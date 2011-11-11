@@ -1,0 +1,234 @@
+Card Me Readme file
+-------------------
+
+Card Me Home Page: http://dma.pixel-act.com
+Project Home Page: http://sourceforge.net/projects/cardme
+
+Card Me Version 0.2.9
+
+JUnit test cases added to all vcard types, utilities and most of parsing and writing classes.
+Field Marshalling test cases contributed by rimovm.
+Total of 379 unit tests.
+
+BUG[3428652]
+VCard utility added to parse strings with special characters where the string itself is delimited by semi-colons.
+
+BUG[3428619]
+Handle parsing of special character strings in the N type.
+
+FEATURE[3425193]
+Added iOS exporter compatibility mode
+
+ 
+PATCH[3401266]
+Maven POM build automation file contributed by rimovm
+
+PATCH[3422950]
+Enhancements to Maven POM file by rimovm
+
+PATCH[3401873]
+Geographic Position number formatter now formatting properly to 6 decimal digits.
+
+George El-Haddad
+Project Lead
+
+Michael Rimov
+Maven Integration Contributor
+
+
+Card Me Version 0.2.8
+---
+FEATURE[3405966]
+Upgrade original BSD license to "Simplified BSD" license (http://www.opensource.org/licenses/bsd-license.php).
+
+FEATURE[3405965]
+Added MS_OUTLOOK compatibility mode to append WORK param type to URLs.
+
+FEATURE[3404126]
+Added MS_OUTLOOK folding scheme to fold lines at 72 characters (including CR+LF)
+Added MS_OUTLOOK compatibility mode to add deprecated encoding type BASE64 for binary data.
+Added MS_OUTLOOK compatibility mode to add an extra Line break after a base64 encoding.
+Added MS_OUTLOOK extra line break when building vcard.
+
+Card Me Version 0.2.7
+---
+Added MS Outlook compatibility mode for parsing N types.
+
+Card Me Version 0.2.6
+---
+Expose parse methods in VCardEngine class so that both process VCard Strings and Files in the same manner. ref: https://sourceforge.net/projects/cardme/forums/forum/346312/topic/4039981/index/page/1
+
+
+Card Me Version 0.2.5
+---
+BUG[3071705] 
+Address (ADR) labels are properly matched based on parameter type signatures. Only 1 address is allowed to have 1 label with zero parameter types, any other detected will result in a warning.
+
+BUG[3073287]
+Parses mixed parameter styles in TEL, ADR, and EMAIL types.
+
+George El-Haddad
+Project Lead
+
+
+Card Me Version 0.2.4
+---
+BUG[3050183]
+Fixed bugs in extended parameter types parsing and string building.
+
+FEATURE[3048384]
+EmailFeature now full support extended parameter types. Parameter type can have extended sub-values delimited by the equals '=' symbol.
+TelephoneFeature and AddressFeature now full support extended parameter types. Parameter type can have extended sub-values delimited by the equals '=' symbol.
+LabelFeature now full support extended parameter types. Parameter type can have extended sub-values delimited by the equals '=' symbol.	
+
+Known Bugs
+BUG[3071705] has been filed as a side-effect of the above feature being implemented.
+
+George El-Haddad
+Project Lead
+
+Card Me Version 0.2.3
+---
+PATCH[3046706]
+Folding VCard sounds, logos and keys for MAC_ADDRESSBOOK compatibility has been updated to in output with BASE64 force encoding type.
+VCardWrtier updated for MAC_ADDRESSBOOK compatibility mode to write the base64 encoding on its own line after the sound, logo and key type declaration.
+
+PATCH[3046706]
+Folding VCard photos for MAC_ADDRESSBOOK compatibility has been updated to in output with BASE64 force encoding type.
+Folding scheme for MAC_ADDRESSBOOK compatibility has been updated to use 76 characters for folding with a 2 space indentation.
+VCardWrtier updated for MAC_ADDRESSBOOK compatibility mode to write the base64 encoding on its own line after the photo type declaration.
+
+BUG[3046257]
+Added HOME, WORK and OTHER parameter types for EMAIL, TELEPHONE, LABEL and ADDRESS types.
+
+BUG[3043332]
+VCardEngine correctly parses vcards with grouping prefixes.
+VCardWriter now outputs grouping prefixes the same as they were read in.
+
+FEATURE[3043684]
+Add support for grouping prefixes when parsing and writing vcards.
+
+BUG[3043158]
+Added missing PREF parameter type for telephone number.
+Added better java doc explanation.
+
+Bug[3042332]
+By default 3.0 vcards can omit the TYPE parameter name in PHOTO, LOGO and SOUND types.
+
+George El-Haddad
+Project Lead
+
+
+Card Me Version 0.2.2
+---
+This is a bug fix release.
+
+BUG[3037073]
+Fix VCardEngine not converting lower case types to upper-case so that it can be converted to the proper enum class.
+
+BUG[3037075]
+Source, Name and Profile type tags should be optional.
+
+BUG[3042152]
+Added I_PHONE compatibility mode for reading photo, sound or logo parameter types without the encoding, type or value prefix.
+
+George El-Haddad
+Project Lead
+
+
+Card Me Version 0.2.1
+---
+This is a bug fix release.
+
+BUG[3016121]
+Fix parsing of N type incorrectly due to java's .split not recognizing trailing semi-colons as an empty field.
+Fix added for TEL type as well.
+Added feature to parse Non-Standard / Custom Email parameter type
+Added feature to parse Non-Standard / Custom Telephone parameter type
+
+George El-Haddad
+Project Lead
+
+
+Card Me Version 0.2.0
+---
+Cardme has been completely re-written to utilize more efficient parsing
+techniques as well as writing. The goal of this new version is to implement
+VCard 3.0 features as much as possible and to make the Cardme library more
+robust and scalable. New VCard features can be added in a modular fashion
+which allows the engine to remain maintainable.
+
+One of the other goals of cardme is to allow the developer/user to control
+the formatting output of their vcards. We provide special classes that
+control the formatting of parameter types and ISO codes. There is a compatibility
+framework in use which allows for reading and writing of vcard features
+to be modified to suit the target application's standards.
+
+A strict emphasis on documentation and code style has been put into effect
+to allow the project source to remain readable and maintainable. Any source
+code that is mixed with many formatting styles will cause many headaches for
+contributors and developers.
+
+Error handling interfaces and implementation have been added to allow
+exceptions to be thrown once detected or caught and stored within a
+VCard object and then accessed later for repair or reporting.
+
+Persistence interfaces have been added to make persisting vcards in
+a database easier. One can write the VCard completely as a CLOB in
+a database table and then read it and parse it back into a Java object.
+But what if we want to use the RFC-2426 implementation of a contact as
+a model to structure contact database and make it completely compatible
+with exporting it as a VCard? this is where the persistence interface
+comes into play. It allows each feature to be marked for persistence and
+each can be marked as INSERT,UPDATE,DELETE or UNMARKED so that they can be
+diverted to the appropriate SQL code. 
+
+Cardme now is in its V3.0 testing phase and all errors should be reported
+as bugs and will be fixed as soon as possible.
+
+George El-Haddad
+Project Lead
+
+Wolfgang Fahl
+Project Contributer
+
+
+Card Me Version 0.1.4
+---
+The project has a new project lead and new contributors
+we'll try to stick more closely to the VCard definition in http://www.ietf.org/rfc/rfc2426.txt
+We are starting to add JUnit tests and refractoring the software to reach this goal
+
+Wolfgang Fahl
+Project Contributer
+
+George El-Haddad
+Project Lead
+
+
+Card Me Version 0.1.3
+--
+Neighborhood Technologies and cardme contributors
+Cardme is a Java VCard library which allows you to work with VCard objects
+in java prorams. It allows the parsing of .VCF vcards into java VCard objects
+and vice versa. Currently it complies with the VCard v2.1 standard and has
+some support for v3.0.
+
+The reason taken to add v2.1 support was mainly due to supporting some
+integration with MS Outlook 2003+. Outlook support v2.1 vcards and even
+not the whole standard. It exports its contacts into v2.1 vcards.
+Not mentioning that they break MIME-DIR and ISO standards doing that.
+I needed to swap back and forth VCards from Outlook to my java program
+to a database and to other applications that use VCards to manage contacts.
+So I coded full (as much as I could) v2.1 support into cardme.
+
+Cardme also includes the MIME-DIR-J library from http://sourceforge.net/projects/mime-dir-j/
+which should allow for more flexibility. As for version 0.1.1 card me depends on
+the mime-dir-j libray. This library can be downloaded from cardme website.
+
+George El-Haddad
+Project Lead
+
+Chris Hubick
+Mime-Dir-J Project Lead
+Cardme Contributer

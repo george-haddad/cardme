@@ -1,0 +1,318 @@
+WARNING THIS ONLY APPLIES TO VCARD v0.1.4 and below.
+For information on how to use CardMe 0.2.0+ please refer
+to the following java class file "info.ineighborhood.cardme.engine.TestParser"
+
+Card Me Home Page: http://dma.pixel-act.com
+Project Home Page: http://sourceforge.net/projects/cardme
+
+
+This is a quick "HOW TO" for the card me library (v 0.1.4 ONLY!)
+---
+By George El-Haddad
+---
+
+1: Include the cardme jar file in your classpath so that you can use it.
+   You need Java 1.5.x
+
+2: You can use cardme in three different ways:
+	1: Create java objects that represent VCards
+	2: Write those java vcard objects to a file or output them as strings
+	3: Read in vcard files or strings and parse them into java vcard objects
+
+3: Everything you need to create a VCard object is in the package "info.ineighborhood.cardme.impl"
+   You would need to use the VCardImpl object to create your java object. The interfaces to everying
+   in this package is in "info.ineighborhood.cardme" VCardImpl source file is fully documented and
+   includes descriptive parameter names. Also at the end of the VCardImpl class is a small test
+   stub to demonstrate how to create a full VCardImpl object and write it out to file. I'll
+   repaste some of it here incase you have the binary version.
+
+4: Cardme supports v2.1 VCards (has v3.0 support hidden but not fully implemented). I've gone out
+   of my way to include Microsoft Outlook 2003 compatibility code. MS parses and writes out VCards
+   in a way that breaks MIME-DIR and ISO standards. So be sure to raise the MS compatibility flags
+   when constructing, parsing, or writing vcards intended to go to Outlook 2003.
+
+5: Reading and writing vcards are done in the "info.ineighborhood.cardme.io" package. There is a
+   simple reader and a writer class. The reader takes in a File as an argument and returns a fully
+   unfolded (and cleaned) String representation of the vcard file. This string can be sent to the
+   VCardParser to be parsed into a VCard object.
+   
+   The VCardWriter takes in a VCard object and returns a fully folded string that is ready to be
+   written to a file on disk.
+
+6: VCardParser must be given a fully unfolded VCard string (must pass through the VCardReader or
+   the programmer must unfold the lines using VCardUtils class. By default the VCardParser
+   initializes its tokens for v2.1 vcards. You can add extra tokens through set/get methods to
+   add extra extensions. I included a class called TestParser which is a stand alone program
+   and will demonstrate how to use the parser to read/write vcard files.
+
+---------------------------------------------------
+Code snip on how to create a VCard programatically
+It's a bit long, but I go over all the cases.
+---------------------------------------------------
+
+		VCard vcard = new VCardImpl();
+		vcard.setVersion(VCard.VERSION_2_1);
+		vcard.setSalutation("Mr.");
+		vcard.setFirstName("George");
+		// vcard.setMiddleName(""); //don't have one
+		vcard.setLastName("El-Haddad");
+		vcard.setSuffix("I");
+		vcard.setJobTitle("Programmer/Analyst");
+		vcard.setRole("Linux Admin, Systems & Data Integration");
+		vcard.setMailer("Mozilla Thunderbird");
+		vcard.setUrl("http://www.sun.com");
+		vcard.setUid("1234567678123123412312");
+		vcard.setLatitude(new Double(3.4));
+		vcard.setLongitude(new Double(-2.6));
+		vcard.setOrganization("A Big Bank Inc.");
+		vcard.setOrganizationalUnit("PCS");
+
+		Calendar birthday = Calendar.getInstance();
+		birthday.clear();
+		birthday.set(Calendar.YEAR, 1983);
+		birthday.set(Calendar.MONTH, 3);
+		birthday.set(Calendar.DAY_OF_MONTH, 10);
+
+		vcard.setBirthday(birthday);
+		vcard.setRevisionDate(Calendar.getInstance());
+		vcard.setTimeZone(Calendar.getInstance().getTimeZone());
+		vcard.addExtendedValue("X-GENERATOR", "My VCard Generator");
+
+		MailingAddress address1 = new MailingAddressImpl();
+		address1.addType(MailingAddressType.HOME_MAILING_ADDRESS);
+		address1.addType(MailingAddressType.DOMESTIC_MAILING_ADDRESS);
+		address1.addType(MailingAddressType.PARCEL_MAILING_ADDRESS);
+		address1.setCountry("Lebanon");
+		address1.setLocality("Adonis");
+		address1.setRegion("Zouk Mosbeh");
+		address1.setStreetAddress("Street 99");
+		address1.setPostalCode("GreenZone");
+
+		Label address1Label = new AddressLabelImpl();
+		address1Label.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+		address1Label.addType(MailingAddressType.HOME_MAILING_ADDRESS);
+		address1Label.addType(MailingAddressType.DOMESTIC_MAILING_ADDRESS);
+		address1Label.addType(MailingAddressType.PARCEL_MAILING_ADDRESS);
+		address1Label.setLabelText("George El-Haddad\nAdonis, Zouk Mosbeh,\nStreet99, GreenZone,\nLebanon");
+
+		address1.setLabel(address1Label);
+		vcard.addAddress(address1);
+
+		MailingAddress address2 = new MailingAddressImpl();
+		address2.addType(MailingAddressType.WORK_MAILING_ADDRESS);
+		address2.setCountry("Lebanon");
+		address2.setLocality("Tripoli");
+		address2.setStreetAddress("Street 14");
+		address2.setPostalCode("RedZone");
+		address2.setPostOfficeBox("P.O.Box 55");
+		
+		// Funny, Outlook uses this as the Office if it is a Work address
+		address2.setExtendedAddress("PCS Office");
+
+		Label address2Label = new AddressLabelImpl();
+		address2Label.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+		address2Label.addType(MailingAddressType.WORK_MAILING_ADDRESS);
+		address2Label.setLabelText("Big Java Corp.,\nStreet 14, Red Zone,\nTripoli, P.O.Box 55,\nPCS Office");
+
+		address2.setLabel(address2Label);
+		vcard.addAddress(address2);
+
+		MailingAddress address3 = new MailingAddressImpl();
+		address3.addType(MailingAddressType.INTERNATIONAL_MAILING_ADDRESS);
+		address3.setCountry("Lebanon");
+		address3.setLocality("Beirut");
+		address3.setRegion("Verdun");
+		address3.setStreetAddress("Street 55");
+		address3.setPostalCode("BlueZone");
+		address3.setPostOfficeBox("P.O.Box 1234");
+		address3.setExtendedAddress("Some extended address");
+		address3.setHasLabel(false);
+		vcard.addAddress(address3);
+
+		PhoneNumber phone1 = new PhoneNumberImpl();
+		phone1.addType(PhoneNumberType.CELL_PHONE);
+		phone1.addType(PhoneNumberType.VOICE_PHONE);
+		phone1.setCountryCode("961");
+		phone1.setAreaCode("03");
+		phone1.setLocalNumber("3456789");
+		vcard.addPhoneNumber(phone1);
+
+		PhoneNumber phone2 = new PhoneNumberImpl();
+		phone2.addType(PhoneNumberType.HOME_PHONE);
+		phone2.setCountryCode("961");
+		phone2.setAreaCode("03");
+		phone2.setLocalNumber("2345678");
+		vcard.addPhoneNumber(phone2);
+
+		PhoneNumber phone3 = new PhoneNumberImpl();
+		phone3.addType(PhoneNumberType.WORK_PHONE);
+		phone3.addType(PhoneNumberType.MODEM_NUMBER);
+		phone3.addType(PhoneNumberType.FAX_NUMBER);
+		phone3.setCountryCode("961");
+		phone3.setAreaCode("03");
+		phone3.setLocalNumber("1234567");
+		vcard.addPhoneNumber(phone3);
+
+		EmailAddress email = new EmailAddressImpl();
+		email.addType(EmailAddressType.INTERNET_EMAIL);
+		email.setEmailAddress("billy_bob@gmail.com");
+		email.setPreferred(true);
+		vcard.addEmailAddress(email);
+
+		EmailAddress email2 = new EmailAddressImpl();
+		email2.addType(EmailAddressType.INTERNET_EMAIL);
+		email2.addType(EmailAddressType.IBM_MAIL);
+		email2.setEmailAddress("billy@ibm.com");
+		email2.setPreferred(false);
+		vcard.addEmailAddress(email2);
+
+		Note aNote = new NoteImpl();
+		aNote.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+		aNote.setNote("For future reference\nI must buy a cooler car or something like that in the far distant future");
+		vcard.addNote(aNote);
+
+		try {
+			Photo photo1 = new PhotoImpl();
+			photo1.setEncodingType(EncodingType.BASE64);
+			photo1.setType(ImageType.PNG);
+			photo1.setData(BASE64.encode(System.getProperty("user.home")+ File.separator + "tux.png"));
+			photo1.setEmbeded(true);
+			vcard.addPhoto(photo1);
+		}
+		catch (Exception ex) {
+			System.err.println("Unable to load and encode picture to BASE64");
+			ex.printStackTrace();
+		}
+
+		Photo photo2 = new PhotoImpl();
+		photo2.setURL("file:///" + System.getProperty("user.home")+ File.separator + "tux.png");
+		photo2.setEmbeded(false); // this is done automatically on setURL() anyways
+		vcard.addPhoto(photo2);
+
+		try {
+			// OK so I am encoding a picture instead of a sound file.
+			// Just using it for testing.
+			Sound sound1 = new SoundImpl();
+			sound1.setEncodingType(EncodingType.BASE64);
+			sound1.setType(SoundType.WAVE);
+			sound1.setData(BASE64.encode(System.getProperty("user.home")+ File.separator + "tux.png"));
+			sound1.setEmbeded(true);
+			vcard.addSound(sound1);
+		}
+		catch (Exception ex) {
+			System.err.println("Unable to load and encode sound to BASE64");
+			ex.printStackTrace();
+		}
+
+		Sound sound2 = new SoundImpl();
+		sound2.setURL("http://www.MyHomePage.com/sounds/myVoice.wav");
+		sound2.setEmbeded(false); // this is done automatically on setURL() anyways
+		vcard.addSound(sound2);
+
+		try {
+			Logo logo1 = new LogoImpl();
+			logo1.setEncodingType(EncodingType.BASE64);
+			logo1.setType(ImageType.PNG);
+			logo1.setData(BASE64.encode(System.getProperty("user.home")+ File.separator + "tux.png"));
+			logo1.setEmbeded(true);
+			vcard.addLogo(logo1);
+		}
+		catch (Exception ex) {
+			System.err.println("Unable to load and encode logo to BASE64");
+			ex.printStackTrace();
+		}
+
+		// Print out the vcards
+
+		try {
+			System.out.println("Standard V2.1 VCard");
+			System.out.println();
+			System.out.println(VCardWriter.toVCardString(vcard));
+		}
+		catch (VCardException vce) {
+			System.err.println(vce.getMessage());
+		}
+
+--------------------------------------
+Below is how one could go about parsing vcards into java objects
+Please note that TestParser basically prompts the user to select
+1 or more vcard files and it returns a Vector of VCard objects.
+It also keeps track of any vcards that couldn't be parsed.
+--------------------------------------
+
+		TestParser testParser = new TestParser();
+		boolean hasErrors = testParser.importVCards();
+		if(hasErrors) {
+			ArrayList<File> badFiles = testParser.getBadFiles();
+			System.out.println("The following files could not be imported:");
+			for(int i=0; i < badFiles.size(); i++) {
+				System.out.println("\t"+badFiles.get(i).getName());
+			}
+		}
+		else {
+			System.out.println("All VCards imported successfully!");
+			System.out.println("View output below to make sure it's all correct\n");
+			Vector<VCard> vcards = testParser.getVCards();
+			
+			//The parser returns a vector of VCards to which you can do
+			//whatever you want with them. For test purposes I write them
+			//back out to the console to see if it came out the same as it
+			//came in.
+			
+			for(int i=0; i < vcards.size(); i++) {
+				try {
+					System.out.println(VCardWriter.toVCardString(vcards.get(i)));
+					System.out.println();
+				}
+				catch(VCardException vce) {
+					System.err.println(vce.getMessage());
+				}
+			}
+		}
+		
+		System.out.println("\n-- END --");
+		
+-------------------------------------------------------
+This is how one could go about using the VCardParser to do the same
+job as the TestParser. This is basically a snip from the TestParser
+class, but it shows you what it is basically doing
+--------------------------------------------------------
+
+		//------- Initialize the VCardParser
+		
+		vcardParser = new VCardParser();
+		vcardParser.setVersion(VCard.VERSION_2_1);
+		vcardParser.setOutlookMode(false);
+		
+		//Extra extensions must be defined manually
+		//The parser will check for the 'X-' substring and
+		//add it to the VCard's extended values collection
+		
+		Token xgeneratorToken = new TokenImpl("X-GENERATOR");
+		vcardParser.getTokens().addToken(xgeneratorToken);
+		
+		//-------- Finished initializing
+		
+		//vCardFiles is an array of vcard files collected from the user
+		
+		for(int i=0; i < vCardFiles.length; i++) {
+			try { 
+				String vcardString = VCardReader.readVCard(vCardFiles[i], VCard.VERSION_2_1);
+				VCard vcard = vcardParser.parse(vcardString);
+				
+				vcards.add(vcard);	//We then populate a vector with vcard java objects to use later on
+			}
+			catch(Exception ex) {
+				
+				//if any error occurs, keep track of which file caused the error 
+				
+				ex.printStackTrace();
+				
+				if(badFiles == null) {
+					badFiles = new ArrayList<File>();
+				}
+				
+				badFiles.add(vCardFiles[i]);
+			}
+		}
+---------------------------------------
