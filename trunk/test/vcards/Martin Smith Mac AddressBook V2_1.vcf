@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:2.1
+N:Smith;Martin;;;
+FN:Martin Smith
+ORG:Rocket & Partner;
+EMAIL;INTERNET;WORK:martin.smith@rocket-partner.com
+ADR;WORK:;;6 Valleydrive;Huntsville;;;
+X-ABRELATEDNAMES;type=pref:Simona Forest
+CATEGORIES:cardme
+END:VCARD
