@@ -743,7 +743,7 @@ public class VCardEngine {
 		return nameFeature;
 	}
 	
-	private NameType parseNTypeRFC(String value) throws VCardBuildException
+	private NameType parseNTypeRFC(String value)
 	{
 		NameType nameFeature = new NameType();
 		String[] names = VCardUtils.parseStringWithEscappedDelimiter(value, ';');
@@ -756,9 +756,6 @@ public class VCardEngine {
 				nameFeature.setFamilyName(names[0]);
 			}
 		}
-		else {
-			throw new VCardBuildException("NameType ("+VCardType.FN.getType()+") The family name field cannot be left empty.");
-		}
 		
 		if(names[1] != null) {
 			if(VCardUtils.needsUnEscaping(names[1])) {
@@ -767,9 +764,6 @@ public class VCardEngine {
 			else {
 				nameFeature.setGivenName(names[1]);
 			}
-		}
-		else {
-			throw new VCardBuildException("NameType ("+VCardType.FN.getType()+") The given name field cannot be left empty.");
 		}
 		
 		if(names[2] != null) {
