@@ -1036,8 +1036,15 @@ public class VCardWriter {
 				}
 				
 				tmpSb.append(nameFeature.getTypeString());
+				
+				if(nameFeature.hasCharset()) {
+					tmpSb.append(";CHARSET=");
+					tmpSb.append(nameFeature.getCharset().name());
+				}
+				
 				tmpSb.append(":");
-
+				
+				//TODO code the charset encoded string
 				if(nameFeature.hasFamilyName()) {
 					tmpSb.append(VCardUtils.escapeString(nameFeature.getFamilyName()));
 
