@@ -317,19 +317,19 @@ public class VCardEngine {
 			
 			case FN:
 			{
-				parseFnType(group, value, vcard);
+				parseFnType(group, value, paramTypes, vcard);
 				break;
 			}
 			
 			case N:
 			{
-				parseNType(group, value, vcard);
+				parseNType(group, value, paramTypes, vcard);
 				break;
 			}
 			
 			case NICKNAME:
 			{
-				parseNicknameType(group, value, vcard);
+				parseNicknameType(group, value, paramTypes, vcard);
 				break;
 			}
 			
@@ -341,7 +341,7 @@ public class VCardEngine {
 			
 			case BDAY:
 			{
-				parseBDayType(group, value, vcard);
+				parseBDayType(group, value, paramTypes, vcard);
 				break;
 			}
 			
@@ -371,7 +371,7 @@ public class VCardEngine {
 			
 			case MAILER:
 			{
-				parseMailerType(group, value, vcard);
+				parseMailerType(group, value, paramTypes, vcard);
 				break;
 			}
 			
@@ -383,19 +383,19 @@ public class VCardEngine {
 			
 			case GEO:
 			{
-				parseGeoType(group, value, vcard);
+				parseGeoType(group, value, paramTypes, vcard);
 				break;
 			}
 			
 			case TITLE:
 			{
-				parseTitleType(group, value, vcard);
+				parseTitleType(group, value, paramTypes, vcard);
 				break;
 			}
 			
 			case ROLE:
 			{
-				parseRoleType(group, value, vcard);
+				parseRoleType(group, value, paramTypes, vcard);
 				break;
 			}
 			
@@ -413,37 +413,37 @@ public class VCardEngine {
 			
 			case ORG:
 			{
-				parseOrgType(group, value, vcard);
+				parseOrgType(group, value, paramTypes, vcard);
 				break;
 			}
 			
 			case CATEGORIES:
 			{
-				parseCategoriesType(group, value, vcard);
+				parseCategoriesType(group, value, paramTypes, vcard);
 				break;
 			}
 			
 			case NOTE:
 			{
-				parseNoteType(group, value, vcard);
+				parseNoteType(group, value, paramTypes, vcard);
 				break;
 			}
 			
 			case PRODID:
 			{
-				parseProdidType(group, value, vcard);
+				parseProdidType(group, value, paramTypes, vcard);
 				break;
 			}
 			
 			case REV:
 			{
-				parseRevType(group, value, vcard);
+				parseRevType(group, value, paramTypes, vcard);
 				break;
 			}
 			
 			case SORT_STRING:
 			{
-				parseSortStringType(group, value, vcard);
+				parseSortStringType(group, value, paramTypes, vcard);
 				break;
 			}
 			
@@ -455,19 +455,19 @@ public class VCardEngine {
 			
 			case UID:
 			{
-				parseUidType(group, value, vcard);
+				parseUidType(group, value, paramTypes, vcard);
 				break;
 			}
 			
 			case URL:
 			{
-				parseUrlType(group, value, vcard);
+				parseUrlType(group, value, paramTypes, vcard);
 				break;
 			}
 			
 			case CLASS:
 			{
-				parseClassType(group, value, vcard);
+				parseClassType(group, value, paramTypes, vcard);
 				break;
 			}
 			
@@ -479,25 +479,25 @@ public class VCardEngine {
 			
 			case XTENDED:
 			{
-				parseXtendedType(group, value, type, vcard);
+				parseXtendedType(group, value, type, paramTypes, vcard);
 				break;
 			}
 			
 			case NAME:
 			{
-				parseDisplayableNameType(group, value, vcard);
+				parseDisplayableNameType(group, value, paramTypes, vcard);
 				break;
 			}
 			
 			case PROFILE:
 			{
-				parseProfileType(group, value, vcard);
+				parseProfileType(group, value, paramTypes, vcard);
 				break;
 			}
 			
 			case SOURCE:
 			{
-				parseSourceType(group, value, vcard);
+				parseSourceType(group, value, paramTypes, vcard);
 				break;
 			}
 
@@ -599,12 +599,30 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
+	 * @param paramTypes
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseFnType(String group, String value, VCardImpl vcard) throws VCardBuildException {
+	private void parseFnType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			FormattedNameType formattedNameFeature = new FormattedNameType();
+			
+			if(paramTypes != null) {
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
+					
+					if(pt.getName().equals("CHARSET")) {
+						formattedNameFeature.setCharset(pt.getValue());
+					}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
+					}
+				}
+				
+				paramTypeList = null;
+			}
+			
 			if(VCardUtils.needsUnEscaping(value)) {
 				formattedNameFeature.setFormattedName(VCardUtils.unescapeString(value));
 			}
@@ -628,13 +646,14 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
+	 * @param paramTypes
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseNType(String group, String value, VCardImpl vcard) throws VCardBuildException {
+	private void parseNType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			NameType nameFeature = null;
-
+			
 			switch(compatMode)
 			{
 				case MS_OUTLOOK:
@@ -649,7 +668,23 @@ public class VCardEngine {
 					break;
 				}
 			}
-
+			
+			if(paramTypes != null) {
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
+					
+					if(pt.getName().equals("CHARSET")) {
+						nameFeature.setCharset(pt.getValue());
+					}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
+					}
+				}
+				
+				paramTypeList = null;
+			}
+			
 			if(group != null) {
 				nameFeature.setGroup(group);
 			}
@@ -810,12 +845,30 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
+	 * @param paramTypes
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseNicknameType(String group, String value, VCardImpl vcard) throws VCardBuildException {
+	private void parseNicknameType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			NicknameType nicknameFeature = new NicknameType();
+			
+			if(paramTypes != null) {
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
+					
+					if(pt.getName().equals("CHARSET")) {
+						nicknameFeature.setCharset(pt.getValue());
+					}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
+					}
+				}
+				
+				paramTypeList = null;
+			}
+			
 			String[] nicknames = value.split(",");
 			for(int i = 0; i < nicknames.length; i++) {
 				if(VCardUtils.needsUnEscaping(nicknames[i])) {
@@ -862,6 +915,7 @@ public class VCardEngine {
 					case I_PHONE:
 					case MAC_ADDRESS_BOOK:
 					{
+						//TODO charset
 						if(params[i].contains("=")) {
 							//For proper vcard parameter types
 							paramType = params[i].trim().split("=");
@@ -997,12 +1051,30 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
+	 * @param paramTypes
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseBDayType(String group, String value, VCardImpl vcard) throws VCardBuildException {
+	private void parseBDayType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			BirthdayType birthdayFeature = new BirthdayType();
+			
+			if(paramTypes != null) {
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
+					
+					if(pt.getName().equals("CHARSET")) {
+						birthdayFeature.setCharset(pt.getValue());
+					}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
+					}
+				}
+				
+				paramTypeList = null;
+			}
+			
 			if(value.matches(ISOUtils.ISO8601_DATE_EXTENDED_REGEX)) {
 				//Example: 1996-04-15
 				String[] date = value.split("-");
@@ -1126,7 +1198,7 @@ public class VCardEngine {
 				if(paramTypes.indexOf(';') != -1) {
 					//Parameter List Style
 					//Example: TYPE=home;TYPE=parcel;TYPE=postal;TYPE=pref
-					
+					//TODO charset
 					String[] list = paramTypes.split(";");
 					for(int i = 0; i < list.length; i++) {
 						String paramType = list[i];
@@ -1286,6 +1358,8 @@ public class VCardEngine {
 				if(paramTypes.indexOf(';') != -1) {
 					//Parameter List Style
 					//Example: TYPE=home;TYPE=parcel;TYPE=postal;TYPE=pref
+					//TODO charset
+					
 					String[] list = paramTypes.split(";");
 					for(int i = 0; i < list.length; i++) {
 						String paramType = list[i];
@@ -1429,6 +1503,7 @@ public class VCardEngine {
 				if(paramTypes.indexOf(';') != -1) {
 					//Parameter List Style
 					//Example: TYPE=cell;TYPE=home;TYPE=fax;TYPE=X-SAT-PHONE;TYPE=X-PRIORITY=1
+					//TODO charset
 					
 					String[] list = paramTypes.split(";");
 					for(int i = 0; i < list.length; i++) {
@@ -1525,6 +1600,7 @@ public class VCardEngine {
 			EmailType emailType = new EmailType();
 			boolean isBinary = false;
 			String charset = null; //Optional, this is a temp hack.
+			//TODO recode this for proper charset
 			
 			if(paramTypes != null) {
 				String[] params = paramTypes.split(";");
@@ -1631,12 +1707,30 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
+	 * @param paramTypes
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseMailerType(String group, String value, VCardImpl vcard) throws VCardBuildException {
+	private void parseMailerType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			MailerType mailerFeature = new MailerType();
+			
+			if(paramTypes != null) {
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
+					
+					if(pt.getName().equals("CHARSET")) {
+						mailerFeature.setCharset(pt.getValue());
+					}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
+					}
+				}
+				
+				paramTypeList = null;
+			}
+			
 			if(VCardUtils.needsUnEscaping(value)) {
 				mailerFeature.setMailer(VCardUtils.unescapeString(value));
 			}
@@ -1670,6 +1764,8 @@ public class VCardEngine {
 			if(paramTypes != null) {
 				//VALUE=TEXT
 				//-05:00; EST; Raleigh/North America
+				//TODO charset, check if this field supports it.
+				
 				String paramValue = paramTypes.substring(paramTypes.indexOf('=')+1);
 				if(paramValue.compareToIgnoreCase("TEXT") == 0) {
 					timeZoneFeature.setTextValue(value);
@@ -1759,12 +1855,30 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
+	 * @param paramTypes
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseGeoType(String group, String value, VCardImpl vcard) throws VCardBuildException {
+	private void parseGeoType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			GeographicPositionType geographicPositionFeature = new GeographicPositionType();
+			
+			if(paramTypes != null) {
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
+					
+					if(pt.getName().equals("CHARSET")) {
+						geographicPositionFeature.setCharset(pt.getValue());
+					}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
+					}
+				}
+				
+				paramTypeList = null;
+			}
+			
 			if(value.matches("-?\\d{1,3}\\.\\d{1,6}\\;-?\\d{1,3}\\.\\d{1,6}")) {
 				String[] geo = value.split(";");
 				String lat = geo[0];
@@ -1792,12 +1906,30 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
+	 * @param paramTypes
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseTitleType(String group, String value, VCardImpl vcard) throws VCardBuildException {
+	private void parseTitleType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			TitleType titleFeature = new TitleType();
+			
+			if(paramTypes != null) {
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
+					
+					if(pt.getName().equals("CHARSET")) {
+						titleFeature.setCharset(pt.getValue());
+					}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
+					}
+				}
+				
+				paramTypeList = null;
+			}
+			
 			if(VCardUtils.needsUnEscaping(value)) {
 				titleFeature.setTitle(VCardUtils.unescapeString(value));
 			}
@@ -1821,12 +1953,30 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
+	 * @param paramTypes
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseRoleType(String group, String value, VCardImpl vcard) throws VCardBuildException {
+	private void parseRoleType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			RoleType roleFeature = new RoleType();
+			
+			if(paramTypes != null) {
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
+					
+					if(pt.getName().equals("CHARSET")) {
+						roleFeature.setCharset(pt.getValue());
+					}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
+					}
+				}
+				
+				paramTypeList = null;
+			}
+			
 			if(VCardUtils.needsUnEscaping(value)) {
 				roleFeature.setRole(VCardUtils.unescapeString(value));
 			}
@@ -1872,6 +2022,7 @@ public class VCardEngine {
 					{
 						if(params[i].contains("=")) {
 							//For proper vcard parameter types
+							//TODO charset
 							paramType = params[i].trim().split("=");
 						}
 						else {
@@ -2006,12 +2157,29 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
+	 * @param paramTypes
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseOrgType(String group, String value, VCardImpl vcard) throws VCardBuildException {
+	private void parseOrgType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			OrganizationType organizationFeature = new OrganizationType();
+			
+			if(paramTypes != null) {
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
+					
+					if(pt.getName().equals("CHARSET")) {
+						organizationFeature.setCharset(pt.getValue());
+					}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
+					}
+				}
+				
+				paramTypeList = null;
+			}
 			
 			/*
 			 * If escaped semi-colons exist in the list then replace them
@@ -2049,12 +2217,30 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
+	 * @param paramTypes
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseCategoriesType(String group, String value, VCardImpl vcard) throws VCardBuildException {
+	private void parseCategoriesType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			CategoriesType categoriesFeature = new CategoriesType();
+			
+			if(paramTypes != null) {
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
+					
+					if(pt.getName().equals("CHARSET")) {
+						categoriesFeature.setCharset(pt.getValue());
+					}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
+					}
+				}
+				
+				paramTypeList = null;
+			}
+			
 			String[] categories = null;
 			switch(compatMode)
 			{
@@ -2105,12 +2291,30 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
+	 * @param paramTypes
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseNoteType(String group, String value, VCardImpl vcard) throws VCardBuildException {
+	private void parseNoteType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			NoteType noteFeature = new NoteType();
+			
+			if(paramTypes != null) {
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
+					
+					if(pt.getName().equals("CHARSET")) {
+						noteFeature.setCharset(pt.getValue());
+					}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
+					}
+				}
+				
+				paramTypeList = null;
+			}
+			
 			if(VCardUtils.needsUnEscaping(value)) {
 				noteFeature.setNote(VCardUtils.unescapeString(value));
 			}
@@ -2134,13 +2338,30 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
+	 * @param paramTypes
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseProdidType(String group, String value, VCardImpl vcard) throws VCardBuildException {
+	private void parseProdidType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			ProductIdType productIdFeature = new ProductIdType();
 			productIdFeature.setProductId(value);
+			
+			if(paramTypes != null) {
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
+					
+					if(pt.getName().equals("CHARSET")) {
+						productIdFeature.setCharset(pt.getValue());
+					}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
+					}
+				}
+				
+				paramTypeList = null;
+			}
 			
 			if(group != null) {
 				productIdFeature.setGroup(group);
@@ -2158,12 +2379,30 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
+	 * @param paramTypes
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseRevType(String group, String value, VCardImpl vcard) throws VCardBuildException {
+	private void parseRevType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			RevisionType revisionFeature = new RevisionType();
+			
+			if(paramTypes != null) {
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
+					
+					if(pt.getName().equals("CHARSET")) {
+						revisionFeature.setCharset(pt.getValue());
+					}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
+					}
+				}
+				
+				paramTypeList = null;
+			}
+			
 			if(value.matches(ISOUtils.ISO8601_DATE_EXTENDED_REGEX)) {
 				//Example: 1996-04-15
 				String[] date = value.split("-");
@@ -2276,13 +2515,30 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
+	 * @param paramTypes
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseSortStringType(String group, String value, VCardImpl vcard) throws VCardBuildException {
+	private void parseSortStringType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			SortStringType sortStringFeature = new SortStringType();
 			sortStringFeature.setSortString(value);
+			
+			if(paramTypes != null) {
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
+					
+					if(pt.getName().equals("CHARSET")) {
+						sortStringFeature.setCharset(pt.getValue());
+					}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
+					}
+				}
+				
+				paramTypeList = null;
+			}
 			
 			if(group != null) {
 				sortStringFeature.setGroup(group);
@@ -2322,6 +2578,7 @@ public class VCardEngine {
 					{
 						if(params[i].contains("=")) {
 							//For proper vcard parameter types
+							//TODO charset
 							paramType = params[i].trim().split("=");
 						}
 						else {
@@ -2454,15 +2711,32 @@ public class VCardEngine {
 	/**
 	 * <p>Parses the UID type.</p>
 	 *
-	 * @param
+	 * @param group
 	 * @param value
+	 * @param paramTypes
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseUidType(String group, String value, VCardImpl vcard) throws VCardBuildException {
+	private void parseUidType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			UIDType uidFeature = new UIDType();
 			uidFeature.setUID(value);
+			
+			if(paramTypes != null) {
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
+					
+					if(pt.getName().equals("CHARSET")) {
+						uidFeature.setCharset(pt.getValue());
+					}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
+					}
+				}
+				
+				paramTypeList = null;
+			}
 			
 			if(group != null) {
 				uidFeature.setGroup(group);
@@ -2480,12 +2754,30 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
+	 * @param paramTypes
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseUrlType(String group, String value, VCardImpl vcard) throws VCardBuildException {
+	private void parseUrlType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			URLType urlFeature = new URLType();
+			
+			if(paramTypes != null) {
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
+					
+					if(pt.getName().equals("CHARSET")) {
+						urlFeature.setCharset(pt.getValue());
+					}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
+					}
+				}
+				
+				paramTypeList = null;
+			}
+			
 			if(VCardUtils.needsUnEscaping(value)) {
 				urlFeature.setURL(new URL(VCardUtils.unescapeString(value)));
 			}
@@ -2509,13 +2801,30 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
+	 * @param paramTypes
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseClassType(String group, String value, VCardImpl vcard) throws VCardBuildException {
+	private void parseClassType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			ClassType classFeature = new ClassType();
 			classFeature.setSecurityClass(value);
+			
+			if(paramTypes != null) {
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
+					
+					if(pt.getName().equals("CHARSET")) {
+						classFeature.setCharset(pt.getValue());
+					}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
+					}
+				}
+				
+				paramTypeList = null;
+			}
 			
 			if(group != null) {
 				classFeature.setGroup(group);
@@ -2554,6 +2863,7 @@ public class VCardEngine {
 					{
 						if(params[i].contains("=")) {
 							//For proper vcard parameter types
+							//TODO charset
 							paramType = params[i].trim().split("=");
 						}
 						else {
@@ -2669,15 +2979,32 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
+	 * @param paramTypes
 	 * @param typeName
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseXtendedType(String group, String value, String typeName, VCardImpl vcard) throws VCardBuildException {
+	private void parseXtendedType(String group, String value, String paramTypes, String typeName, VCardImpl vcard) throws VCardBuildException {
 		try {
 			ExtendedType extendedFeature = new ExtendedType();
 			extendedFeature.setExtensionName(typeName);
 			extendedFeature.setExtensionData(value);
+			
+			if(paramTypes != null) {
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
+					
+					if(pt.getName().equals("CHARSET")) {
+						extendedFeature.setCharset(pt.getValue());
+					}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
+					}
+				}
+				
+				paramTypeList = null;
+			}
 			
 			if(group != null) {
 				extendedFeature.setGroup(group);
@@ -2695,13 +3022,30 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
+	 * @param paramTypes
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseDisplayableNameType(String group, String value, VCardImpl vcard) throws VCardBuildException {
+	private void parseDisplayableNameType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			DisplayableNameType displayableNameFeature = new DisplayableNameType();
 			displayableNameFeature.setName(value);
+			
+			if(paramTypes != null) {
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
+					
+					if(pt.getName().equals("CHARSET")) {
+						displayableNameFeature.setCharset(pt.getValue());
+					}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
+					}
+				}
+				
+				paramTypeList = null;
+			}
 			
 			if(group != null) {
 				displayableNameFeature.setGroup(group);
@@ -2719,13 +3063,30 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
+	 * @param paramTypes
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseProfileType(String group, String value, VCardImpl vcard) throws VCardBuildException {
+	private void parseProfileType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			ProfileType profileFeature = new ProfileType();
 			profileFeature.setProfile(value);
+			
+			if(paramTypes != null) {
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
+					
+					if(pt.getName().equals("CHARSET")) {
+						profileFeature.setCharset(pt.getValue());
+					}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
+					}
+				}
+				
+				paramTypeList = null;
+			}
 			
 			if(group != null) {
 				profileFeature.setGroup(group);
@@ -2743,13 +3104,30 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
+	 * @param paramTypes
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseSourceType(String group, String value, VCardImpl vcard) throws VCardBuildException {
+	private void parseSourceType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			SourceType sourceFeature = new SourceType();
 			sourceFeature.setSource(value);
+			
+			if(paramTypes != null) {
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
+					
+					if(pt.getName().equals("CHARSET")) {
+						sourceFeature.setCharset(pt.getValue());
+					}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
+					}
+				}
+				
+				paramTypeList = null;
+			}
 			
 			if(group != null) {
 				sourceFeature.setGroup(group);
@@ -2784,6 +3162,32 @@ public class VCardEngine {
 		}
 		
 		vcard.addError(vError);
+	}
+	
+	/**
+	 * <p>Parses the specified string of parameter types and returns
+	 * a list of <code>ParamterType</code> objects. Parameter types
+	 * are expected to be delimited by a semi-colon.</p>
+	 *
+	 * @param paramTypes
+	 * @return {@link List}&lt;ParameterType&gt;
+	 * @throws VCardBuildException
+	 */
+	private List<ParameterType> parseParamTypes(String paramTypes) throws VCardBuildException
+	{
+		List<ParameterType> parameterTypes = new ArrayList<ParameterType>();
+		String[] params = paramTypes.split(";");
+		for(int i = 0; i < params.length; i++) {
+			if(params[i].contains("=")) {
+				String[] paramType = params[i].trim().split("=");
+				parameterTypes.add(new ParameterType(paramType[0], paramType[1]));
+			}
+			else {
+				throw new VCardBuildException("Malformed parameter type, missing '=' sign: "+params[i]);
+			}
+		}
+		
+		return parameterTypes;
 	}
 	
 	/**

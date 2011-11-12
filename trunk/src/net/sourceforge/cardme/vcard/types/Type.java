@@ -6,6 +6,7 @@ import net.sourceforge.cardme.util.Util;
 import net.sourceforge.cardme.vcard.EncodingType;
 import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
 import java.io.Serializable;
+import java.nio.charset.Charset;
 
 /**
  * Copyright 2011 George El-Haddad. All rights reserved.
@@ -49,6 +50,7 @@ public abstract class Type implements Persistable, Cloneable, Serializable {
 	protected EncodingType encodingType = null;
 	protected ParameterTypeStyle paramTypeStyle = null;
 	protected String group = null;
+	protected Charset charset = Charset.defaultCharset();
 	
 	public Type() {
 		
@@ -154,6 +156,70 @@ public abstract class Type implements Persistable, Cloneable, Serializable {
 	public String getID()
 	{
 		return id;
+	}
+	
+	/**
+	 * <p>Returns the charset of this type.</p>
+	 *
+	 * @return {@link Charset}
+	 */
+	public Charset getCharset()
+	{
+		return charset;
+	}
+	
+	/**
+	 * <p>Sets a specified charset for this type. Any charset
+	 * that is null, empty or not supported will revert this
+	 * type to the default charset supported by the java
+	 * virtual machine that is currently running.</p>
+	 *
+	 * @param strCharset
+	 */
+	public void setCharset(String strCharset) {
+		if(strCharset == null) {
+			charset = Charset.defaultCharset();
+		}
+		else if(strCharset.isEmpty()) {
+			charset = Charset.defaultCharset();
+		}
+		else {
+			if(Charset.isSupported(strCharset)) {
+				charset = Charset.forName(strCharset);
+			}
+			else {
+				charset = Charset.defaultCharset();
+			}
+		}
+	}
+	
+	/**
+	 * <p>Sets a specified charset for this type. Should
+	 * the charset be null then the default charset supported
+	 * by the java virtual machine will be used instead.</p>
+	 *
+	 * @param charset
+	 */
+	public void setCharset(Charset charset) {
+		if(charset == null) {
+			this.charset = Charset.defaultCharset();
+		}
+		else {
+			this.charset = charset;
+		}
+	}
+	
+	/**
+	 * <p>Returns true if the charset is something other
+	 * than the default charset. The default charset will
+	 * be used anyways by default, so we are interested if
+	 * there is something different.</p>
+	 *
+	 * @return boolean
+	 */
+	public boolean hasCharset()
+	{
+		return charset.compareTo(Charset.defaultCharset()) != 0;
 	}
 	
 	/**

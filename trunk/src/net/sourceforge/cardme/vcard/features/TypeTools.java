@@ -1,5 +1,7 @@
 package net.sourceforge.cardme.vcard.features;
 
+import java.nio.charset.Charset;
+
 import net.sourceforge.cardme.db.Persistable;
 import net.sourceforge.cardme.vcard.types.Type;
 import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
@@ -75,6 +77,42 @@ public interface TypeTools extends Persistable {
 	 * @see Type#hasGroup()
 	 */
 	public boolean hasGroup();
+	
+	/**
+	 * <p>Returns the charset of this type.</p>
+	 *
+	 * @return {@link Charset}
+	 */
+	public Charset getCharset();
+	
+	/**
+	 * <p>Sets a specified charset for this type. Any charset
+	 * that is null, empty or not supported will revert this
+	 * type to the default charset supported by the java
+	 * virtual machine that is currently running.</p>
+	 *
+	 * @param strCharset
+	 */
+	public void setCharset(String strCharset);
+	
+	/**
+	 * <p>Sets a specified charset for this type. Should
+	 * the charset be null then the default charset supported
+	 * by the java virtual machine will be used instead.</p>
+	 *
+	 * @param charset
+	 */
+	public void setCharset(Charset charset);
+	
+	/**
+	 * <p>Returns true if the charset is something other
+	 * than the default charset. The default charset will
+	 * be used anyways by default, so we are interested if
+	 * there is something different.</p>
+	 *
+	 * @return boolean
+	 */
+	public boolean hasCharset();
 	
 	/**
 	 * @see Type#equals(Object)
