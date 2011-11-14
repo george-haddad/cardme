@@ -1205,7 +1205,7 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param formattedNameFeature
+	 * @param displayableNameFeature
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the displayable name feature is null
@@ -1257,7 +1257,7 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param formattedNameFeature
+	 * @param profileFeature
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the profile feature is null
@@ -1274,8 +1274,22 @@ public class VCardWriter {
 				}
 				
 				tmpSb.append(profileFeature.getTypeString());
+				
+				if(profileFeature.hasCharset()) {
+					tmpSb.append(";CHARSET=");
+					tmpSb.append(profileFeature.getCharset().name());
+				}
+				
 				tmpSb.append(":");
-				tmpSb.append(VCardUtils.escapeString(profile));
+				
+				if(profileFeature.hasCharset()) {
+					String str =  VCardUtils.escapeString(profile);
+					tmpSb.append(new String(str.getBytes(), profileFeature.getCharset()));
+				}
+				else {
+					tmpSb.append(VCardUtils.escapeString(profile));
+				}
+				
 				String tmpProfileLine = tmpSb.toString();
 				String foldedProfileLine = VCardUtils.foldLine(tmpProfileLine, foldingScheme);
 				sb.append(foldedProfileLine);
@@ -1295,7 +1309,7 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param formattedNameFeature
+	 * @param sourceFeature
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the source feature is null
@@ -1312,8 +1326,22 @@ public class VCardWriter {
 				}
 				
 				tmpSb.append(sourceFeature.getTypeString());
+				
+				if(sourceFeature.hasCharset()) {
+					tmpSb.append(";CHARSET=");
+					tmpSb.append(sourceFeature.getCharset().name());
+				}
+				
 				tmpSb.append(":");
-				tmpSb.append(VCardUtils.escapeString(source));
+				
+				if(sourceFeature.hasCharset()) {
+					String str =  VCardUtils.escapeString(source);
+					tmpSb.append(new String(str.getBytes(), sourceFeature.getCharset()));
+				}
+				else {
+					tmpSb.append(VCardUtils.escapeString(source));
+				}
+				
 				String tmpSourceLine = tmpSb.toString();
 				String foldedSourceLine = VCardUtils.foldLine(tmpSourceLine, foldingScheme);
 				sb.append(foldedSourceLine);
@@ -1351,8 +1379,22 @@ public class VCardWriter {
 					}
 					
 					tmpSb.append(titleFeature.getTypeString());
+					
+					if(titleFeature.hasCharset()) {
+						tmpSb.append(";CHARSET=");
+						tmpSb.append(titleFeature.getCharset().name());
+					}
+					
 					tmpSb.append(":");
-					tmpSb.append(VCardUtils.escapeString(title));
+					
+					if(titleFeature.hasCharset()) {
+						String str =  VCardUtils.escapeString(title);
+						tmpSb.append(new String(str.getBytes(), titleFeature.getCharset()));
+					}
+					else {
+						tmpSb.append(VCardUtils.escapeString(title));
+					}
+					
 					String tmpTitleLine = tmpSb.toString();
 					String foldedTitleLine = VCardUtils.foldLine(tmpTitleLine, foldingScheme);
 					sb.append(foldedTitleLine);
@@ -1391,8 +1433,22 @@ public class VCardWriter {
 					}
 					
 					tmpSb.append(roleFeature.getTypeString());
+					
+					if(roleFeature.hasCharset()) {
+						tmpSb.append(";CHARSET=");
+						tmpSb.append(roleFeature.getCharset().name());
+					}
+					
 					tmpSb.append(":");
-					tmpSb.append(VCardUtils.escapeString(role));
+					
+					if(roleFeature.hasCharset()) {
+						String str =  VCardUtils.escapeString(role);
+						tmpSb.append(new String(str.getBytes(), roleFeature.getCharset()));
+					}
+					else {
+						tmpSb.append(VCardUtils.escapeString(role));
+					}
+					
 					String tmpRoleLine = tmpSb.toString();
 					String foldedRoleLine = VCardUtils.foldLine(tmpRoleLine, foldingScheme);
 					sb.append(foldedRoleLine);
@@ -1429,10 +1485,24 @@ public class VCardWriter {
 				}
 				
 				tmpSb.append(geographicPositionFeature.getTypeString());
+				
+				if(geographicPositionFeature.hasCharset()) {
+					tmpSb.append(";CHARSET=");
+					tmpSb.append(geographicPositionFeature.getCharset().name());
+				}
+				
 				tmpSb.append(":");
-				tmpSb.append(VCardUtils.getGeographicPositionFormatter().format(geographicPositionFeature.getLatitude()));
-				tmpSb.append(";");
-				tmpSb.append(VCardUtils.getGeographicPositionFormatter().format(geographicPositionFeature.getLongitude()));
+				
+				if(geographicPositionFeature.hasCharset()) {
+					String str =  VCardUtils.getGeographicPositionFormatter().format(geographicPositionFeature.getLatitude())+";"+VCardUtils.getGeographicPositionFormatter().format(geographicPositionFeature.getLongitude());
+					tmpSb.append(new String(str.getBytes(), geographicPositionFeature.getCharset()));
+				}
+				else {
+					tmpSb.append(VCardUtils.getGeographicPositionFormatter().format(geographicPositionFeature.getLatitude()));
+					tmpSb.append(";");
+					tmpSb.append(VCardUtils.getGeographicPositionFormatter().format(geographicPositionFeature.getLongitude()));
+				}
+				
 				String tmpGeoLine = tmpSb.toString();
 				String foldedGeoLine = VCardUtils.foldLine(tmpGeoLine, foldingScheme);
 				sb.append(foldedGeoLine);
@@ -1466,12 +1536,26 @@ public class VCardWriter {
 					}
 					
 					tmpSb.append(organizationFeature.getTypeString());
+					
+					if(organizationFeature.hasCharset()) {
+						tmpSb.append(";CHARSET=");
+						tmpSb.append(organizationFeature.getCharset().name());
+					}
+					
 					tmpSb.append(":");
 					
 					Iterator<String> orgs = organizationFeature.getOrganizations();
 					while(orgs.hasNext()) {
 						String org = orgs.next();
-						tmpSb.append(VCardUtils.escapeString(org));
+						
+						if(organizationFeature.hasCharset()) {
+							String str =  VCardUtils.escapeString(org);
+							tmpSb.append(new String(str.getBytes(), organizationFeature.getCharset()));
+						}
+						else {
+							tmpSb.append(VCardUtils.escapeString(org));
+						}
+						
 						tmpSb.append(";");
 					}
 					
@@ -1513,8 +1597,22 @@ public class VCardWriter {
 					}
 					
 					tmpSb.append(mailerFeature.getTypeString());
+					
+					if(mailerFeature.hasCharset()) {
+						tmpSb.append(";CHARSET=");
+						tmpSb.append(mailerFeature.getCharset().name());
+					}
+					
 					tmpSb.append(":");
-					tmpSb.append(VCardUtils.escapeString(mailerFeature.getMailer()));
+					
+					if(mailerFeature.hasCharset()) {
+						String str =  VCardUtils.escapeString(mailerFeature.getMailer());
+						tmpSb.append(new String(str.getBytes(), mailerFeature.getCharset()));
+					}
+					else {
+						tmpSb.append(VCardUtils.escapeString(mailerFeature.getMailer()));
+					}
+					
 					String tmpMailerLine = tmpSb.toString();
 					String foldedMailerLine = VCardUtils.foldLine(tmpMailerLine, foldingScheme);
 					sb.append(foldedMailerLine);
@@ -1602,14 +1700,33 @@ public class VCardWriter {
 						tmpSb.append("WORK");
 					}
 					
+					if(urlFeature.hasCharset()) {
+						tmpSb.append(";CHARSET=");
+						tmpSb.append(urlFeature.getCharset().name());
+					}
+					
 					tmpSb.append(":");
 					
 					String url = urlFeature.getURL().toString();
-					if(VCardUtils.needsEscaping(url)) {
-						tmpSb.append(VCardUtils.escapeString(url));
+					
+					if(urlFeature.hasCharset()) {
+						String str = null;
+						if(VCardUtils.needsEscaping(url)) {
+							str = VCardUtils.escapeString(url);
+						}
+						else {
+							str = url;
+						}
+						
+						tmpSb.append(new String(str.getBytes(), urlFeature.getCharset()));
 					}
 					else {
-						tmpSb.append(url);
+						if(VCardUtils.needsEscaping(url)) {
+							tmpSb.append(VCardUtils.escapeString(url));
+						}
+						else {
+							tmpSb.append(url);
+						}
 					}
 					
 					String tmpUrlLine = tmpSb.toString();
@@ -1649,8 +1766,22 @@ public class VCardWriter {
 					}
 					
 					tmpSb.append(revisionFeature.getTypeString());
+					
+					if(revisionFeature.hasCharset()) {
+						tmpSb.append(";CHARSET=");
+						tmpSb.append(revisionFeature.getCharset().name());
+					}
+					
 					tmpSb.append(":");
-					tmpSb.append(ISOUtils.toISO8601_UTC_Time(revisionFeature.getRevision(), ISOFormat.ISO8601_EXTENDED));
+					
+					if(revisionFeature.hasCharset()) {
+						String str =  ISOUtils.toISO8601_UTC_Time(revisionFeature.getRevision(), ISOFormat.ISO8601_EXTENDED);
+						tmpSb.append(new String(str.getBytes(), revisionFeature.getCharset()));
+					}
+					else {
+						tmpSb.append(ISOUtils.toISO8601_UTC_Time(revisionFeature.getRevision(), ISOFormat.ISO8601_EXTENDED));
+					}
+					
 					String tmpRevisionLine = tmpSb.toString();
 					String foldedRevisionLine = VCardUtils.foldLine(tmpRevisionLine, foldingScheme);
 					sb.append(foldedRevisionLine);
@@ -1688,8 +1819,22 @@ public class VCardWriter {
 					}
 					
 					tmpSb.append(uidFeature.getTypeString());
+					
+					if(uidFeature.hasCharset()) {
+						tmpSb.append(";CHARSET=");
+						tmpSb.append(uidFeature.getCharset().name());
+					}
+					
 					tmpSb.append(":");
-					tmpSb.append(uidFeature.getUID());
+					
+					if(uidFeature.hasCharset()) {
+						String str =  uidFeature.getUID();
+						tmpSb.append(new String(str.getBytes(), uidFeature.getCharset()));
+					}
+					else {
+						tmpSb.append(uidFeature.getUID());
+					}
+					
 					String tmpUidLine = tmpSb.toString();
 					String foldedUidLine = VCardUtils.foldLine(tmpUidLine, foldingScheme);
 					sb.append(foldedUidLine);
@@ -1726,8 +1871,22 @@ public class VCardWriter {
 				}
 				
 				tmpSb.append(birthdayFeature.getTypeString());
+				
+				if(birthdayFeature.hasCharset()) {
+					tmpSb.append(";CHARSET=");
+					tmpSb.append(birthdayFeature.getCharset().name());
+				}
+				
 				tmpSb.append(":");
-				tmpSb.append(ISOUtils.toISO8601_Date(birthdayFeature.getBirthday(), ISOFormat.ISO8601_EXTENDED));
+				
+				if(birthdayFeature.hasCharset()) {
+					String str =  ISOUtils.toISO8601_Date(birthdayFeature.getBirthday(), ISOFormat.ISO8601_EXTENDED);
+					tmpSb.append(new String(str.getBytes(), birthdayFeature.getCharset()));
+				}
+				else {
+					tmpSb.append(ISOUtils.toISO8601_Date(birthdayFeature.getBirthday(), ISOFormat.ISO8601_EXTENDED));
+				}
+				
 				String tmpBdayLine = tmpSb.toString();
 				String foldedBdayLine = VCardUtils.foldLine(tmpBdayLine, foldingScheme);
 				sb.append(foldedBdayLine);
@@ -2337,8 +2496,22 @@ public class VCardWriter {
 					}
 					
 					tmpSb.append(noteFeature.getTypeString());
+					
+					if(noteFeature.hasCharset()) {
+						tmpSb.append(";CHARSET=");
+						tmpSb.append(noteFeature.getCharset().name());
+					}
+					
 					tmpSb.append(":");
-					tmpSb.append(VCardUtils.escapeString(noteFeature.getNote()));
+					
+					if(noteFeature.hasCharset()) {
+						String str =  VCardUtils.escapeString(noteFeature.getNote());
+						tmpSb.append(new String(str.getBytes(), noteFeature.getCharset()));
+					}
+					else {
+						tmpSb.append(VCardUtils.escapeString(noteFeature.getNote()));
+					}
+					
 					String tmpNoteLine = tmpSb.toString();
 					String foldedNoteLine = VCardUtils.foldLine(tmpNoteLine, foldingScheme);
 					sb.append(foldedNoteLine);
@@ -2376,12 +2549,25 @@ public class VCardWriter {
 					}
 					
 					tmpSb.append(nicknameFeature.getTypeString());
+					
+					if(nicknameFeature.hasCharset()) {
+						tmpSb.append(";CHARSET=");
+						tmpSb.append(nicknameFeature.getCharset().name());
+					}
+					
 					tmpSb.append(":");
 					
 					Iterator<String> nicknames = nicknameFeature.getNicknames();
 					while(nicknames.hasNext()) {
 						String nickname = nicknames.next();
-						tmpSb.append(nickname);
+						
+						if(nicknameFeature.hasCharset()) {
+							tmpSb.append(new String(nickname.getBytes(), nicknameFeature.getCharset()));
+						}
+						else {
+							tmpSb.append(nickname);
+						}
+						
 						tmpSb.append(",");
 					}
 					
@@ -2423,12 +2609,25 @@ public class VCardWriter {
 					}
 					
 					tmpSb.append(categoriesFeature.getTypeString());
+					
+					if(categoriesFeature.hasCharset()) {
+						tmpSb.append(";CHARSET=");
+						tmpSb.append(categoriesFeature.getCharset().name());
+					}
+					
 					tmpSb.append(":");
 					
 					Iterator<String> categories = categoriesFeature.getCategories();
 					while(categories.hasNext()) {
 						String category = categories.next();
-						tmpSb.append(category);
+						
+						if(categoriesFeature.hasCharset()) {
+							tmpSb.append(new String(category.getBytes(), categoriesFeature.getCharset()));
+						}
+						else {
+							tmpSb.append(category);
+						}
+						
 						switch(compatMode)
 						{
 							case KDE_ADDRESS_BOOK:
@@ -2483,8 +2682,22 @@ public class VCardWriter {
 					}
 					
 					tmpSb.append(classFeature.getTypeString());
+					
+					if(classFeature.hasCharset()) {
+						tmpSb.append(";CHARSET=");
+						tmpSb.append(classFeature.getCharset().name());
+					}
+					
 					tmpSb.append(":");
-					tmpSb.append(classFeature.getSecurityClass());
+					
+					if(classFeature.hasCharset()) {
+						String str = classFeature.getSecurityClass();
+						tmpSb.append(new String(str.getBytes(), classFeature.getCharset()));
+					}
+					else {
+						tmpSb.append(classFeature.getSecurityClass());
+					}
+					
 					String tmpClassLine = tmpSb.toString();
 					String foldedClassLine = VCardUtils.foldLine(tmpClassLine, foldingScheme);
 					sb.append(foldedClassLine);
@@ -2522,8 +2735,22 @@ public class VCardWriter {
 					}
 					
 					tmpSb.append(productIdFeature.getTypeString());
+					
+					if(productIdFeature.hasCharset()) {
+						tmpSb.append(";CHARSET=");
+						tmpSb.append(productIdFeature.getCharset().name());
+					}
+					
 					tmpSb.append(":");
-					tmpSb.append(productIdFeature.getProductId());
+					
+					if(productIdFeature.hasCharset()) {
+						String str = productIdFeature.getProductId();
+						tmpSb.append(new String(str.getBytes(), productIdFeature.getCharset()));
+					}
+					else {
+						tmpSb.append(productIdFeature.getProductId());
+					}
+					
 					String tmpProductIdLine = tmpSb.toString();
 					String foldedProductIdLine = VCardUtils.foldLine(tmpProductIdLine, foldingScheme);
 					sb.append(foldedProductIdLine);
@@ -2561,8 +2788,22 @@ public class VCardWriter {
 					}
 					
 					tmpSb.append(sortStringFeature.getTypeString());
+					
+					if(sortStringFeature.hasCharset()) {
+						tmpSb.append(";CHARSET=");
+						tmpSb.append(sortStringFeature.getCharset().name());
+					}
+					
 					tmpSb.append(":");
-					tmpSb.append(sortStringFeature.getSortString());
+					
+					if(sortStringFeature.hasCharset()) {
+						String str = sortStringFeature.getSortString();
+						tmpSb.append(new String(str.getBytes(), sortStringFeature.getCharset()));
+					}
+					else {
+						tmpSb.append(sortStringFeature.getSortString());
+					}
+					
 					String tmpSortStringLine = tmpSb.toString();
 					String foldedSortStringLine = VCardUtils.foldLine(tmpSortStringLine, foldingScheme);
 					sb.append(foldedSortStringLine);
@@ -3316,10 +3557,22 @@ public class VCardWriter {
 					
 					tmpSb.append(agentFeature.getTypeString());
 					
+					if(agentFeature.hasCharset()) {
+						tmpSb.append(";CHARSET=");
+						tmpSb.append(agentFeature.getCharset().name());
+					}
+					
 					if(agentFeature.isURI()) {
 						tmpSb.append(";");
 						tmpSb.append("VALUE=URI:");
-						tmpSb.append(agentFeature.getAgentURI().getPath());
+						
+						if(agentFeature.hasCharset()) {
+							String str = agentFeature.getAgentURI().getPath();
+							tmpSb.append(new String(str.getBytes(), agentFeature.getCharset()));
+						}
+						else {
+							tmpSb.append(agentFeature.getAgentURI().getPath());
+						}
 					}
 					else if(agentFeature.isInline()) {
 						tmpSb.append(":");
@@ -3336,7 +3589,14 @@ public class VCardWriter {
 							writer.setOutputVersion(this.outputVersion);
 							writer.setVCard(agentVCard);
 							String agentVCardStr = writer.buildVCardString();
-							tmpSb.append(VCardUtils.escapeString(agentVCardStr));
+							
+							if(agentFeature.hasCharset()) {
+								String str = VCardUtils.escapeString(agentVCardStr);
+								tmpSb.append(new String(str.getBytes(), agentFeature.getCharset()));
+							}
+							else {
+								tmpSb.append(VCardUtils.escapeString(agentVCardStr));
+							}
 						}
 						catch(VCardException ve) {
 							throw new VCardBuildException(ve.getMessage(), ve);
@@ -3386,8 +3646,22 @@ public class VCardWriter {
 					}
 					
 					tmpSb.append(extendedFeature.getExtensionName());
+					
+					if(extendedFeature.hasCharset()) {
+						tmpSb.append(";CHARSET=");
+						tmpSb.append(extendedFeature.getCharset().name());
+					}
+					
 					tmpSb.append(":");
-					tmpSb.append(extendedFeature.getExtensionData());
+					
+					if(extendedFeature.hasCharset()) {
+						String str = extendedFeature.getExtensionData();
+						tmpSb.append(new String(str.getBytes(), extendedFeature.getCharset()));
+					}
+					else {
+						tmpSb.append(extendedFeature.getExtensionData());
+					}
+					
 					String tmpExtendedLine = tmpSb.toString();
 					String foldedExtendedLine = VCardUtils.foldLine(tmpExtendedLine, foldingScheme);
 					sb.append(foldedExtendedLine);
