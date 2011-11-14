@@ -1044,16 +1044,28 @@ public class VCardWriter {
 				
 				tmpSb.append(":");
 				
-				//TODO code the charset encoded string
 				if(nameFeature.hasFamilyName()) {
-					tmpSb.append(VCardUtils.escapeString(nameFeature.getFamilyName()));
+					if(nameFeature.hasCharset()) {
+						String str =  VCardUtils.escapeString(nameFeature.getFamilyName());
+						tmpSb.append(new String(str.getBytes(), nameFeature.getCharset()));
+					}
+					else {
+						tmpSb.append(VCardUtils.escapeString(nameFeature.getFamilyName()));
+					}
 
 				}
 
 				tmpSb.append(";");
 
 				if(nameFeature.hasGivenName()) {
-					tmpSb.append(VCardUtils.escapeString(nameFeature.getGivenName()));
+					if(nameFeature.hasCharset()) {
+						String str =  VCardUtils.escapeString(nameFeature.getGivenName());
+						tmpSb.append(new String(str.getBytes(), nameFeature.getCharset()));
+						
+					}
+					else {
+						tmpSb.append(VCardUtils.escapeString(nameFeature.getGivenName()));
+					}
 				}
 
 				tmpSb.append(";");
@@ -1062,7 +1074,16 @@ public class VCardWriter {
 					Iterator<String> additionalNames = nameFeature.getAdditionalNames();
 					while(additionalNames.hasNext()) {
 						String addName = additionalNames.next();
-						tmpSb.append(VCardUtils.escapeString(addName));
+						
+						if(nameFeature.hasCharset()) {
+							String str =  VCardUtils.escapeString(addName);
+							tmpSb.append(new String(str.getBytes(), nameFeature.getCharset()));
+							
+						}
+						else {
+							tmpSb.append(VCardUtils.escapeString(addName));
+						}
+						
 						tmpSb.append(",");
 					}
 
@@ -1075,7 +1096,16 @@ public class VCardWriter {
 					Iterator<String> prefixes = nameFeature.getHonorificPrefixes();
 					while(prefixes.hasNext()) {
 						String prefix = prefixes.next();
-						tmpSb.append(VCardUtils.escapeString(prefix));
+						
+						if(nameFeature.hasCharset()) {
+							String str =  VCardUtils.escapeString(prefix);
+							tmpSb.append(new String(str.getBytes(), nameFeature.getCharset()));
+							
+						}
+						else {
+							tmpSb.append(VCardUtils.escapeString(prefix));
+						}
+						
 						tmpSb.append(",");
 					}
 
@@ -1088,7 +1118,16 @@ public class VCardWriter {
 					Iterator<String> suffixes = nameFeature.getHonorificSuffixes();
 					while(suffixes.hasNext()) {
 						String suffix = suffixes.next();
-						tmpSb.append(VCardUtils.escapeString(suffix));
+						
+						if(nameFeature.hasCharset()) {
+							String str =  VCardUtils.escapeString(suffix);
+							tmpSb.append(new String(str.getBytes(), nameFeature.getCharset()));
+							
+						}
+						else {
+							tmpSb.append(VCardUtils.escapeString(suffix));
+						}
+						
 						tmpSb.append(",");
 					}
 
@@ -1131,8 +1170,22 @@ public class VCardWriter {
 				}
 				
 				tmpSb.append(formattedNameFeature.getTypeString());
+				
+				if(formattedNameFeature.hasCharset()) {
+					tmpSb.append(";CHARSET=");
+					tmpSb.append(formattedNameFeature.getCharset().name());
+				}
+				
 				tmpSb.append(":");
-				tmpSb.append(VCardUtils.escapeString(formattedName));
+				
+				if(formattedNameFeature.hasCharset()) {
+					String str =  VCardUtils.escapeString(formattedName);
+					tmpSb.append(new String(str.getBytes(), formattedNameFeature.getCharset()));
+				}
+				else {
+					tmpSb.append(VCardUtils.escapeString(formattedName));
+				}
+				
 				String tmpFormattedNameLine = tmpSb.toString();
 				String foldedFormattedNameLine = VCardUtils.foldLine(tmpFormattedNameLine, foldingScheme);
 				sb.append(foldedFormattedNameLine);
@@ -1169,8 +1222,22 @@ public class VCardWriter {
 				}
 				
 				tmpSb.append(displayableNameFeature.getTypeString());
+				
+				if(displayableNameFeature.hasCharset()) {
+					tmpSb.append(";CHARSET=");
+					tmpSb.append(displayableNameFeature.getCharset().name());
+				}
+				
 				tmpSb.append(":");
-				tmpSb.append(VCardUtils.escapeString(displayableName));
+				
+				if(displayableNameFeature.hasCharset()) {
+					String str =  VCardUtils.escapeString(displayableName);
+					tmpSb.append(new String(str.getBytes(), displayableNameFeature.getCharset()));
+				}
+				else {
+					tmpSb.append(VCardUtils.escapeString(displayableName));
+				}
+				
 				String tmpDisplayableNameLine = tmpSb.toString();
 				String foldedDisplayableNameLine = VCardUtils.foldLine(tmpDisplayableNameLine, foldingScheme);
 				sb.append(foldedDisplayableNameLine);
