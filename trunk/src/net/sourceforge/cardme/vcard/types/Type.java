@@ -50,7 +50,7 @@ public abstract class Type implements Persistable, Cloneable, Serializable {
 	protected EncodingType encodingType = null;
 	protected ParameterTypeStyle paramTypeStyle = null;
 	protected String group = null;
-	protected Charset charset = Charset.defaultCharset();
+	protected Charset charset = null;
 	
 	public Type() {
 		
@@ -219,7 +219,8 @@ public abstract class Type implements Persistable, Cloneable, Serializable {
 	 */
 	public boolean hasCharset()
 	{
-		return charset.compareTo(Charset.defaultCharset()) != 0;
+		//charset.compareTo(Charset.defaultCharset()) != 0;
+		return charset != null;
 	}
 	
 	/**
