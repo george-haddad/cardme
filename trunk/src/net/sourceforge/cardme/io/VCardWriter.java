@@ -56,6 +56,8 @@ import net.sourceforge.cardme.vcard.types.parameters.XAddressParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XEmailParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XLabelParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XTelephoneParameterType;
+
+import java.nio.charset.Charset;
 import java.util.Iterator;
 
 /**
@@ -2343,10 +2345,16 @@ public class VCardWriter {
 					}
 					
 					tmpSb.append(emailFeature.getTypeString());
-
+					
+					if(emailFeature.hasCharset()) {
+						tmpSb.append(";CHARSET=");
+						tmpSb.append(emailFeature.getCharset().name());
+					}
+					
 					if(emailFeature.hasEmailParameterTypes()) {
 						tmpSb.append(";");
 						Iterator<EmailParameterType> paramTypes = emailFeature.getEmailParameterTypes();
+						
 						switch(emailFeature.getParameterTypeStyle())
 						{
 							case PARAMETER_LIST:
@@ -2437,10 +2445,16 @@ public class VCardWriter {
 						{
 							tmpSb.append(";ENCODING=");
 							tmpSb.append(encType.getType());
-							tmpSb.append(";CHARSET=utf8");
 							tmpSb.append(":");
 							
-							byte[] emailBytes = emailFeature.getEmail().getBytes("utf8");
+							byte[] emailBytes = null;
+							if(emailFeature.hasCharset()) {
+								emailBytes = emailFeature.getEmail().getBytes(emailFeature.getCharset().name());
+							}
+							else {
+								emailBytes = emailFeature.getEmail().getBytes(Charset.defaultCharset());
+							}
+							
 							if(emailFeature.isSetCompression()) {
 								tmpSb.append(Base64Wrapper.encode(emailBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION));
 							}

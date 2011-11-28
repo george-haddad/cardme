@@ -1,5 +1,19 @@
 package net.sourceforge.cardme.engine;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.net.URI;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Iterator;
+import java.util.List;
+import java.util.TimeZone;
+
 import net.sourceforge.cardme.io.CompatibilityMode;
 import net.sourceforge.cardme.util.Base64Wrapper;
 import net.sourceforge.cardme.util.ISOUtils;
@@ -62,20 +76,6 @@ import net.sourceforge.cardme.vcard.types.parameters.XAddressParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XEmailParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XLabelParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XTelephoneParameterType;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Iterator;
-import java.util.List;
-import java.util.TimeZone;
 
 /**
  * Copyright 2011 George El-Haddad. All rights reserved.
@@ -407,7 +407,7 @@ public class VCardEngine {
 			
 			case AGENT:
 			{
-//TODO				parseAgentType(group, value, vcard);
+				//TODO	parseAgentType(group, value, vcard);
 				break;
 			}
 			
@@ -614,6 +614,7 @@ public class VCardEngine {
 					
 					if(pt.getName().equals("CHARSET")) {
 						formattedNameFeature.setCharset(pt.getValue());
+						value = new String(value.getBytes(), formattedNameFeature.getCharset());
 					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
@@ -1597,90 +1598,80 @@ public class VCardEngine {
 	 */
 	private void parseEmailType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
-			EmailType emailType = new EmailType();
+			EmailType emailFeature = new EmailType();
 			boolean isBinary = false;
-			String charset = null; //Optional, this is a temp hack.
-			//TODO recode this for proper charset
 			
 			if(paramTypes != null) {
-				String[] params = paramTypes.split(";");
-				
-				for(int i = 0; i < params.length; i++) {
-					String[] paramType = null;
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
 					
-					if(params[i].contains("=")) {
-						paramType = params[i].trim().split("=");
+					if(pt.getName().equals("CHARSET")) {
+						emailFeature.setCharset(pt.getValue());
 					}
-					else {
-						paramType = new String[] {EmailParameterType.TYPE.getType(), params[i]};
-					}
-					
-					if(paramType[0].toUpperCase().startsWith("TYPE")) {
-						String paramValue = paramType[1];
-						if(paramValue.indexOf(',') != -1) {
-							String[] typeValueList = paramValue.split(",");
+					else if(pt.getName().equals("TYPE")) {
+						if(pt.getName().indexOf(',') != -1) {
+							String[] typeValueList = pt.getValue().split(",");
 							for(int j = 0; j < typeValueList.length; j++) {
-								setEmailParameterType(emailType, typeValueList[j]);
+								setEmailParameterType(emailFeature, typeValueList[j]);
 							}
 						}
 						else {
-							setEmailParameterType(emailType, paramValue);
+							setEmailParameterType(emailFeature, pt.getValue());
 						}
 					}
-					else if(paramType[0].toUpperCase().startsWith("ENCODING")) {
-						String paramValue = paramType[1];
-						
-						if(paramValue.compareToIgnoreCase(EncodingType.BINARY.getType()) == 0) {
-							emailType.setEncodingType(EncodingType.BINARY);
+					else if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().compareToIgnoreCase(EncodingType.BINARY.getType()) == 0) {
+							emailFeature.setEncodingType(EncodingType.BINARY);
 							isBinary = true;
 						}
-						else if(paramValue.compareToIgnoreCase(EncodingType.BASE64.getType()) == 0) {
-							emailType.setEncodingType(EncodingType.BINARY);
+						else if(pt.getValue().compareToIgnoreCase(EncodingType.BASE64.getType()) == 0) {
+							emailFeature.setEncodingType(EncodingType.BINARY);
 							isBinary = true;
 						}
 						else {
-							throw new VCardBuildException("EmailType ("+VCardType.EMAIL.getType()+") Invalid encoding type \""+paramValue+"\"");
+							throw new VCardBuildException("EmailType ("+VCardType.EMAIL.getType()+") Invalid encoding type \""+pt.getValue()+"\"");
 						}
 					}
-					else if(paramType[0].toUpperCase().startsWith("CHARSET")) {
-						charset = paramType[1];
-					}
 					else {
-						throw new VCardBuildException("EmailType ("+VCardType.EMAIL.getType()+") Unknown type: "+paramType[0]);
+						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
+				
+				paramTypeList = null;
 			}
 			
 			if(isBinary) {
 				byte[] emailBytes = Base64Wrapper.decode(value);
-				emailType.setCompression(false);
-				if(charset == null) {
-					emailType.setEmail(new String(emailBytes, "utf8"));
+				emailFeature.setCompression(false);
+				if(emailFeature.hasCharset()) {
+					emailFeature.setEmail(new String(emailBytes, emailFeature.getCharset()));
 				}
 				else {
-					try {
-						emailType.setEmail(new String(emailBytes, charset));
-					}
-					catch(UnsupportedEncodingException uee) {
-						throw new VCardBuildException("EmailType ("+VCardType.EMAIL.getType()+") Unsupported charset value: "+charset);
-					}
+					emailFeature.setEmail(new String(emailBytes, Charset.defaultCharset()));
 				}
 			}
 			else {
-				emailType.setEmail(value);
+				emailFeature.setEmail(value);
 			}
 			
 			if(group != null) {
-				emailType.setGroup(group);
+				emailFeature.setGroup(group);
 			}
 			
-			vcard.addEmail(emailType);
+			vcard.addEmail(emailFeature);
 		}
 		catch(Exception ex) {
 			throw new VCardBuildException("EmailType ("+VCardType.EMAIL.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
+	/**
+	 * <p>Helper method for the above.</p>
+	 *
+	 * @param emailType
+	 * @param paramValue
+	 */
 	private void setEmailParameterType(EmailType emailType, String paramValue) {
 		try {
 			EmailParameterType emailParamType = EmailParameterType.valueOf(paramValue);
