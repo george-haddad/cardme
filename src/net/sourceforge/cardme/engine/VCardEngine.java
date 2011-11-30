@@ -66,11 +66,7 @@ import net.sourceforge.cardme.vcard.types.media.ImageMediaType;
 import net.sourceforge.cardme.vcard.types.media.KeyTextType;
 import net.sourceforge.cardme.vcard.types.parameters.AddressParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.EmailParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.KeyParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.LabelParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.LogoParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.PhotoParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.SoundParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.TelephoneParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XAddressParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XEmailParameterType;
@@ -903,132 +899,65 @@ public class VCardEngine {
 	private void parsePhotoType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			PhotoType photoFeature = new PhotoType();
-			String[] params = paramTypes.split(";");
 			boolean isBinary = false;
 			
-			//Parse the parameter types
-			for(int i = 0; i < params.length; i++) {
-				String[] paramType = null;
-				
-				switch(getCompatibilityMode())
-				{
-					case MS_OUTLOOK:
-					case I_PHONE:
-					case MAC_ADDRESS_BOOK:
-					{
-						//TODO charset
-						if(params[i].contains("=")) {
-							//For proper vcard parameter types
-							paramType = params[i].trim().split("=");
-						}
-						else {
-							//When the parameter types are missing we try to guess what they are.
-							//We really should not as it breaks RFC rules but some apps do broken exports.
-							
-							if(params[i].equals(EncodingType.BASE64.getType())) {
-								paramType = new String[] {PhotoParameterType.ENCODING.getTypeName(), params[i]};
-							}
-							else if(params[i].equals(EncodingType.BINARY.getType())) {
-								paramType = new String[] {PhotoParameterType.ENCODING.getTypeName(), params[i]};
-							}
-							else if(params[i].equals("URI")) {
-								paramType = new String[] {PhotoParameterType.VALUE.getTypeName(), params[i]};
-							}
-							else {
-								//If we are here then we can only assume this is
-								//a IANA registered image type (or custom type). 
-								paramType = new String[] {PhotoParameterType.TYPE.getTypeName(), params[i]};
-							}
-						}
-						
-						break;
-					}
+			if(paramTypes != null) {
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
 					
-					case EVOLUTION:
-					case KDE_ADDRESS_BOOK:
-					case RFC2426:
-					default:
-					{
-						if(params[i].contains("=")) {
-							paramType = params[i].trim().split("=");
-						}
-						else {
-							/*
-							 * Type special notes: The type can include the type parameter "TYPE" to
-							 * specify the graphic image format type. The TYPE parameter values MUST
-							 * be one of the IANA registered image formats or a non-standard image format.
-							 */
-							
-							paramType = new String[] {PhotoParameterType.TYPE.getTypeName(), params[i]};
-						}
-						
-						break;
+					if(pt.getName().equals("CHARSET")) {
+						photoFeature.setCharset(pt.getValue());
 					}
-				}
-				
-				/*
-				 * ENCODING=b would look like
-				 * paramType[0] = ENCODING
-				 * paramType[1] = b
-				 */
-				PhotoParameterType photoParamType = PhotoParameterType.valueOf(paramType[0]);
-				switch(photoParamType)
-				{
-					case ENCODING:
-					{
-						if(paramType[1].compareToIgnoreCase(EncodingType.BINARY.getType()) == 0) {
+					else if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().compareToIgnoreCase(EncodingType.BINARY.getType()) == 0) {
 							photoFeature.setEncodingType(EncodingType.BINARY);
 							isBinary = true;
 						}
-						else if(paramType[1].compareToIgnoreCase(EncodingType.BASE64.getType()) == 0) {
+						else if(pt.getValue().compareToIgnoreCase(EncodingType.BASE64.getType()) == 0) {
 							photoFeature.setEncodingType(EncodingType.BINARY);
 							isBinary = true;
 						}
 						else {
-							throw new VCardBuildException("PhotoType ("+VCardType.PHOTO.getType()+") Invalid encoding type \""+paramType[1]+"\"");
+							throw new VCardBuildException("PhotoType ("+VCardType.PHOTO.getType()+") Invalid encoding type \""+pt.getValue()+"\"");
 						}
-						
-						break;
 					}
-					
-					case TYPE:
-					{
+					else if(pt.getName().equals("TYPE")) {
 						ImageMediaType mediaType = null;
 						try {
-							mediaType = ImageMediaType.valueOf(paramType[1]);
+							mediaType = ImageMediaType.valueOf(pt.getValue());
 							photoFeature.setImageMediaType(mediaType);
 						}
 						catch(IllegalArgumentException iae) {
 							mediaType = ImageMediaType.NON_STANDARD;
-							mediaType.setTypeName(paramType[1].trim());
-							mediaType.setIanaRegisteredName(paramType[1].trim());
-							mediaType.setExtension(paramType[1].trim());
+							mediaType.setTypeName(pt.getValue().trim());
+							mediaType.setIanaRegisteredName(pt.getValue().trim());
+							mediaType.setExtension(pt.getValue().trim());
 						}
 						finally {
 							photoFeature.setImageMediaType(mediaType);
 						}
-						
-						break;
 					}
-					
-					case VALUE:
-					{
-						if(paramType[1].compareToIgnoreCase("URI") == 0) {
+					else if(pt.getName().equals("VALUE")) {
+						if(pt.getValue().compareToIgnoreCase("URI") == 0) {
 							photoFeature.setEncodingType(EncodingType.EIGHT_BIT);
 							isBinary = false;
 						}
 						else {
-							throw new VCardBuildException("PhotoType ("+VCardType.PHOTO.getType()+") Invalid value type \""+paramType[1]+"\"");
+							throw new VCardBuildException("PhotoType ("+VCardType.PHOTO.getType()+") Invalid value type \""+pt.getValue()+"\"");
 						}
-						
-						break;
+					}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
+				
+				paramTypeList = null;
 			}
 			
 			if(isBinary) {
 				byte[] photoBytes = Base64Wrapper.decode(value);
-				photoFeature.setCompression(true);
+				photoFeature.setCompression(false);
 				photoFeature.setPhoto(photoBytes);
 			}
 			else {
@@ -1998,133 +1927,65 @@ public class VCardEngine {
 	private void parseLogoType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			LogoType logoFeature = new LogoType();
-			String[] params = paramTypes.split(";");
 			boolean isBinary = false;
 			
-			//Parse the parameter types
-			for(int i = 0; i < params.length; i++) {
-				String[] paramType = null;
-				
-				switch(getCompatibilityMode())
-				{
-					case MS_OUTLOOK:
-					case I_PHONE:
-					case MAC_ADDRESS_BOOK:
-					{
-						if(params[i].contains("=")) {
-							//For proper vcard parameter types
-							//TODO charset
-							paramType = params[i].trim().split("=");
-						}
-						else {
-							//When the parameter types are missing we try to guess what they are.
-							//We really should not as it breaks RFC rules but some apps do broken exports.
-							
-							if(params[i].equals(EncodingType.BASE64.getType())) {
-								paramType = new String[] {PhotoParameterType.ENCODING.getTypeName(), params[i]};
-							}
-							else if(params[i].equals(EncodingType.BINARY.getType())) {
-								paramType = new String[] {PhotoParameterType.ENCODING.getTypeName(), params[i]};
-							}
-							else if(params[i].equals("URI")) {
-								paramType = new String[] {PhotoParameterType.VALUE.getTypeName(), params[i]};
-							}
-							else {
-								//If we are here then we can only assume this is
-								//a IANA registered image type (or custom type). 
-								paramType = new String[] {PhotoParameterType.TYPE.getTypeName(), params[i]};
-							}
-						}
-						
-						break;
-					}
+			if(paramTypes != null) {
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
 					
-					case EVOLUTION:
-					case KDE_ADDRESS_BOOK:
-					case RFC2426:
-					default:
-					{
-						if(params[i].contains("=")) {
-							paramType = params[i].trim().split("=");
-						}
-						else {
-							/*
-							 * Type special notes: The type can include the type parameter "TYPE" to
-							 * specify the graphic image format type. The TYPE parameter values MUST
-							 * be one of the IANA registered image formats or a non-standard image format.
-							 */
-							
-							paramType = new String[] {PhotoParameterType.TYPE.getTypeName(), params[i]};
-						}
-						
-						break;
+					if(pt.getName().equals("CHARSET")) {
+						logoFeature.setCharset(pt.getValue());
 					}
-				}
-				
-				/*
-				 * ENCODING=b would look like
-				 * paramType[0] = ENCODING
-				 * paramType[1] = b
-				 */
-				
-				LogoParameterType logoParamType = LogoParameterType.valueOf(paramType[0]);
-				switch(logoParamType)
-				{
-					case ENCODING:
-					{
-						if(paramType[1].compareToIgnoreCase(EncodingType.BINARY.getType()) == 0) {
+					else if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().compareToIgnoreCase(EncodingType.BINARY.getType()) == 0) {
 							logoFeature.setEncodingType(EncodingType.BINARY);
 							isBinary = true;
 						}
-						else if(paramType[1].compareToIgnoreCase(EncodingType.BASE64.getType()) == 0) {
+						else if(pt.getValue().compareToIgnoreCase(EncodingType.BASE64.getType()) == 0) {
 							logoFeature.setEncodingType(EncodingType.BINARY);
 							isBinary = true;
 						}
 						else {
-							throw new VCardBuildException("LogoType ("+VCardType.LOGO.getType()+") Invalid encoding type \""+paramType[1]+"\"");
+							throw new VCardBuildException("LogoType ("+VCardType.LOGO.getType()+") Invalid encoding type \""+pt.getValue()+"\"");
 						}
-						
-						break;
 					}
-					
-					case TYPE:
-					{
+					else if(pt.getName().equals("TYPE")) {
 						ImageMediaType mediaType = null;
 						try {
-							mediaType = ImageMediaType.valueOf(paramType[1]);
+							mediaType = ImageMediaType.valueOf(pt.getValue());
 							logoFeature.setImageMediaType(mediaType);
 						}
 						catch(IllegalArgumentException iae) {
 							mediaType = ImageMediaType.NON_STANDARD;
-							mediaType.setTypeName(paramType[1].trim());
-							mediaType.setIanaRegisteredName(paramType[1].trim());
-							mediaType.setExtension(paramType[1].trim());
+							mediaType.setTypeName(pt.getValue().trim());
+							mediaType.setIanaRegisteredName(pt.getValue().trim());
+							mediaType.setExtension(pt.getValue().trim());
 						}
 						finally {
 							logoFeature.setImageMediaType(mediaType);
 						}
-						
-						break;
 					}
-					
-					case VALUE:
-					{
-						if(paramType[1].compareToIgnoreCase("URI") == 0) {
+					else if(pt.getName().equals("VALUE")) {
+						if(pt.getValue().compareToIgnoreCase("URI") == 0) {
 							logoFeature.setEncodingType(EncodingType.EIGHT_BIT);
 							isBinary = false;
 						}
 						else {
-							throw new VCardBuildException("LogoType ("+VCardType.LOGO.getType()+") Invalid value type \""+paramType[1]+"\"");
+							throw new VCardBuildException("LogoType ("+VCardType.LOGO.getType()+") Invalid value type \""+pt.getValue()+"\"");
 						}
-						
-						break;
+					}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
+				
+				paramTypeList = null;
 			}
 			
 			if(isBinary) {
 				byte[] logoBytes = Base64Wrapper.decode(value);
-				logoFeature.setCompression(true);
+				logoFeature.setCompression(false);
 				logoFeature.setLogo(logoBytes);
 			}
 			else {
@@ -2554,133 +2415,65 @@ public class VCardEngine {
 	private void parseSoundType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			SoundType soundFeature = new SoundType();
-			String[] params = paramTypes.split(";");
 			boolean isBinary = false;
 			
-			//Parse the parameter types
-			for(int i = 0; i < params.length; i++) {
-				String[] paramType = null;
-				
-				switch(getCompatibilityMode())
-				{
-					case MS_OUTLOOK:
-					case I_PHONE:
-					case MAC_ADDRESS_BOOK:
-					{
-						if(params[i].contains("=")) {
-							//For proper vcard parameter types
-							//TODO charset
-							paramType = params[i].trim().split("=");
-						}
-						else {
-							//When the parameter types are missing we try to guess what they are.
-							//We really should not as it breaks RFC rules but some apps do broken exports.
-							
-							if(params[i].equals(EncodingType.BASE64.getType())) {
-								paramType = new String[] {PhotoParameterType.ENCODING.getTypeName(), params[i]};
-							}
-							else if(params[i].equals(EncodingType.BINARY.getType())) {
-								paramType = new String[] {PhotoParameterType.ENCODING.getTypeName(), params[i]};
-							}
-							else if(params[i].equals("URI")) {
-								paramType = new String[] {PhotoParameterType.VALUE.getTypeName(), params[i]};
-							}
-							else {
-								//If we are here then we can only assume this is
-								//a IANA registered image type (or custom type). 
-								paramType = new String[] {PhotoParameterType.TYPE.getTypeName(), params[i]};
-							}
-						}
-						
-						break;
-					}
+			if(paramTypes != null) {
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
 					
-					case EVOLUTION:
-					case KDE_ADDRESS_BOOK:
-					case RFC2426:
-					default:
-					{
-						if(params[i].contains("=")) {
-							paramType = params[i].trim().split("=");
-						}
-						else {
-							/*
-							 * Type special notes: The type can include the type parameter "TYPE" to
-							 * specify the audio format type. The TYPE parameter values MUST be one
-							 * of the IANA registered audio formats or a non-standard audio format.
-							 */
-							
-							paramType = new String[] {PhotoParameterType.TYPE.getTypeName(), params[i]};
-						}
-						
-						break;
+					if(pt.getName().equals("CHARSET")) {
+						soundFeature.setCharset(pt.getValue());
 					}
-				}
-				
-				/*
-				 * ENCODING=b would look like
-				 * paramType[0] = ENCODING
-				 * paramType[1] = b
-				 */
-				
-				SoundParameterType soundParamType = SoundParameterType.valueOf(paramType[0]);
-				switch(soundParamType)
-				{
-					case ENCODING:
-					{
-						if(paramType[1].compareToIgnoreCase(EncodingType.BINARY.getType()) == 0) {
+					else if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().compareToIgnoreCase(EncodingType.BINARY.getType()) == 0) {
 							soundFeature.setEncodingType(EncodingType.BINARY);
 							isBinary = true;
 						}
-						else if(paramType[1].compareToIgnoreCase(EncodingType.BASE64.getType()) == 0) {
+						else if(pt.getValue().compareToIgnoreCase(EncodingType.BASE64.getType()) == 0) {
 							soundFeature.setEncodingType(EncodingType.BINARY);
 							isBinary = true;
 						}
 						else {
-							throw new VCardBuildException("SoundType ("+VCardType.SOUND.getType()+") Invalid encoding type \""+paramType[1]+"\"");
+							throw new VCardBuildException("SoundType ("+VCardType.SOUND.getType()+") Invalid encoding type \""+pt.getValue()+"\"");
 						}
-						
-						break;
 					}
-					
-					case TYPE:
-					{
+					else if(pt.getName().equals("TYPE")) {
 						AudioMediaType mediaType = null;
 						try {
-							mediaType = AudioMediaType.valueOf(paramType[1]);
+							mediaType = AudioMediaType.valueOf(pt.getValue().trim());
 							soundFeature.setAudioMediaType(mediaType);
 						}
 						catch(IllegalArgumentException iae) {
 							mediaType = AudioMediaType.NON_STANDARD;
-							mediaType.setTypeName(paramType[1].trim());
-							mediaType.setIanaRegisteredName(paramType[1].trim());
-							mediaType.setExtension(paramType[1].trim());
+							mediaType.setTypeName(pt.getValue().trim());
+							mediaType.setIanaRegisteredName(pt.getValue().trim());
+							mediaType.setExtension(pt.getValue().trim());
 						}
 						finally {
 							soundFeature.setAudioMediaType(mediaType);
 						}
-						
-						break;
 					}
-					
-					case VALUE:
-					{
-						if(paramType[1].compareToIgnoreCase("URI") == 0) {
+					else if(pt.getName().equals("VALUE")) {
+						if(pt.getValue().compareToIgnoreCase("URI") == 0) {
 							soundFeature.setEncodingType(EncodingType.EIGHT_BIT);
 							isBinary = false;
 						}
 						else {
-							throw new VCardBuildException("SoundType ("+VCardType.SOUND.getType()+") Invalid value type \""+paramType[1]+"\"");
+							throw new VCardBuildException("SoundType ("+VCardType.SOUND.getType()+") Invalid value type \""+pt.getValue()+"\"");
 						}
-						
-						break;
+					}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
+				
+				paramTypeList = null;
 			}
 			
 			if(isBinary) {
 				byte[] soundBytes = Base64Wrapper.decode(value);
-				soundFeature.setCompression(true);
+				soundFeature.setCompression(false);
 				soundFeature.setSound(soundBytes);
 			}
 			else {
@@ -2840,118 +2633,52 @@ public class VCardEngine {
 	private void parseKeyType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			KeyType keyFeature = new KeyType();
-			String[] params = paramTypes.split(";");
 			
-			//Parse the parameter types
-			for(int i = 0; i < params.length; i++) {
-				String[] paramType = null;
-				
-				switch(getCompatibilityMode())
-				{
-					case MS_OUTLOOK:
-					case I_PHONE:
-					case MAC_ADDRESS_BOOK:
-					{
-						if(params[i].contains("=")) {
-							//For proper vcard parameter types
-							//TODO charset
-							paramType = params[i].trim().split("=");
-						}
-						else {
-							//When the parameter types are missing we try to guess what they are.
-							//We really should not as it breaks RFC rules but some apps do broken exports.
-							
-							if(params[i].equals(EncodingType.BASE64.getType())) {
-								paramType = new String[] {PhotoParameterType.ENCODING.getTypeName(), params[i]};
-							}
-							else if(params[i].equals(EncodingType.BINARY.getType())) {
-								paramType = new String[] {PhotoParameterType.ENCODING.getTypeName(), params[i]};
-							}
-							else if(params[i].equals("URI")) {
-								paramType = new String[] {PhotoParameterType.VALUE.getTypeName(), params[i]};
-							}
-							else {
-								//If we are here then we can only assume this is
-								//a IANA registered image type (or custom type). 
-								paramType = new String[] {PhotoParameterType.TYPE.getTypeName(), params[i]};
-							}
-						}
-						
-						break;
-					}
+			if(paramTypes != null) {
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
 					
-					case EVOLUTION:
-					case KDE_ADDRESS_BOOK:
-					case RFC2426:
-					default:
-					{
-						if(params[i].contains("=")) {
-							paramType = params[i].trim().split("=");
-						}
-						else {
-							/*
-							 * Type special notes: The type can also include the type parameter TYPE
-							 * to specify the public key or authentication certificate format. The
-							 * parameter type should specify an IANA registered public key or
-							 * authentication certificate format. The parameter type can also
-							 * specify a non-standard format.
-							 */
-							
-							paramType = new String[] {KeyParameterType.TYPE.getTypeName(), params[i]};
-						}
-						
-						break;
+					if(pt.getName().equals("CHARSET")) {
+						keyFeature.setCharset(pt.getValue());
 					}
-				}
-				
-				/*
-				 * ENCODING=b would look like
-				 * paramType[0] = ENCODING
-				 * paramType[1] = b
-				 */
-				
-				KeyParameterType keyParamType = KeyParameterType.valueOf(paramType[0]);
-				switch(keyParamType)
-				{
-					case ENCODING:
-					{
-						if(paramType[1].compareToIgnoreCase(EncodingType.BINARY.getType()) == 0) {
+					else if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().compareToIgnoreCase(EncodingType.BINARY.getType()) == 0) {
 							keyFeature.setEncodingType(EncodingType.BINARY);
 						}
-						else if(paramType[1].compareToIgnoreCase(EncodingType.BASE64.getType()) == 0) {
+						else if(pt.getValue().compareToIgnoreCase(EncodingType.BASE64.getType()) == 0) {
 							keyFeature.setEncodingType(EncodingType.BINARY);
 						}
 						else {
-							throw new VCardBuildException("KeyType ("+VCardType.KEY.getType()+") Invalid encoding type \""+paramType[1]+"\"");
+							throw new VCardBuildException("KeyType ("+VCardType.KEY.getType()+") Invalid encoding type \""+pt.getValue()+"\"");
 						}
-						
-						break;
 					}
-					
-					case TYPE:
-					{
+					else if(pt.getName().equals("TYPE")) {
 						KeyTextType keyTextType = null;
 						try {
-							keyTextType = KeyTextType.valueOf(paramType[1]);
+							keyTextType = KeyTextType.valueOf(pt.getValue().trim());
 							keyFeature.setKeyTextType(keyTextType);
 						}
 						catch(IllegalArgumentException iae) {
 							keyTextType = KeyTextType.NON_STANDARD;
-							keyTextType.setTypeName(paramType[1].trim());
-							keyTextType.setIanaRegisteredName(paramType[1].trim());
-							keyTextType.setExtension(paramType[1].trim());
+							keyTextType.setTypeName(pt.getValue().trim());
+							keyTextType.setIanaRegisteredName(pt.getValue().trim());
+							keyTextType.setExtension(pt.getValue().trim());
 						}
 						finally {
 							keyFeature.setKeyTextType(keyTextType);
 						}
-						
-						break;
+					}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
+				
+				paramTypeList = null;
 			}
 			
 			byte[] keyBytes = Base64Wrapper.decode(value);
-			keyFeature.setCompression(true);
+			keyFeature.setCompression(false);
 			keyFeature.setKey(keyBytes);
 			
 			if(group != null) {
@@ -2975,7 +2702,7 @@ public class VCardEngine {
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseXtendedType(String group, String value, String paramTypes, String typeName, VCardImpl vcard) throws VCardBuildException {
+	private void parseXtendedType(String group, String value, String typeName, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			ExtendedType extendedFeature = new ExtendedType();
 			extendedFeature.setExtensionName(typeName);
@@ -3174,7 +2901,32 @@ public class VCardEngine {
 				parameterTypes.add(new ParameterType(paramType[0], paramType[1]));
 			}
 			else {
-				throw new VCardBuildException("Malformed parameter type, missing '=' sign: "+params[i]);
+					//When the parameter types are missing we try to guess what they are.
+					//We really should not as it breaks RFC rules but some apps do broken exports.
+					
+					if(params[i].trim().equals(EncodingType.BASE64.getType())) {
+						parameterTypes.add(new ParameterType("ENCODING", params[i].trim()));
+					}
+					else if(params[i].trim().equals(EncodingType.BINARY.getType())) {
+						parameterTypes.add(new ParameterType("ENCODING", params[i].trim()));
+					}
+					else if(params[i].trim().equals("URI")) {
+						parameterTypes.add(new ParameterType("VALUE", params[i].trim()));
+					}
+					else if(Charset.isSupported(params[i].trim())) {
+						//Hell, it could even be a charset
+						parameterTypes.add(new ParameterType("CHARSET", params[i].trim()));
+					}
+					else {
+						
+						/*
+						 * Type special notes: The type can include the type parameter "TYPE" to
+						 * specify the graphic image format type. The TYPE parameter values MUST
+						 * be one of the IANA registered image formats or a non-standard image format.
+						 */
+						
+						parameterTypes.add(new ParameterType("TYPE", params[i].trim()));
+					}
 			}
 		}
 		

@@ -2855,6 +2855,12 @@ public class VCardWriter {
 					}
 					
 					tmpSb.append(keyFeature.getTypeString());
+					
+					if(keyFeature.hasCharset()) {
+						tmpSb.append("CHARSET=");
+						tmpSb.append(keyFeature.getCharset().name());
+					}
+					
 					tmpSb.append(";");
 					
 					String foldedKeyLine = null;
@@ -3027,6 +3033,12 @@ public class VCardWriter {
 					tmpSb.append(";");
 					
 					String foldedPhotoLine = null;
+					
+					if(photoFeature.hasCharset()) {
+						tmpSb.append("CHARSET=");
+						tmpSb.append(photoFeature.getCharset().name());
+						tmpSb.append(";");
+					}
 					
 					if(photoFeature.isURI()) {
 						tmpSb.append("VALUE=URI:");
@@ -3210,6 +3222,12 @@ public class VCardWriter {
 					
 					String foldedLogoLine = null;
 					
+					if(logoFeature.hasCharset()) {
+						tmpSb.append("CHARSET=");
+						tmpSb.append(logoFeature.getCharset().name());
+						tmpSb.append(";");
+					}
+					
 					if(logoFeature.isURI()) {
 						tmpSb.append("VALUE=URI:");
 						tmpSb.append(logoFeature.getLogoURI().getPath());
@@ -3391,6 +3409,12 @@ public class VCardWriter {
 					tmpSb.append(";");
 					
 					String foldedSoundLine = null;
+					
+					if(soundFeature.hasCharset()) {
+						tmpSb.append("CHARSET=");
+						tmpSb.append(soundFeature.getCharset().name());
+						tmpSb.append(";");
+					}
 					
 					if(soundFeature.isURI()) {
 						tmpSb.append("VALUE=URI:");

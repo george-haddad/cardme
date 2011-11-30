@@ -3,6 +3,13 @@ package net.sourceforge.cardme;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.Calendar;
+
 import net.sourceforge.cardme.engine.VCardEngine;
 import net.sourceforge.cardme.io.CompatibilityMode;
 import net.sourceforge.cardme.io.FoldingScheme;
@@ -17,6 +24,7 @@ import net.sourceforge.cardme.vcard.features.AddressFeature;
 import net.sourceforge.cardme.vcard.features.CategoriesFeature;
 import net.sourceforge.cardme.vcard.features.DisplayableNameFeature;
 import net.sourceforge.cardme.vcard.features.EmailFeature;
+import net.sourceforge.cardme.vcard.features.ExtendedFeature;
 import net.sourceforge.cardme.vcard.features.FormattedNameFeature;
 import net.sourceforge.cardme.vcard.features.LabelFeature;
 import net.sourceforge.cardme.vcard.features.LogoFeature;
@@ -66,10 +74,7 @@ import net.sourceforge.cardme.vcard.types.parameters.EmailParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.LabelParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
 import net.sourceforge.cardme.vcard.types.parameters.TelephoneParameterType;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Calendar;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -426,6 +431,7 @@ public class TestVCard {
 		
 		FormattedNameFeature formattedName = new FormattedNameType();
 		formattedName.setFormattedName("John \"Johny\" Doe");
+		formattedName.setCharset(Charset.forName("UTF-8"));
 		vcard.setFormattedName(formattedName);
 		
 		NicknameFeature nicknames = new NicknameType();
@@ -505,6 +511,7 @@ public class TestVCard {
 		email.addEmailParameterType(EmailParameterType.IBMMAIL);
 		email.addEmailParameterType(EmailParameterType.INTERNET);
 		email.addEmailParameterType(EmailParameterType.PREF);
+		email.setCharset("UTF-8");
 		vcard.addEmail(email);
 		vcard.addEmail(new EmailType("billy_bob@gmail.com"));
 		
@@ -535,7 +542,10 @@ public class TestVCard {
 		sound.setSoundURI(new File("test/images/smallTux.png").toURI());
 		vcard.addSound(sound);
 		
-		vcard.addExtendedType(new ExtendedType("X-GENERATOR", "Cardme Generator"));
+		ExtendedFeature xGenerator = new ExtendedType("X-GENERATOR", "Cardme Generator");
+		xGenerator.setCharset("UTF-8");
+		
+		vcard.addExtendedType(xGenerator);
 		vcard.addExtendedType(new ExtendedType("X-LONG-STRING", "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"));
 		
 		((VCardErrorHandling)vcard).setThrowExceptions(false);
