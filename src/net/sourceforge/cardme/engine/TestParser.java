@@ -179,7 +179,7 @@ public class TestParser {
 //			
 			Iterator<EmailFeature> iter = vcard.getEmails();
 			while(iter.hasNext()) {
-				iter.next().setParameterTypeStyle(ParameterTypeStyle.PARAMETER_LIST);
+				iter.next().setParameterTypeStyle(ParameterTypeStyle.PARAMETER_VALUE_LIST);
 			}
 			
 			writer.setVCard(vcard);

@@ -1124,69 +1124,32 @@ public class VCardEngine {
 	private void parseAdrType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			AddressType addressFeature = new AddressType();
+			
 			if(paramTypes != null) {
-				if(paramTypes.indexOf(';') != -1) {
-					//Parameter List Style
-					//Example: TYPE=home;TYPE=parcel;TYPE=postal;TYPE=pref
-					//TODO charset
-					String[] list = paramTypes.split(";");
-					for(int i = 0; i < list.length; i++) {
-						String paramType = list[i];
-						
-						//Only do this to remove the TYPE prefix on certain occasions
-						String paramValue = null;
-						if(paramType.toUpperCase().contains("TYPE")) {
-							paramValue = paramType.substring(paramType.indexOf('=')+1);
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
+					
+					if(pt.getName().equals("CHARSET")) {
+						addressFeature.setCharset(pt.getValue());
+					}
+					else if(pt.getName().equals("TYPE")) {
+						if(pt.getValue().indexOf(',') != -1) {
+							String[] typeValueList = pt.getValue().split(",");
+							for(int j = 0; j < typeValueList.length; j++) {
+								setAdrParameterType(addressFeature, typeValueList[j]);
+							}
 						}
 						else {
-							paramValue = paramType;
-						}
-						
-						try {
-							AddressParameterType addrParamType = AddressParameterType.valueOf(paramValue);
-							addressFeature.addAddressParameterType(addrParamType);
-						}
-						catch(IllegalArgumentException iae) {
-							XAddressParameterType xAddrType = null;
-							if(paramValue.indexOf('=') != -1) {
-								String[] pTmp = paramValue.split("=");
-								xAddrType = new XAddressParameterType(pTmp[0], pTmp[1]);
-								pTmp[0] = null;
-								pTmp[1] = null;
-							}
-							else {
-								xAddrType = new XAddressParameterType(paramValue);
-							}
-							
-							addressFeature.addExtendedAddressParameterType(xAddrType);
+							setAdrParameterType(addressFeature, pt.getValue());
 						}
 					}
-				}
-				else {
-					String[] list = paramTypes.substring(paramTypes.indexOf('=')+1).split(",");
-					for(int i = 0; i < list.length; i++) {
-						String paramValue = list[i];
-						
-						try {
-							AddressParameterType addrParamType = AddressParameterType.valueOf(paramValue);
-							addressFeature.addAddressParameterType(addrParamType);
-						}
-						catch(IllegalArgumentException iae) {
-							XAddressParameterType xAddrType = null;
-							if(paramValue.indexOf('=') != -1) {
-								String[] pTmp = paramValue.split("=");
-								xAddrType = new XAddressParameterType(pTmp[0], pTmp[1]);
-								pTmp[0] = null;
-								pTmp[1] = null;
-							}
-							else {
-								xAddrType = new XAddressParameterType(paramValue);
-							}
-							
-							addressFeature.addExtendedAddressParameterType(xAddrType);
-						}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
+				
+				paramTypeList = null;
 			}
 			
 			String[] address = value.split(";",7);
@@ -1273,6 +1236,33 @@ public class VCardEngine {
 	}
 	
 	/**
+	 * <p>Helper method for the above.</p>
+	 *
+	 * @param adrType
+	 * @param paramValue
+	 */
+	private void setAdrParameterType(AddressType adrType, String paramValue) {
+		try {
+			AddressParameterType adrParamType = AddressParameterType.valueOf(paramValue);
+			adrType.addAddressParameterType(adrParamType);
+		}
+		catch(IllegalArgumentException iae) {
+			XAddressParameterType xAdrType = null;
+			if(paramValue.indexOf('=') != -1) {
+				String[] pTmp = paramValue.split("=");
+				xAdrType = new XAddressParameterType(pTmp[0], pTmp[1]);
+				pTmp[0] = null;
+				pTmp[1] = null;
+			}
+			else {
+				xAdrType = new XAddressParameterType(paramValue);
+			}
+			
+			adrType.addExtendedAddressParameterType(xAdrType);
+		}
+	}
+	
+	/**
 	 * <p>Parses the LABEL type.</p>
 	 *
 	 * @param group
@@ -1284,72 +1274,32 @@ public class VCardEngine {
 	private void parseLabelType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			LabelType labelFeature = new LabelType();
+			
 			if(paramTypes != null) {
-				if(paramTypes.indexOf(';') != -1) {
-					//Parameter List Style
-					//Example: TYPE=home;TYPE=parcel;TYPE=postal;TYPE=pref
-					//TODO charset
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
 					
-					String[] list = paramTypes.split(";");
-					for(int i = 0; i < list.length; i++) {
-						String paramType = list[i];
-						
-						//Only do this to remove the TYPE prefix on certain occasions
-						String paramValue = null;
-						if(paramType.toUpperCase().contains("TYPE")) {
-							paramValue = paramType.substring(paramType.indexOf('=')+1);
+					if(pt.getName().equals("CHARSET")) {
+						labelFeature.setCharset(pt.getValue());
+					}
+					else if(pt.getName().equals("TYPE")) {
+						if(pt.getValue().indexOf(',') != -1) {
+							String[] typeValueList = pt.getValue().split(",");
+							for(int j = 0; j < typeValueList.length; j++) {
+								setLabelParameterType(labelFeature, typeValueList[j]);
+							}
 						}
 						else {
-							paramValue = paramType;
-						}
-						
-						try {
-							LabelParameterType labelParamType = LabelParameterType.valueOf(paramValue);
-							labelFeature.addLabelParameterType(labelParamType);
-						}
-						catch(IllegalArgumentException iae) {
-							XLabelParameterType xLabelType = null;
-							if(paramValue.indexOf('=') != -1) {
-								String[] pTmp = paramValue.split("=");
-								xLabelType = new XLabelParameterType(pTmp[0], pTmp[1]);
-								pTmp[0] = null;
-								pTmp[1] = null;
-							}
-							else {
-								xLabelType = new XLabelParameterType(paramValue);
-							}
-							
-							labelFeature.addExtendedLabelParameterType(xLabelType);
+							setLabelParameterType(labelFeature, pt.getValue());
 						}
 					}
-				}
-				else {
-					//Parameter Value List Style
-					//Example: TYPE=home,parcel,postal,intl
-					String[] list = paramTypes.substring(paramTypes.indexOf('=')+1).split(",");
-					for(int i = 0; i < list.length; i++) {
-						String paramValue = list[i];
-						
-						try {
-							LabelParameterType labelParamType = LabelParameterType.valueOf(paramValue);
-							labelFeature.addLabelParameterType(labelParamType);
-						}
-						catch(IllegalArgumentException iae) {
-							XLabelParameterType xLabelType = null;
-							if(paramValue.indexOf('=') != -1) {
-								String[] pTmp = paramValue.split("=");
-								xLabelType = new XLabelParameterType(pTmp[0], pTmp[1]);
-								pTmp[0] = null;
-								pTmp[1] = null;
-							}
-							else {
-								xLabelType = new XLabelParameterType(paramValue);
-							}
-							
-							labelFeature.addExtendedLabelParameterType(xLabelType);
-						}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
+				
+				paramTypeList = null;
 			}
 			
 			if(VCardUtils.needsUnEscaping(value)) {
@@ -1418,6 +1368,33 @@ public class VCardEngine {
 	}
 	
 	/**
+	 * <p>Helper method for the above.</p>
+	 *
+	 * @param labelType
+	 * @param paramValue
+	 */
+	private void setLabelParameterType(LabelType labelType, String paramValue) {
+		try {
+			LabelParameterType adrParamType = LabelParameterType.valueOf(paramValue);
+			labelType.addLabelParameterType(adrParamType);
+		}
+		catch(IllegalArgumentException iae) {
+			XLabelParameterType xLabelType = null;
+			if(paramValue.indexOf('=') != -1) {
+				String[] pTmp = paramValue.split("=");
+				xLabelType = new XLabelParameterType(pTmp[0], pTmp[1]);
+				pTmp[0] = null;
+				pTmp[1] = null;
+			}
+			else {
+				xLabelType = new XLabelParameterType(paramValue);
+			}
+			
+			labelType.addExtendedLabelParameterType(xLabelType);
+		}
+	}
+	
+	/**
 	 * <p>Parses the TEL type.</p>
 	 *
 	 * @param group
@@ -1429,73 +1406,32 @@ public class VCardEngine {
 	private void parseTelType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			TelephoneType telephoneFeature = new TelephoneType();
+			
 			if(paramTypes != null) {
-				if(paramTypes.indexOf(';') != -1) {
-					//Parameter List Style
-					//Example: TYPE=cell;TYPE=home;TYPE=fax;TYPE=X-SAT-PHONE;TYPE=X-PRIORITY=1
-					//TODO charset
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (int i = 0; i < paramTypeList.size(); i++) {
+					ParameterType pt = paramTypeList.get(i);
 					
-					String[] list = paramTypes.split(";");
-					for(int i = 0; i < list.length; i++) {
-						String paramType = list[i];
-						
-						//Only do this to remove the TYPE prefix on certain occasions
-						String paramValue = null;
-						if(paramType.toUpperCase().contains("TYPE")) {
-							paramValue = paramType.substring(paramType.indexOf('=')+1);
+					if(pt.getName().equals("CHARSET")) {
+						telephoneFeature.setCharset(pt.getValue());
+					}
+					else if(pt.getName().equals("TYPE")) {
+						if(pt.getValue().indexOf(',') != -1) {
+							String[] typeValueList = pt.getValue().split(",");
+							for(int j = 0; j < typeValueList.length; j++) {
+								setTelParameterType(telephoneFeature, typeValueList[j]);
+							}
 						}
 						else {
-							paramValue = paramType;
-						}
-						
-						try {
-							TelephoneParameterType telephoneParamType = TelephoneParameterType.valueOf(paramValue);
-							telephoneFeature.addTelephoneParameterType(telephoneParamType);
-						}
-						catch(IllegalArgumentException iae) {
-							XTelephoneParameterType xTelType = null;
-							if(paramValue.indexOf('=') != -1) {
-								String[] pTmp = paramValue.split("=");
-								xTelType = new XTelephoneParameterType(pTmp[0], pTmp[1]);
-								pTmp[0] = null;
-								pTmp[1] = null;
-							}
-							else {
-								xTelType = new XTelephoneParameterType(paramValue);
-							}
-							
-							telephoneFeature.addExtendedTelephoneParameterType(xTelType);
+							setTelParameterType(telephoneFeature, pt.getValue());
 						}
 					}
-				}
-				else {
-					//Parameter Value List Style
-					//Example: TYPE=cell,home,fax,x-priority=1,x-satphone
-					
-					String[] list = paramTypes.substring(paramTypes.indexOf('=')+1).split(",");
-					for(int i = 0; i < list.length; i++) {
-						String paramValue = list[i];
-						
-						try {
-							TelephoneParameterType telephoneParamType = TelephoneParameterType.valueOf(paramValue);
-							telephoneFeature.addTelephoneParameterType(telephoneParamType);
-						}
-						catch(IllegalArgumentException iae) {
-							XTelephoneParameterType xTelType = null;
-							if(paramValue.indexOf('=') != -1) {
-								String[] pTmp = paramValue.split("=");
-								xTelType = new XTelephoneParameterType(pTmp[0], pTmp[1]);
-								pTmp[0] = null;
-								pTmp[1] = null;
-							}
-							else {
-								xTelType = new XTelephoneParameterType(paramValue);
-							}
-							
-							telephoneFeature.addExtendedTelephoneParameterType(xTelType);
-						}
+					else {
+						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
+				
+				paramTypeList = null;
 			}
 			
 			if(VCardUtils.needsUnEscaping(value)) {
@@ -1513,6 +1449,33 @@ public class VCardEngine {
 		}
 		catch(Exception ex) {
 			throw new VCardBuildException("TelephoneType ("+VCardType.TEL.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+		}
+	}
+	
+	/**
+	 * <p>Helper method for the above.</p>
+	 *
+	 * @param telType
+	 * @param paramValue
+	 */
+	private void setTelParameterType(TelephoneType telType, String paramValue) {
+		try {
+			TelephoneParameterType telParamType = TelephoneParameterType.valueOf(paramValue);
+			telType.addTelephoneParameterType(telParamType);
+		}
+		catch(IllegalArgumentException iae) {
+			XTelephoneParameterType xTelType = null;
+			if(paramValue.indexOf('=') != -1) {
+				String[] pTmp = paramValue.split("=");
+				xTelType = new XTelephoneParameterType(pTmp[0], pTmp[1]);
+				pTmp[0] = null;
+				pTmp[1] = null;
+			}
+			else {
+				xTelType = new XTelephoneParameterType(paramValue);
+			}
+			
+			telType.addExtendedTelephoneParameterType(xTelType);
 		}
 	}
 	
@@ -1539,7 +1502,7 @@ public class VCardEngine {
 						emailFeature.setCharset(pt.getValue());
 					}
 					else if(pt.getName().equals("TYPE")) {
-						if(pt.getName().indexOf(',') != -1) {
+						if(pt.getValue().indexOf(',') != -1) {
 							String[] typeValueList = pt.getValue().split(",");
 							for(int j = 0; j < typeValueList.length; j++) {
 								setEmailParameterType(emailFeature, typeValueList[j]);
@@ -1684,79 +1647,16 @@ public class VCardEngine {
 			if(paramTypes != null) {
 				//VALUE=TEXT
 				//-05:00; EST; Raleigh/North America
-				//TODO charset, check if this field supports it.
-				
 				String paramValue = paramTypes.substring(paramTypes.indexOf('=')+1);
 				if(paramValue.compareToIgnoreCase("TEXT") == 0) {
 					timeZoneFeature.setTextValue(value);
 				}
+				else {
+					setTzType(timeZoneFeature, value);
+				}
 			}
 			else {
-				if(value.matches(ISOUtils.ISO8601_TIMEZONE_BASIC_REGEX)) {
-					//-500 or -0500
-					if(value.startsWith("-")) {
-						String hour = null;
-						String minute = null;
-						if(value.length() == 4) {
-							hour = value.substring(0, 2);
-							minute = value.substring(2);
-						}
-						else if(value.length() == 5) {
-							hour = value.substring(0, 3);
-							minute = value.substring(3);
-						}
-						else {
-							throw new VCardBuildException("TimeZoneType ("+VCardType.TZ.getType()+") Timezone value is not a valid ISO-8601 text.");
-						}
-							
-						int offsetMillis = Integer.parseInt(hour) + (Integer.parseInt(minute) / 10);
-						offsetMillis = (((offsetMillis * 60) * 60) * 1000);
-						
-						TimeZone tz = TimeZone.getDefault();
-						tz.setRawOffset(offsetMillis);
-						timeZoneFeature.setTimeZone(tz);
-						
-					}
-					else {
-						//500 or 0500
-						String hour = null;
-						String minute = null;
-						if(value.length() == 3) {
-							hour = value.substring(0, 1);
-							minute = value.substring(1);
-						}
-						else if(value.length() == 4) {
-							hour = value.substring(0, 2);
-							minute = value.substring(2);
-						}
-						else {
-							throw new VCardBuildException("TimeZoneType ("+VCardType.TZ.getType()+") Timezone value is not a valid ISO-8601 text.");
-						}
-						
-						int offsetMillis = Integer.parseInt(hour) + (Integer.parseInt(minute) / 10);
-						offsetMillis = (((offsetMillis * 60) * 60) * 1000);
-						
-						TimeZone tz = TimeZone.getDefault();
-						tz.setRawOffset(offsetMillis);
-						timeZoneFeature.setTimeZone(tz);
-					}
-				}
-				else if(value.matches(ISOUtils.ISO8601_TIMEZONE_EXTENDED_REGEX)) {
-					//-5:00 or -05:00 or 5:00 or 05:00
-					String[] split = value.split(":");
-					String hour = split[0];
-					String minute = split[1];
-					
-					int offsetMillis = Integer.parseInt(hour) + (Integer.parseInt(minute) / 10);
-					offsetMillis = (((offsetMillis * 60) * 60) * 1000);
-					
-					TimeZone tz = TimeZone.getDefault();
-					tz.setRawOffset(offsetMillis);
-					timeZoneFeature.setTimeZone(tz);
-				}
-				else {
-					throw new VCardBuildException("TimeZoneType ("+VCardType.TZ.getType()+") Timezone value is not a valid ISO-8601 text.");
-				}
+				setTzType(timeZoneFeature, value);
 			}
 			
 			if(group != null) {
@@ -1767,6 +1667,81 @@ public class VCardEngine {
 		}
 		catch(Exception ex) {
 			throw new VCardBuildException("TimeZoneType ("+VCardType.TZ.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+		}
+	}
+	
+	/**
+	 * <p>Helper method for the above.</p>
+	 *
+	 * @param timeZoneType
+	 * @param value
+	 * @throws VCardBuildException
+	 */
+	private void setTzType(TimeZoneType timeZoneType, String value) throws VCardBuildException {
+		if(value.matches(ISOUtils.ISO8601_TIMEZONE_BASIC_REGEX)) {
+			//-500 or -0500
+			if(value.startsWith("-")) {
+				String hour = null;
+				String minute = null;
+				if(value.length() == 4) {
+					hour = value.substring(0, 2);
+					minute = value.substring(2);
+				}
+				else if(value.length() == 5) {
+					hour = value.substring(0, 3);
+					minute = value.substring(3);
+				}
+				else {
+					throw new VCardBuildException("TimeZoneType ("+VCardType.TZ.getType()+") Timezone value is not a valid ISO-8601 text.");
+				}
+					
+				int offsetMillis = Integer.parseInt(hour) + (Integer.parseInt(minute) / 10);
+				offsetMillis = (((offsetMillis * 60) * 60) * 1000);
+				
+				TimeZone tz = TimeZone.getDefault();
+				tz.setRawOffset(offsetMillis);
+				timeZoneType.setTimeZone(tz);
+				
+			}
+			else {
+				//500 or 0500
+				String hour = null;
+				String minute = null;
+				if(value.length() == 3) {
+					hour = value.substring(0, 1);
+					minute = value.substring(1);
+				}
+				else if(value.length() == 4) {
+					hour = value.substring(0, 2);
+					minute = value.substring(2);
+				}
+				else {
+					throw new VCardBuildException("TimeZoneType ("+VCardType.TZ.getType()+") Timezone value is not a valid ISO-8601 text.");
+				}
+				
+				int offsetMillis = Integer.parseInt(hour) + (Integer.parseInt(minute) / 10);
+				offsetMillis = (((offsetMillis * 60) * 60) * 1000);
+				
+				TimeZone tz = TimeZone.getDefault();
+				tz.setRawOffset(offsetMillis);
+				timeZoneType.setTimeZone(tz);
+			}
+		}
+		else if(value.matches(ISOUtils.ISO8601_TIMEZONE_EXTENDED_REGEX)) {
+			//-5:00 or -05:00 or 5:00 or 05:00
+			String[] split = value.split(":");
+			String hour = split[0];
+			String minute = split[1];
+			
+			int offsetMillis = Integer.parseInt(hour) + (Integer.parseInt(minute) / 10);
+			offsetMillis = (((offsetMillis * 60) * 60) * 1000);
+			
+			TimeZone tz = TimeZone.getDefault();
+			tz.setRawOffset(offsetMillis);
+			timeZoneType.setTimeZone(tz);
+		}
+		else {
+			throw new VCardBuildException("TimeZoneType ("+VCardType.TZ.getType()+") Timezone value is not a valid ISO-8601 text.");
 		}
 	}
 	
