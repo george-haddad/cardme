@@ -53,9 +53,6 @@ public enum ProblemSeverity {
 	 */
 	WARNING,
 	
-	/**
-	 * TODO
-	 */
 	HINT,
 	
 	/**
