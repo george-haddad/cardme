@@ -1923,7 +1923,12 @@ public class VCardWriter {
 				}
 				
 				tmpSb.append(addressFeature.getTypeString());
-
+				
+				if(addressFeature.hasCharset()) {
+					tmpSb.append(";CHARSET=");
+					tmpSb.append(addressFeature.getCharset().name());
+				}
+				
 				if(addressFeature.hasAddressParameterTypes()) {
 					tmpSb.append(";");
 					Iterator<AddressParameterType> paramTypes = addressFeature.getAddressParameterTypes();
@@ -2083,7 +2088,12 @@ public class VCardWriter {
 					}
 					
 					tmpSb.append(labelFeature.getTypeString());
-
+					
+					if(labelFeature.hasCharset()) {
+						tmpSb.append(";CHARSET=");
+						tmpSb.append(labelFeature.getCharset().name());
+					}
+					
 					if(labelFeature.hasLabelParameterTypes()) {
 						tmpSb.append(";");
 						Iterator<LabelParameterType> paramTypes = labelFeature.getLabelParameterTypes();
@@ -2209,7 +2219,12 @@ public class VCardWriter {
 					}
 					
 					tmpSb.append(telephoneFeature.getTypeString());
-
+					
+					if(telephoneFeature.hasCharset()) {
+						tmpSb.append(";CHARSET=");
+						tmpSb.append(telephoneFeature.getCharset().name());
+					}
+					
 					if(telephoneFeature.hasTelephoneParameterTypes()) {
 						tmpSb.append(";");
 						Iterator<TelephoneParameterType> paramTypes = telephoneFeature.getTelephoneParameterTypes();

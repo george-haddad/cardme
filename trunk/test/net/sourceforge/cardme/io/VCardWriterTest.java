@@ -351,6 +351,7 @@ public class VCardWriterTest {
 	}
 	
 	//TODO a lot more to code
+	//Also incorporate CHARSET
 	
 	private VCard getFullVCardNoErrors() throws IOException
 	{

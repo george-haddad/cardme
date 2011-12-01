@@ -473,6 +473,7 @@ public class TestVCard {
 		vcard.setTimeZone(new TimeZoneType(Calendar.getInstance().getTimeZone()));
 		
 		AddressFeature address1 = new AddressType();
+		address1.setCharset("UTF-8");
 		address1.setExtendedAddress("");
 		address1.setCountryName("U.S.A.");
 		address1.setLocality("New York");
@@ -486,6 +487,7 @@ public class TestVCard {
 		vcard.addAddress(address1);
 
 		LabelFeature labelForAddress1 = new LabelType();
+		labelForAddress1.setCharset("UTF-8");
 		labelForAddress1.addLabelParameterType(LabelParameterType.HOME);
 		labelForAddress1.addLabelParameterType(LabelParameterType.PARCEL);
 		labelForAddress1.addLabelParameterType(LabelParameterType.PREF);
@@ -493,6 +495,7 @@ public class TestVCard {
 		vcard.setLabel(labelForAddress1, address1);
 		
 		TelephoneFeature telephone = new TelephoneType();
+		telephone.setCharset("UTF-8");
 		telephone.setTelephone("+1 (212) 204-34456");
 		telephone.addTelephoneParameterType(TelephoneParameterType.CELL);
 		telephone.addTelephoneParameterType(TelephoneParameterType.HOME);
