@@ -14,6 +14,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
 
+import org.apache.commons.codec.net.QuotedPrintableCodec;
+
 import net.sourceforge.cardme.io.CompatibilityMode;
 import net.sourceforge.cardme.util.Base64Wrapper;
 import net.sourceforge.cardme.util.ISOUtils;
@@ -612,12 +614,22 @@ public class VCardEngine {
 						formattedNameFeature.setCharset(pt.getValue());
 						value = new String(value.getBytes(), formattedNameFeature.getCharset());
 					}
+					else if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+							formattedNameFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+						}
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
 				
 				paramTypeList = null;
+			}
+			
+			if(formattedNameFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
+				QuotedPrintableCodec q = new QuotedPrintableCodec();
+				value = q.decode(value);
 			}
 			
 			if(VCardUtils.needsUnEscaping(value)) {
@@ -649,22 +661,7 @@ public class VCardEngine {
 	 */
 	private void parseNType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
-			NameType nameFeature = null;
-			
-			switch(compatMode)
-			{
-				case MS_OUTLOOK:
-				{
-					nameFeature = parseNTypeOutlook(value);
-					break;
-				}
-
-				default:
-				{
-					nameFeature = parseNTypeRFC(value);
-					break;
-				}
-			}
+			NameType nameFeature = new NameType();
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
@@ -674,12 +671,37 @@ public class VCardEngine {
 					if(pt.getName().equals("CHARSET")) {
 						nameFeature.setCharset(pt.getValue());
 					}
+					else if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+							nameFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+						}
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
 				
 				paramTypeList = null;
+			}
+			
+			if(nameFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
+				QuotedPrintableCodec q = new QuotedPrintableCodec();
+				value = q.decode(value);
+			}
+			
+			switch(compatMode)
+			{
+				case MS_OUTLOOK:
+				{
+					parseNTypeOutlook(nameFeature, value);
+					break;
+				}
+
+				default:
+				{
+					parseNTypeRFC(nameFeature, value);
+					break;
+				}
 			}
 			
 			if(group != null) {
@@ -693,9 +715,8 @@ public class VCardEngine {
 		}
 	}
 	
-	private NameType parseNTypeOutlook(String value)
+	private NameType parseNTypeOutlook(NameType nameFeature, String value)
 	{
-		NameType nameFeature = new NameType();
 		String[] names = VCardUtils.parseStringWithEscappedDelimiter(value, ';');
 		
 		for(int i=0; i < names.length; i++) {
@@ -775,9 +796,8 @@ public class VCardEngine {
 		return nameFeature;
 	}
 	
-	private NameType parseNTypeRFC(String value)
+	private NameType parseNTypeRFC(NameType nameFeature, String value)
 	{
-		NameType nameFeature = new NameType();
 		String[] names = VCardUtils.parseStringWithEscappedDelimiter(value, ';');
 		
 		if(names[0] != null) {
@@ -858,12 +878,22 @@ public class VCardEngine {
 					if(pt.getName().equals("CHARSET")) {
 						nicknameFeature.setCharset(pt.getValue());
 					}
+					else if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+							nicknameFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+						}
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
 				
 				paramTypeList = null;
+			}
+			
+			if(nicknameFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
+				QuotedPrintableCodec q = new QuotedPrintableCodec();
+				value = q.decode(value);
 			}
 			
 			String[] nicknames = value.split(",");
@@ -1133,6 +1163,11 @@ public class VCardEngine {
 					if(pt.getName().equals("CHARSET")) {
 						addressFeature.setCharset(pt.getValue());
 					}
+					else if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+							addressFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+						}
+					}
 					else if(pt.getName().equals("TYPE")) {
 						if(pt.getValue().indexOf(',') != -1) {
 							String[] typeValueList = pt.getValue().split(",");
@@ -1150,6 +1185,11 @@ public class VCardEngine {
 				}
 				
 				paramTypeList = null;
+			}
+			
+			if(addressFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
+				QuotedPrintableCodec q = new QuotedPrintableCodec();
+				value = q.decode(value);
 			}
 			
 			String[] address = value.split(";",7);
@@ -1283,6 +1323,11 @@ public class VCardEngine {
 					if(pt.getName().equals("CHARSET")) {
 						labelFeature.setCharset(pt.getValue());
 					}
+					else if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+							labelFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+						}
+					}
 					else if(pt.getName().equals("TYPE")) {
 						if(pt.getValue().indexOf(',') != -1) {
 							String[] typeValueList = pt.getValue().split(",");
@@ -1300,6 +1345,11 @@ public class VCardEngine {
 				}
 				
 				paramTypeList = null;
+			}
+			
+			if(labelFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
+				QuotedPrintableCodec q = new QuotedPrintableCodec();
+				value = q.decode(value);
 			}
 			
 			if(VCardUtils.needsUnEscaping(value)) {
@@ -1415,6 +1465,11 @@ public class VCardEngine {
 					if(pt.getName().equals("CHARSET")) {
 						telephoneFeature.setCharset(pt.getValue());
 					}
+					else if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+							telephoneFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+						}
+					}
 					else if(pt.getName().equals("TYPE")) {
 						if(pt.getValue().indexOf(',') != -1) {
 							String[] typeValueList = pt.getValue().split(",");
@@ -1432,6 +1487,11 @@ public class VCardEngine {
 				}
 				
 				paramTypeList = null;
+			}
+			
+			if(telephoneFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
+				QuotedPrintableCodec q = new QuotedPrintableCodec();
+				value = q.decode(value);
 			}
 			
 			if(VCardUtils.needsUnEscaping(value)) {
@@ -1521,9 +1581,13 @@ public class VCardEngine {
 							emailFeature.setEncodingType(EncodingType.BINARY);
 							isBinary = true;
 						}
+						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+							emailFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+						}
 						else {
 							throw new VCardBuildException("EmailType ("+VCardType.EMAIL.getType()+") Invalid encoding type \""+pt.getValue()+"\"");
 						}
+						
 					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
@@ -1544,6 +1608,11 @@ public class VCardEngine {
 				}
 			}
 			else {
+				if(emailFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
+					QuotedPrintableCodec q = new QuotedPrintableCodec();
+					value = q.decode(value);
+				}
+				
 				emailFeature.setEmail(value);
 			}
 			
@@ -1606,12 +1675,22 @@ public class VCardEngine {
 					if(pt.getName().equals("CHARSET")) {
 						mailerFeature.setCharset(pt.getValue());
 					}
+					else if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+							mailerFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+						}
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
 				
 				paramTypeList = null;
+			}
+			
+			if(mailerFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
+				QuotedPrintableCodec q = new QuotedPrintableCodec();
+				value = q.decode(value);
 			}
 			
 			if(VCardUtils.needsUnEscaping(value)) {
@@ -1817,12 +1896,22 @@ public class VCardEngine {
 					if(pt.getName().equals("CHARSET")) {
 						titleFeature.setCharset(pt.getValue());
 					}
+					else if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+							titleFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+						}
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
 				
 				paramTypeList = null;
+			}
+			
+			if(titleFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
+				QuotedPrintableCodec q = new QuotedPrintableCodec();
+				value = q.decode(value);
 			}
 			
 			if(VCardUtils.needsUnEscaping(value)) {
@@ -1864,12 +1953,22 @@ public class VCardEngine {
 					if(pt.getName().equals("CHARSET")) {
 						roleFeature.setCharset(pt.getValue());
 					}
+					else if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+							roleFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+						}
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
 				
 				paramTypeList = null;
+			}
+			
+			if(roleFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
+				QuotedPrintableCodec q = new QuotedPrintableCodec();
+				value = q.decode(value);
 			}
 			
 			if(VCardUtils.needsUnEscaping(value)) {
@@ -2000,12 +2099,22 @@ public class VCardEngine {
 					if(pt.getName().equals("CHARSET")) {
 						organizationFeature.setCharset(pt.getValue());
 					}
+					else if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+							organizationFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+						}
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
 				
 				paramTypeList = null;
+			}
+			
+			if(organizationFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
+				QuotedPrintableCodec q = new QuotedPrintableCodec();
+				value = q.decode(value);
 			}
 			
 			/*
@@ -2060,12 +2169,22 @@ public class VCardEngine {
 					if(pt.getName().equals("CHARSET")) {
 						categoriesFeature.setCharset(pt.getValue());
 					}
+					else if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+							categoriesFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+						}
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
 				
 				paramTypeList = null;
+			}
+			
+			if(categoriesFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
+				QuotedPrintableCodec q = new QuotedPrintableCodec();
+				value = q.decode(value);
 			}
 			
 			String[] categories = null;
@@ -2134,12 +2253,22 @@ public class VCardEngine {
 					if(pt.getName().equals("CHARSET")) {
 						noteFeature.setCharset(pt.getValue());
 					}
+					else if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+							noteFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+						}
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
 				
 				paramTypeList = null;
+			}
+			
+			if(noteFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
+				QuotedPrintableCodec q = new QuotedPrintableCodec();
+				value = q.decode(value);
 			}
 			
 			if(VCardUtils.needsUnEscaping(value)) {
@@ -2172,7 +2301,6 @@ public class VCardEngine {
 	private void parseProdidType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			ProductIdType productIdFeature = new ProductIdType();
-			productIdFeature.setProductId(value);
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
@@ -2182,12 +2310,29 @@ public class VCardEngine {
 					if(pt.getName().equals("CHARSET")) {
 						productIdFeature.setCharset(pt.getValue());
 					}
+					else if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+							productIdFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+						}
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
 				
 				paramTypeList = null;
+			}
+			
+			if(productIdFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
+				QuotedPrintableCodec q = new QuotedPrintableCodec();
+				value = q.decode(value);
+			}
+			
+			if(VCardUtils.needsUnEscaping(value)) {
+				productIdFeature.setProductId(VCardUtils.unescapeString(value));
+			}
+			else {
+				productIdFeature.setProductId(value);
 			}
 			
 			if(group != null) {
@@ -2349,7 +2494,6 @@ public class VCardEngine {
 	private void parseSortStringType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			SortStringType sortStringFeature = new SortStringType();
-			sortStringFeature.setSortString(value);
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
@@ -2359,12 +2503,29 @@ public class VCardEngine {
 					if(pt.getName().equals("CHARSET")) {
 						sortStringFeature.setCharset(pt.getValue());
 					}
+					else if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+							sortStringFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+						}
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
 				
 				paramTypeList = null;
+			}
+			
+			if(sortStringFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
+				QuotedPrintableCodec q = new QuotedPrintableCodec();
+				value = q.decode(value);
+			}
+			
+			if(VCardUtils.needsUnEscaping(value)) {
+				sortStringFeature.setSortString(VCardUtils.unescapeString(value));
+			}
+			else {
+				sortStringFeature.setSortString(value);
 			}
 			
 			if(group != null) {
@@ -2479,7 +2640,6 @@ public class VCardEngine {
 	private void parseUidType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			UIDType uidFeature = new UIDType();
-			uidFeature.setUID(value);
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
@@ -2489,12 +2649,29 @@ public class VCardEngine {
 					if(pt.getName().equals("CHARSET")) {
 						uidFeature.setCharset(pt.getValue());
 					}
+					else if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+							uidFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+						}
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
 				
 				paramTypeList = null;
+			}
+			
+			if(uidFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
+				QuotedPrintableCodec q = new QuotedPrintableCodec();
+				value = q.decode(value);
+			}
+			
+			if(VCardUtils.needsUnEscaping(value)) {
+				uidFeature.setUID(VCardUtils.unescapeString(value));
+			}
+			else {
+				uidFeature.setUID(value);
 			}
 			
 			if(group != null) {
@@ -2529,12 +2706,22 @@ public class VCardEngine {
 					if(pt.getName().equals("CHARSET")) {
 						urlFeature.setCharset(pt.getValue());
 					}
+					else if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+							urlFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+						}
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
 				
 				paramTypeList = null;
+			}
+			
+			if(urlFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
+				QuotedPrintableCodec q = new QuotedPrintableCodec();
+				value = q.decode(value);
 			}
 			
 			if(VCardUtils.needsUnEscaping(value)) {
@@ -2567,7 +2754,6 @@ public class VCardEngine {
 	private void parseClassType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			ClassType classFeature = new ClassType();
-			classFeature.setSecurityClass(value);
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
@@ -2577,12 +2763,29 @@ public class VCardEngine {
 					if(pt.getName().equals("CHARSET")) {
 						classFeature.setCharset(pt.getValue());
 					}
+					else if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+							classFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+						}
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
 				
 				paramTypeList = null;
+			}
+			
+			if(classFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
+				QuotedPrintableCodec q = new QuotedPrintableCodec();
+				value = q.decode(value);
+			}
+			
+			if(VCardUtils.needsUnEscaping(value)) {
+				classFeature.setSecurityClass(VCardUtils.unescapeString(value));
+			}
+			else {
+				classFeature.setSecurityClass(value);
 			}
 			
 			if(group != null) {
@@ -2680,8 +2883,6 @@ public class VCardEngine {
 	private void parseXtendedType(String group, String value, String typeName, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			ExtendedType extendedFeature = new ExtendedType();
-			extendedFeature.setExtensionName(typeName);
-			extendedFeature.setExtensionData(value);
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
@@ -2691,12 +2892,31 @@ public class VCardEngine {
 					if(pt.getName().equals("CHARSET")) {
 						extendedFeature.setCharset(pt.getValue());
 					}
+					else if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+							extendedFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+						}
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
 				
 				paramTypeList = null;
+			}
+			
+			if(extendedFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
+				QuotedPrintableCodec q = new QuotedPrintableCodec();
+				value = q.decode(value);
+			}
+			
+			if(VCardUtils.needsUnEscaping(value)) {
+				extendedFeature.setExtensionName(typeName);
+				extendedFeature.setExtensionData(VCardUtils.unescapeString(value));
+			}
+			else {
+				extendedFeature.setExtensionName(typeName);
+				extendedFeature.setExtensionData(value);
 			}
 			
 			if(group != null) {
@@ -2722,7 +2942,6 @@ public class VCardEngine {
 	private void parseDisplayableNameType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			DisplayableNameType displayableNameFeature = new DisplayableNameType();
-			displayableNameFeature.setName(value);
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
@@ -2732,12 +2951,29 @@ public class VCardEngine {
 					if(pt.getName().equals("CHARSET")) {
 						displayableNameFeature.setCharset(pt.getValue());
 					}
+					else if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+							displayableNameFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+						}
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
 				
 				paramTypeList = null;
+			}
+			
+			if(displayableNameFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
+				QuotedPrintableCodec q = new QuotedPrintableCodec();
+				value = q.decode(value);
+			}
+			
+			if(VCardUtils.needsUnEscaping(value)) {
+				displayableNameFeature.setName(VCardUtils.unescapeString(value));
+			}
+			else {
+				displayableNameFeature.setName(value);
 			}
 			
 			if(group != null) {
@@ -2763,7 +2999,7 @@ public class VCardEngine {
 	private void parseProfileType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			ProfileType profileFeature = new ProfileType();
-			profileFeature.setProfile(value);
+			
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
@@ -2773,12 +3009,29 @@ public class VCardEngine {
 					if(pt.getName().equals("CHARSET")) {
 						profileFeature.setCharset(pt.getValue());
 					}
+					else if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+							profileFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+						}
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
 				
 				paramTypeList = null;
+			}
+			
+			if(profileFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
+				QuotedPrintableCodec q = new QuotedPrintableCodec();
+				value = q.decode(value);
+			}
+			
+			if(VCardUtils.needsUnEscaping(value)) {
+				profileFeature.setProfile(VCardUtils.unescapeString(value));
+			}
+			else {
+				profileFeature.setProfile(value);
 			}
 			
 			if(group != null) {
@@ -2804,7 +3057,6 @@ public class VCardEngine {
 	private void parseSourceType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
 		try {
 			SourceType sourceFeature = new SourceType();
-			sourceFeature.setSource(value);
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
@@ -2814,12 +3066,29 @@ public class VCardEngine {
 					if(pt.getName().equals("CHARSET")) {
 						sourceFeature.setCharset(pt.getValue());
 					}
+					else if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+							sourceFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+						}
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
 				
 				paramTypeList = null;
+			}
+			
+			if(sourceFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
+				QuotedPrintableCodec q = new QuotedPrintableCodec();
+				value = q.decode(value);
+			}
+			
+			if(VCardUtils.needsUnEscaping(value)) {
+				sourceFeature.setSource(VCardUtils.unescapeString(value));
+			}
+			else {
+				sourceFeature.setSource(value);
 			}
 			
 			if(group != null) {
@@ -2883,6 +3152,9 @@ public class VCardEngine {
 						parameterTypes.add(new ParameterType("ENCODING", params[i].trim()));
 					}
 					else if(params[i].trim().equals(EncodingType.BINARY.getType())) {
+						parameterTypes.add(new ParameterType("ENCODING", params[i].trim()));
+					}
+					else if(params[i].trim().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
 						parameterTypes.add(new ParameterType("ENCODING", params[i].trim()));
 					}
 					else if(params[i].trim().equals("URI")) {

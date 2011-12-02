@@ -3,6 +3,7 @@ package net.sourceforge.cardme.vcard.features;
 import java.nio.charset.Charset;
 
 import net.sourceforge.cardme.db.Persistable;
+import net.sourceforge.cardme.vcard.EncodingType;
 import net.sourceforge.cardme.vcard.types.Type;
 import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
 
@@ -113,6 +114,22 @@ public interface TypeTools extends Persistable {
 	 * @return boolean
 	 */
 	public boolean hasCharset();
+	
+	/**
+	 * <p>Sets the encoding type.</p>
+	 *
+	 * @see EncodingType
+	 * @param encodingType
+	 */
+	public void setEncodingType(EncodingType encodingType);
+	
+	/**
+	 * <p>Returns the encoding type.</p>
+	 * 
+	 * @see EncodingType
+	 * @return {@link EncodingType}
+	 */
+	public EncodingType getEncodingType();
 	
 	/**
 	 * @see Type#equals(Object)
