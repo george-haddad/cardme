@@ -3,6 +3,7 @@ package net.sourceforge.cardme;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,7 +29,6 @@ import net.sourceforge.cardme.vcard.features.ExtendedFeature;
 import net.sourceforge.cardme.vcard.features.FormattedNameFeature;
 import net.sourceforge.cardme.vcard.features.LabelFeature;
 import net.sourceforge.cardme.vcard.features.LogoFeature;
-import net.sourceforge.cardme.vcard.features.NameFeature;
 import net.sourceforge.cardme.vcard.features.NicknameFeature;
 import net.sourceforge.cardme.vcard.features.NoteFeature;
 import net.sourceforge.cardme.vcard.features.OrganizationFeature;
@@ -404,6 +404,28 @@ public class TestVCard {
 		//assertEquals(vcardFull.hashCode(), _vcard.hashCode());
 	}
 	
+	@Test
+	public void testQuotedPrintableName() throws Exception {
+		VCardWriter vcardWriter = new VCardWriter();
+		vcardWriter.setOutputVersion(VCardVersion.V3_0);
+		vcardWriter.setFoldingScheme(FoldingScheme.MIME_DIR);
+		vcardWriter.setCompatibilityMode(CompatibilityMode.RFC2426);
+		vcardWriter.setVCard(vcardFull);
+		
+		String vcardString = vcardWriter.buildVCardString();
+		
+		assertNotNull(vcardString);
+		assertFalse(vcardWriter.hasErrors());
+		
+		assertTrue((vcardString.indexOf("=C3=96") != -1));
+		
+		VCardEngine vcardEngine = new VCardEngine();
+		vcardEngine.setCompatibilityMode(CompatibilityMode.RFC2426);
+		VCard _vcard = vcardEngine.parse(vcardString);
+		
+		assertEquals("DÖe", _vcard.getName().getFamilyName());
+	}
+	
 	private static VCard getFullVCardNoErrors() throws IOException
 	{
 		VCard vcard = new VCardImpl();
@@ -421,8 +443,9 @@ public class TestVCard {
 		source.setSource("Whatever");
 		vcard.setSource(source);
 		
-		NameFeature name = new NameType();
-		name.setFamilyName("Doe");
+		NameType name = new NameType();
+		name.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+		name.setFamilyName("D=C3=96e");
 		name.setGivenName("John");
 		name.addHonorificPrefix("Mr.");
 		name.addHonorificSuffix("I");

@@ -1,5 +1,8 @@
 package net.sourceforge.cardme.io;
 
+import java.nio.charset.Charset;
+import java.util.Iterator;
+
 import net.sourceforge.cardme.util.Base64Wrapper;
 import net.sourceforge.cardme.util.ISOFormat;
 import net.sourceforge.cardme.util.ISOUtils;
@@ -56,9 +59,6 @@ import net.sourceforge.cardme.vcard.types.parameters.XAddressParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XEmailParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XLabelParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XTelephoneParameterType;
-
-import java.nio.charset.Charset;
-import java.util.Iterator;
 
 /**
  * Copyright 2011 George El-Haddad. All rights reserved.
@@ -1044,6 +1044,15 @@ public class VCardWriter {
 					tmpSb.append(nameFeature.getCharset().name());
 				}
 				
+				switch(nameFeature.getEncodingType())
+				{
+					case QUOTED_PRINTABLE:
+					{
+						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+						break;
+					}
+				}
+				
 				tmpSb.append(":");
 				
 				if(nameFeature.hasFamilyName()) {
@@ -1178,6 +1187,15 @@ public class VCardWriter {
 					tmpSb.append(formattedNameFeature.getCharset().name());
 				}
 				
+				switch(formattedNameFeature.getEncodingType())
+				{
+					case QUOTED_PRINTABLE:
+					{
+						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+						break;
+					}
+				}
+				
 				tmpSb.append(":");
 				
 				if(formattedNameFeature.hasCharset()) {
@@ -1228,6 +1246,15 @@ public class VCardWriter {
 				if(displayableNameFeature.hasCharset()) {
 					tmpSb.append(";CHARSET=");
 					tmpSb.append(displayableNameFeature.getCharset().name());
+				}
+				
+				switch(displayableNameFeature.getEncodingType())
+				{
+					case QUOTED_PRINTABLE:
+					{
+						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+						break;
+					}
 				}
 				
 				tmpSb.append(":");
@@ -1282,6 +1309,15 @@ public class VCardWriter {
 					tmpSb.append(profileFeature.getCharset().name());
 				}
 				
+				switch(profileFeature.getEncodingType())
+				{
+					case QUOTED_PRINTABLE:
+					{
+						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+						break;
+					}
+				}
+				
 				tmpSb.append(":");
 				
 				if(profileFeature.hasCharset()) {
@@ -1332,6 +1368,15 @@ public class VCardWriter {
 				if(sourceFeature.hasCharset()) {
 					tmpSb.append(";CHARSET=");
 					tmpSb.append(sourceFeature.getCharset().name());
+				}
+				
+				switch(sourceFeature.getEncodingType())
+				{
+					case QUOTED_PRINTABLE:
+					{
+						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+						break;
+					}
 				}
 				
 				tmpSb.append(":");
@@ -1387,6 +1432,15 @@ public class VCardWriter {
 						tmpSb.append(titleFeature.getCharset().name());
 					}
 					
+					switch(titleFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
+					}
+					
 					tmpSb.append(":");
 					
 					if(titleFeature.hasCharset()) {
@@ -1439,6 +1493,15 @@ public class VCardWriter {
 					if(roleFeature.hasCharset()) {
 						tmpSb.append(";CHARSET=");
 						tmpSb.append(roleFeature.getCharset().name());
+					}
+					
+					switch(roleFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
 					}
 					
 					tmpSb.append(":");
@@ -1544,6 +1607,15 @@ public class VCardWriter {
 						tmpSb.append(organizationFeature.getCharset().name());
 					}
 					
+					switch(organizationFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
+					}
+					
 					tmpSb.append(":");
 					
 					Iterator<String> orgs = organizationFeature.getOrganizations();
@@ -1603,6 +1675,15 @@ public class VCardWriter {
 					if(mailerFeature.hasCharset()) {
 						tmpSb.append(";CHARSET=");
 						tmpSb.append(mailerFeature.getCharset().name());
+					}
+					
+					switch(mailerFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
 					}
 					
 					tmpSb.append(":");
@@ -1707,6 +1788,15 @@ public class VCardWriter {
 						tmpSb.append(urlFeature.getCharset().name());
 					}
 					
+					switch(urlFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
+					}
+					
 					tmpSb.append(":");
 					
 					String url = urlFeature.getURL().toString();
@@ -1774,6 +1864,15 @@ public class VCardWriter {
 						tmpSb.append(revisionFeature.getCharset().name());
 					}
 					
+					switch(revisionFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
+					}
+					
 					tmpSb.append(":");
 					
 					if(revisionFeature.hasCharset()) {
@@ -1825,6 +1924,15 @@ public class VCardWriter {
 					if(uidFeature.hasCharset()) {
 						tmpSb.append(";CHARSET=");
 						tmpSb.append(uidFeature.getCharset().name());
+					}
+					
+					switch(uidFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
 					}
 					
 					tmpSb.append(":");
@@ -1927,6 +2035,15 @@ public class VCardWriter {
 				if(addressFeature.hasCharset()) {
 					tmpSb.append(";CHARSET=");
 					tmpSb.append(addressFeature.getCharset().name());
+				}
+				
+				switch(addressFeature.getEncodingType())
+				{
+					case QUOTED_PRINTABLE:
+					{
+						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+						break;
+					}
 				}
 				
 				if(addressFeature.hasAddressParameterTypes()) {
@@ -2094,6 +2211,15 @@ public class VCardWriter {
 						tmpSb.append(labelFeature.getCharset().name());
 					}
 					
+					switch(labelFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
+					}
+					
 					if(labelFeature.hasLabelParameterTypes()) {
 						tmpSb.append(";");
 						Iterator<LabelParameterType> paramTypes = labelFeature.getLabelParameterTypes();
@@ -2223,6 +2349,15 @@ public class VCardWriter {
 					if(telephoneFeature.hasCharset()) {
 						tmpSb.append(";CHARSET=");
 						tmpSb.append(telephoneFeature.getCharset().name());
+					}
+					
+					switch(telephoneFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
 					}
 					
 					if(telephoneFeature.hasTelephoneParameterTypes()) {
@@ -2357,6 +2492,15 @@ public class VCardWriter {
 					if(emailFeature.hasGroup()) {
 						tmpSb.append(emailFeature.getGroup());
 						tmpSb.append(".");
+					}
+					
+					switch(emailFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
 					}
 					
 					tmpSb.append(emailFeature.getTypeString());
@@ -2531,6 +2675,15 @@ public class VCardWriter {
 						tmpSb.append(noteFeature.getCharset().name());
 					}
 					
+					switch(noteFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
+					}
+					
 					tmpSb.append(":");
 					
 					if(noteFeature.hasCharset()) {
@@ -2582,6 +2735,15 @@ public class VCardWriter {
 					if(nicknameFeature.hasCharset()) {
 						tmpSb.append(";CHARSET=");
 						tmpSb.append(nicknameFeature.getCharset().name());
+					}
+					
+					switch(nicknameFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
 					}
 					
 					tmpSb.append(":");
@@ -2642,6 +2804,15 @@ public class VCardWriter {
 					if(categoriesFeature.hasCharset()) {
 						tmpSb.append(";CHARSET=");
 						tmpSb.append(categoriesFeature.getCharset().name());
+					}
+					
+					switch(categoriesFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
 					}
 					
 					tmpSb.append(":");
@@ -2717,6 +2888,15 @@ public class VCardWriter {
 						tmpSb.append(classFeature.getCharset().name());
 					}
 					
+					switch(classFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
+					}
+					
 					tmpSb.append(":");
 					
 					if(classFeature.hasCharset()) {
@@ -2770,6 +2950,15 @@ public class VCardWriter {
 						tmpSb.append(productIdFeature.getCharset().name());
 					}
 					
+					switch(productIdFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
+					}
+					
 					tmpSb.append(":");
 					
 					if(productIdFeature.hasCharset()) {
@@ -2821,6 +3010,15 @@ public class VCardWriter {
 					if(sortStringFeature.hasCharset()) {
 						tmpSb.append(";CHARSET=");
 						tmpSb.append(sortStringFeature.getCharset().name());
+					}
+					
+					switch(sortStringFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
 					}
 					
 					tmpSb.append(":");
@@ -3703,6 +3901,15 @@ public class VCardWriter {
 					if(extendedFeature.hasCharset()) {
 						tmpSb.append(";CHARSET=");
 						tmpSb.append(extendedFeature.getCharset().name());
+					}
+					
+					switch(extendedFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
 					}
 					
 					tmpSb.append(":");
