@@ -210,16 +210,12 @@ public abstract class Type implements Persistable, Cloneable, Serializable {
 	}
 	
 	/**
-	 * <p>Returns true if the charset is something other
-	 * than the default charset. The default charset will
-	 * be used anyways by default, so we are interested if
-	 * there is something different.</p>
+	 * <p>Returns true if the charset is not null.</p>
 	 *
 	 * @return boolean
 	 */
 	public boolean hasCharset()
 	{
-		//charset.compareTo(Charset.defaultCharset()) != 0;
 		return charset != null;
 	}
 	
