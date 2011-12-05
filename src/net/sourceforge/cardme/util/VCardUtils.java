@@ -406,6 +406,17 @@ public final class VCardUtils {
 		return GEO_NUM_FORMATTER;
 	}
 	
+	
+	/**
+	 * <p>Parses the specified {@link String} <code>str</code> with the given
+	 * delimiter <code>delim</code> and returns an array of {@link String}
+	 * delimited by the said delimiter. Note that this method takes into
+	 * account characters escaped by a backslash.</p>
+	 *
+	 * @param str
+	 * @param delim
+	 * @return {@link String}[]
+	 */
 	public static String[] parseStringWithEscappedDelimiter(String str, char delim)
 	{
 		int i = 0;
