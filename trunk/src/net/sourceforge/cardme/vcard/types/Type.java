@@ -220,6 +220,16 @@ public abstract class Type implements Persistable, Cloneable, Serializable {
 	}
 	
 	/**
+	 * <p>Returns true if the encoding type is QUOTED-PRINTABLE.</p>
+	 *
+	 * @return boolean
+	 */
+	public boolean isQuotedPrintable()
+	{
+		return encodingType.equals(EncodingType.QUOTED_PRINTABLE);
+	}
+	
+	/**
 	 * {@inheritDoc}
 	 */
 	public MarkType getMarkType()

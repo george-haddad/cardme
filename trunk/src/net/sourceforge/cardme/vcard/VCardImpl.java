@@ -1,5 +1,12 @@
 package net.sourceforge.cardme.vcard;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import net.sourceforge.cardme.db.MarkType;
 import net.sourceforge.cardme.db.Persistable;
 import net.sourceforge.cardme.util.Util;
@@ -44,13 +51,6 @@ import net.sourceforge.cardme.vcard.features.VersionFeature;
 import net.sourceforge.cardme.vcard.types.BeginType;
 import net.sourceforge.cardme.vcard.types.EndType;
 import net.sourceforge.cardme.vcard.types.VersionType;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Copyright 2011 George El-Haddad. All rights reserved.
@@ -1780,7 +1780,13 @@ public class VCardImpl implements VCard, VCardErrorHandling, Persistable, Serial
 		}
 		
 		if(name != null) {
-			sb.append(name.toString());
+			if(name.isQuotedPrintable()) {
+				sb.append(name.toString());
+			}
+			else {
+				sb.append(name.toString());
+			}
+			
 			sb.append(",");
 		}
 		
