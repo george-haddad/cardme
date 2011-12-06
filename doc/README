@@ -2,7 +2,52 @@ Card Me Readme file
 -------------------
 
 Card Me Home Page: http://dma.pixel-act.com
-Project Home Page: http://sourceforge.net/projects/cardme
+Project Home Page: https://sourceforge.net/projects/cardme
+Ohloh Home Page: https://www.ohloh.net/p/cardme
+
+Do not forget to go to the project or Ohloh home page and recommend cardme to others and even write a review.
+We want to be the best VCard library on the net, so if there is a bug or a new feature you want then let us know about it.
+
+-------------------
+
+Card Me Version 0.3
+
+*Special Notice*
+From version 0.3 and up the package name of cardme has changed! It is now net.sourceforge.cardme.* 
+So make sure you refractor your imports.
+
+FEATURE[3436545]
+The N type should allow for all empty fields. Cardme will now not throw an exception if all fields are left empty.
+
+BUG[3259762]
+Cardme now correctly parses and decodes strings with QUOTED-PRINTABLE encoding.
+As well as encodes strings to QUOTED-PRINTABLE encoding for writing. 
+
+FEATURE[3434718]
+Refactor SVN to allow for release tagging by rimovm.
+
+FEATURE[3434727]
+Create Ticket Request for Repository Access for Cardme.
+
+FEATURE[3435526]
+Rename Cardme package to net.sourceforge.cardme.
+
+FEATURE[3436823]
+Support reading/writing the CHARSET type.
+
+BUG[3452269]
+Some strings not escaped and some too much.
+
+Known Bugs:
+BUG[3452302]
+https://sourceforge.net/tracker/?group_id=99914&atid=625723
+
+George El-Haddad
+Project Lead
+
+Michael Rimov
+Maven Integration Contributor
+
 
 Card Me Version 0.2.9
 
@@ -19,7 +64,6 @@ Handle parsing of special character strings in the N type.
 FEATURE[3425193]
 Added iOS exporter compatibility mode
 
- 
 PATCH[3401266]
 Maven POM build automation file contributed by rimovm
 
