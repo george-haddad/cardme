@@ -359,6 +359,10 @@ public class TestVCard {
 	
 	@Test
 	public void testHashcode() throws Exception {
+		
+		//FIXME for some reason this test fails
+		//3 in 30 times, or 1 in 10 times.
+		
 		VCard vcardCopy = getFullVCardNoErrors();
 		
 		int h1 = vcardFull.hashCode();
@@ -416,8 +420,7 @@ public class TestVCard {
 		
 		assertNotNull(vcardString);
 		assertFalse(vcardWriter.hasErrors());
-		
-		assertTrue((vcardString.indexOf("=C3=96") != -1));
+		assertTrue((vcardString.indexOf("D=C3=96e") != -1));
 		
 		VCardEngine vcardEngine = new VCardEngine();
 		vcardEngine.setCompatibilityMode(CompatibilityMode.RFC2426);
@@ -445,7 +448,8 @@ public class TestVCard {
 		
 		NameType name = new NameType();
 		name.setEncodingType(EncodingType.QUOTED_PRINTABLE);
-		name.setFamilyName("D=C3=96e");
+		name.setFamilyName("DÖe");
+//		name.setFamilyName("Doe");
 		name.setGivenName("John");
 		name.addHonorificPrefix("Mr.");
 		name.addHonorificSuffix("I");

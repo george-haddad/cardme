@@ -132,6 +132,13 @@ public interface TypeTools extends Persistable {
 	public EncodingType getEncodingType();
 	
 	/**
+	 * <p>Returns true if the encoding type is QUOTED-PRINTABLE.</p>
+	 *
+	 * @return boolean
+	 */
+	public boolean isQuotedPrintable();
+	
+	/**
 	 * @see Type#equals(Object)
 	 */
 	public boolean equals(Object obj);
