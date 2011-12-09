@@ -16,6 +16,10 @@ Card Me Version 0.3
 From version 0.3 and up the package name of cardme has changed! It is now net.sourceforge.cardme.* 
 So make sure you refractor your imports.
 
+BUG[3453763]
+Binary folding scheme enum added to solve issue where some applications have specific folding schemes,
+but use at the same time a different folding scheme for binary data.
+
 FEATURE[3436545]
 The N type should allow for all empty fields. Cardme will now not throw an exception if all fields are left empty.
 
