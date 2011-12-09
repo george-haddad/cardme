@@ -34,7 +34,7 @@ import net.sourceforge.cardme.util.VCardUtils;
  * 
  * @author George El-Haddad
  * <br/>
- * Feb 8, 2010
+ * Dec 9, 2011
  *
  */
 public enum BinaryFoldingScheme {

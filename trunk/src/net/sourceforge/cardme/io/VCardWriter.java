@@ -2,8 +2,6 @@ package net.sourceforge.cardme.io;
 
 import java.nio.charset.Charset;
 import java.util.Iterator;
-import org.apache.commons.codec.EncoderException;
-import org.apache.commons.codec.net.QuotedPrintableCodec;
 
 import net.sourceforge.cardme.util.Base64Wrapper;
 import net.sourceforge.cardme.util.ISOFormat;
@@ -119,12 +117,21 @@ public class VCardWriter {
 	private VCardVersion outputVersion = null;
 	
 	/**
-	 * <p>Selects which line/data folding scheme should
+	 * <p>Selects which line folding scheme should
 	 * be used. The default is to use the standard RFC-2426
 	 * folding scheme of 75 max characters per line. Some
 	 * applications use less ... or more.</p>
 	 */
 	private FoldingScheme foldingScheme = null;
+	
+	
+	/**
+	 * <p>Selects which data folding scheme should
+	 * be used. The default is to use the standard RFC-2426
+	 * folding scheme of 75 max characters per line. Some
+	 * applications use less ... or more.</p>
+	 */
+	private BinaryFoldingScheme binaryFoldingScheme = null;
 	
 	/**
 	 * <p>Selects from a list of application compatibility modes
@@ -142,19 +149,12 @@ public class VCardWriter {
 	private boolean isThrowsExceptions = true;
 	
 	/**
-	 * <p>Quoted Printable codec provided by apache commons-codec.
-	 * This will created and used only where there is at least one
-	 * type that needs it.</p>
-	 */
-	private QuotedPrintableCodec qpCodec = null;
-	
-	/**
 	 * <p>Creates a new VCardWriter with default parameters.</p>
 	 * 
 	 * @throws VCardException
 	 */
 	public VCardWriter() throws VCardException {
-		this(null,null,null);
+		this(null, null, null, null);
 	}
 	
 	/**
@@ -166,7 +166,7 @@ public class VCardWriter {
 	 * @throws VCardException
 	 */
 	public VCardWriter(VCardVersion outputVersion) throws VCardException {
-		this(outputVersion, null, null);
+		this(outputVersion, null, null, null);
 	}
 	
 	/**
@@ -174,13 +174,15 @@ public class VCardWriter {
 	 * 
 	 * @see VCardVersion
 	 * @see FoldingScheme
+	 * @see BinaryFoldingScheme
 	 *  
 	 * @param outputVersion
 	 * @param foldingScheme
+	 * @param binaryFoldingScheme
 	 * @throws VCardException
 	 */
-	public VCardWriter(VCardVersion outputVersion, FoldingScheme foldingScheme) throws VCardException {
-		this(outputVersion, foldingScheme, null);
+	public VCardWriter(VCardVersion outputVersion, FoldingScheme foldingScheme, BinaryFoldingScheme binaryFoldingScheme) throws VCardException {
+		this(outputVersion, foldingScheme, binaryFoldingScheme, null);
 	}
 	
 	/**
@@ -194,7 +196,7 @@ public class VCardWriter {
 	 * @throws VCardException
 	 */
 	public VCardWriter(VCardVersion outputVersion, CompatibilityMode compatMode) throws VCardException {
-		this(outputVersion, null, compatMode);
+		this(outputVersion, null, null, compatMode);
 	}
 	
 	/**
@@ -202,16 +204,19 @@ public class VCardWriter {
 	 * 
 	 * @see VCardVersion
 	 * @see FoldingScheme
+	 * @see BinaryFoldingScheme
 	 * @see CompatibilityMode
 	 * 
 	 * @param outputVersion
 	 * @param foldingScheme
+	 * @param binaryFoldingScheme
 	 * @param compatMode
 	 * @throws VCardException
 	 */
-	public VCardWriter(VCardVersion outputVersion, FoldingScheme foldingScheme, CompatibilityMode compatMode) throws VCardException {
+	public VCardWriter(VCardVersion outputVersion, FoldingScheme foldingScheme, BinaryFoldingScheme binaryFoldingScheme, CompatibilityMode compatMode) throws VCardException {
 		setOutputVersion(outputVersion);
 		setFoldingScheme(foldingScheme);
+		setBinaryfoldingScheme(binaryFoldingScheme);
 		setCompatibilityMode(compatMode);
 	}
 	
@@ -264,7 +269,8 @@ public class VCardWriter {
 	}
 	
 	/**
-	 * <p>Sets the folding scheme to use when folding long lines.
+	 * <p>Sets the folding scheme to use when folding long lines
+	 * (excluding base64 encoded text.)
 	 * If null {@link FoldingScheme}.MIME_DIR is used.</p>
 	 *
 	 * @param foldingScheme
@@ -275,6 +281,21 @@ public class VCardWriter {
 		}
 		else {
 			this.foldingScheme = foldingScheme;
+		}
+	}
+	
+	/**
+	 * <p>Sets the binary folding scheme to use when folding long
+	 * lines of data. If null {@link BinaryFoldingScheme}.MIME_DIR is used.</p>
+	 *
+	 * @param binaryFoldingScheme
+	 */
+	public void setBinaryfoldingScheme(BinaryFoldingScheme binaryFoldingScheme) {
+		if(binaryFoldingScheme == null) {
+			this.binaryFoldingScheme = BinaryFoldingScheme.MIME_DIR;
+		}
+		else {
+			this.binaryFoldingScheme = binaryFoldingScheme;
 		}
 	}
 	
@@ -1039,7 +1060,6 @@ public class VCardWriter {
 	private void buildNameFeature(StringBuilder sb, NameFeature nameFeature) throws VCardBuildException {
 		try {
 			if(nameFeature != null) {
-				boolean isQuotedPrintable = nameFeature.isQuotedPrintable();
 				StringBuilder tmpSb = new StringBuilder();
 				
 				if(nameFeature.hasGroup()) {
@@ -1054,20 +1074,25 @@ public class VCardWriter {
 					tmpSb.append(nameFeature.getCharset().name());
 				}
 				
-				if(isQuotedPrintable) {
-					tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+				switch(nameFeature.getEncodingType())
+				{
+					case QUOTED_PRINTABLE:
+					{
+						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+						break;
+					}
 				}
 				
 				tmpSb.append(":");
 				
 				if(nameFeature.hasFamilyName()) {
-					tmpSb.append(escapeAndEncode(nameFeature.getFamilyName(), isQuotedPrintable));
+					tmpSb.append(VCardUtils.escapeString(nameFeature.getFamilyName()));
 				}
 
 				tmpSb.append(";");
 
 				if(nameFeature.hasGivenName()) {
-					tmpSb.append(escapeAndEncode(nameFeature.getGivenName(), isQuotedPrintable));
+					tmpSb.append(VCardUtils.escapeString(nameFeature.getGivenName()));
 				}
 
 				tmpSb.append(";");
@@ -1076,7 +1101,7 @@ public class VCardWriter {
 					Iterator<String> additionalNames = nameFeature.getAdditionalNames();
 					while(additionalNames.hasNext()) {
 						String addName = additionalNames.next();
-						tmpSb.append(escapeAndEncode(addName, isQuotedPrintable));
+						tmpSb.append(VCardUtils.escapeString(addName));
 						tmpSb.append(",");
 					}
 
@@ -1089,7 +1114,7 @@ public class VCardWriter {
 					Iterator<String> prefixes = nameFeature.getHonorificPrefixes();
 					while(prefixes.hasNext()) {
 						String prefix = prefixes.next();
-						tmpSb.append(escapeAndEncode(prefix, isQuotedPrintable));
+						tmpSb.append(VCardUtils.escapeString(prefix));
 						tmpSb.append(",");
 					}
 
@@ -1102,7 +1127,7 @@ public class VCardWriter {
 					Iterator<String> suffixes = nameFeature.getHonorificSuffixes();
 					while(suffixes.hasNext()) {
 						String suffix = suffixes.next();
-						tmpSb.append(escapeAndEncode(suffix, isQuotedPrintable));
+						tmpSb.append(VCardUtils.escapeString(suffix));
 						tmpSb.append(",");
 					}
 
@@ -1136,7 +1161,6 @@ public class VCardWriter {
 	private void buildFormattedNameFeature(StringBuilder sb, FormattedNameFeature formattedNameFeature) throws VCardBuildException {
 		try {
 			if(formattedNameFeature != null) {
-				boolean isQuotedPrintable = formattedNameFeature.isQuotedPrintable();
 				String formattedName = formattedNameFeature.getFormattedName();
 				StringBuilder tmpSb = new StringBuilder();
 				
@@ -1152,12 +1176,17 @@ public class VCardWriter {
 					tmpSb.append(formattedNameFeature.getCharset().name());
 				}
 				
-				if(isQuotedPrintable) {
-					tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+				switch(formattedNameFeature.getEncodingType())
+				{
+					case QUOTED_PRINTABLE:
+					{
+						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+						break;
+					}
 				}
 				
 				tmpSb.append(":");
-				tmpSb.append(escapeAndEncode(formattedName, isQuotedPrintable));
+				tmpSb.append(VCardUtils.escapeString(formattedName));
 				
 				String tmpFormattedNameLine = tmpSb.toString();
 				String foldedFormattedNameLine = VCardUtils.foldLine(tmpFormattedNameLine, foldingScheme);
@@ -1186,7 +1215,6 @@ public class VCardWriter {
 	private void buildDisplayableNameFeature(StringBuilder sb, DisplayableNameFeature displayableNameFeature) throws VCardBuildException {
 		try {
 			if(displayableNameFeature != null) {
-				boolean isQuotedPrintable = displayableNameFeature.isQuotedPrintable();
 				String displayableName = displayableNameFeature.getName();
 				StringBuilder tmpSb = new StringBuilder();
 				
@@ -1202,12 +1230,17 @@ public class VCardWriter {
 					tmpSb.append(displayableNameFeature.getCharset().name());
 				}
 				
-				if(isQuotedPrintable) {
-					tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+				switch(displayableNameFeature.getEncodingType())
+				{
+					case QUOTED_PRINTABLE:
+					{
+						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+						break;
+					}
 				}
 				
 				tmpSb.append(":");
-				tmpSb.append(escapeAndEncode(displayableName, isQuotedPrintable));
+				tmpSb.append(VCardUtils.escapeString(displayableName));
 				
 				String tmpDisplayableNameLine = tmpSb.toString();
 				String foldedDisplayableNameLine = VCardUtils.foldLine(tmpDisplayableNameLine, foldingScheme);
@@ -1236,7 +1269,6 @@ public class VCardWriter {
 	private void buildProfileFeature(StringBuilder sb, ProfileFeature profileFeature) throws VCardBuildException {
 		try {
 			if(profileFeature != null) {
-				boolean isQuotedPrintable = profileFeature.isQuotedPrintable();
 				String profile = profileFeature.getProfile();
 				StringBuilder tmpSb = new StringBuilder();
 				
@@ -1252,12 +1284,17 @@ public class VCardWriter {
 					tmpSb.append(profileFeature.getCharset().name());
 				}
 				
-				if(isQuotedPrintable) {
-					tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+				switch(profileFeature.getEncodingType())
+				{
+					case QUOTED_PRINTABLE:
+					{
+						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+						break;
+					}
 				}
 				
 				tmpSb.append(":");
-				tmpSb.append(escapeAndEncode(profile, isQuotedPrintable));
+				tmpSb.append(VCardUtils.escapeString(profile));
 				
 				String tmpProfileLine = tmpSb.toString();
 				String foldedProfileLine = VCardUtils.foldLine(tmpProfileLine, foldingScheme);
@@ -1286,7 +1323,6 @@ public class VCardWriter {
 	private void buildSourceFeature(StringBuilder sb, SourceFeature sourceFeature) throws VCardBuildException {
 		try {
 			if(sourceFeature != null) {
-				boolean isQuotedPrintable = sourceFeature.isQuotedPrintable();
 				String source = sourceFeature.getSource();
 				StringBuilder tmpSb = new StringBuilder();
 				
@@ -1302,12 +1338,17 @@ public class VCardWriter {
 					tmpSb.append(sourceFeature.getCharset().name());
 				}
 				
-				if(isQuotedPrintable) {
-					tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+				switch(sourceFeature.getEncodingType())
+				{
+					case QUOTED_PRINTABLE:
+					{
+						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+						break;
+					}
 				}
 				
 				tmpSb.append(":");
-				tmpSb.append(escapeAndEncode(source, isQuotedPrintable));
+				tmpSb.append(VCardUtils.escapeString(source));
 				
 				String tmpSourceLine = tmpSb.toString();
 				String foldedSourceLine = VCardUtils.foldLine(tmpSourceLine, foldingScheme);
@@ -1337,7 +1378,6 @@ public class VCardWriter {
 		try {
 			if(titleFeature != null) {
 				if(titleFeature.hasTitle()) {
-					boolean isQuotedPrintable = titleFeature.isQuotedPrintable();
 					String title = titleFeature.getTitle();
 					StringBuilder tmpSb = new StringBuilder();
 					
@@ -1353,12 +1393,17 @@ public class VCardWriter {
 						tmpSb.append(titleFeature.getCharset().name());
 					}
 					
-					if(isQuotedPrintable) {
-						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+					switch(titleFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
 					}
 					
 					tmpSb.append(":");
-					tmpSb.append(escapeAndEncode(title, isQuotedPrintable));
+					tmpSb.append(VCardUtils.escapeString(title));
 					
 					String tmpTitleLine = tmpSb.toString();
 					String foldedTitleLine = VCardUtils.foldLine(tmpTitleLine, foldingScheme);
@@ -1389,7 +1434,6 @@ public class VCardWriter {
 		try {
 			if(roleFeature != null) {
 				if(roleFeature.hasRole()) {
-					boolean isQuotedPrintable = roleFeature.isQuotedPrintable();
 					String role = roleFeature.getRole();
 					StringBuilder tmpSb = new StringBuilder();
 					
@@ -1405,12 +1449,17 @@ public class VCardWriter {
 						tmpSb.append(roleFeature.getCharset().name());
 					}
 					
-					if(isQuotedPrintable) {
-						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+					switch(roleFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
 					}
 					
 					tmpSb.append(":");
-					tmpSb.append(escapeAndEncode(role, isQuotedPrintable));
+					tmpSb.append(VCardUtils.escapeString(role));
 					
 					String tmpRoleLine = tmpSb.toString();
 					String foldedRoleLine = VCardUtils.foldLine(tmpRoleLine, foldingScheme);
@@ -1484,7 +1533,6 @@ public class VCardWriter {
 		try {
 			if(organizationFeature != null) {
 				if(organizationFeature.hasOrganizations()) {
-					boolean isQuotedPrintable = organizationFeature.isQuotedPrintable();
 					StringBuilder tmpSb = new StringBuilder();
 					
 					if(organizationFeature.hasGroup()) {
@@ -1499,8 +1547,13 @@ public class VCardWriter {
 						tmpSb.append(organizationFeature.getCharset().name());
 					}
 					
-					if(isQuotedPrintable) {
-						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+					switch(organizationFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
 					}
 					
 					tmpSb.append(":");
@@ -1508,7 +1561,7 @@ public class VCardWriter {
 					Iterator<String> orgs = organizationFeature.getOrganizations();
 					while(orgs.hasNext()) {
 						String org = orgs.next();
-						tmpSb.append(escapeAndEncode(org, isQuotedPrintable));
+						tmpSb.append(VCardUtils.escapeString(org));
 						tmpSb.append(";");
 					}
 					
@@ -1542,8 +1595,6 @@ public class VCardWriter {
 		try {
 			if(mailerFeature != null) {
 				if(mailerFeature.hasMailer()) {
-					boolean isQuotedPrintable = mailerFeature.isQuotedPrintable();
-					String mailer = mailerFeature.getMailer();
 					StringBuilder tmpSb = new StringBuilder();
 					
 					if(mailerFeature.hasGroup()) {
@@ -1558,12 +1609,17 @@ public class VCardWriter {
 						tmpSb.append(mailerFeature.getCharset().name());
 					}
 					
-					if(isQuotedPrintable) {
-						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+					switch(mailerFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
 					}
 					
 					tmpSb.append(":");
-					tmpSb.append(escapeAndEncode(mailer, isQuotedPrintable));
+					tmpSb.append(VCardUtils.escapeString(mailerFeature.getMailer()));
 					
 					String tmpMailerLine = tmpSb.toString();
 					String foldedMailerLine = VCardUtils.foldLine(tmpMailerLine, foldingScheme);
@@ -1638,8 +1694,6 @@ public class VCardWriter {
 		try {
 			if(urlFeature != null) {
 				if(urlFeature.hasURL()) {
-					boolean isQuotedPrintable = urlFeature.isQuotedPrintable();
-					String url = urlFeature.getURL().toString();
 					StringBuilder tmpSb = new StringBuilder();
 					
 					if(urlFeature.hasGroup()) {
@@ -1659,12 +1713,25 @@ public class VCardWriter {
 						tmpSb.append(urlFeature.getCharset().name());
 					}
 					
-					if(isQuotedPrintable) {
-						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+					switch(urlFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
 					}
 					
 					tmpSb.append(":");
-					tmpSb.append(escapeAndEncode(url, isQuotedPrintable));
+					
+					String url = urlFeature.getURL().toString();
+					
+					if(VCardUtils.needsEscaping(url)) {
+						tmpSb.append(VCardUtils.escapeString(url));
+					}
+					else {
+						tmpSb.append(url);
+					}
 					
 					String tmpUrlLine = tmpSb.toString();
 					String foldedUrlLine = VCardUtils.foldLine(tmpUrlLine, foldingScheme);
@@ -1709,6 +1776,15 @@ public class VCardWriter {
 						tmpSb.append(revisionFeature.getCharset().name());
 					}
 					
+					switch(revisionFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
+					}
+					
 					tmpSb.append(":");
 					tmpSb.append(ISOUtils.toISO8601_UTC_Time(revisionFeature.getRevision(), ISOFormat.ISO8601_EXTENDED));
 					
@@ -1741,8 +1817,6 @@ public class VCardWriter {
 		try {
 			if(uidFeature != null) {
 				if(uidFeature.hasUID()) {
-					boolean isQuotedPrintable = uidFeature.isQuotedPrintable();
-					String uid = uidFeature.getUID();
 					StringBuilder tmpSb = new StringBuilder();
 					
 					if(uidFeature.hasGroup()) {
@@ -1757,12 +1831,17 @@ public class VCardWriter {
 						tmpSb.append(uidFeature.getCharset().name());
 					}
 					
-					if(isQuotedPrintable) {
-						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+					switch(uidFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
 					}
 					
 					tmpSb.append(":");
-					tmpSb.append(escapeAndEncode(uid, isQuotedPrintable));
+					tmpSb.append(uidFeature.getUID());
 					
 					String tmpUidLine = tmpSb.toString();
 					String foldedUidLine = VCardUtils.foldLine(tmpUidLine, foldingScheme);
@@ -1835,7 +1914,6 @@ public class VCardWriter {
 	private void buildAddressFeature(StringBuilder sb, AddressFeature addressFeature) throws VCardBuildException {
 		try {
 			if(addressFeature != null) {
-				boolean isQuotedPrintable = addressFeature.isQuotedPrintable();
 				StringBuilder tmpSb = new StringBuilder();
 				
 				if(addressFeature.hasGroup()) {
@@ -1850,8 +1928,13 @@ public class VCardWriter {
 					tmpSb.append(addressFeature.getCharset().name());
 				}
 				
-				if(isQuotedPrintable) {
-					tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+				switch(addressFeature.getEncodingType())
+				{
+					case QUOTED_PRINTABLE:
+					{
+						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+						break;
+					}
 				}
 				
 				if(addressFeature.hasAddressParameterTypes()) {
@@ -1941,43 +2024,43 @@ public class VCardWriter {
 				
 				tmpSb.append(":");
 				if(addressFeature.hasPostOfficebox()) {
-					tmpSb.append(escapeAndEncode(addressFeature.getPostOfficeBox(), isQuotedPrintable));
+					tmpSb.append(VCardUtils.escapeString(addressFeature.getPostOfficeBox()));
 				}
 
 				tmpSb.append(";");
 
 				if(addressFeature.hasExtendedAddress()) {
-					tmpSb.append(escapeAndEncode(addressFeature.getExtendedAddress(), isQuotedPrintable));
+					tmpSb.append(VCardUtils.escapeString(addressFeature.getExtendedAddress()));
 				}
 
 				tmpSb.append(";");
 				
 				if(addressFeature.hasStreetAddress()) {
-					tmpSb.append(escapeAndEncode(addressFeature.getStreetAddress(), isQuotedPrintable));
+					tmpSb.append(VCardUtils.escapeString(addressFeature.getStreetAddress()));
 				}
 
 				tmpSb.append(";");
 
 				if(addressFeature.hasLocality()) {
-					tmpSb.append(escapeAndEncode(addressFeature.getLocality(), isQuotedPrintable));
+					tmpSb.append(VCardUtils.escapeString(addressFeature.getLocality()));
 				}
 
 				tmpSb.append(";");
 
 				if(addressFeature.hasRegion()) {
-					tmpSb.append(escapeAndEncode(addressFeature.getRegion(), isQuotedPrintable));
+					tmpSb.append(VCardUtils.escapeString(addressFeature.getRegion()));
 				}
 
 				tmpSb.append(";");
 
 				if(addressFeature.hasPostalCode()) {
-					tmpSb.append(escapeAndEncode(addressFeature.getPostalCode(), isQuotedPrintable));
+					tmpSb.append(VCardUtils.escapeString(addressFeature.getPostalCode()));
 				}
 
 				tmpSb.append(";");
 
 				if(addressFeature.hasCountryName()) {
-					tmpSb.append(escapeAndEncode(addressFeature.getCountryName(), isQuotedPrintable));
+					tmpSb.append(VCardUtils.escapeString(addressFeature.getCountryName()));
 				}
 
 				String tmpAddressLine = tmpSb.toString();
@@ -2005,7 +2088,6 @@ public class VCardWriter {
 		try {
 			if(labelFeature != null) {
 				if(labelFeature.hasLabel()) {
-					boolean isQuotedPrintable = labelFeature.isQuotedPrintable();
 					StringBuilder tmpSb = new StringBuilder();
 					
 					if(labelFeature.hasGroup()) {
@@ -2020,8 +2102,13 @@ public class VCardWriter {
 						tmpSb.append(labelFeature.getCharset().name());
 					}
 					
-					if(isQuotedPrintable) {
-						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+					switch(labelFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
 					}
 					
 					if(labelFeature.hasLabelParameterTypes()) {
@@ -2111,7 +2198,7 @@ public class VCardWriter {
 					
 					
 					tmpSb.append(":");
-					tmpSb.append(escapeAndEncode(labelFeature.getLabel(), isQuotedPrintable));
+					tmpSb.append(VCardUtils.escapeString(labelFeature.getLabel()));
 					String tmpLabelLine = tmpSb.toString();
 					String foldedLabelLine = VCardUtils.foldLine(tmpLabelLine, foldingScheme);
 					sb.append(foldedLabelLine);
@@ -2141,7 +2228,6 @@ public class VCardWriter {
 		try {
 			if(telephoneFeature != null) {
 				if(telephoneFeature.hasTelephone()) {
-					boolean isQuotedPrintable = telephoneFeature.isQuotedPrintable();
 					StringBuilder tmpSb = new StringBuilder();
 					
 					if(telephoneFeature.hasGroup()) {
@@ -2156,8 +2242,13 @@ public class VCardWriter {
 						tmpSb.append(telephoneFeature.getCharset().name());
 					}
 					
-					if(isQuotedPrintable) {
-						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+					switch(telephoneFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
 					}
 					
 					if(telephoneFeature.hasTelephoneParameterTypes()) {
@@ -2246,7 +2337,16 @@ public class VCardWriter {
 					}
 					
 					tmpSb.append(":");
-					tmpSb.append(escapeAndEncode(telephoneFeature.getTelephone(), isQuotedPrintable));
+					
+					if(compatMode.equals(CompatibilityMode.IOS_EXPORTER)) {
+						String telNbr = telephoneFeature.getTelephone();
+						if(VCardUtils.needsEscaping(telNbr)) {
+							tmpSb.append(VCardUtils.escapeString(telNbr));
+						}
+					}
+					else {
+						tmpSb.append(telephoneFeature.getTelephone());
+					}
 					
 					String tmpTelephoneLine = tmpSb.toString();
 					String foldedTelephoneLine = VCardUtils.foldLine(tmpTelephoneLine, foldingScheme);
@@ -2278,12 +2378,20 @@ public class VCardWriter {
 		try {
 			if(emailFeature != null) {
 				if(emailFeature.hasEmail()) {
-					boolean isQuotedPrintable = emailFeature.isQuotedPrintable();
 					StringBuilder tmpSb = new StringBuilder();
 					
 					if(emailFeature.hasGroup()) {
 						tmpSb.append(emailFeature.getGroup());
 						tmpSb.append(".");
+					}
+					
+					switch(emailFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
 					}
 					
 					tmpSb.append(emailFeature.getTypeString());
@@ -2407,21 +2515,16 @@ public class VCardWriter {
 							break;
 						}
 						
-						case QUOTED_PRINTABLE:
-						{
-							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
-						}
-						
 						default:
 						{
 							tmpSb.append(":");
-							tmpSb.append(escapeAndEncode(emailFeature.getEmail(), isQuotedPrintable));
+							tmpSb.append(emailFeature.getEmail());
 							break;
 						}
 					}
 					
 					String tmpEmailLine = tmpSb.toString();
-					String foldedEmailLine = VCardUtils.foldLine(tmpEmailLine, foldingScheme);
+					String foldedEmailLine = VCardUtils.foldLine(tmpEmailLine, binaryFoldingScheme);
 					sb.append(foldedEmailLine);
 					sb.append(VCardUtils.CRLF);
 				}
@@ -2449,7 +2552,6 @@ public class VCardWriter {
 		try {
 			if(noteFeature != null) {
 				if(noteFeature.hasNote()) {
-					boolean isQuotedPrintable = noteFeature.isQuotedPrintable();
 					StringBuilder tmpSb = new StringBuilder();
 					
 					if(noteFeature.hasGroup()) {
@@ -2464,12 +2566,17 @@ public class VCardWriter {
 						tmpSb.append(noteFeature.getCharset().name());
 					}
 					
-					if(isQuotedPrintable) {
-						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+					switch(noteFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
 					}
 					
 					tmpSb.append(":");
-					tmpSb.append(escapeAndEncode(noteFeature.getNote(), isQuotedPrintable));
+					tmpSb.append(VCardUtils.escapeString(noteFeature.getNote()));
 					
 					String tmpNoteLine = tmpSb.toString();
 					String foldedNoteLine = VCardUtils.foldLine(tmpNoteLine, foldingScheme);
@@ -2500,7 +2607,6 @@ public class VCardWriter {
 		try {
 			if(nicknameFeature != null) {
 				if(nicknameFeature.hasNicknames()) {
-					boolean isQuotedPrintable = nicknameFeature.isQuotedPrintable();
 					StringBuilder tmpSb = new StringBuilder();
 					
 					if(nicknameFeature.hasGroup()) {
@@ -2515,8 +2621,13 @@ public class VCardWriter {
 						tmpSb.append(nicknameFeature.getCharset().name());
 					}
 					
-					if(isQuotedPrintable) {
-						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+					switch(nicknameFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
 					}
 					
 					tmpSb.append(":");
@@ -2524,7 +2635,7 @@ public class VCardWriter {
 					Iterator<String> nicknames = nicknameFeature.getNicknames();
 					while(nicknames.hasNext()) {
 						String nickname = nicknames.next();
-						tmpSb.append(escapeAndEncode(nickname, isQuotedPrintable));
+						tmpSb.append(nickname);
 						tmpSb.append(",");
 					}
 					
@@ -2558,7 +2669,6 @@ public class VCardWriter {
 		try {
 			if(categoriesFeature != null) {
 				if(categoriesFeature.hasCategories()) {
-					boolean isQuotedPrintable = categoriesFeature.isQuotedPrintable();
 					StringBuilder tmpSb = new StringBuilder();
 					
 					if(categoriesFeature.hasGroup()) {
@@ -2573,8 +2683,13 @@ public class VCardWriter {
 						tmpSb.append(categoriesFeature.getCharset().name());
 					}
 					
-					if(isQuotedPrintable) {
-						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+					switch(categoriesFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
 					}
 					
 					tmpSb.append(":");
@@ -2582,7 +2697,7 @@ public class VCardWriter {
 					Iterator<String> categories = categoriesFeature.getCategories();
 					while(categories.hasNext()) {
 						String category = categories.next();
-						tmpSb.append(escapeAndEncode(category, isQuotedPrintable));
+						tmpSb.append(category);
 						
 						switch(compatMode)
 						{
@@ -2630,7 +2745,6 @@ public class VCardWriter {
 		try {
 			if(classFeature != null) {
 				if(classFeature.hasSecurityClass()) {
-					boolean isQuotedPrintable = classFeature.isQuotedPrintable();
 					StringBuilder tmpSb = new StringBuilder();
 					
 					if(classFeature.hasGroup()) {
@@ -2645,12 +2759,17 @@ public class VCardWriter {
 						tmpSb.append(classFeature.getCharset().name());
 					}
 					
-					if(isQuotedPrintable) {
-						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+					switch(classFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
 					}
 					
 					tmpSb.append(":");
-					tmpSb.append(escapeAndEncode(classFeature.getSecurityClass(), isQuotedPrintable));
+					tmpSb.append(classFeature.getSecurityClass());
 					
 					String tmpClassLine = tmpSb.toString();
 					String foldedClassLine = VCardUtils.foldLine(tmpClassLine, foldingScheme);
@@ -2681,7 +2800,6 @@ public class VCardWriter {
 		try {
 			if(productIdFeature != null) {
 				if(productIdFeature.hasProductId()) {
-					boolean isQuotedPrintable = productIdFeature.isQuotedPrintable();
 					StringBuilder tmpSb = new StringBuilder();
 					
 					if(productIdFeature.hasGroup()) {
@@ -2696,12 +2814,17 @@ public class VCardWriter {
 						tmpSb.append(productIdFeature.getCharset().name());
 					}
 					
-					if(isQuotedPrintable) {
-						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+					switch(productIdFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
 					}
 					
 					tmpSb.append(":");
-					tmpSb.append(escapeAndEncode(productIdFeature.getProductId(), isQuotedPrintable));
+					tmpSb.append(productIdFeature.getProductId());
 					
 					String tmpProductIdLine = tmpSb.toString();
 					String foldedProductIdLine = VCardUtils.foldLine(tmpProductIdLine, foldingScheme);
@@ -2732,7 +2855,6 @@ public class VCardWriter {
 		try {
 			if(sortStringFeature != null) {
 				if(sortStringFeature.hasSortString()) {
-					boolean isQuotedPrintable = sortStringFeature.isQuotedPrintable();
 					StringBuilder tmpSb = new StringBuilder();
 					
 					if(sortStringFeature.hasGroup()) {
@@ -2747,12 +2869,17 @@ public class VCardWriter {
 						tmpSb.append(sortStringFeature.getCharset().name());
 					}
 					
-					if(isQuotedPrintable) {
-						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+					switch(sortStringFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
 					}
 					
 					tmpSb.append(":");
-					tmpSb.append(escapeAndEncode(sortStringFeature.getSortString(), isQuotedPrintable));
+					tmpSb.append(sortStringFeature.getSortString());
 					
 					String tmpSortStringLine = tmpSb.toString();
 					String foldedSortStringLine = VCardUtils.foldLine(tmpSortStringLine, foldingScheme);
@@ -2804,18 +2931,13 @@ public class VCardWriter {
 					
 					switch(compatMode)
 					{
-						case MAC_ADDRESS_BOOK:
-						{
-							tmpSb.append(EncodingType.BASE64.getType());
-							break;
-						}
-						
 						case MS_OUTLOOK:
 						{
 							tmpSb.append(EncodingType.BASE64.getType());
 							break;
 						}
 						
+						case MAC_ADDRESS_BOOK:
 						case EVOLUTION:
 						case KDE_ADDRESS_BOOK:
 						case RFC2426:
@@ -2836,32 +2958,6 @@ public class VCardWriter {
 					
 					switch(compatMode)
 					{
-						case MAC_ADDRESS_BOOK:
-						{
-							String b64str = null;
-							try {
-								byte[] keyBytes = keyFeature.getKey();
-								if(keyFeature.isSetCompression()) {
-									b64str = Base64Wrapper.encode(keyBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION);
-								}
-								else {
-									b64str = Base64Wrapper.encode(keyBytes);
-								}
-							}
-							catch(Exception ex) {
-								throw new VCardBuildException(ex.getMessage(), ex);
-							}
-							
-							String tmpKeyLine = tmpSb.toString();
-							String foldedKeyLine2 = VCardUtils.foldLine(tmpKeyLine, foldingScheme);
-							
-							foldedKeyLine = VCardUtils.foldLine(b64str, foldingScheme);
-							sb.append(foldedKeyLine2);				//Type declaration with param types
-							sb.append(VCardUtils.CRLF);				//Distinctive line break
-							sb.append(FoldingScheme.MAC_ADDRESS_BOOK.getIndent());	//Indent first line
-							break;
-						}
-						
 						case MS_OUTLOOK:
 						{
 							String b64str = null;
@@ -2879,15 +2975,16 @@ public class VCardWriter {
 							}
 							
 							String tmpKeyLine = tmpSb.toString();
-							String foldedKeyLine2 = VCardUtils.foldLine(tmpKeyLine, foldingScheme);
+							String foldedKeyLine2 = VCardUtils.foldLine(tmpKeyLine, binaryFoldingScheme);
 							
-							foldedKeyLine = VCardUtils.foldLine(b64str, foldingScheme);
-							sb.append(foldedKeyLine2);				//Type declaration with param types
-							sb.append(VCardUtils.CRLF);				//Distinctive line break
-							sb.append(FoldingScheme.MS_OUTLOOK.getIndent());	//Indent first line
+							foldedKeyLine = VCardUtils.foldLine(b64str, binaryFoldingScheme);
+							sb.append(foldedKeyLine2);							//Type declaration with param types
+							sb.append(VCardUtils.CRLF);							//Distinctive line break
+							sb.append(binaryFoldingScheme.getIndent());			//Indent first line
 							break;
 						}
-							
+						
+						case MAC_ADDRESS_BOOK:
 						case EVOLUTION:
 						case KDE_ADDRESS_BOOK:
 						case RFC2426:
@@ -2907,7 +3004,8 @@ public class VCardWriter {
 							}
 							
 							String tmpKeyLine = tmpSb.toString();
-							foldedKeyLine = VCardUtils.foldLine(tmpKeyLine, foldingScheme);
+							foldedKeyLine = VCardUtils.foldLine(tmpKeyLine, binaryFoldingScheme);
+							
 							break;
 						}
 					}
@@ -2988,18 +3086,13 @@ public class VCardWriter {
 						
 						switch(compatMode)
 						{
-							case MAC_ADDRESS_BOOK:
-							{
-								tmpSb.append(EncodingType.BASE64.getType());
-								break;
-							}
-							
 							case MS_OUTLOOK:
 							{
 								tmpSb.append(EncodingType.BASE64.getType());
 								break;
 							}
 							
+							case MAC_ADDRESS_BOOK:
 							case EVOLUTION:
 							case KDE_ADDRESS_BOOK:
 							case RFC2426:
@@ -3020,32 +3113,6 @@ public class VCardWriter {
 						
 						switch(compatMode)
 						{
-							case MAC_ADDRESS_BOOK:
-							{
-								String b64str = null;
-								try {
-									byte[] photoBytes = photoFeature.getPhoto();
-									if(photoFeature.isSetCompression()) {
-										b64str = Base64Wrapper.encode(photoBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION);
-									}
-									else {
-										b64str = Base64Wrapper.encode(photoBytes);
-									}
-								}
-								catch(Exception ex) {
-									throw new VCardBuildException(ex.getMessage(), ex);
-								}
-								
-								String tmpPhotoLine = tmpSb.toString();
-								String foldedPhotoLine2 = VCardUtils.foldLine(tmpPhotoLine, foldingScheme);
-								
-								foldedPhotoLine = VCardUtils.foldLine(b64str, foldingScheme);
-								sb.append(foldedPhotoLine2);							//Type declaration with param types
-								sb.append(VCardUtils.CRLF);								//Distinctive line break
-								sb.append(FoldingScheme.MAC_ADDRESS_BOOK.getIndent());	//Indent first line
-								break;
-							}
-							
 							case MS_OUTLOOK:
 							{
 								String b64str = null;
@@ -3063,16 +3130,17 @@ public class VCardWriter {
 								}
 								
 								String tmpPhotoLine = tmpSb.toString();
-								String foldedPhotoLine2 = VCardUtils.foldLine(tmpPhotoLine, foldingScheme);
+								String foldedPhotoLine2 = VCardUtils.foldLine(tmpPhotoLine, binaryFoldingScheme);
 								
-								foldedPhotoLine = VCardUtils.foldLine(b64str, foldingScheme);
-								sb.append(foldedPhotoLine2);						//Type declaration with param types
-								sb.append(VCardUtils.CRLF);							//Distinctive line break
-								sb.append(FoldingScheme.MS_OUTLOOK.getIndent());	//Indent first line
+								foldedPhotoLine = VCardUtils.foldLine(b64str, binaryFoldingScheme);
+								sb.append(foldedPhotoLine2);				//Type declaration with param types
+								sb.append(VCardUtils.CRLF);					//Distinctive line break
+								sb.append(binaryFoldingScheme.getIndent());	//Indent first line
 								break;
 							}
 							
 							case RFC2426:
+							case MAC_ADDRESS_BOOK:
 							case EVOLUTION:
 							case KDE_ADDRESS_BOOK:
 							case I_PHONE:
@@ -3091,7 +3159,8 @@ public class VCardWriter {
 								}
 								
 								String tmpPhotoLine = tmpSb.toString();
-								foldedPhotoLine = VCardUtils.foldLine(tmpPhotoLine, foldingScheme);
+								foldedPhotoLine = VCardUtils.foldLine(tmpPhotoLine, binaryFoldingScheme);
+								
 								break;
 							}
 						}
@@ -3176,18 +3245,13 @@ public class VCardWriter {
 						
 						switch(compatMode)
 						{
-							case MAC_ADDRESS_BOOK:
-							{
-								tmpSb.append(EncodingType.BASE64.getType());
-								break;
-							}
-							
 							case MS_OUTLOOK:
 							{
 								tmpSb.append(EncodingType.BASE64.getType());
 								break;
 							}
-								
+							
+							case MAC_ADDRESS_BOOK:
 							case EVOLUTION:
 							case KDE_ADDRESS_BOOK:
 							case RFC2426:
@@ -3208,31 +3272,6 @@ public class VCardWriter {
 						
 						switch(compatMode)
 						{
-							case MAC_ADDRESS_BOOK:
-							{
-								String b64str = null;
-								try {
-									byte[] logoBytes = logoFeature.getLogo();
-									if(logoFeature.isSetCompression()) {
-										b64str = Base64Wrapper.encode(logoBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION);
-									}
-									else {
-										b64str = Base64Wrapper.encode(logoBytes);
-									}
-								}
-								catch(Exception ex) {
-									throw new VCardBuildException(ex.getMessage(), ex);
-								}
-								
-								String tmpLogoLine = tmpSb.toString();
-								String foldedPhotoLine2 = VCardUtils.foldLine(tmpLogoLine, foldingScheme);
-								
-								foldedLogoLine = VCardUtils.foldLine(b64str, foldingScheme);
-								sb.append(foldedPhotoLine2);							//Type declaration with param types
-								sb.append(VCardUtils.CRLF);								//Distinctive line break
-								sb.append(FoldingScheme.MAC_ADDRESS_BOOK.getIndent());	//Indent first line
-								break;
-							}
 							
 							case MS_OUTLOOK:
 							{
@@ -3251,15 +3290,16 @@ public class VCardWriter {
 								}
 								
 								String tmpLogoLine = tmpSb.toString();
-								String foldedPhotoLine2 = VCardUtils.foldLine(tmpLogoLine, foldingScheme);
+								String foldedPhotoLine2 = VCardUtils.foldLine(tmpLogoLine, binaryFoldingScheme);
 								
-								foldedLogoLine = VCardUtils.foldLine(b64str, foldingScheme);
-								sb.append(foldedPhotoLine2);						//Type declaration with param types
-								sb.append(VCardUtils.CRLF);							//Distinctive line break
-								sb.append(FoldingScheme.MS_OUTLOOK.getIndent());	//Indent first line
+								foldedLogoLine = VCardUtils.foldLine(b64str, binaryFoldingScheme);
+								sb.append(foldedPhotoLine2);				//Type declaration with param types
+								sb.append(VCardUtils.CRLF);					//Distinctive line break
+								sb.append(binaryFoldingScheme.getIndent());	//Indent first line
 								break;
 							}
 							
+							case MAC_ADDRESS_BOOK:
 							case RFC2426:
 							case EVOLUTION:
 							case KDE_ADDRESS_BOOK:
@@ -3279,7 +3319,8 @@ public class VCardWriter {
 								}
 								
 								String tmpLogoLine = tmpSb.toString();
-								foldedLogoLine = VCardUtils.foldLine(tmpLogoLine, foldingScheme);
+								foldedLogoLine = VCardUtils.foldLine(tmpLogoLine, binaryFoldingScheme);
+								
 								break;
 							}
 						}
@@ -3364,18 +3405,13 @@ public class VCardWriter {
 						
 						switch(compatMode)
 						{
-							case MAC_ADDRESS_BOOK:
-							{
-								tmpSb.append(EncodingType.BASE64.getType());
-								break;
-							}
-							
 							case MS_OUTLOOK:
 							{
 								tmpSb.append(EncodingType.BASE64.getType());
 								break;
 							}
 							
+							case MAC_ADDRESS_BOOK:
 							case EVOLUTION:
 							case KDE_ADDRESS_BOOK:
 							case RFC2426:
@@ -3396,32 +3432,6 @@ public class VCardWriter {
 						
 						switch(compatMode)
 						{
-							case MAC_ADDRESS_BOOK:
-							{
-								String b64str = null;
-								try {
-									byte[] soundBytes = soundFeature.getSound();
-									if(soundFeature.isSetCompression()) {
-										b64str = Base64Wrapper.encode(soundBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION);
-									}
-									else {
-										b64str = Base64Wrapper.encode(soundBytes);
-									}
-								}
-								catch(Exception ex) {
-									throw new VCardBuildException(ex.getMessage(), ex);
-								}
-								
-								String tmpSoundLine = tmpSb.toString();
-								String foldedSoundLine2 = VCardUtils.foldLine(tmpSoundLine, foldingScheme);
-								
-								foldedSoundLine = VCardUtils.foldLine(b64str, foldingScheme);
-								sb.append(foldedSoundLine2);							//Type declaration with param types
-								sb.append(VCardUtils.CRLF);								//Distinctive line break
-								sb.append(FoldingScheme.MAC_ADDRESS_BOOK.getIndent());	//Indent first line
-								break;
-							}
-							
 							case MS_OUTLOOK:
 							{
 								String b64str = null;
@@ -3439,15 +3449,16 @@ public class VCardWriter {
 								}
 								
 								String tmpSoundLine = tmpSb.toString();
-								String foldedSoundLine2 = VCardUtils.foldLine(tmpSoundLine, foldingScheme);
+								String foldedSoundLine2 = VCardUtils.foldLine(tmpSoundLine, binaryFoldingScheme);
 								
-								foldedSoundLine = VCardUtils.foldLine(b64str, foldingScheme);
-								sb.append(foldedSoundLine2);						//Type declaration with param types
-								sb.append(VCardUtils.CRLF);							//Distinctive line break
-								sb.append(FoldingScheme.MS_OUTLOOK.getIndent());	//Indent first line
+								foldedSoundLine = VCardUtils.foldLine(b64str, binaryFoldingScheme);
+								sb.append(foldedSoundLine2);				//Type declaration with param types
+								sb.append(VCardUtils.CRLF);					//Distinctive line break
+								sb.append(binaryFoldingScheme.getIndent());	//Indent first line
 								break;
 							}
 							
+							case MAC_ADDRESS_BOOK:
 							case RFC2426:
 							case EVOLUTION:
 							case KDE_ADDRESS_BOOK:
@@ -3467,7 +3478,8 @@ public class VCardWriter {
 								}
 								
 								String tmpSoundLine = tmpSb.toString();
-								foldedSoundLine = VCardUtils.foldLine(tmpSoundLine, foldingScheme);
+								foldedSoundLine = VCardUtils.foldLine(tmpSoundLine, binaryFoldingScheme);
+								
 								break;
 							}
 						}
@@ -3599,7 +3611,6 @@ public class VCardWriter {
 		try {
 			if(extendedFeature != null) {
 				if(extendedFeature.hasExtension()) {
-					boolean isQuotedPrintable = extendedFeature.isQuotedPrintable();
 					StringBuilder tmpSb = new StringBuilder();
 					
 					if(extendedFeature.hasGroup()) {
@@ -3614,12 +3625,17 @@ public class VCardWriter {
 						tmpSb.append(extendedFeature.getCharset().name());
 					}
 					
-					if(isQuotedPrintable) {
-						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+					switch(extendedFeature.getEncodingType())
+					{
+						case QUOTED_PRINTABLE:
+						{
+							tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+							break;
+						}
 					}
 					
 					tmpSb.append(":");
-					tmpSb.append(escapeAndEncode(extendedFeature.getExtensionData(), isQuotedPrintable));
+					tmpSb.append(extendedFeature.getExtensionData());
 					
 					String tmpExtendedLine = tmpSb.toString();
 					String foldedExtendedLine = VCardUtils.foldLine(tmpExtendedLine, foldingScheme);
@@ -3633,31 +3649,6 @@ public class VCardWriter {
 		}
 		catch(Exception ex) {
 			throw new VCardBuildException("ExtendedFeature ("+VCardType.XTENDED.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
-		}
-	}
-	
-	/**
-	 * <p>Helper method to escape string and encode to QUOTED-PRINTABLE if needed.
-	 * Here we lazy create the codec only if we actually need it.</p>
-	 *
-	 * @param str
-	 * @param isQuotedPrintable
-	 * @return {@link String}
-	 * @throws EncoderException
-	 */
-	private String escapeAndEncode(String str, boolean isQuotedPrintable) throws EncoderException
-	{
-		String str2 = VCardUtils.escapeString(str);
-		
-		if(isQuotedPrintable) {
-			if(qpCodec == null) {
-				qpCodec = new QuotedPrintableCodec();
-			}
-			
-			return qpCodec.encode(str2);
-		}
-		else {
-			return str2;
 		}
 	}
 	
