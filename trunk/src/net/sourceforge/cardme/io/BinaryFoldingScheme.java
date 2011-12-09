@@ -37,27 +37,16 @@ import net.sourceforge.cardme.util.VCardUtils;
  * Feb 8, 2010
  *
  */
-public enum FoldingScheme {
+public enum BinaryFoldingScheme {
 
 	MIME_DIR(75, VCardUtils.SP),
 	MS_OUTLOOK(72, VCardUtils.SP),
-	
-	/**
-	 * <p>This is used mainly for folding non-binary data.
-	 * Binary data seems to use the standard MIME_DIR.</p>
-	 */
-	MAC_ADDRESS_BOOK(76, VCardUtils.SP+VCardUtils.SP),
-	
-	/**
-	 * <p>This is used internally for folding binary data.</p>
-	 */
-	MAC_ADDRESS_BOOK_B(74, VCardUtils.SP),
-	
+	MAC_ADDRESS_BOOK(74, VCardUtils.SP),
 	NONE(-1, "");
 	
 	private int maxChars = -1;
 	private String indent = "";
-	FoldingScheme(int _maxChars, String _indent) {
+	BinaryFoldingScheme(int _maxChars, String _indent) {
 		maxChars = _maxChars;
 		indent = _indent;
 	}
