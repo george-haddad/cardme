@@ -69,9 +69,8 @@ public enum CompatibilityMode {
 	/**
 	 * <p>
 	 * 	<ol>
-	 * 		<li>Folds lines at 76 characters instead of 75.</li>
-	 * 		<li>Base64 encoded text start on a new line and end with a new line (v2.1 style)</li>
-	 * 		<li>Folds base64 encoded text at 72 characters instead of 75.</li>
+	 * 		<li>Folds lines at 76 characters instead of 75 only for non-binary data.</li>
+	 * 		<li>Folds base64 encoded text like standard MIME-DIR.</li>
 	 * 		<li>Does not include the ENCODING parameter type for PHOTOs.</li>
 	 * 		<li>Compensates for missing = sign delimiting parameter types in PHOTO, LOGO, SOUND and KEY types when parsing.</li>
 	 * 	</ol>

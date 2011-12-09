@@ -1,5 +1,6 @@
 package net.sourceforge.cardme.util;
 
+import net.sourceforge.cardme.io.BinaryFoldingScheme;
 import net.sourceforge.cardme.io.FoldingScheme;
 
 import java.text.NumberFormat;
@@ -265,11 +266,25 @@ public final class VCardUtils {
 	 */
 	public static boolean needsFolding(String line, FoldingScheme foldingScheme)
 	{
-		if(foldingScheme.getMaxChars() < 0) {
+		return needsFolding(line, foldingScheme.getMaxChars());
+	}
+	
+	/**
+	 * <p>Returns true if the given String is greater than the maximum allowed
+	 * characters needed for folding as specified by <code>foldingScheme</code> excluding
+	 * the CRLF at the end.</p>
+	 *
+	 * @param line
+	 * @param maxChars
+	 * @return boolean
+	 */
+	public static boolean needsFolding(String line, int maxChars)
+	{
+		if(maxChars < 0) {
 			return false;
 		}
 		else {
-			return line.length() > foldingScheme.getMaxChars();
+			return line.length() > maxChars;
 		}
 	}
 	
@@ -336,6 +351,46 @@ public final class VCardUtils {
 	}
 	
 	/**
+	 * <p>Takes a single line and folds it according to the MIME-DIR specification.
+	 * The line is folded if its length exceeds <code>maxChars</code> characters.
+	 * For every <code>maxChars</code> characters a CRLF is appended to the end,
+	 * the following line will begin with a SP character and then followed by the
+	 * usual next <code>maxChars</code> chars + CRLF until the end.</p>
+	 * 
+	 * <p>Strings coming out of here will always terminate with CRLF.</p>
+	 * 
+	 * <p>This method will not check the length of the String before folding, use
+	 * the VCardUtils.needsFolding(String) method before invoking this one. This
+	 * method will start the folding procedure right away. Running a line that
+	 * doesn't need folding through here won't affect the outcome, but creates
+	 * extra over head.</p>
+	 * 
+	 * @param thisLine
+	 * @param binaryFoldingScheme
+	 * @return {@link String}
+	 */
+	public static String foldLine(String thisLine, BinaryFoldingScheme binaryFoldingScheme)
+	{
+		return foldLine(thisLine, VCardUtils.CRLF, binaryFoldingScheme.getMaxChars(), binaryFoldingScheme.getIndent());
+	}
+	
+	/**
+	 *  <p>Does the same job as {@link #foldLine(String)} but allows you
+	 * to specify a String to be append when the line folds. By default
+	 * it is CRLF. Here you can specify what you want. Useful when folding
+	 * Quoted-Printable labels. Though a trailing delimiter may appear.</p>
+	 *
+	 * @param thisLine
+	 * @param eolDelimeter
+	 * @param binaryFoldingScheme
+	 * @return {@link String}
+	 */
+	public static String foldLine(String thisLine,  String eolDelimeter, BinaryFoldingScheme binaryFoldingScheme)
+	{
+		return foldLine(thisLine, eolDelimeter, binaryFoldingScheme.getMaxChars(), binaryFoldingScheme.getIndent());
+	}
+	
+	/**
 	 * <p>Does the same job as {@link #foldLine(String)} but allows you
 	 * to specify a String to be append when the line folds. By default
 	 * it is CRLF. Here you can specify what you want. Useful when folding
@@ -348,7 +403,24 @@ public final class VCardUtils {
 	 */
 	public static String foldLine(String thisLine, String eolDelimeter, FoldingScheme foldingScheme)
 	{
-		if(!needsFolding(thisLine, foldingScheme)) {
+		return foldLine(thisLine, eolDelimeter, foldingScheme.getMaxChars(),foldingScheme.getIndent());
+	}
+	
+	/**
+	 * <p>Does the same job as {@link #foldLine(String)} but allows you
+	 * to specify a String to be append when the line folds. By default
+	 * it is CRLF. Here you can specify what you want. Useful when folding
+	 * Quoted-Printable labels. Though a trailing delimiter may appear.</p>
+	 *
+	 * @param thisLine
+	 * @param eolDelimeter
+	 * @param maxChars
+	 * @param indent
+	 * @return
+	 */
+	public static String foldLine(String thisLine, String eolDelimeter, int maxChars, String indent)
+	{
+		if(!needsFolding(thisLine, maxChars)) {
 			return thisLine;
 		}
 		
@@ -360,13 +432,13 @@ public final class VCardUtils {
 		StringBuilder builder = new StringBuilder();
 		while (loop) {
 			prev = crnt;
-			crnt = crnt + foldingScheme.getMaxChars();
+			crnt = crnt + maxChars;
 
 			if (crnt > thisLine.length()) {
 				// Append any extra characters at the end
 				if (prev < thisLine.length()) {
 					if (!first) {
-						builder.append(foldingScheme.getIndent()); // on some rare occasions
+						builder.append(indent); // on some rare occasions
 					}
 
 					builder.append(thisLine.substring(prev).trim());
@@ -378,7 +450,7 @@ public final class VCardUtils {
 			}
 			else {
 				if (!first) {
-					builder.append(foldingScheme.getIndent());
+					builder.append(indent);
 
 				}
 				else {
