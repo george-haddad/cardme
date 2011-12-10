@@ -1,0 +1,24 @@
+<assembly>
+  <id>bin</id>
+  <formats>
+    <format>zip</format>
+    <format>tar.gz</format>
+  </formats>
+  <fileSets>
+    <fileSet>
+	  <outputDirectory>/</outputDirectory>
+      <includes>
+        <include>doc/**</include>
+        <include>licenses/**</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>target</directory>
+      <outputDirectory>/</outputDirectory>
+      <includes>
+        <include>cardme*-SNAPSHOT.jar</include>
+		<include>apidocs/**</include>
+      </includes>
+    </fileSet>
+  </fileSets>
+</assembly>
