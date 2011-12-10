@@ -33,9 +33,7 @@
 				<role>Committer</role>
 			</roles>
 		</developer>
-	</developers>
-	<contributors>
-		<contributor>
+		<developer>
 			<name>Michael Rimov</name>
 			<email><![CDATA[http://www.google.com/recaptcha/mailhide/d?k=01xBp9R5oyZ0AHlFSGuH_nLA==&c=TYIAHRtzmufrxC_wK5nmAZKgyDjrgAi6fWI_FI5eJX8=]]></email>
 			<organization>Centerline Computers, Inc.</organization>
@@ -45,16 +43,16 @@
 				<role>Maven Integration Contributor</role>
 				<role>Committer</role>
 			</roles>
-		</contributor>
-	</contributors>
+		</developer>
+	</developers>
 	<issueManagement>
-		<system>SourceForge Bugs Tracker</system>
+		<system>SourceForge Bug Tracker</system>
 		<url>https://sourceforge.net/tracker/?group_id=99914&amp;atid=625723</url>
 	</issueManagement>
 	<scm>
 		<connection>scm:svn:https://cardme.svn.sourceforge.net/svnroot/cardme</connection>
 		<developerConnection>scm:svn:https://cardme.svn.sourceforge.net/svnroot/cardme</developerConnection>
-		<tag>HEAD</tag>
+		<tag>trunk</tag>
 		<url>http://cardme.svn.sourceforge.net/viewvc/cardme/</url>
 	</scm>
 	<dependencies>
@@ -215,7 +213,14 @@
 						  </goals>
 						</execution>
 					  </executions>
-					</plugin>		  
+					</plugin>
+					<plugin>
+				        <artifactId>maven-assembly-plugin</artifactId>
+				        <version>2.2-beta-2</version>
+				        <configuration>
+				          <descriptor>assembly.xml</descriptor>
+				        </configuration>					
+				     </plugin>		  
 				</plugins>
 		  </build>
 	  </profile>
