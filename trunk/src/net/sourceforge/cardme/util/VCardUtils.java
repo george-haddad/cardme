@@ -501,7 +501,7 @@ public final class VCardUtils {
 
 		for(int len = testStringarr.length; i < len; i++) {
 			c = testStringarr[i];
-			
+
 			if(state == 0) {
 				if(c == '\\') {
 					state++;
@@ -526,7 +526,13 @@ public final class VCardUtils {
 			}
 		}
 		
-		strList.add(str.substring(prev+1));
+		if(firstTime) {
+			strList.add(str.substring(prev));
+		}
+		else {
+			strList.add(str.substring(prev+1));
+		}
+		
 		return strList.toArray(new String[strList.size()]);
 	}
 }

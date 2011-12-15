@@ -151,18 +151,19 @@ public class TestParser {
 		}
 		
 		TestParser testParser = new TestParser();
-//		testParser.setCompatibilityMode(CompatibilityMode.RFC2426);
+		testParser.setCompatibilityMode(CompatibilityMode.RFC2426);
 //		testParser.setCompatibilityMode(CompatibilityMode.I_PHONE);
 //		testParser.setCompatibilityMode(CompatibilityMode.KDE_ADDRESS_BOOK);
-		testParser.setCompatibilityMode(CompatibilityMode.MAC_ADDRESS_BOOK);
+//		testParser.setCompatibilityMode(CompatibilityMode.MAC_ADDRESS_BOOK);
 //		testParser.setCompatibilityMode(CompatibilityMode.MS_OUTLOOK);
 		List<VCard> vcards = testParser.importVCards();
 		
 		VCardWriter writer = new VCardWriter();
 		writer.setOutputVersion(VCardVersion.V3_0);
-		writer.setCompatibilityMode(CompatibilityMode.MAC_ADDRESS_BOOK);
-		writer.setFoldingScheme(FoldingScheme.MAC_ADDRESS_BOOK);
-		writer.setBinaryfoldingScheme(BinaryFoldingScheme.MAC_ADDRESS_BOOK);
+//		writer.setCompatibilityMode(CompatibilityMode.MS_OUTLOOK);
+		writer.setCompatibilityMode(CompatibilityMode.RFC2426);
+		writer.setFoldingScheme(FoldingScheme.MIME_DIR);
+		writer.setBinaryfoldingScheme(BinaryFoldingScheme.MIME_DIR);
 		
 		for(int i = 0; i < vcards.size(); i++) {
 			VCardImpl vcard = (VCardImpl)vcards.get(i);
