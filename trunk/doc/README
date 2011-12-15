@@ -10,6 +10,18 @@ We want to be the best VCard library on the net, so if there is a bug or a new f
 
 -------------------
 
+Card Me Version 0.3.0.01
+
+BUG[3459920]
+Fix accidental truncation of first character when parsing a string with escaped delimiter. - Lev Stipakov
+
+George El-Haddad
+Project Lead
+
+Michael Rimov
+Maven Integration Contributor
+
+
 Card Me Version 0.3
 
 *Special Notice*
