@@ -129,7 +129,15 @@ public class TelephoneType extends Type implements TelephoneFeature {
 	{
 		return telephoneParameterTypes.contains(telephoneParameterType);
 	}
-
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean containsAllTelephoneParameterTypes(List<TelephoneParameterType> telephoneParameterTypes)
+	{
+		return telephoneParameterTypes.containsAll(telephoneParameterTypes);
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -189,6 +197,14 @@ public class TelephoneType extends Type implements TelephoneFeature {
 	public boolean containsExtendedTelephoneParameterType(XTelephoneParameterType xtendedTelephoneParameterType)
 	{
 		return xtendedTelephoneParameterTypes.contains(xtendedTelephoneParameterType);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean containsAllExtendedTelephoneParameterTypes(List<XTelephoneParameterType> xtendedTelephoneParameterTypes)
+	{
+		return xtendedTelephoneParameterTypes.containsAll(xtendedTelephoneParameterTypes);
 	}
 	
 	/**

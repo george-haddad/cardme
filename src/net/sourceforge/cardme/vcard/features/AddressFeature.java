@@ -194,6 +194,14 @@ public interface AddressFeature extends TypeTools {
 	public boolean containsAddressParameterType(AddressParameterType addressParameterType);
 	
 	/**
+	 * <p>Returns true if all the parameter types exist.</p>
+	 *
+	 * @param addressParameterTypes
+	 * @return boolean
+	 */
+	public boolean containsAllAddressParameterTypes(List<AddressParameterType> addressParameterTypes);
+	
+	/**
 	 * <p>Removes all address parameter types.</p>
 	 */
 	public void clearAddressParameterTypes();
@@ -240,6 +248,14 @@ public interface AddressFeature extends TypeTools {
 	 * @return boolean
 	 */
 	public boolean containsExtendedAddressParameterType(XAddressParameterType xtendedAddressParameterType);
+	
+	/**
+	 * <p>Returns true if all the extended parameter types exist.</p>
+	 *
+	 * @param xtendedParameterTypes
+	 * @return boolean
+	 */
+	public boolean containsAllExtendedAddressParameterTypes(List<XAddressParameterType> xtendedParameterTypes);
 	
 	/**
 	 * <p>Returns true if this address number has extended parameter types.</p>

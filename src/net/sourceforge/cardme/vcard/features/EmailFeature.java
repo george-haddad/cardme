@@ -126,6 +126,14 @@ public interface EmailFeature extends TypeTools, TypeData {
 	public boolean containsEmailParameterType(EmailParameterType emailParameterType);
 	
 	/**
+	 * <p>Returns true if all parameter types exist.</p>
+	 *
+	 * @param emailParameterTypes
+	 * @return boolean
+	 */
+	public boolean containsAllEmailParameterTypes(List<EmailParameterType> emailParameterTypes);
+	
+	/**
 	 * <p>Returns true if this email has parameter types.</p>
 	 *
 	 * @return boolean
@@ -179,6 +187,14 @@ public interface EmailFeature extends TypeTools, TypeData {
 	 * @return boolean
 	 */
 	public boolean containsExtendedEmailParameterType(XEmailParameterType xtendedEmailParameterType);
+	
+	/**
+	 * <p>Returns true if all extended parameter types exist.</p>
+	 *
+	 * @param xtendedEmailParameterTypes
+	 * @return boolean
+	 */
+	public boolean containsAllExtendedEmailParameterTypes(List<XEmailParameterType> xtendedEmailParameterTypes);
 	
 	/**
 	 * <p>Returns true if this email number has extended parameter types.</p>

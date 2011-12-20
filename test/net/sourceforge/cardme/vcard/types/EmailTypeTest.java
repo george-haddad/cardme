@@ -3,12 +3,16 @@ package net.sourceforge.cardme.vcard.types;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import net.sourceforge.cardme.vcard.VCardType;
 import net.sourceforge.cardme.vcard.features.EmailFeature;
 import net.sourceforge.cardme.vcard.types.parameters.EmailParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XEmailParameterType;
-import java.util.Iterator;
-import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -110,6 +114,15 @@ public class EmailTypeTest {
 	}
 	
 	@Test
+	public void testContainsAllEmailParameterTypes() {
+		List<EmailParameterType> types = new ArrayList<EmailParameterType>(2);
+		types.add(EmailParameterType.PREF);
+		types.add(EmailParameterType.INTERNET);
+		
+		assertTrue(emailType.containsAllEmailParameterTypes(types));
+	}
+	
+	@Test
 	public void testHasEmailParameterTypes() {
 		assertTrue(emailType.hasEmailParameterTypes());
 	}
@@ -155,6 +168,15 @@ public class EmailTypeTest {
 	public void testContainsExtendedEmailParameterType() {
 		assertTrue(emailType.containsExtendedEmailParameterType(new XEmailParameterType("X-SLOT", "GROUP-1")));
 		assertTrue(emailType.containsExtendedEmailParameterType(new XEmailParameterType("X-COMPANY-ACCOUNT")));
+	}
+	
+	@Test
+	public void testContainsAllExtendedEmailParameterTypes() {
+		List<XEmailParameterType> types = new ArrayList<XEmailParameterType>(2);
+		types.add(new XEmailParameterType("X-SLOT", "GROUP-1"));
+		types.add(new XEmailParameterType("X-COMPANY-ACCOUNT"));
+		
+		assertTrue(emailType.containsAllExtendedEmailParameterTypes(types));
 	}
 	
 	@Test

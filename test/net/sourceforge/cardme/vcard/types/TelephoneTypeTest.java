@@ -7,6 +7,8 @@ import net.sourceforge.cardme.vcard.VCardType;
 import net.sourceforge.cardme.vcard.features.TelephoneFeature;
 import net.sourceforge.cardme.vcard.types.parameters.TelephoneParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XTelephoneParameterType;
+
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import org.junit.After;
@@ -111,6 +113,16 @@ public class TelephoneTypeTest {
 	public void testContainsTelephoneParameterType() {
 		assertTrue(telephoneType.containsTelephoneParameterType(TelephoneParameterType.HOME));
 	}
+	
+	@Test
+	public void testContainsAllTelephoneParameterTypes() {
+		List<TelephoneParameterType> types = new ArrayList<TelephoneParameterType>(3);
+		types.add(TelephoneParameterType.CELL);
+		types.add(TelephoneParameterType.PREF);
+		types.add(TelephoneParameterType.HOME);
+		
+		assertTrue(telephoneType.containsAllTelephoneParameterTypes(types));
+	}
 
 	@Test
 	public void testHasTelephoneParameterTypes() {
@@ -157,6 +169,15 @@ public class TelephoneTypeTest {
 	@Test
 	public void testContainsExtendedTelephoneParameterType() {
 		assertTrue(telephoneType.containsExtendedTelephoneParameterType(new XTelephoneParameterType("X-3G")));
+	}
+	
+	@Test
+	public void testContainsAllExtendedTelephoneParameterTypes() {
+		List<XTelephoneParameterType> types = new ArrayList<XTelephoneParameterType>(3);
+		types.add(new XTelephoneParameterType("X-3G"));
+		types.add(new XTelephoneParameterType("X-TYPE", "SmartPhone"));
+		
+		assertTrue(telephoneType.containsAllExtendedTelephoneParameterTypes(types));
 	}
 
 	@Test

@@ -125,6 +125,14 @@ public class EmailType extends Type implements EmailFeature {
 	{
 		return emailParameterTypes.contains(emailParameterType);
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean containsAllEmailParameterTypes(List<EmailParameterType> emailParameterTypes)
+	{
+		return emailParameterTypes.containsAll(emailParameterTypes);
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -185,6 +193,14 @@ public class EmailType extends Type implements EmailFeature {
 	public boolean containsExtendedEmailParameterType(XEmailParameterType xtendedEmailParameterType)
 	{
 		return xtendedEmailParameterTypes.contains(xtendedEmailParameterType);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean containsAllExtendedEmailParameterTypes(List<XEmailParameterType> xtendedEmailParameterTypes)
+	{
+		return xtendedEmailParameterTypes.containsAll(xtendedEmailParameterTypes);
 	}
 	
 	/**

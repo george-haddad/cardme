@@ -119,6 +119,14 @@ public class LabelType extends Type implements LabelFeature {
 	{
 		return labelParameterTypes.contains(labelParameterType);
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean conatinsAllLabelParameterTypes(List<LabelParameterType> parameterTypes)
+	{
+		return labelParameterTypes.containsAll(parameterTypes);
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -179,6 +187,14 @@ public class LabelType extends Type implements LabelFeature {
 	public boolean containsExtendedLabelParameterType(XLabelParameterType xtendedLabelParameterType)
 	{
 		return xtendedLabelParameterTypes.contains(xtendedLabelParameterType);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean containsAllExtendedLabelParameterTypes(List<XLabelParameterType> parameterTypes)
+	{
+		return xtendedLabelParameterTypes.containsAll(parameterTypes);
 	}
 	
 	/**
