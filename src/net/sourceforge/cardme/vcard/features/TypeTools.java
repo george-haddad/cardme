@@ -4,6 +4,7 @@ import java.nio.charset.Charset;
 
 import net.sourceforge.cardme.db.Persistable;
 import net.sourceforge.cardme.vcard.EncodingType;
+import net.sourceforge.cardme.vcard.LanguageType;
 import net.sourceforge.cardme.vcard.types.Type;
 import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
 
@@ -114,6 +115,36 @@ public interface TypeTools extends Persistable {
 	 * @return boolean
 	 */
 	public boolean hasCharset();
+	
+	/**
+	 * <p>Returns the current language type, or null if there are none.</p>
+	 *
+	 * @return {@link LanguageType}
+	 */
+	public LanguageType getLanguage();
+	
+	/**
+	 * <p>Sets the language type.</p>
+	 *
+	 * @param languageType
+	 */
+	public void setLanguage(LanguageType languageType);
+	
+	/**
+	 * <p>Sets the language type via parsing a String. Should
+	 * the string be invalid or null then the current language
+	 * type is assigned to null.</p>
+	 *
+	 * @param languageType
+	 */
+	public void setLanguage(String languageType);
+	
+	/**
+	 * <p>Returns true if this type has a language type.</p>
+	 *
+	 * @return boolean
+	 */
+	public boolean hasLanguage();
 	
 	/**
 	 * <p>Sets the encoding type.</p>

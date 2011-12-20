@@ -189,11 +189,11 @@ public class VCardWriterTest {
 	public void testBuildFormattedNameFeature() {
 		String vcardStr = vcardWriter.buildVCardString();
 		
-		int startIndex = vcardStr.indexOf("\r\nFN:")+2;
+		int startIndex = vcardStr.indexOf("\r\nFN;")+2;
 		int stopIndex = vcardStr.indexOf('\n', startIndex)+1;
 		String line = vcardStr.substring(startIndex, stopIndex);
 		
-		assertTrue(line.compareTo("FN:John \"Johny\" Doe\r\n") == 0);
+		assertTrue(line.compareTo("FN;LANGUAGE=en:John \"Johny\" Doe\r\n") == 0);
 	}
 	
 	@Test
@@ -380,6 +380,7 @@ public class VCardWriterTest {
 		
 		FormattedNameFeature formattedName = new FormattedNameType();
 		formattedName.setFormattedName("John \"Johny\" Doe");
+		formattedName.setLanguage("en");
 		vcard.setFormattedName(formattedName);
 		
 		NicknameFeature nicknames = new NicknameType();

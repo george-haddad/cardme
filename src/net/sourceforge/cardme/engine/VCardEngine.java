@@ -619,6 +619,9 @@ public class VCardEngine {
 							formattedNameFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 						}
 					}
+					else if(pt.getName().equals("LANGUAGE")) {
+						formattedNameFeature.setLanguage(pt.getValue());
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
@@ -675,6 +678,9 @@ public class VCardEngine {
 						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
 							nameFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 						}
+					}
+					else if(pt.getName().equals("LANGUAGE")) {
+						nameFeature.setLanguage(pt.getValue());
 					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
@@ -882,6 +888,9 @@ public class VCardEngine {
 						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
 							nicknameFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 						}
+					}
+					else if(pt.getName().equals("LANGUAGE")) {
+						nicknameFeature.setLanguage(pt.getValue());
 					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
@@ -1179,6 +1188,9 @@ public class VCardEngine {
 							setAdrParameterType(addressFeature, pt.getValue());
 						}
 					}
+					else if(pt.getName().equals("LANGUAGE")) {
+						addressFeature.setLanguage(pt.getValue());
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
@@ -1339,6 +1351,9 @@ public class VCardEngine {
 							setLabelParameterType(labelFeature, pt.getValue());
 						}
 					}
+					else if(pt.getName().equals("LANGUAGE")) {
+						labelFeature.setLanguage(pt.getValue());
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
@@ -1481,6 +1496,9 @@ public class VCardEngine {
 							setTelParameterType(telephoneFeature, pt.getValue());
 						}
 					}
+					else if(pt.getName().equals("LANGUAGE")) {
+						telephoneFeature.setLanguage(pt.getValue());
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
@@ -1589,6 +1607,9 @@ public class VCardEngine {
 						}
 						
 					}
+					else if(pt.getName().equals("LANGUAGE")) {
+						emailFeature.setLanguage(pt.getValue());
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
@@ -1679,6 +1700,9 @@ public class VCardEngine {
 						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
 							mailerFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 						}
+					}
+					else if(pt.getName().equals("LANGUAGE")) {
+						mailerFeature.setLanguage(pt.getValue());
 					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
@@ -1901,6 +1925,9 @@ public class VCardEngine {
 							titleFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 						}
 					}
+					else if(pt.getName().equals("LANGUAGE")) {
+						titleFeature.setLanguage(pt.getValue());
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
@@ -1957,6 +1984,9 @@ public class VCardEngine {
 						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
 							roleFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 						}
+					}
+					else if(pt.getName().equals("LANGUAGE")) {
+						roleFeature.setLanguage(pt.getValue());
 					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
@@ -2104,6 +2134,9 @@ public class VCardEngine {
 							organizationFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 						}
 					}
+					else if(pt.getName().equals("LANGUAGE")) {
+						organizationFeature.setLanguage(pt.getValue());
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
@@ -2173,6 +2206,9 @@ public class VCardEngine {
 						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
 							categoriesFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 						}
+					}
+					else if(pt.getName().equals("LANGUAGE")) {
+						categoriesFeature.setLanguage(pt.getValue());
 					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
@@ -2258,6 +2294,9 @@ public class VCardEngine {
 							noteFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 						}
 					}
+					else if(pt.getName().equals("LANGUAGE")) {
+						noteFeature.setLanguage(pt.getValue());
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
@@ -2314,6 +2353,9 @@ public class VCardEngine {
 						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
 							productIdFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 						}
+					}
+					else if(pt.getName().equals("LANGUAGE")) {
+						productIdFeature.setLanguage(pt.getValue());
 					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
@@ -2508,6 +2550,9 @@ public class VCardEngine {
 							sortStringFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 						}
 					}
+					else if(pt.getName().equals("LANGUAGE")) {
+						sortStringFeature.setLanguage(pt.getValue());
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
@@ -2654,6 +2699,9 @@ public class VCardEngine {
 							uidFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 						}
 					}
+					else if(pt.getName().equals("LANGUAGE")) {
+						uidFeature.setLanguage(pt.getValue());
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
@@ -2711,6 +2759,9 @@ public class VCardEngine {
 							urlFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 						}
 					}
+					else if(pt.getName().equals("LANGUAGE")) {
+						urlFeature.setLanguage(pt.getValue());
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
@@ -2767,6 +2818,9 @@ public class VCardEngine {
 						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
 							classFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 						}
+					}
+					else if(pt.getName().equals("LANGUAGE")) {
+						classFeature.setLanguage(pt.getValue());
 					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
@@ -2897,6 +2951,9 @@ public class VCardEngine {
 							extendedFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 						}
 					}
+					else if(pt.getName().equals("LANGUAGE")) {
+						extendedFeature.setLanguage(pt.getValue());
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
@@ -2956,6 +3013,9 @@ public class VCardEngine {
 							displayableNameFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 						}
 					}
+					else if(pt.getName().equals("LANGUAGE")) {
+						displayableNameFeature.setLanguage(pt.getValue());
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
@@ -3014,6 +3074,9 @@ public class VCardEngine {
 							profileFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 						}
 					}
+					else if(pt.getName().equals("LANGUAGE")) {
+						profileFeature.setLanguage(pt.getValue());
+					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
@@ -3070,6 +3133,9 @@ public class VCardEngine {
 						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
 							sourceFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 						}
+					}
+					else if(pt.getName().equals("LANGUAGE")) {
+						sourceFeature.setLanguage(pt.getValue());
 					}
 					else {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
