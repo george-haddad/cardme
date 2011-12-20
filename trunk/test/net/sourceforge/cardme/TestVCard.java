@@ -17,6 +17,7 @@ import net.sourceforge.cardme.io.FoldingScheme;
 import net.sourceforge.cardme.io.VCardWriter;
 import net.sourceforge.cardme.util.Util;
 import net.sourceforge.cardme.vcard.EncodingType;
+import net.sourceforge.cardme.vcard.LanguageType;
 import net.sourceforge.cardme.vcard.VCard;
 import net.sourceforge.cardme.vcard.VCardImpl;
 import net.sourceforge.cardme.vcard.VCardVersion;
@@ -459,6 +460,7 @@ public class TestVCard {
 		FormattedNameFeature formattedName = new FormattedNameType();
 		formattedName.setFormattedName("John \"Johny\" Doe");
 		formattedName.setCharset(Charset.forName("UTF-8"));
+		formattedName.setLanguage(LanguageType.EN);
 		vcard.setFormattedName(formattedName);
 		
 		NicknameFeature nicknames = new NicknameType();

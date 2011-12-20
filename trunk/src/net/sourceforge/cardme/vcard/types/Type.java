@@ -4,6 +4,7 @@ import net.sourceforge.cardme.db.MarkType;
 import net.sourceforge.cardme.db.Persistable;
 import net.sourceforge.cardme.util.Util;
 import net.sourceforge.cardme.vcard.EncodingType;
+import net.sourceforge.cardme.vcard.LanguageType;
 import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
 import java.io.Serializable;
 import java.nio.charset.Charset;
@@ -51,6 +52,7 @@ public abstract class Type implements Persistable, Cloneable, Serializable {
 	protected ParameterTypeStyle paramTypeStyle = null;
 	protected String group = null;
 	protected Charset charset = null;
+	protected LanguageType languageType = null;
 	
 	public Type() {
 		
@@ -217,6 +219,56 @@ public abstract class Type implements Persistable, Cloneable, Serializable {
 	public boolean hasCharset()
 	{
 		return charset != null;
+	}
+	
+	/**
+	 * <p>Returns the current language type, or null if there are none.</p>
+	 *
+	 * @return {@link LanguageType}
+	 */
+	public LanguageType getLanguage()
+	{
+		return languageType;
+	}
+	
+	/**
+	 * <p>Sets the language type.</p>
+	 *
+	 * @param languageType
+	 */
+	public void setLanguage(LanguageType languageType) {
+		setLanguage(languageType.getLanguageCode());
+	}
+	
+	/**
+	 * <p>Sets the language type via parsing a String. Should
+	 * the string be invalid or null then the current language
+	 * type is assigned to null.</p>
+	 *
+	 * @param languageType
+	 */
+	public void setLanguage(String languageType) {
+		if(languageType != null) {
+			try {
+				this.languageType = LanguageType.valueOf(languageType.toUpperCase().replaceAll("-", "_"));
+			}
+			catch(Exception ex) {
+				this.languageType = null;
+			}
+		}
+		else {
+			this.languageType = null;
+		}
+	}
+	
+	/**
+	 * <p>Returns true if this type has a language type.</p>
+	 *
+	 * @return boolean
+	 */
+	public boolean hasLanguage()
+	{
+		return languageType != null;
 	}
 	
 	/**

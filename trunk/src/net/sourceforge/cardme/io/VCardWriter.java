@@ -1082,6 +1082,11 @@ public class VCardWriter {
 					tmpSb.append(nameFeature.getCharset().name());
 				}
 				
+				if(nameFeature.hasLanguage()) {
+					tmpSb.append(";LANGUAGE=");
+					tmpSb.append(nameFeature.getLanguage().getLanguageCode());
+				}
+				
 				if(isQuotedPrintable) {
 					tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 				}
@@ -1180,6 +1185,11 @@ public class VCardWriter {
 					tmpSb.append(formattedNameFeature.getCharset().name());
 				}
 				
+				if(formattedNameFeature.hasLanguage()) {
+					tmpSb.append(";LANGUAGE=");
+					tmpSb.append(formattedNameFeature.getLanguage().getLanguageCode());
+				}
+				
 				if(isQuotedPrintable) {
 					tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 				}
@@ -1228,6 +1238,11 @@ public class VCardWriter {
 				if(displayableNameFeature.hasCharset()) {
 					tmpSb.append(";CHARSET=");
 					tmpSb.append(displayableNameFeature.getCharset().name());
+				}
+				
+				if(displayableNameFeature.hasLanguage()) {
+					tmpSb.append(";LANGUAGE=");
+					tmpSb.append(displayableNameFeature.getLanguage().getLanguageCode());
 				}
 				
 				if(isQuotedPrintable) {
@@ -1280,6 +1295,11 @@ public class VCardWriter {
 					tmpSb.append(profileFeature.getCharset().name());
 				}
 				
+				if(profileFeature.hasLanguage()) {
+					tmpSb.append(";LANGUAGE=");
+					tmpSb.append(profileFeature.getLanguage().getLanguageCode());
+				}
+				
 				if(isQuotedPrintable) {
 					tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 				}
@@ -1328,6 +1348,11 @@ public class VCardWriter {
 				if(sourceFeature.hasCharset()) {
 					tmpSb.append(";CHARSET=");
 					tmpSb.append(sourceFeature.getCharset().name());
+				}
+				
+				if(sourceFeature.hasLanguage()) {
+					tmpSb.append(";LANGUAGE=");
+					tmpSb.append(sourceFeature.getLanguage().getLanguageCode());
 				}
 				
 				if(isQuotedPrintable) {
@@ -1381,6 +1406,11 @@ public class VCardWriter {
 						tmpSb.append(titleFeature.getCharset().name());
 					}
 					
+					if(titleFeature.hasLanguage()) {
+						tmpSb.append(";LANGUAGE=");
+						tmpSb.append(titleFeature.getLanguage().getLanguageCode());
+					}
+					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
@@ -1431,6 +1461,11 @@ public class VCardWriter {
 					if(roleFeature.hasCharset()) {
 						tmpSb.append(";CHARSET=");
 						tmpSb.append(roleFeature.getCharset().name());
+					}
+					
+					if(roleFeature.hasLanguage()) {
+						tmpSb.append(";LANGUAGE=");
+						tmpSb.append(roleFeature.getLanguage().getLanguageCode());
 					}
 					
 					if(isQuotedPrintable) {
@@ -1527,6 +1562,11 @@ public class VCardWriter {
 						tmpSb.append(organizationFeature.getCharset().name());
 					}
 					
+					if(organizationFeature.hasLanguage()) {
+						tmpSb.append(";LANGUAGE=");
+						tmpSb.append(organizationFeature.getLanguage().getLanguageCode());
+					}
+					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
@@ -1584,6 +1624,11 @@ public class VCardWriter {
 					if(mailerFeature.hasCharset()) {
 						tmpSb.append(";CHARSET=");
 						tmpSb.append(mailerFeature.getCharset().name());
+					}
+					
+					if(mailerFeature.hasLanguage()) {
+						tmpSb.append(";LANGUAGE=");
+						tmpSb.append(mailerFeature.getLanguage().getLanguageCode());
 					}
 					
 					if(isQuotedPrintable) {
@@ -1687,6 +1732,11 @@ public class VCardWriter {
 						tmpSb.append(urlFeature.getCharset().name());
 					}
 					
+					if(urlFeature.hasLanguage()) {
+						tmpSb.append(";LANGUAGE=");
+						tmpSb.append(urlFeature.getLanguage().getLanguageCode());
+					}
+					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
@@ -1785,6 +1835,11 @@ public class VCardWriter {
 						tmpSb.append(uidFeature.getCharset().name());
 					}
 					
+					if(uidFeature.hasLanguage()) {
+						tmpSb.append(";LANGUAGE=");
+						tmpSb.append(uidFeature.getLanguage().getLanguageCode());
+					}
+					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
@@ -1876,6 +1931,11 @@ public class VCardWriter {
 				if(addressFeature.hasCharset()) {
 					tmpSb.append(";CHARSET=");
 					tmpSb.append(addressFeature.getCharset().name());
+				}
+				
+				if(addressFeature.hasLanguage()) {
+					tmpSb.append(";LANGUAGE=");
+					tmpSb.append(addressFeature.getLanguage().getLanguageCode());
 				}
 				
 				if(isQuotedPrintable) {
@@ -2048,6 +2108,11 @@ public class VCardWriter {
 						tmpSb.append(labelFeature.getCharset().name());
 					}
 					
+					if(labelFeature.hasLanguage()) {
+						tmpSb.append(";LANGUAGE=");
+						tmpSb.append(labelFeature.getLanguage().getLanguageCode());
+					}
+					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
@@ -2182,6 +2247,11 @@ public class VCardWriter {
 					if(telephoneFeature.hasCharset()) {
 						tmpSb.append(";CHARSET=");
 						tmpSb.append(telephoneFeature.getCharset().name());
+					}
+					
+					if(telephoneFeature.hasLanguage()) {
+						tmpSb.append(";LANGUAGE=");
+						tmpSb.append(telephoneFeature.getLanguage().getLanguageCode());
 					}
 					
 					if(isQuotedPrintable) {
@@ -2319,6 +2389,11 @@ public class VCardWriter {
 					if(emailFeature.hasCharset()) {
 						tmpSb.append(";CHARSET=");
 						tmpSb.append(emailFeature.getCharset().name());
+					}
+					
+					if(emailFeature.hasLanguage()) {
+						tmpSb.append(";LANGUAGE=");
+						tmpSb.append(emailFeature.getLanguage().getLanguageCode());
 					}
 					
 					if(emailFeature.hasEmailParameterTypes()) {
@@ -2492,6 +2567,11 @@ public class VCardWriter {
 						tmpSb.append(noteFeature.getCharset().name());
 					}
 					
+					if(noteFeature.hasLanguage()) {
+						tmpSb.append(";LANGUAGE=");
+						tmpSb.append(noteFeature.getLanguage().getLanguageCode());
+					}
+					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
@@ -2541,6 +2621,11 @@ public class VCardWriter {
 					if(nicknameFeature.hasCharset()) {
 						tmpSb.append(";CHARSET=");
 						tmpSb.append(nicknameFeature.getCharset().name());
+					}
+					
+					if(nicknameFeature.hasLanguage()) {
+						tmpSb.append(";LANGUAGE=");
+						tmpSb.append(nicknameFeature.getLanguage().getLanguageCode());
 					}
 					
 					if(isQuotedPrintable) {
@@ -2599,6 +2684,11 @@ public class VCardWriter {
 					if(categoriesFeature.hasCharset()) {
 						tmpSb.append(";CHARSET=");
 						tmpSb.append(categoriesFeature.getCharset().name());
+					}
+					
+					if(categoriesFeature.hasLanguage()) {
+						tmpSb.append(";LANGUAGE=");
+						tmpSb.append(categoriesFeature.getLanguage().getLanguageCode());
 					}
 					
 					if(isQuotedPrintable) {
@@ -2673,6 +2763,11 @@ public class VCardWriter {
 						tmpSb.append(classFeature.getCharset().name());
 					}
 					
+					if(classFeature.hasLanguage()) {
+						tmpSb.append(";LANGUAGE=");
+						tmpSb.append(classFeature.getLanguage().getLanguageCode());
+					}
+					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
@@ -2724,6 +2819,11 @@ public class VCardWriter {
 						tmpSb.append(productIdFeature.getCharset().name());
 					}
 					
+					if(productIdFeature.hasLanguage()) {
+						tmpSb.append(";LANGUAGE=");
+						tmpSb.append(productIdFeature.getLanguage().getLanguageCode());
+					}
+					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
@@ -2773,6 +2873,11 @@ public class VCardWriter {
 					if(sortStringFeature.hasCharset()) {
 						tmpSb.append(";CHARSET=");
 						tmpSb.append(sortStringFeature.getCharset().name());
+					}
+					
+					if(sortStringFeature.hasLanguage()) {
+						tmpSb.append(";LANGUAGE=");
+						tmpSb.append(sortStringFeature.getLanguage().getLanguageCode());
 					}
 					
 					if(isQuotedPrintable) {
@@ -3520,6 +3625,11 @@ public class VCardWriter {
 					if(extendedFeature.hasCharset()) {
 						tmpSb.append(";CHARSET=");
 						tmpSb.append(extendedFeature.getCharset().name());
+					}
+					
+					if(extendedFeature.hasLanguage()) {
+						tmpSb.append(";LANGUAGE=");
+						tmpSb.append(extendedFeature.getLanguage().getLanguageCode());
 					}
 					
 					if(isQuotedPrintable) {
