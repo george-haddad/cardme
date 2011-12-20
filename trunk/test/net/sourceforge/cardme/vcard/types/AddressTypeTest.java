@@ -3,10 +3,15 @@ package net.sourceforge.cardme.vcard.types;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import net.sourceforge.cardme.vcard.VCardType;
 import net.sourceforge.cardme.vcard.features.AddressFeature;
 import net.sourceforge.cardme.vcard.types.parameters.AddressParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XAddressParameterType;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -83,9 +88,27 @@ public class AddressTypeTest {
 	}
 	
 	@Test
+	public void testContainsAllAddressParameterTypes() {
+		List<AddressParameterType> types = new ArrayList<AddressParameterType>(3);
+		types.add(AddressParameterType.PREF);
+		types.add(AddressParameterType.HOME);
+		types.add(AddressParameterType.WORK);
+		
+		assertTrue(addressType.containsAllAddressParameterTypes(types));
+	}
+	
+	@Test
 	public void testContainsExtendedAddressParameterType() {
 		assertTrue(addressType.containsExtendedAddressParameterType(new XAddressParameterType("X-OFFICE")));
 		assertFalse(addressType.containsExtendedAddressParameterType(new XAddressParameterType("X-NO-EXISTS")));
+	}
+	
+	@Test
+	public void testContainsAllExtendedAddressParameterTypes() {
+		List<XAddressParameterType> types = new ArrayList<XAddressParameterType>(1);
+		types.add(new XAddressParameterType("X-OFFICE"));
+		
+		assertTrue(addressType.containsAllExtendedAddressParameterTypes(types));
 	}
 	
 	@Test

@@ -110,6 +110,14 @@ public interface TelephoneFeature extends TypeTools {
 	public boolean containsTelephoneParameterType(TelephoneParameterType telephoneParameterType);
 	
 	/**
+	 * <p>Returns true if all the parameter types exist.</p>
+	 *
+	 * @param telephoneParameterTypes
+	 * @return boolean
+	 */
+	public boolean containsAllTelephoneParameterTypes(List<TelephoneParameterType> telephoneParameterTypes);
+	
+	/**
 	 * <p>Returns true if this telephone number has parameter types.</p>
 	 *
 	 * @return boolean
@@ -163,6 +171,14 @@ public interface TelephoneFeature extends TypeTools {
 	 * @return boolean
 	 */
 	public boolean containsExtendedTelephoneParameterType(XTelephoneParameterType xtendedTelephoneParameterType);
+	
+	/**
+	 * <p>Returns true if all the extended parameter types exist.</p>
+	 *
+	 * @param xtendedTelephoneParameterTypes
+	 * @return boolean
+	 */
+	public boolean containsAllExtendedTelephoneParameterTypes(List<XTelephoneParameterType> xtendedTelephoneParameterTypes);
 	
 	/**
 	 * <p>Returns true if this telephone number has extended parameter types.</p>

@@ -110,6 +110,14 @@ public interface LabelFeature extends TypeTools {
 	public boolean containsLabelParameterType(LabelParameterType labelParameterType);
 	
 	/**
+	 * <p>Returns true if all parameter types exist.</p>
+	 *
+	 * @param labelParameterType
+	 * @return boolean
+	 */
+	public boolean conatinsAllLabelParameterTypes(List<LabelParameterType> labelParameterType);
+	
+	/**
 	 * <p>Returns true if this label has parameter types.</p>
 	 *
 	 * @return boolean
@@ -163,6 +171,14 @@ public interface LabelFeature extends TypeTools {
 	 * @return boolean
 	 */
 	public boolean containsExtendedLabelParameterType(XLabelParameterType xtendedLabelParameterType);
+	
+	/**
+	 * <p>Returns true if all extended parameter types exist.</p>
+	 *
+	 * @param xtendedParameterTypes
+	 * @return boolean
+	 */
+	public boolean containsAllExtendedLabelParameterTypes(List<XLabelParameterType> xtendedParameterTypes);
 	
 	/**
 	 * <p>Returns true if this label number has extended parameter types.</p>

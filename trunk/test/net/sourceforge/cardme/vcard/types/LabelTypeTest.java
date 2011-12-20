@@ -3,10 +3,14 @@ package net.sourceforge.cardme.vcard.types;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.types.parameters.LabelParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.XLabelParameterType;
+
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import net.sourceforge.cardme.vcard.types.parameters.LabelParameterType;
+import net.sourceforge.cardme.vcard.types.parameters.XLabelParameterType;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -108,6 +112,15 @@ public class LabelTypeTest {
 	}
 	
 	@Test
+	public void testContainsAllLabelParameterTypes() {
+		List<LabelParameterType> types = new ArrayList<LabelParameterType>(2);
+		types.add(LabelParameterType.POSTAL);
+		types.add(LabelParameterType.PARCEL);
+		
+		assertTrue(labelType.conatinsAllLabelParameterTypes(types));
+	}
+	
+	@Test
 	public void testClearLabelParameterTypes() {
 		labelType.clearLabelParameterTypes();
 		assertFalse(labelType.containsLabelParameterType(LabelParameterType.POSTAL));
@@ -155,6 +168,15 @@ public class LabelTypeTest {
 	public void testContainsExtendedLabelParameterType() {
 		assertTrue(labelType.containsExtendedLabelParameterType(new XLabelParameterType("X-DHL")));
 		assertTrue(labelType.containsExtendedLabelParameterType(new XLabelParameterType("X-TRACKING-NO", "SADF-9123840932180941")));
+	}
+	
+	@Test
+	public void testContainsAllExtendedLabelParameterTypes() {
+		List<XLabelParameterType> types = new ArrayList<XLabelParameterType>(2);
+		types.add(new XLabelParameterType("X-DHL"));
+		types.add(new XLabelParameterType("X-TRACKING-NO", "SADF-9123840932180941"));
+		
+		assertTrue(labelType.containsAllExtendedLabelParameterTypes(types));
 	}
 	
 	@Test

@@ -220,6 +220,14 @@ public class AddressType extends Type implements AddressFeature {
 	/**
 	 * {@inheritDoc}
 	 */
+	public boolean containsAllAddressParameterTypes(List<AddressParameterType> addressParameterTypes)
+	{
+		return addressParameterTypes.containsAll(addressParameterTypes);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void clearAddressParameterTypes() {
 		addressParameterTypes.clear();
 	}
@@ -268,6 +276,14 @@ public class AddressType extends Type implements AddressFeature {
 	public boolean containsExtendedAddressParameterType(XAddressParameterType xtendedAddressParameterType)
 	{
 		return xtendedAddressParameterTypes.contains(xtendedAddressParameterType);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean containsAllExtendedAddressParameterTypes(List<XAddressParameterType> xtendedAddressParameterTypes)
+	{
+		return xtendedAddressParameterTypes.containsAll(xtendedAddressParameterTypes);
 	}
 	
 	/**
