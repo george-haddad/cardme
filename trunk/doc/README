@@ -4,11 +4,28 @@ Card Me Readme file
 Card Me Home Page: http://dma.pixel-act.com
 Project Home Page: https://sourceforge.net/projects/cardme
 Ohloh Home Page: https://www.ohloh.net/p/cardme
+Freecode Home Page: http://freecode.com/projects/cardme
 
 Do not forget to go to the project or Ohloh home page and recommend cardme to others and even write a review.
 We want to be the best VCard library on the net, so if there is a bug or a new feature you want then let us know about it.
 
 -------------------
+
+Card Me Version 0.3.1
+
+FEATURE[3462916]
+Support for LANGUAGE parameter type.
+
+FEATURE[3460122]
+Implement containsAll(List) method to check if a list of parameter types exists within the current type of Address, Email, Label, and Telephone.
+Unit tests also implemented to make sure these methods work as expected.
+
+George El-Haddad
+Project Lead
+
+Michael Rimov
+Maven Integration Contributor
+
 
 Card Me Version 0.3.0.01
 
