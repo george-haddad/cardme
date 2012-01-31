@@ -157,6 +157,14 @@ public class VCardWriter {
 	private QuotedPrintableCodec qpCodec = null;
 	
 	/**
+	 * <p>The end of line character to use. By default and by
+	 * RFC and MIME-DIR standards the EOL character must be
+	 * CR+LF (\r\n) but we can customize it by setting this
+	 * variable.</p>
+	 */
+	private String eol = VCardUtils.CRLF;
+	
+	/**
 	 * <p>Creates a new VCardWriter with default parameters.</p>
 	 * 
 	 * @throws VCardException
@@ -318,6 +326,29 @@ public class VCardWriter {
 		}
 		else {
 			this.compatMode = compatMode;
+		}
+	}
+	
+	/**
+	 * <p>Sets the EOL character to use when building the VCard.
+	 * If not set then the default CRLF is used. See below list
+	 * for compatible types:
+	 * <ul>
+	 * 		<li><strong>LF or <code>\n</code></strong>: Unix, GNU/Linux, AIX, Xenix, Mac OS X, FreeBSD, BeOS, Amiga, and RISC OS</li>
+	 *  	<li><strong>CR or <code>\r</code></strong>:  Commodore 8-bit machines, Acorn BBC, TRS-80, Apple II family, Mac OS up to version 9 and OS-9</li>
+	 *  	<li><strong>CRLF or <code>\r\n</code></strong>:  Microsoft Windows, DEC TOPS-10, RT-11, CP/M, MP/M, DOS (MS-DOS, PC-DOS, etc.), Atari TOS, OS/2, Symbian OS, Palm OS</li>
+	 * </ul>
+	 * See <a href="http://en.wikipedia.org/wiki/Newline">wikipedia</a> for more info.
+	 * </p>
+	 *
+	 * @param eol
+	 */
+	public void setEOL(String eol) {
+		if(eol == null) {
+			this.eol = VCardUtils.CRLF;
+		}
+		else {
+			this.eol = new String(eol);
 		}
 	}
 	
@@ -978,7 +1009,7 @@ public class VCardWriter {
 				
 				sb.append(beginFeature.getTypeString());
 				sb.append(":VCARD");
-				sb.append(VCardUtils.CRLF);
+				sb.append(eol);
 			}
 			else {
 				throw new VCardBuildException("Cannot continue because BeginFeature ("+VCardType.BEGIN.getType()+") is null.");
@@ -1009,7 +1040,7 @@ public class VCardWriter {
 				
 				sb.append(endFeature.getTypeString());
 				sb.append(":VCARD");
-				sb.append(VCardUtils.CRLF);
+				sb.append(eol);
 			}
 			else {
 				throw new VCardBuildException("Cannot continue because EndFeature ("+VCardType.END.getType()+") is null.");
@@ -1041,7 +1072,7 @@ public class VCardWriter {
 				sb.append(versionFeature.getTypeString());
 				sb.append(":");
 				sb.append(versionFeature.getVersion().getVersion());
-				sb.append(VCardUtils.CRLF);
+				sb.append(eol);
 			}
 			else {
 				throw new VCardBuildException("Cannot continue because VersionFeature ("+VCardType.VERSION.getType()+") is null.");
@@ -1143,9 +1174,9 @@ public class VCardWriter {
 				}
 
 				String tmpNameLine = tmpSb.toString();
-				String foldedNameLine = VCardUtils.foldLine(tmpNameLine, foldingScheme);
+				String foldedNameLine = VCardUtils.foldLine(tmpNameLine, eol, foldingScheme);
 				sb.append(foldedNameLine);
-				sb.append(VCardUtils.CRLF);
+				sb.append(eol);
 			}
 			else {
 				throw new VCardBuildException("NameFeature ("+VCardType.N.getType()+") cannot be left null.");
@@ -1198,9 +1229,9 @@ public class VCardWriter {
 				tmpSb.append(escapeAndEncode(formattedName, isQuotedPrintable));
 				
 				String tmpFormattedNameLine = tmpSb.toString();
-				String foldedFormattedNameLine = VCardUtils.foldLine(tmpFormattedNameLine, foldingScheme);
+				String foldedFormattedNameLine = VCardUtils.foldLine(tmpFormattedNameLine, eol, foldingScheme);
 				sb.append(foldedFormattedNameLine);
-				sb.append(VCardUtils.CRLF);
+				sb.append(eol);
 			}
 			else {
 				throw new VCardBuildException("FormattedNameFeature ("+VCardType.FN.getType()+") cannot be left null.");
@@ -1253,9 +1284,9 @@ public class VCardWriter {
 				tmpSb.append(escapeAndEncode(displayableName, isQuotedPrintable));
 				
 				String tmpDisplayableNameLine = tmpSb.toString();
-				String foldedDisplayableNameLine = VCardUtils.foldLine(tmpDisplayableNameLine, foldingScheme);
+				String foldedDisplayableNameLine = VCardUtils.foldLine(tmpDisplayableNameLine, eol, foldingScheme);
 				sb.append(foldedDisplayableNameLine);
-				sb.append(VCardUtils.CRLF);
+				sb.append(eol);
 			}
 			else {
 				throw new VCardBuildException("DisplayableNameFeature ("+VCardType.NAME.getType()+") cannot be left null.");
@@ -1308,9 +1339,9 @@ public class VCardWriter {
 				tmpSb.append(escapeAndEncode(profile, isQuotedPrintable));
 				
 				String tmpProfileLine = tmpSb.toString();
-				String foldedProfileLine = VCardUtils.foldLine(tmpProfileLine, foldingScheme);
+				String foldedProfileLine = VCardUtils.foldLine(tmpProfileLine, eol, foldingScheme);
 				sb.append(foldedProfileLine);
-				sb.append(VCardUtils.CRLF);
+				sb.append(eol);
 			}
 			else {
 				throw new VCardBuildException("ProfileFeature ("+VCardType.PROFILE.getType()+") cannot be left null.");
@@ -1363,9 +1394,9 @@ public class VCardWriter {
 				tmpSb.append(escapeAndEncode(source, isQuotedPrintable));
 				
 				String tmpSourceLine = tmpSb.toString();
-				String foldedSourceLine = VCardUtils.foldLine(tmpSourceLine, foldingScheme);
+				String foldedSourceLine = VCardUtils.foldLine(tmpSourceLine, eol, foldingScheme);
 				sb.append(foldedSourceLine);
-				sb.append(VCardUtils.CRLF);
+				sb.append(eol);
 			}
 			else {
 				throw new VCardBuildException("SourceFeature ("+VCardType.SOURCE.getType()+") cannot be left null.");
@@ -1419,9 +1450,9 @@ public class VCardWriter {
 					tmpSb.append(escapeAndEncode(title, isQuotedPrintable));
 					
 					String tmpTitleLine = tmpSb.toString();
-					String foldedTitleLine = VCardUtils.foldLine(tmpTitleLine, foldingScheme);
+					String foldedTitleLine = VCardUtils.foldLine(tmpTitleLine, eol, foldingScheme);
 					sb.append(foldedTitleLine);
-					sb.append(VCardUtils.CRLF);
+					sb.append(eol);
 				}
 				else {
 					throw new VCardBuildException("TitleFeature ("+VCardType.TITLE.getType()+") exists but is emtpy.");
@@ -1476,9 +1507,9 @@ public class VCardWriter {
 					tmpSb.append(escapeAndEncode(role, isQuotedPrintable));
 					
 					String tmpRoleLine = tmpSb.toString();
-					String foldedRoleLine = VCardUtils.foldLine(tmpRoleLine, foldingScheme);
+					String foldedRoleLine = VCardUtils.foldLine(tmpRoleLine, eol, foldingScheme);
 					sb.append(foldedRoleLine);
-					sb.append(VCardUtils.CRLF);
+					sb.append(eol);
 				}
 				else {
 					throw new VCardBuildException("RoleFeature ("+VCardType.ROLE.getType()+") exists but is empty.");
@@ -1523,9 +1554,9 @@ public class VCardWriter {
 				tmpSb.append(VCardUtils.getGeographicPositionFormatter().format(geographicPositionFeature.getLongitude()));
 				
 				String tmpGeoLine = tmpSb.toString();
-				String foldedGeoLine = VCardUtils.foldLine(tmpGeoLine, foldingScheme);
+				String foldedGeoLine = VCardUtils.foldLine(tmpGeoLine, eol, foldingScheme);
 				sb.append(foldedGeoLine);
-				sb.append(VCardUtils.CRLF);
+				sb.append(eol);
 			}
 		}
 		catch(Exception ex) {
@@ -1582,9 +1613,9 @@ public class VCardWriter {
 					
 					tmpSb.deleteCharAt(tmpSb.length()-1);
 					String tmpOrgLine = tmpSb.toString();
-					String foldedOrgLine = VCardUtils.foldLine(tmpOrgLine, foldingScheme);
+					String foldedOrgLine = VCardUtils.foldLine(tmpOrgLine, eol, foldingScheme);
 					sb.append(foldedOrgLine);
-					sb.append(VCardUtils.CRLF);
+					sb.append(eol);
 				}
 				else {
 					throw new VCardBuildException("OrganizationFeature ("+VCardType.ORG.getType()+") exists but is empty.");
@@ -1639,9 +1670,9 @@ public class VCardWriter {
 					tmpSb.append(escapeAndEncode(mailer, isQuotedPrintable));
 					
 					String tmpMailerLine = tmpSb.toString();
-					String foldedMailerLine = VCardUtils.foldLine(tmpMailerLine, foldingScheme);
+					String foldedMailerLine = VCardUtils.foldLine(tmpMailerLine, eol, foldingScheme);
 					sb.append(foldedMailerLine);
-					sb.append(VCardUtils.CRLF);
+					sb.append(eol);
 				}
 				else {
 					throw new VCardBuildException("MailerFeature ("+VCardType.MAILER.getType()+") exists but is empty.");
@@ -1687,9 +1718,9 @@ public class VCardWriter {
 				}
 
 				String tmpTimeZoneLine = tmpSb.toString();
-				String foldedTimeZoneLine = VCardUtils.foldLine(tmpTimeZoneLine, foldingScheme);
+				String foldedTimeZoneLine = VCardUtils.foldLine(tmpTimeZoneLine, eol, foldingScheme);
 				sb.append(foldedTimeZoneLine);
-				sb.append(VCardUtils.CRLF);
+				sb.append(eol);
 			}
 		}
 		catch(Exception ex) {
@@ -1745,9 +1776,9 @@ public class VCardWriter {
 					tmpSb.append(escapeAndEncode(url, isQuotedPrintable));
 					
 					String tmpUrlLine = tmpSb.toString();
-					String foldedUrlLine = VCardUtils.foldLine(tmpUrlLine, foldingScheme);
+					String foldedUrlLine = VCardUtils.foldLine(tmpUrlLine, eol, foldingScheme);
 					sb.append(foldedUrlLine);
-					sb.append(VCardUtils.CRLF);
+					sb.append(eol);
 				}
 				else {
 					throw new VCardBuildException("URLFeature ("+VCardType.URL.getType()+") exists but is empty.");
@@ -1791,9 +1822,9 @@ public class VCardWriter {
 					tmpSb.append(ISOUtils.toISO8601_UTC_Time(revisionFeature.getRevision(), ISOFormat.ISO8601_EXTENDED));
 					
 					String tmpRevisionLine = tmpSb.toString();
-					String foldedRevisionLine = VCardUtils.foldLine(tmpRevisionLine, foldingScheme);
+					String foldedRevisionLine = VCardUtils.foldLine(tmpRevisionLine, eol, foldingScheme);
 					sb.append(foldedRevisionLine);
-					sb.append(VCardUtils.CRLF);
+					sb.append(eol);
 				}
 				else {
 					throw new VCardBuildException("RevisionFeature ("+VCardType.REV.getType()+") exists but is empty.");
@@ -1848,9 +1879,9 @@ public class VCardWriter {
 					tmpSb.append(escapeAndEncode(uid, isQuotedPrintable));
 					
 					String tmpUidLine = tmpSb.toString();
-					String foldedUidLine = VCardUtils.foldLine(tmpUidLine, foldingScheme);
+					String foldedUidLine = VCardUtils.foldLine(tmpUidLine, eol, foldingScheme);
 					sb.append(foldedUidLine);
-					sb.append(VCardUtils.CRLF);
+					sb.append(eol);
 				}
 				else {
 					throw new VCardBuildException("UIDFeature ("+VCardType.UID.getType()+") exists but is empty.");
@@ -1893,9 +1924,9 @@ public class VCardWriter {
 				tmpSb.append(ISOUtils.toISO8601_Date(birthdayFeature.getBirthday(), ISOFormat.ISO8601_EXTENDED));
 				
 				String tmpBdayLine = tmpSb.toString();
-				String foldedBdayLine = VCardUtils.foldLine(tmpBdayLine, foldingScheme);
+				String foldedBdayLine = VCardUtils.foldLine(tmpBdayLine, eol, foldingScheme);
 				sb.append(foldedBdayLine);
-				sb.append(VCardUtils.CRLF);
+				sb.append(eol);
 			}
 		}
 		catch(Exception ex) {
@@ -2069,9 +2100,9 @@ public class VCardWriter {
 				}
 
 				String tmpAddressLine = tmpSb.toString();
-				String foldedAddressLine = VCardUtils.foldLine(tmpAddressLine, foldingScheme);
+				String foldedAddressLine = VCardUtils.foldLine(tmpAddressLine, eol, foldingScheme);
 				sb.append(foldedAddressLine);
-				sb.append(VCardUtils.CRLF);
+				sb.append(eol);
 			}
 		}
 		catch(Exception ex) {
@@ -2206,9 +2237,9 @@ public class VCardWriter {
 					tmpSb.append(":");
 					tmpSb.append(escapeAndEncode(labelFeature.getLabel(), isQuotedPrintable));
 					String tmpLabelLine = tmpSb.toString();
-					String foldedLabelLine = VCardUtils.foldLine(tmpLabelLine, foldingScheme);
+					String foldedLabelLine = VCardUtils.foldLine(tmpLabelLine, eol, foldingScheme);
 					sb.append(foldedLabelLine);
-					sb.append(VCardUtils.CRLF);
+					sb.append(eol);
 				}
 				else {
 					throw new VCardBuildException("LabelFeature ("+VCardType.LABEL.getType()+") exists but is empty.");
@@ -2347,9 +2378,9 @@ public class VCardWriter {
 					tmpSb.append(escapeAndEncode(telephoneFeature.getTelephone(), isQuotedPrintable));
 					
 					String tmpTelephoneLine = tmpSb.toString();
-					String foldedTelephoneLine = VCardUtils.foldLine(tmpTelephoneLine, foldingScheme);
+					String foldedTelephoneLine = VCardUtils.foldLine(tmpTelephoneLine, eol, foldingScheme);
 					sb.append(foldedTelephoneLine);
-					sb.append(VCardUtils.CRLF);
+					sb.append(eol);
 				}
 				else {
 					throw new VCardBuildException("TelephoneFeature ("+VCardType.TEL.getType()+") exists but is empty.");
@@ -2524,9 +2555,9 @@ public class VCardWriter {
 					}
 					
 					String tmpEmailLine = tmpSb.toString();
-					String foldedEmailLine = VCardUtils.foldLine(tmpEmailLine, binaryFoldingScheme);
+					String foldedEmailLine = VCardUtils.foldLine(tmpEmailLine, eol, binaryFoldingScheme);
 					sb.append(foldedEmailLine);
-					sb.append(VCardUtils.CRLF);
+					sb.append(eol);
 				}
 				else {
 					throw new VCardBuildException("EmailFeature ("+VCardType.EMAIL.getType()+") exists but is empty.");
@@ -2580,9 +2611,9 @@ public class VCardWriter {
 					tmpSb.append(escapeAndEncode(noteFeature.getNote(), isQuotedPrintable));
 					
 					String tmpNoteLine = tmpSb.toString();
-					String foldedNoteLine = VCardUtils.foldLine(tmpNoteLine, foldingScheme);
+					String foldedNoteLine = VCardUtils.foldLine(tmpNoteLine, eol, foldingScheme);
 					sb.append(foldedNoteLine);
-					sb.append(VCardUtils.CRLF);
+					sb.append(eol);
 				}
 				else {
 					throw new VCardBuildException("NoteFeature ("+VCardType.NOTE.getType()+") exists but is empty.");
@@ -2643,9 +2674,9 @@ public class VCardWriter {
 					
 					tmpSb.deleteCharAt(tmpSb.length()-1);
 					String tmpNicknameLine = tmpSb.toString();
-					String foldedNicknameLine = VCardUtils.foldLine(tmpNicknameLine, foldingScheme);
+					String foldedNicknameLine = VCardUtils.foldLine(tmpNicknameLine, eol, foldingScheme);
 					sb.append(foldedNicknameLine);
-					sb.append(VCardUtils.CRLF);
+					sb.append(eol);
 				}
 				else {
 					throw new VCardBuildException("NicknameFeature ("+VCardType.NICKNAME.getType()+") exists but is empty.");
@@ -2720,9 +2751,9 @@ public class VCardWriter {
 					
 					tmpSb.deleteCharAt(tmpSb.length()-1);
 					String tmpCategoryLine = tmpSb.toString();
-					String foldedCategoryLine = VCardUtils.foldLine(tmpCategoryLine, foldingScheme);
+					String foldedCategoryLine = VCardUtils.foldLine(tmpCategoryLine, eol, foldingScheme);
 					sb.append(foldedCategoryLine);
-					sb.append(VCardUtils.CRLF);
+					sb.append(eol);
 				}
 				else {
 					throw new VCardBuildException("CategoriesFeature ("+VCardType.CATEGORIES.getType()+") exists but is empty.");
@@ -2776,9 +2807,9 @@ public class VCardWriter {
 					tmpSb.append(escapeAndEncode(classFeature.getSecurityClass(), isQuotedPrintable));
 					
 					String tmpClassLine = tmpSb.toString();
-					String foldedClassLine = VCardUtils.foldLine(tmpClassLine, foldingScheme);
+					String foldedClassLine = VCardUtils.foldLine(tmpClassLine, eol, foldingScheme);
 					sb.append(foldedClassLine);
-					sb.append(VCardUtils.CRLF);
+					sb.append(eol);
 				}
 				else {
 					throw new VCardBuildException("ClassFeature ("+VCardType.CLASS.getType()+") exists but is empty.");
@@ -2832,9 +2863,9 @@ public class VCardWriter {
 					tmpSb.append(escapeAndEncode(productIdFeature.getProductId(), isQuotedPrintable));
 					
 					String tmpProductIdLine = tmpSb.toString();
-					String foldedProductIdLine = VCardUtils.foldLine(tmpProductIdLine, foldingScheme);
+					String foldedProductIdLine = VCardUtils.foldLine(tmpProductIdLine, eol, foldingScheme);
 					sb.append(foldedProductIdLine);
-					sb.append(VCardUtils.CRLF);
+					sb.append(eol);
 				}
 				else {
 					throw new VCardBuildException("ProductIdFeature ("+VCardType.PRODID.getType()+") exists but is empty.");
@@ -2888,9 +2919,9 @@ public class VCardWriter {
 					tmpSb.append(escapeAndEncode(sortStringFeature.getSortString(), isQuotedPrintable));
 					
 					String tmpSortStringLine = tmpSb.toString();
-					String foldedSortStringLine = VCardUtils.foldLine(tmpSortStringLine, foldingScheme);
+					String foldedSortStringLine = VCardUtils.foldLine(tmpSortStringLine, eol, foldingScheme);
 					sb.append(foldedSortStringLine);
-					sb.append(VCardUtils.CRLF);
+					sb.append(eol);
 				}
 				else {
 					throw new VCardBuildException("SortStringFeature ("+VCardType.SORT_STRING.getType()+") exists but is empty.");
@@ -2981,11 +3012,11 @@ public class VCardWriter {
 							}
 							
 							String tmpKeyLine = tmpSb.toString();
-							String foldedKeyLine2 = VCardUtils.foldLine(tmpKeyLine, binaryFoldingScheme);
+							String foldedKeyLine2 = VCardUtils.foldLine(tmpKeyLine, eol, binaryFoldingScheme);
 							
-							foldedKeyLine = VCardUtils.foldLine(b64str, binaryFoldingScheme);
-							sb.append(foldedKeyLine2);			//Type declaration with param types
-							sb.append(VCardUtils.CRLF);			//Distinctive line break
+							foldedKeyLine = VCardUtils.foldLine(b64str, eol, binaryFoldingScheme);
+							sb.append(foldedKeyLine2);					//Type declaration with param types
+							sb.append(eol);								//Distinctive line break
 							sb.append(binaryFoldingScheme.getIndent());	//Indent first line
 							break;
 						}
@@ -3010,7 +3041,7 @@ public class VCardWriter {
 							}
 							
 							String tmpKeyLine = tmpSb.toString();
-							foldedKeyLine = VCardUtils.foldLine(tmpKeyLine, binaryFoldingScheme);
+							foldedKeyLine = VCardUtils.foldLine(tmpKeyLine, eol, binaryFoldingScheme);
 							break;
 						}
 					}
@@ -3021,8 +3052,8 @@ public class VCardWriter {
 					{
 						case MS_OUTLOOK:
 						{
-							sb.append(VCardUtils.CRLF);
-							sb.append(VCardUtils.CRLF);
+							sb.append(eol);
+							sb.append(eol);
 							break;
 						}
 							
@@ -3032,7 +3063,7 @@ public class VCardWriter {
 						case I_PHONE:
 						case MAC_ADDRESS_BOOK:
 						{
-							sb.append(VCardUtils.CRLF);
+							sb.append(eol);
 							break;
 						}
 					}
@@ -3084,7 +3115,7 @@ public class VCardWriter {
 						tmpSb.append(photoFeature.getPhotoURI().toString());
 						
 						String tmpPhotoLine = tmpSb.toString();
-						foldedPhotoLine = VCardUtils.foldLine(tmpPhotoLine, foldingScheme);
+						foldedPhotoLine = VCardUtils.foldLine(tmpPhotoLine, eol, foldingScheme);
 					}
 					else if(photoFeature.isInline()) {
 						tmpSb.append("ENCODING=");
@@ -3135,11 +3166,11 @@ public class VCardWriter {
 								}
 								
 								String tmpPhotoLine = tmpSb.toString();
-								String foldedPhotoLine2 = VCardUtils.foldLine(tmpPhotoLine, binaryFoldingScheme);
+								String foldedPhotoLine2 = VCardUtils.foldLine(tmpPhotoLine, eol, binaryFoldingScheme);
 								
-								foldedPhotoLine = VCardUtils.foldLine(b64str, binaryFoldingScheme);
-								sb.append(foldedPhotoLine2);			//Type declaration with param types
-								sb.append(VCardUtils.CRLF);			//Distinctive line break
+								foldedPhotoLine = VCardUtils.foldLine(b64str, eol, binaryFoldingScheme);
+								sb.append(foldedPhotoLine2);				//Type declaration with param types
+								sb.append(eol);								//Distinctive line break
 								sb.append(binaryFoldingScheme.getIndent());	//Indent first line
 								break;
 							}
@@ -3164,7 +3195,7 @@ public class VCardWriter {
 								}
 								
 								String tmpPhotoLine = tmpSb.toString();
-								foldedPhotoLine = VCardUtils.foldLine(tmpPhotoLine, binaryFoldingScheme);
+								foldedPhotoLine = VCardUtils.foldLine(tmpPhotoLine, eol, binaryFoldingScheme);
 								break;
 							}
 						}
@@ -3179,8 +3210,8 @@ public class VCardWriter {
 					{
 						case MS_OUTLOOK:
 						{
-							sb.append(VCardUtils.CRLF);
-							sb.append(VCardUtils.CRLF);
+							sb.append(eol);
+							sb.append(eol);
 							break;
 						}
 							
@@ -3190,7 +3221,7 @@ public class VCardWriter {
 						case I_PHONE:
 						case MAC_ADDRESS_BOOK:
 						{
-							sb.append(VCardUtils.CRLF);
+							sb.append(eol);
 							break;
 						}
 					}
@@ -3242,7 +3273,7 @@ public class VCardWriter {
 						tmpSb.append(logoFeature.getLogoURI().getPath());
 						
 						String tmpLogoLine = tmpSb.toString();
-						foldedLogoLine = VCardUtils.foldLine(tmpLogoLine, foldingScheme);
+						foldedLogoLine = VCardUtils.foldLine(tmpLogoLine, eol, foldingScheme);
 					}
 					else if(logoFeature.isInline()) {
 						tmpSb.append("ENCODING=");
@@ -3293,11 +3324,11 @@ public class VCardWriter {
 								}
 								
 								String tmpLogoLine = tmpSb.toString();
-								String foldedPhotoLine2 = VCardUtils.foldLine(tmpLogoLine, binaryFoldingScheme);
+								String foldedPhotoLine2 = VCardUtils.foldLine(tmpLogoLine, eol, binaryFoldingScheme);
 								
 								foldedLogoLine = VCardUtils.foldLine(b64str, binaryFoldingScheme);
-								sb.append(foldedPhotoLine2);			//Type declaration with param types
-								sb.append(VCardUtils.CRLF);			//Distinctive line break
+								sb.append(foldedPhotoLine2);				//Type declaration with param types
+								sb.append(eol);								//Distinctive line break
 								sb.append(binaryFoldingScheme.getIndent());	//Indent first line
 								break;
 							}
@@ -3322,7 +3353,7 @@ public class VCardWriter {
 								}
 								
 								String tmpLogoLine = tmpSb.toString();
-								foldedLogoLine = VCardUtils.foldLine(tmpLogoLine, binaryFoldingScheme);
+								foldedLogoLine = VCardUtils.foldLine(tmpLogoLine, eol, binaryFoldingScheme);
 								break;
 							}
 						}
@@ -3337,8 +3368,8 @@ public class VCardWriter {
 					{
 						case MS_OUTLOOK:
 						{
-							sb.append(VCardUtils.CRLF);
-							sb.append(VCardUtils.CRLF);
+							sb.append(eol);
+							sb.append(eol);
 							break;
 						}
 							
@@ -3348,7 +3379,7 @@ public class VCardWriter {
 						case I_PHONE:
 						case MAC_ADDRESS_BOOK:
 						{
-							sb.append(VCardUtils.CRLF);
+							sb.append(eol);
 							break;
 						}
 					}
@@ -3400,7 +3431,7 @@ public class VCardWriter {
 						tmpSb.append(soundFeature.getSoundURI().getPath());
 						
 						String tmpSoundLine = tmpSb.toString();
-						foldedSoundLine = VCardUtils.foldLine(tmpSoundLine, foldingScheme);
+						foldedSoundLine = VCardUtils.foldLine(tmpSoundLine, eol, foldingScheme);
 					}
 					else if(soundFeature.isInline()) {
 						tmpSb.append("ENCODING=");
@@ -3451,11 +3482,11 @@ public class VCardWriter {
 								}
 								
 								String tmpSoundLine = tmpSb.toString();
-								String foldedSoundLine2 = VCardUtils.foldLine(tmpSoundLine, binaryFoldingScheme);
+								String foldedSoundLine2 = VCardUtils.foldLine(tmpSoundLine, eol, binaryFoldingScheme);
 								
-								foldedSoundLine = VCardUtils.foldLine(b64str, binaryFoldingScheme);
-								sb.append(foldedSoundLine2);			//Type declaration with param types
-								sb.append(VCardUtils.CRLF);			//Distinctive line break
+								foldedSoundLine = VCardUtils.foldLine(b64str, eol, binaryFoldingScheme);
+								sb.append(foldedSoundLine2);				//Type declaration with param types
+								sb.append(eol);								//Distinctive line break
 								sb.append(binaryFoldingScheme.getIndent());	//Indent first line
 								break;
 							}
@@ -3480,7 +3511,7 @@ public class VCardWriter {
 								}
 								
 								String tmpSoundLine = tmpSb.toString();
-								foldedSoundLine = VCardUtils.foldLine(tmpSoundLine, binaryFoldingScheme);
+								foldedSoundLine = VCardUtils.foldLine(tmpSoundLine, eol, binaryFoldingScheme);
 								break;
 							}
 						}
@@ -3495,8 +3526,8 @@ public class VCardWriter {
 					{
 						case MS_OUTLOOK:
 						{
-							sb.append(VCardUtils.CRLF);
-							sb.append(VCardUtils.CRLF);
+							sb.append(eol);
+							sb.append(eol);
 							break;
 						}
 							
@@ -3506,7 +3537,7 @@ public class VCardWriter {
 						case I_PHONE:
 						case MAC_ADDRESS_BOOK:
 						{
-							sb.append(VCardUtils.CRLF);
+							sb.append(eol);
 							break;
 						}
 					}
@@ -3580,9 +3611,9 @@ public class VCardWriter {
 						}
 						
 						String tmpAgentLine = tmpSb.toString();
-						String foldedAgentLine = VCardUtils.foldLine(tmpAgentLine, foldingScheme);
+						String foldedAgentLine = VCardUtils.foldLine(tmpAgentLine, eol, foldingScheme);
 						sb.append(foldedAgentLine);
-						sb.append(VCardUtils.CRLF);
+						sb.append(eol);
 					}
 					else {
 						throw new VCardBuildException("AgentFeature ("+VCardType.AGENT.getType()+") is not URI and not Inline, cannot proceed, must be one or the other.");
@@ -3640,9 +3671,9 @@ public class VCardWriter {
 					tmpSb.append(escapeAndEncode(extendedFeature.getExtensionData(), isQuotedPrintable));
 					
 					String tmpExtendedLine = tmpSb.toString();
-					String foldedExtendedLine = VCardUtils.foldLine(tmpExtendedLine, foldingScheme);
+					String foldedExtendedLine = VCardUtils.foldLine(tmpExtendedLine, eol, foldingScheme);
 					sb.append(foldedExtendedLine);
-					sb.append(VCardUtils.CRLF);
+					sb.append(eol);
 				}
 				else {
 					throw new VCardBuildException("ExtendedFeature ("+extendedFeature.getExtensionName()+") exists but is empty.");

@@ -385,7 +385,7 @@ public final class VCardUtils {
 	 * @param binaryFoldingScheme
 	 * @return {@link String}
 	 */
-	public static String foldLine(String thisLine,  String eolDelimeter, BinaryFoldingScheme binaryFoldingScheme)
+	public static String foldLine(String thisLine, String eolDelimeter, BinaryFoldingScheme binaryFoldingScheme)
 	{
 		return foldLine(thisLine, eolDelimeter, binaryFoldingScheme.getMaxChars(), binaryFoldingScheme.getIndent());
 	}
