@@ -5,6 +5,7 @@ import net.sourceforge.cardme.io.CompatibilityMode;
 import net.sourceforge.cardme.io.FoldingScheme;
 import net.sourceforge.cardme.io.VCardWriter;
 import net.sourceforge.cardme.util.StringUtil;
+import net.sourceforge.cardme.util.VCardUtils;
 import net.sourceforge.cardme.vcard.VCard;
 import net.sourceforge.cardme.vcard.VCardImpl;
 import net.sourceforge.cardme.vcard.VCardVersion;
@@ -164,6 +165,7 @@ public class TestParser {
 		writer.setCompatibilityMode(CompatibilityMode.RFC2426);
 		writer.setFoldingScheme(FoldingScheme.MIME_DIR);
 		writer.setBinaryfoldingScheme(BinaryFoldingScheme.MIME_DIR);
+		writer.setEOL(VCardUtils.LF);
 		
 		for(int i = 0; i < vcards.size(); i++) {
 			VCardImpl vcard = (VCardImpl)vcards.get(i);
