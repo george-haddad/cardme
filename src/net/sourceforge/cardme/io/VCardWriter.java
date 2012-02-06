@@ -3774,6 +3774,7 @@ public class VCardWriter {
 		setFoldingScheme(null);
 		setBinaryfoldingScheme(null);
 		setCompatibilityMode(null);
+		setEOL(null);
 		this.vcard = null;
 	}
 }
