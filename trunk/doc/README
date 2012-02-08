@@ -11,6 +11,19 @@ We want to be the best VCard library on the net, so if there is a bug or a new f
 
 -------------------
 
+Card Me Version 0.3.1.01
+
+FEATURE[3481733]
+Allow the definition of custom End of Line (EOL) characters to be used.
+If none defined then default CR+LF (Carriage Return and Line Feed) characters are used.
+
+George El-Haddad
+Project Lead
+
+Michael Rimov
+Maven Integration Contributor
+
+
 Card Me Version 0.3.1
 
 FEATURE[3462916]
