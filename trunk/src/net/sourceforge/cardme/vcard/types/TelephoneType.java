@@ -135,7 +135,7 @@ public class TelephoneType extends Type implements TelephoneFeature {
 	 */
 	public boolean containsAllTelephoneParameterTypes(List<TelephoneParameterType> telephoneParameterTypes)
 	{
-		return telephoneParameterTypes.containsAll(telephoneParameterTypes);
+		return this.telephoneParameterTypes.containsAll(telephoneParameterTypes);
 	}
 	
 	/**
@@ -204,7 +204,7 @@ public class TelephoneType extends Type implements TelephoneFeature {
 	 */
 	public boolean containsAllExtendedTelephoneParameterTypes(List<XTelephoneParameterType> xtendedTelephoneParameterTypes)
 	{
-		return xtendedTelephoneParameterTypes.containsAll(xtendedTelephoneParameterTypes);
+		return this.xtendedTelephoneParameterTypes.containsAll(xtendedTelephoneParameterTypes);
 	}
 	
 	/**

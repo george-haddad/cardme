@@ -222,7 +222,7 @@ public class AddressType extends Type implements AddressFeature {
 	 */
 	public boolean containsAllAddressParameterTypes(List<AddressParameterType> addressParameterTypes)
 	{
-		return addressParameterTypes.containsAll(addressParameterTypes);
+		return this.addressParameterTypes.containsAll(addressParameterTypes);
 	}
 	
 	/**
@@ -283,7 +283,7 @@ public class AddressType extends Type implements AddressFeature {
 	 */
 	public boolean containsAllExtendedAddressParameterTypes(List<XAddressParameterType> xtendedAddressParameterTypes)
 	{
-		return xtendedAddressParameterTypes.containsAll(xtendedAddressParameterTypes);
+		return this.xtendedAddressParameterTypes.containsAll(xtendedAddressParameterTypes);
 	}
 	
 	/**
