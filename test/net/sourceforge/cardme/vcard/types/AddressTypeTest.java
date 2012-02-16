@@ -92,7 +92,6 @@ public class AddressTypeTest {
 		List<AddressParameterType> types = new ArrayList<AddressParameterType>(3);
 		types.add(AddressParameterType.PREF);
 		types.add(AddressParameterType.HOME);
-		types.add(AddressParameterType.WORK);
 		
 		assertTrue(addressType.containsAllAddressParameterTypes(types));
 	}
