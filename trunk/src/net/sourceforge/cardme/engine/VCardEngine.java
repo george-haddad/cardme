@@ -120,6 +120,12 @@ public class VCardEngine {
 	private CompatibilityMode compatMode = null;
 	
 	/**
+	 * <p>If set, this charset will override any charset definition
+	 * when decoding strings from any type that defines "CHARSET".</p>
+	 */
+	private Charset forceCharset = null;
+	
+	/**
 	 * <p>Create a VCard parsing engine and initialize it to
 	 * use RFC2426 compatibility mode by default.</p>
 	 */
@@ -164,6 +170,67 @@ public class VCardEngine {
 	}
 	
 	/**
+	 * <p>Sets the charset to always be used when the
+	 * "CHARSET" parameter is encountered.</p>
+	 *
+	 * @param charset
+	 */
+	public void setForcedCharset(String charset) {
+		forceCharset = Charset.forName(charset);
+	}
+	
+	/**
+	 * <p>Sets the charset to always be used when the
+	 * "CHARSET" parameter is encountered.</p>
+	 *
+	 * @param charset
+	 */
+	public void setForcedCharset(Charset charset) {
+		forceCharset = charset;
+	}
+	
+	/**
+	 * <p>Returns the charset that has been set 
+	 * to be forced on all types, null if not set.</p>
+	 *
+	 * @return {@link Charset}
+	 */
+	public Charset getForcedCharset()
+	{
+		return forceCharset;
+	}
+	
+	/**
+	 * <p>Returns true if the engine is enforcing a charset
+	 * on all types.</p>
+	 *
+	 * @return boolean
+	 */
+	public boolean isCharsetForced()
+	{
+		return forceCharset != null;
+	}
+	
+	/**
+	 * <p>Convenient method to parse an array of VCard files in one go.
+	 * This returns an array of VCard objects in the same order they were
+	 * parsed.</p>
+	 *
+	 * @param vcardFiles
+	 * @return {@link VCard}[]
+	 * @throws IOException
+	 */
+	public VCard[] parse(File[] vcardFiles) throws IOException
+	{
+		VCard[] vcards = new VCard[vcardFiles.length];
+		for (int i = 0; i < vcardFiles.length; i++) {
+			vcards[i] = parse(vcardFiles[i]);
+		}
+		
+		return vcards;
+	}
+	
+	/**
 	 * <p>Parses the specified VCard file by retrieving the contents
 	 * of the file, unfolding it and then parsing it. The returned result
 	 * is a VCard java object.</p>
@@ -177,6 +244,25 @@ public class VCardEngine {
 		String vcardStr = getContentFromFile(vcardFile);
 		String unfoldedVcardStr = VCardUtils.unfoldVCard(vcardStr);
 		return parseVCard(unfoldedVcardStr);
+	}
+	
+	/**
+	 * <p>Convenient method to parse an array of VCard strings in one go.
+	 * This returns an array of VCard objects in the same order they were
+	 * parsed.</p>
+	 *
+	 * @param vcardStrings
+	 * @return
+	 * @throws IOException
+	 */
+	public VCard[] parse(String[] vcardStrings) throws IOException
+	{
+		VCard[] vcards = new VCard[vcardStrings.length];
+		for (int i = 0; i < vcards.length; i++) {
+			vcards[i] = parse(vcardStrings[i]);
+		}
+		
+		return vcards;
 	}
 	
 	/**
@@ -632,7 +718,18 @@ public class VCardEngine {
 			
 			if(formattedNameFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
 				QuotedPrintableCodec q = new QuotedPrintableCodec();
-				value = q.decode(value);
+				
+				if(isCharsetForced()) {
+					value = q.decode(value, forceCharset.name());
+				}
+				else { 
+					if(formattedNameFeature.hasCharset()) {
+						value = q.decode(value, formattedNameFeature.getCharset().name());
+					}
+					else {
+						value = q.decode(value);
+					}
+				}
 			}
 			
 			if(VCardUtils.needsUnEscaping(value)) {
@@ -692,7 +789,18 @@ public class VCardEngine {
 			
 			if(nameFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
 				QuotedPrintableCodec q = new QuotedPrintableCodec();
-				value = q.decode(value);
+				
+				if(isCharsetForced()) {
+					value = q.decode(value, forceCharset.name());
+				}
+				else { 
+					if(nameFeature.hasCharset()) {
+						value = q.decode(value, nameFeature.getCharset().name());
+					}
+					else {
+						value = q.decode(value);
+					}
+				}
 			}
 			
 			switch(compatMode)
@@ -902,7 +1010,18 @@ public class VCardEngine {
 			
 			if(nicknameFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
 				QuotedPrintableCodec q = new QuotedPrintableCodec();
-				value = q.decode(value);
+				
+				if(isCharsetForced()) {
+					value = q.decode(value, forceCharset.name());
+				}
+				else { 
+					if(nicknameFeature.hasCharset()) {
+						value = q.decode(value, nicknameFeature.getCharset().name());
+					}
+					else {
+						value = q.decode(value);
+					}
+				}
 			}
 			
 			String[] nicknames = value.split(",");
@@ -1201,7 +1320,18 @@ public class VCardEngine {
 			
 			if(addressFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
 				QuotedPrintableCodec q = new QuotedPrintableCodec();
-				value = q.decode(value);
+				
+				if(isCharsetForced()) {
+					value = q.decode(value, forceCharset.name());
+				}
+				else { 
+					if(addressFeature.hasCharset()) {
+						value = q.decode(value, addressFeature.getCharset().name());
+					}
+					else {
+						value = q.decode(value);
+					}
+				}
 			}
 			
 			String[] address = value.split(";",7);
@@ -1364,7 +1494,18 @@ public class VCardEngine {
 			
 			if(labelFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
 				QuotedPrintableCodec q = new QuotedPrintableCodec();
-				value = q.decode(value);
+				
+				if(isCharsetForced()) {
+					value = q.decode(value, forceCharset.name());
+				}
+				else { 
+					if(labelFeature.hasCharset()) {
+						value = q.decode(value, labelFeature.getCharset().name());
+					}
+					else {
+						value = q.decode(value);
+					}
+				}
 			}
 			
 			if(VCardUtils.needsUnEscaping(value)) {
@@ -1509,7 +1650,18 @@ public class VCardEngine {
 			
 			if(telephoneFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
 				QuotedPrintableCodec q = new QuotedPrintableCodec();
-				value = q.decode(value);
+
+				if(isCharsetForced()) {
+					value = q.decode(value, forceCharset.name());
+				}
+				else { 
+					if(telephoneFeature.hasCharset()) {
+						value = q.decode(value, telephoneFeature.getCharset().name());
+					}
+					else {
+						value = q.decode(value);
+					}
+				}
 			}
 			
 			if(VCardUtils.needsUnEscaping(value)) {
@@ -1714,7 +1866,18 @@ public class VCardEngine {
 			
 			if(mailerFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
 				QuotedPrintableCodec q = new QuotedPrintableCodec();
-				value = q.decode(value);
+
+				if(isCharsetForced()) {
+					value = q.decode(value, forceCharset.name());
+				}
+				else { 
+					if(mailerFeature.hasCharset()) {
+						value = q.decode(value, mailerFeature.getCharset().name());
+					}
+					else {
+						value = q.decode(value);
+					}
+				}
 			}
 			
 			if(VCardUtils.needsUnEscaping(value)) {
@@ -1938,7 +2101,18 @@ public class VCardEngine {
 			
 			if(titleFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
 				QuotedPrintableCodec q = new QuotedPrintableCodec();
-				value = q.decode(value);
+
+				if(isCharsetForced()) {
+					value = q.decode(value, forceCharset.name());
+				}
+				else { 
+					if(titleFeature.hasCharset()) {
+						value = q.decode(value, titleFeature.getCharset().name());
+					}
+					else {
+						value = q.decode(value);
+					}
+				}
 			}
 			
 			if(VCardUtils.needsUnEscaping(value)) {
@@ -1998,7 +2172,18 @@ public class VCardEngine {
 			
 			if(roleFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
 				QuotedPrintableCodec q = new QuotedPrintableCodec();
-				value = q.decode(value);
+
+				if(isCharsetForced()) {
+					value = q.decode(value, forceCharset.name());
+				}
+				else { 
+					if(roleFeature.hasCharset()) {
+						value = q.decode(value, roleFeature.getCharset().name());
+					}
+					else {
+						value = q.decode(value);
+					}
+				}
 			}
 			
 			if(VCardUtils.needsUnEscaping(value)) {
@@ -2147,7 +2332,18 @@ public class VCardEngine {
 			
 			if(organizationFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
 				QuotedPrintableCodec q = new QuotedPrintableCodec();
-				value = q.decode(value);
+
+				if(isCharsetForced()) {
+					value = q.decode(value, forceCharset.name());
+				}
+				else { 
+					if(organizationFeature.hasCharset()) {
+						value = q.decode(value, organizationFeature.getCharset().name());
+					}
+					else {
+						value = q.decode(value);
+					}
+				}
 			}
 			
 			/*
@@ -2220,7 +2416,18 @@ public class VCardEngine {
 			
 			if(categoriesFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
 				QuotedPrintableCodec q = new QuotedPrintableCodec();
-				value = q.decode(value);
+
+				if(isCharsetForced()) {
+					value = q.decode(value, forceCharset.name());
+				}
+				else { 
+					if(categoriesFeature.hasCharset()) {
+						value = q.decode(value, categoriesFeature.getCharset().name());
+					}
+					else {
+						value = q.decode(value);
+					}
+				}
 			}
 			
 			String[] categories = null;
@@ -2307,7 +2514,18 @@ public class VCardEngine {
 			
 			if(noteFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
 				QuotedPrintableCodec q = new QuotedPrintableCodec();
-				value = q.decode(value);
+
+				if(isCharsetForced()) {
+					value = q.decode(value, forceCharset.name());
+				}
+				else { 
+					if(noteFeature.hasCharset()) {
+						value = q.decode(value, noteFeature.getCharset().name());
+					}
+					else {
+						value = q.decode(value);
+					}
+				}
 			}
 			
 			if(VCardUtils.needsUnEscaping(value)) {
@@ -2367,7 +2585,18 @@ public class VCardEngine {
 			
 			if(productIdFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
 				QuotedPrintableCodec q = new QuotedPrintableCodec();
-				value = q.decode(value);
+
+				if(isCharsetForced()) {
+					value = q.decode(value, forceCharset.name());
+				}
+				else { 
+					if(productIdFeature.hasCharset()) {
+						value = q.decode(value, productIdFeature.getCharset().name());
+					}
+					else {
+						value = q.decode(value);
+					}
+				}
 			}
 			
 			if(VCardUtils.needsUnEscaping(value)) {
@@ -2563,7 +2792,18 @@ public class VCardEngine {
 			
 			if(sortStringFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
 				QuotedPrintableCodec q = new QuotedPrintableCodec();
-				value = q.decode(value);
+
+				if(isCharsetForced()) {
+					value = q.decode(value, forceCharset.name());
+				}
+				else { 
+					if(sortStringFeature.hasCharset()) {
+						value = q.decode(value, sortStringFeature.getCharset().name());
+					}
+					else {
+						value = q.decode(value);
+					}
+				}
 			}
 			
 			if(VCardUtils.needsUnEscaping(value)) {
@@ -2712,7 +2952,18 @@ public class VCardEngine {
 			
 			if(uidFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
 				QuotedPrintableCodec q = new QuotedPrintableCodec();
-				value = q.decode(value);
+
+				if(isCharsetForced()) {
+					value = q.decode(value, forceCharset.name());
+				}
+				else { 
+					if(uidFeature.hasCharset()) {
+						value = q.decode(value, uidFeature.getCharset().name());
+					}
+					else {
+						value = q.decode(value);
+					}
+				}
 			}
 			
 			if(VCardUtils.needsUnEscaping(value)) {
@@ -2772,7 +3023,18 @@ public class VCardEngine {
 			
 			if(urlFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
 				QuotedPrintableCodec q = new QuotedPrintableCodec();
-				value = q.decode(value);
+
+				if(isCharsetForced()) {
+					value = q.decode(value, forceCharset.name());
+				}
+				else { 
+					if(urlFeature.hasCharset()) {
+						value = q.decode(value, urlFeature.getCharset().name());
+					}
+					else {
+						value = q.decode(value);
+					}
+				}
 			}
 			
 			if(VCardUtils.needsUnEscaping(value)) {
@@ -2832,7 +3094,18 @@ public class VCardEngine {
 			
 			if(classFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
 				QuotedPrintableCodec q = new QuotedPrintableCodec();
-				value = q.decode(value);
+
+				if(isCharsetForced()) {
+					value = q.decode(value, forceCharset.name());
+				}
+				else { 
+					if(classFeature.hasCharset()) {
+						value = q.decode(value, classFeature.getCharset().name());
+					}
+					else {
+						value = q.decode(value);
+					}
+				}
 			}
 			
 			if(VCardUtils.needsUnEscaping(value)) {
@@ -2964,7 +3237,18 @@ public class VCardEngine {
 			
 			if(extendedFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
 				QuotedPrintableCodec q = new QuotedPrintableCodec();
-				value = q.decode(value);
+
+				if(isCharsetForced()) {
+					value = q.decode(value, forceCharset.name());
+				}
+				else { 
+					if(extendedFeature.hasCharset()) {
+						value = q.decode(value, extendedFeature.getCharset().name());
+					}
+					else {
+						value = q.decode(value);
+					}
+				}
 			}
 			
 			if(VCardUtils.needsUnEscaping(value)) {
@@ -3026,7 +3310,18 @@ public class VCardEngine {
 			
 			if(displayableNameFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
 				QuotedPrintableCodec q = new QuotedPrintableCodec();
-				value = q.decode(value);
+
+				if(isCharsetForced()) {
+					value = q.decode(value, forceCharset.name());
+				}
+				else { 
+					if(displayableNameFeature.hasCharset()) {
+						value = q.decode(value, displayableNameFeature.getCharset().name());
+					}
+					else {
+						value = q.decode(value);
+					}
+				}
 			}
 			
 			if(VCardUtils.needsUnEscaping(value)) {
@@ -3087,7 +3382,18 @@ public class VCardEngine {
 			
 			if(profileFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
 				QuotedPrintableCodec q = new QuotedPrintableCodec();
-				value = q.decode(value);
+
+				if(isCharsetForced()) {
+					value = q.decode(value, forceCharset.name());
+				}
+				else { 
+					if(profileFeature.hasCharset()) {
+						value = q.decode(value, profileFeature.getCharset().name());
+					}
+					else {
+						value = q.decode(value);
+					}
+				}
 			}
 			
 			if(VCardUtils.needsUnEscaping(value)) {
@@ -3147,7 +3453,18 @@ public class VCardEngine {
 			
 			if(sourceFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
 				QuotedPrintableCodec q = new QuotedPrintableCodec();
-				value = q.decode(value);
+
+				if(isCharsetForced()) {
+					value = q.decode(value, forceCharset.name());
+				}
+				else { 
+					if(sourceFeature.hasCharset()) {
+						value = q.decode(value, sourceFeature.getCharset().name());
+					}
+					else {
+						value = q.decode(value);
+					}
+				}
 			}
 			
 			if(VCardUtils.needsUnEscaping(value)) {
