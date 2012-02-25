@@ -34,7 +34,7 @@ package net.sourceforge.cardme.vcard.features;
  * <br/>
  * Mar 10, 2010
  * 
- * <p><b>RFC 2426</b></br>
+ * <p><b>RFC 2426</b><br/>
  * <b>2.1.2 NAME Type Definition</b>
  * <ul>
  * 	<li><b>Type name:</b> NAME</li>

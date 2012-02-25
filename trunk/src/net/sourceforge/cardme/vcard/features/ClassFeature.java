@@ -34,7 +34,7 @@ package net.sourceforge.cardme.vcard.features;
  * <br/>
  * Feb 4, 2010
  * 
- * <p><b>RFC 2426</b></br>
+ * <p><b>RFC 2426</b><br/>
  * <b>3.7.1 CLASS Type Definition</b>
  * <ul>
  * 	<li><b>Type name:</b> CLASS</li>
