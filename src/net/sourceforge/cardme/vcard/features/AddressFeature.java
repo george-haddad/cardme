@@ -39,7 +39,7 @@ import java.util.List;
  * <br/>
  * Feb 4, 2010
  * 
- * <p><b>RFC 2426</b></br>
+ * <p><b>RFC 2426</b><br/>
  * <b>3.2.1 ADR Type Definition</b>
  * <ul>
  * 	<li><b>Type name:</b> ADR</li>
