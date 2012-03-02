@@ -1,5 +1,11 @@
 package net.sourceforge.cardme.engine;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import net.sourceforge.cardme.io.BinaryFoldingScheme;
 import net.sourceforge.cardme.io.CompatibilityMode;
 import net.sourceforge.cardme.io.FoldingScheme;
@@ -12,12 +18,6 @@ import net.sourceforge.cardme.vcard.VCardVersion;
 import net.sourceforge.cardme.vcard.errors.VCardError;
 import net.sourceforge.cardme.vcard.features.EmailFeature;
 import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Copyright 2011 George El-Haddad. All rights reserved.
@@ -146,6 +146,7 @@ public class TestParser {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		
 		vcardFiles = new File[args.length];
 		for (int i = 0; i < args.length; i++) {
 			vcardFiles[i] = new File(args[i]);

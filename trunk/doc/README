@@ -3,6 +3,7 @@ Card Me Readme file
 
 Card Me Home Page: http://dma.pixel-act.com
 Project Home Page: https://sourceforge.net/projects/cardme
+Card Me Wiki Page: http://sourceforge.net/apps/mediawiki/cardme/index.php?title=Main_Page
 Ohloh Home Page: https://www.ohloh.net/p/cardme
 Freecode Home Page: http://freecode.com/projects/cardme
 
@@ -10,6 +11,20 @@ Do not forget to go to the project or Ohloh home page and recommend cardme to ot
 We want to be the best VCard library on the net, so if there is a bug or a new feature you want then let us know about it.
 
 -------------------
+
+Card Me Version 0.3.2
+
+BUG[3487486]
+Fixed reference error in containsAllXXXParameterTypes() method where it should have been referencing "this" instead of local parameter.
+Fixed CardMe behavior for encoding and decoding Quoted-Printable strings to use the declared charset if present. If not then use the default system charset unless a user specified charset is forced.
+Allow users to force a charset for use with Quoted-Printable strings in the VCardEngine and VCardWriter
+
+George El-Haddad
+Project Lead
+
+Michael Rimov
+Maven Integration Contributor
+
 
 Card Me Version 0.3.1.01
 

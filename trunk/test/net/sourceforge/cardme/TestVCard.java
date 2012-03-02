@@ -28,8 +28,10 @@ import net.sourceforge.cardme.vcard.features.DisplayableNameFeature;
 import net.sourceforge.cardme.vcard.features.EmailFeature;
 import net.sourceforge.cardme.vcard.features.ExtendedFeature;
 import net.sourceforge.cardme.vcard.features.FormattedNameFeature;
+import net.sourceforge.cardme.vcard.features.KeyFeature;
 import net.sourceforge.cardme.vcard.features.LabelFeature;
 import net.sourceforge.cardme.vcard.features.LogoFeature;
+import net.sourceforge.cardme.vcard.features.NameFeature;
 import net.sourceforge.cardme.vcard.features.NicknameFeature;
 import net.sourceforge.cardme.vcard.features.NoteFeature;
 import net.sourceforge.cardme.vcard.features.OrganizationFeature;
@@ -47,6 +49,7 @@ import net.sourceforge.cardme.vcard.types.EmailType;
 import net.sourceforge.cardme.vcard.types.ExtendedType;
 import net.sourceforge.cardme.vcard.types.FormattedNameType;
 import net.sourceforge.cardme.vcard.types.GeographicPositionType;
+import net.sourceforge.cardme.vcard.types.KeyType;
 import net.sourceforge.cardme.vcard.types.LabelType;
 import net.sourceforge.cardme.vcard.types.LogoType;
 import net.sourceforge.cardme.vcard.types.MailerType;
@@ -70,11 +73,13 @@ import net.sourceforge.cardme.vcard.types.URLType;
 import net.sourceforge.cardme.vcard.types.VersionType;
 import net.sourceforge.cardme.vcard.types.media.AudioMediaType;
 import net.sourceforge.cardme.vcard.types.media.ImageMediaType;
+import net.sourceforge.cardme.vcard.types.media.KeyTextType;
 import net.sourceforge.cardme.vcard.types.parameters.AddressParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.EmailParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.LabelParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
 import net.sourceforge.cardme.vcard.types.parameters.TelephoneParameterType;
+import net.sourceforge.cardme.vcard.types.parameters.XAddressParameterType;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -447,8 +452,10 @@ public class TestVCard {
 		source.setSource("Whatever");
 		vcard.setSource(source);
 		
-		NameType name = new NameType();
+		NameFeature name = new NameType();
 		name.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+		name.setCharset(Charset.forName("UTF-8"));
+		name.setLanguage(LanguageType.EN);
 		name.setFamilyName("DÖe");
 //		name.setFamilyName("Doe");
 		name.setGivenName("John");
@@ -513,6 +520,8 @@ public class TestVCard {
 		address1.addAddressParameterType(AddressParameterType.HOME);
 		address1.addAddressParameterType(AddressParameterType.PARCEL);
 		address1.addAddressParameterType(AddressParameterType.PREF);
+		address1.addExtendedAddressParameterType(new XAddressParameterType("CUSTOM-PARAM-TYPE"));
+		address1.addExtendedAddressParameterType(new XAddressParameterType("CUSTOM-PARAM-TYPE", "WITH-CUSTOM-VALUE"));
 		vcard.addAddress(address1);
 
 		LabelFeature labelForAddress1 = new LabelType();
@@ -573,6 +582,13 @@ public class TestVCard {
 		sound.setAudioMediaType(AudioMediaType.OGG);
 		sound.setSoundURI(new File("test/images/smallTux.png").toURI());
 		vcard.addSound(sound);
+		
+		KeyFeature key = new KeyType();
+		key.setKeyTextType(KeyTextType.GPG);
+		key.setEncodingType(EncodingType.BINARY);
+		byte[] keyBytes = Util.getFileAsBytes(new File("test/images/smallTux.png"));
+		key.setKey(keyBytes);
+		vcard.addKey(key);
 		
 		ExtendedFeature xGenerator = new ExtendedType("X-GENERATOR", "Cardme Generator");
 		xGenerator.setCharset("UTF-8");
