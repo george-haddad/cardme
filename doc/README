@@ -12,6 +12,20 @@ We want to be the best VCard library on the net, so if there is a bug or a new f
 
 -------------------
 
+Card Me Version 0.3.2.01
+
+BUG[3496318]
+Parsing engine now handles soft line breaks.
+Do not throw exception when encountering TYPE parameters in URL type when in MS_OUTLOOK compatibility mode.
+Force VCard version 3.0 on VCards which have been set to v2.1 when writing.
+
+George El-Haddad
+Project Lead
+
+Michael Rimov
+Maven Integration Contributor
+
+
 Card Me Version 0.3.2
 
 BUG[3487486]

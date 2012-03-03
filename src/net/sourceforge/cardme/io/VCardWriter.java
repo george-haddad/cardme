@@ -60,6 +60,7 @@ import net.sourceforge.cardme.vcard.types.parameters.XAddressParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XEmailParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XLabelParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XTelephoneParameterType;
+
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.net.QuotedPrintableCodec;
 
@@ -3011,7 +3012,7 @@ public class VCardWriter {
 									b64str = Base64Wrapper.encode(keyBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION);
 								}
 								else {
-									b64str = Base64Wrapper.encode(keyBytes);
+									b64str = Base64Wrapper.encode(keyBytes, Base64Wrapper.OPTIONS.NO_COMPRESSION);
 								}
 							}
 							catch(Exception ex) {
@@ -3040,7 +3041,7 @@ public class VCardWriter {
 									tmpSb.append(Base64Wrapper.encode(keyBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION));
 								}
 								else {
-									tmpSb.append(Base64Wrapper.encode(keyBytes));
+									tmpSb.append(Base64Wrapper.encode(keyBytes, Base64Wrapper.OPTIONS.NO_COMPRESSION));
 								}
 							}
 							catch(Exception ex) {
@@ -3165,7 +3166,7 @@ public class VCardWriter {
 										b64str = Base64Wrapper.encode(photoBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION);
 									}
 									else {
-										b64str = Base64Wrapper.encode(photoBytes);
+										b64str = Base64Wrapper.encode(photoBytes, Base64Wrapper.OPTIONS.NO_COMPRESSION);
 									}
 								}
 								catch(Exception ex) {
@@ -3194,7 +3195,7 @@ public class VCardWriter {
 										tmpSb.append(Base64Wrapper.encode(photoBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION));
 									}
 									else {
-										tmpSb.append(Base64Wrapper.encode(photoBytes));
+										tmpSb.append(Base64Wrapper.encode(photoBytes, Base64Wrapper.OPTIONS.NO_COMPRESSION));
 									}
 								}
 								catch(Exception ex) {
@@ -3323,7 +3324,7 @@ public class VCardWriter {
 										b64str = Base64Wrapper.encode(logoBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION);
 									}
 									else {
-										b64str = Base64Wrapper.encode(logoBytes);
+										b64str = Base64Wrapper.encode(logoBytes, Base64Wrapper.OPTIONS.NO_COMPRESSION);
 									}
 								}
 								catch(Exception ex) {
@@ -3347,12 +3348,12 @@ public class VCardWriter {
 							case I_PHONE:
 							{
 								try {
-									byte[] photoBytes = logoFeature.getLogo();
+									byte[] logoBytes = logoFeature.getLogo();
 									if(logoFeature.isSetCompression()) {
-										tmpSb.append(Base64Wrapper.encode(photoBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION));
+										tmpSb.append(Base64Wrapper.encode(logoBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION));
 									}
 									else {
-										tmpSb.append(Base64Wrapper.encode(photoBytes));
+										tmpSb.append(Base64Wrapper.encode(logoBytes, Base64Wrapper.OPTIONS.NO_COMPRESSION));
 									}
 								}
 								catch(Exception ex) {
@@ -3481,7 +3482,7 @@ public class VCardWriter {
 										b64str = Base64Wrapper.encode(soundBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION);
 									}
 									else {
-										b64str = Base64Wrapper.encode(soundBytes);
+										b64str = Base64Wrapper.encode(soundBytes, Base64Wrapper.OPTIONS.NO_COMPRESSION);
 									}
 								}
 								catch(Exception ex) {
@@ -3510,7 +3511,7 @@ public class VCardWriter {
 										tmpSb.append(Base64Wrapper.encode(soundBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION));
 									}
 									else {
-										tmpSb.append(Base64Wrapper.encode(soundBytes));
+										tmpSb.append(Base64Wrapper.encode(soundBytes, Base64Wrapper.OPTIONS.NO_COMPRESSION));
 									}
 								}
 								catch(Exception ex) {
