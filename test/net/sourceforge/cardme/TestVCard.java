@@ -589,8 +589,8 @@ public class TestVCard {
 		key.setKeyTextType(KeyTextType.GPG);
 		key.setEncodingType(EncodingType.BINARY);
 		key.setCompression(false);
-		//byte[] keyBytes = Util.getFileAsBytes(new File("test/images/smallTux.png"));
-		key.setKey(tuxPicture2);
+		byte[] keyBytes = Util.getFileAsBytes(new File("test/images/smallTux.png"));
+		key.setKey(keyBytes);
 		vcard.addKey(key);
 		
 		ExtendedFeature xGenerator = new ExtendedType("X-GENERATOR", "Cardme Generator");
