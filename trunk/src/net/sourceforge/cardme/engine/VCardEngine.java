@@ -14,8 +14,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
 
-import org.apache.commons.codec.net.QuotedPrintableCodec;
-
 import net.sourceforge.cardme.io.CompatibilityMode;
 import net.sourceforge.cardme.util.Base64Wrapper;
 import net.sourceforge.cardme.util.ISOUtils;
@@ -74,6 +72,8 @@ import net.sourceforge.cardme.vcard.types.parameters.XAddressParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XEmailParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XLabelParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XTelephoneParameterType;
+
+import org.apache.commons.codec.net.QuotedPrintableCodec;
 
 /**
  * Copyright 2011 George El-Haddad. All rights reserved.

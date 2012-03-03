@@ -12,6 +12,7 @@ import java.nio.charset.Charset;
 import java.util.Calendar;
 
 import net.sourceforge.cardme.engine.VCardEngine;
+import net.sourceforge.cardme.io.BinaryFoldingScheme;
 import net.sourceforge.cardme.io.CompatibilityMode;
 import net.sourceforge.cardme.io.FoldingScheme;
 import net.sourceforge.cardme.io.VCardWriter;
@@ -389,6 +390,7 @@ public class TestVCard {
 		vcardWriter.setOutputVersion(VCardVersion.V3_0);
 		vcardWriter.setFoldingScheme(FoldingScheme.MIME_DIR);
 		vcardWriter.setCompatibilityMode(CompatibilityMode.RFC2426);
+		vcardWriter.setBinaryfoldingScheme(BinaryFoldingScheme.MIME_DIR);
 		vcardWriter.setVCard(vcardFull);
 		
 		String vcardString = vcardWriter.buildVCardString();
@@ -561,7 +563,7 @@ public class TestVCard {
 		vcard.addNote(note);
 		
 		PhotoFeature photo1 = new PhotoType();
-		photo1.setCompression(true);
+		photo1.setCompression(false);
 		photo1.setEncodingType(EncodingType.BINARY);
 		photo1.setImageMediaType(ImageMediaType.PNG);
 		byte[] tuxPicture1 = Util.getFileAsBytes(new File("test/images/smallTux.png"));
@@ -569,7 +571,7 @@ public class TestVCard {
 		vcard.addPhoto(photo1);
 		
 		LogoFeature logo = new LogoType();
-		logo.setCompression(false);
+		logo.setCompression(true);
 		logo.setEncodingType(EncodingType.BINARY);
 		logo.setImageMediaType(ImageMediaType.PNG);
 		byte[] tuxPicture2 = Util.getFileAsBytes(new File("test/images/smallTux.png"));
@@ -577,7 +579,7 @@ public class TestVCard {
 		vcard.addLogo(logo);
 		
 		SoundFeature sound = new SoundType();
-		sound.setCompression(true);
+		sound.setCompression(false);
 		sound.setEncodingType(EncodingType.BINARY);
 		sound.setAudioMediaType(AudioMediaType.OGG);
 		sound.setSoundURI(new File("test/images/smallTux.png").toURI());
@@ -586,8 +588,9 @@ public class TestVCard {
 		KeyFeature key = new KeyType();
 		key.setKeyTextType(KeyTextType.GPG);
 		key.setEncodingType(EncodingType.BINARY);
-		byte[] keyBytes = Util.getFileAsBytes(new File("test/images/smallTux.png"));
-		key.setKey(keyBytes);
+		key.setCompression(false);
+		//byte[] keyBytes = Util.getFileAsBytes(new File("test/images/smallTux.png"));
+		key.setKey(tuxPicture2);
 		vcard.addKey(key);
 		
 		ExtendedFeature xGenerator = new ExtendedType("X-GENERATOR", "Cardme Generator");

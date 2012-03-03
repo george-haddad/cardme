@@ -122,7 +122,7 @@ public final class Base64Wrapper {
 	 */
 	public static byte[] decode(String base64String)
 	{
-		return Base64.decode(base64String);
+		return Base64.decode(base64String, Base64.NO_OPTIONS);
 	}
 
 //	/**
