@@ -302,7 +302,7 @@ public final class VCardUtils {
 	{
 		String unfold1 = vcardString.replaceAll("=\n\\p{Blank}+", "");
 		String unfold2 = unfold1.replaceAll("\n\\p{Blank}+", "");
-		String unfold3 = unfold2.replaceAll("=\n\\p{Blank}*", ""); //Remove soft line breaks
+		String unfold3 = unfold2.replaceAll("=\n\\p{Blank}+", ""); //Remove soft line breaks
 		return unfold3;
 	}
 	
