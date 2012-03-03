@@ -1070,6 +1070,12 @@ public class VCardWriter {
 					sb.append(".");
 				}
 				
+				if(versionFeature.getVersion() == VCardVersion.V2_1) {
+					//We do not support writing in v2.1, so if it has
+					//been set before, force it to v3.0
+					versionFeature.setVersion(VCardVersion.V3_0);
+				}
+				
 				sb.append(versionFeature.getTypeString());
 				sb.append(":");
 				sb.append(versionFeature.getVersion().getVersion());

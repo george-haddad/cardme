@@ -3014,7 +3014,18 @@ public class VCardEngine {
 						urlFeature.setLanguage(pt.getValue());
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						if(compatMode == CompatibilityMode.MS_OUTLOOK) {
+							if(pt.getName().equals("TYPE")) {
+								//Ignore this because URL types do not have type parameters.
+								//For Outlook we will re-add it in the VCardWriter
+							}
+							else {
+								throw new VCardBuildException("Invalid parameter type: "+pt);
+							}
+						}
+						else {
+							throw new VCardBuildException("Invalid parameter type: "+pt);
+						}
 					}
 				}
 				

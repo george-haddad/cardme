@@ -1,11 +1,11 @@
 package net.sourceforge.cardme.util;
 
-import net.sourceforge.cardme.io.BinaryFoldingScheme;
-import net.sourceforge.cardme.io.FoldingScheme;
-
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import net.sourceforge.cardme.io.BinaryFoldingScheme;
+import net.sourceforge.cardme.io.FoldingScheme;
 
 /**
  * Copyright 2011 George El-Haddad. All rights reserved.
@@ -302,7 +302,8 @@ public final class VCardUtils {
 	{
 		String unfold1 = vcardString.replaceAll("=\n\\p{Blank}+", "");
 		String unfold2 = unfold1.replaceAll("\n\\p{Blank}+", "");
-		return unfold2;
+		String unfold3 = unfold2.replaceAll("=\n\\p{Blank}*", ""); //Remove soft line breaks
+		return unfold3;
 	}
 	
 	/**
