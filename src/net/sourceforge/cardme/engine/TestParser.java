@@ -154,9 +154,9 @@ public class TestParser {
 		
 		TestParser testParser = new TestParser();
 		testParser.setCompatibilityMode(CompatibilityMode.RFC2426);
-//		testParser.setCompatibilityMode(CompatibilityMode.I_PHONE);
-//		testParser.setCompatibilityMode(CompatibilityMode.KDE_ADDRESS_BOOK);
-//		testParser.setCompatibilityMode(CompatibilityMode.MAC_ADDRESS_BOOK);
+		testParser.setCompatibilityMode(CompatibilityMode.I_PHONE);
+		testParser.setCompatibilityMode(CompatibilityMode.KDE_ADDRESS_BOOK);
+		testParser.setCompatibilityMode(CompatibilityMode.MAC_ADDRESS_BOOK);
 //		testParser.setCompatibilityMode(CompatibilityMode.MS_OUTLOOK);
 		List<VCard> vcards = testParser.importVCards();
 		
