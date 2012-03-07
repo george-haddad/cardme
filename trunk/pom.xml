@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2007 sp2 (http://www.altova.com) by Michael Rimov (Centerline Computers) -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
@@ -72,6 +73,20 @@
 	<build>
 		<defaultGoal>install</defaultGoal>
 		<sourceDirectory>src</sourceDirectory>
+		<resources>
+			<resource>
+				<directory>licenses</directory>
+				<includes>
+					<include>*</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>doc</directory>
+				<includes>
+					<include>README</include>
+				</includes>
+			</resource>
+		</resources>
 		<testSourceDirectory>test</testSourceDirectory>
 		<testResources>
 			<testResource>
@@ -87,7 +102,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.0.2</version>
+				<version>2.3.2</version>
 				<configuration>
 					<source>${compileSource}</source>
 					<target>${compileSource}</target>
@@ -110,7 +125,7 @@
 				<!-- Run Unit Tests -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.4.2</version>
+				<version>2.11</version>
 			</plugin>
 			<plugin>
 				<!-- Create a source code jar as well -->
@@ -139,22 +154,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-gpg-plugin</artifactId>
-				<version>1.4</version>
-				<executions>
-					<execution>
-						<id>sign-artifacts</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
@@ -175,57 +174,81 @@
 							<groupId>org.apache.maven.plugins</groupId>
 							<artifactId>maven-jxr-plugin</artifactId>
 							<version>2.1</version>
-						</plugin>	
+						</plugin>
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
 							<artifactId>maven-pmd-plugin</artifactId>
 							<version>2.4</version>
 							<configuration>
-							  <targetJdk>${compileSource}</targetJdk>
-							</configuration>							
-						</plugin>												
+								<targetJdk>${compileSource}</targetJdk>
+							</configuration>
+						</plugin>
 						<plugin>
 							<groupId>org.codehaus.mojo</groupId>
 							<artifactId>cobertura-maven-plugin</artifactId>
 							<version>2.5.1</version>
-						</plugin>						
+						</plugin>
 					</reportPlugins>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-  <properties>
-    <compileSource>1.5</compileSource>
-    <cobertura.version>2.5.1</cobertura.version>
-  </properties>
-  <profiles>
-	  <profile>
-		  <id>dist</id>
-		  <build>
-			  <plugins>
-				<plugin>
-					  <groupId>org.apache.maven.plugins</groupId>
-					  <artifactId>maven-javadoc-plugin</artifactId>
-					  <version>2.8</version>
-					  <executions>
-						<execution>
-						  <id>attach-javadocs</id>
-						  <goals>
-							<goal>jar</goal>
-						  </goals>
-						</execution>
-					  </executions>
+	<properties>
+		<compileSource>1.5</compileSource>
+		<cobertura.version>2.5.1</cobertura.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	<profiles>
+		<profile>
+			<id>dist</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.8</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
 					</plugin>
 					<plugin>
-				        <artifactId>maven-assembly-plugin</artifactId>
-				        <version>2.2-beta-2</version>
-				        <configuration>
-				          <descriptor>assembly.xml</descriptor>
-				        </configuration>					
-				     </plugin>		  
+						<artifactId>maven-assembly-plugin</artifactId>
+						<version>2.2-beta-2</version>
+						<configuration>
+							<descriptor>assembly.xml</descriptor>
+						</configuration>
+					</plugin>
 				</plugins>
-		  </build>
-	  </profile>
-  
-  </profiles>
+			</build>
+		</profile>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.4</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+								<configuration>
+									<keyname>Cardme Developer Team</keyname>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

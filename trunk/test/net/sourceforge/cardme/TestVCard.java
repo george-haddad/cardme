@@ -428,7 +428,7 @@ public class TestVCard {
 		
 		assertNotNull(vcardString);
 		assertFalse(vcardWriter.hasErrors());
-		assertTrue((vcardString.indexOf("D=C3=96e") != -1));
+		assertTrue("Got " + vcardString, (vcardString.indexOf("D=C3=96e") != -1));
 		
 		VCardEngine vcardEngine = new VCardEngine();
 		vcardEngine.setCompatibilityMode(CompatibilityMode.RFC2426);
