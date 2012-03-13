@@ -34,49 +34,49 @@ import net.sourceforge.cardme.vcard.VCardType;
  * 
  * @author George El-Haddad
  * <br/>
- * Aug 23, 2010
+ * Mar 8, 2012
  *
  */
-public class XAddressParameterType extends XTendedParameterType {
+public class XURLParameterType extends XTendedParameterType {
 
 	/**
 	 * <p>Creates a new extended telephone parameter type with
 	 * the extended name and value.</p>
-	 * <p>Example: <code>ADR;TYPE=X-EVOLUTION-SLOT=1;</code></p>
+	 * <p>Example: <code>URL;TYPE=X-EVOLUTION-SLOT=1;</code></p>
 	 * 
 	 * @param xtendedTypeName
 	 * @param xtendedTypeValue
 	 */
-	public XAddressParameterType(String xtendedTypeName, String xtendedTypeValue) {
+	public XURLParameterType(String xtendedTypeName, String xtendedTypeValue) {
 		super(xtendedTypeName, xtendedTypeValue);
 	}
 	
 	/**
 	 * <p>Creates a new extended telephone parameter type with
 	 * the extended name only.
-	 * <p>Example: <code>ADR;TYPE=X-COLOR-RED;</code></p>
+	 * <p>Example: <code>URL;TYPE=X-COLOR-RED;</code></p>
 	 * 
 	 * @param xtendedTypeName
 	 */
-	public XAddressParameterType(String xtendedTypeName) {
+	public XURLParameterType(String xtendedTypeName) {
 		super(xtendedTypeName);
 	}
 	
 	@Override
 	public String getType()
 	{
-		return AddressParameterType.NON_STANDARD.getType();
+		return URLParameterType.NON_STANDARD.getType();
 	}
 	
 	@Override
 	public String getDescription()
 	{
-		return AddressParameterType.NON_STANDARD.getDescription();
+		return URLParameterType.NON_STANDARD.getDescription();
 	}
 	
 	@Override
 	public VCardType getParentType()
 	{
-		return VCardType.ADR;
+		return VCardType.URL;
 	}
 }

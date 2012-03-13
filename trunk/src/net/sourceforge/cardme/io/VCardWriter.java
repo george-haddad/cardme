@@ -56,10 +56,12 @@ import net.sourceforge.cardme.vcard.types.parameters.EmailParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.LabelParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.TelephoneParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.TimeZoneParameterType;
+import net.sourceforge.cardme.vcard.types.parameters.URLParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XAddressParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XEmailParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XLabelParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XTelephoneParameterType;
+import net.sourceforge.cardme.vcard.types.parameters.XURLParameterType;
 
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.net.QuotedPrintableCodec;
@@ -1761,9 +1763,100 @@ public class VCardWriter {
 					
 					tmpSb.append(urlFeature.getTypeString());
 					
-					if(compatMode.compareTo(CompatibilityMode.MS_OUTLOOK) == 0) {
-						tmpSb.append(";");
-						tmpSb.append("WORK");
+					switch(compatMode)
+					{
+						case MS_OUTLOOK:
+						case I_PHONE:
+						case GMAIL:
+						case MAC_ADDRESS_BOOK:
+						{
+							if(urlFeature.hasURLParameterTypes()) {
+								tmpSb.append(";");
+								Iterator<URLParameterType> paramTypes = urlFeature.getURLParameterTypes();
+								switch(urlFeature.getParameterTypeStyle())
+								{
+									case PARAMETER_LIST:
+									{
+										while(paramTypes.hasNext()) {
+											URLParameterType urlType = paramTypes.next();
+											tmpSb.append("TYPE=");
+											tmpSb.append(urlType.getType());
+											tmpSb.append(";");
+										}
+
+										break;
+									}
+
+									case PARAMETER_VALUE_LIST:
+									{
+										tmpSb.append("TYPE=");
+										while(paramTypes.hasNext()) {
+											URLParameterType urlType = paramTypes.next();
+											tmpSb.append(urlType.getType());
+											tmpSb.append(",");
+										}
+
+										break;
+									}
+								}
+
+								tmpSb.deleteCharAt(tmpSb.length()-1);
+							}
+							
+							if(urlFeature.hasExtendedURLParameterTypes()) {
+								Iterator<XURLParameterType> xParamTypes = urlFeature.getExtendedURLParameterTypes();
+								switch(urlFeature.getParameterTypeStyle())
+								{
+									case PARAMETER_LIST:
+									{
+										tmpSb.append(";");
+										
+										while(xParamTypes.hasNext()) {
+											XURLParameterType xUrlType = xParamTypes.next();
+											tmpSb.append("TYPE=");
+											tmpSb.append(xUrlType.getXtendedTypeName());
+											if(xUrlType.hasXtendedTypeValue()) {
+												tmpSb.append("=");
+												tmpSb.append(xUrlType.getXtendedTypeValue());
+											}
+											
+											tmpSb.append(";");
+										}
+
+										break;
+									}
+
+									case PARAMETER_VALUE_LIST:
+									{
+										if(urlFeature.hasURLParameterTypes()) {
+											//Continue from the list
+											tmpSb.append(",");
+										}
+										else {
+											//Start a new
+											tmpSb.append(";TYPE=");
+										}
+										
+										while(xParamTypes.hasNext()) {
+											XURLParameterType xUrlType = xParamTypes.next();
+											tmpSb.append(xUrlType.getXtendedTypeName());
+											if(xUrlType.hasXtendedTypeValue()) {
+												tmpSb.append("=");
+												tmpSb.append(xUrlType.getXtendedTypeValue());
+											}
+											
+											tmpSb.append(",");
+										}
+
+										break;
+									}
+								}
+
+								tmpSb.deleteCharAt(tmpSb.length()-1);
+							}
+							
+							break;
+						}
 					}
 					
 					if(urlFeature.hasCharset()) {

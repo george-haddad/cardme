@@ -1,12 +1,19 @@
 package net.sourceforge.cardme.vcard.types;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
 import net.sourceforge.cardme.util.Util;
 import net.sourceforge.cardme.vcard.EncodingType;
 import net.sourceforge.cardme.vcard.VCardType;
 import net.sourceforge.cardme.vcard.features.URLFeature;
 import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
-import java.net.MalformedURLException;
-import java.net.URL;
+import net.sourceforge.cardme.vcard.types.parameters.URLParameterType;
+import net.sourceforge.cardme.vcard.types.parameters.XURLParameterType;
 
 /**
  * Copyright 2011 George El-Haddad. All rights reserved.
@@ -46,6 +53,8 @@ import java.net.URL;
 public class URLType extends Type implements URLFeature {
 
 	private URL url = null;
+	private List<URLParameterType> urlParameterTypes = null;
+	private List<XURLParameterType> xtendedUrlParameterTypes = null;
 	
 	public URLType() {
 		this((URL)null);
@@ -57,6 +66,8 @@ public class URLType extends Type implements URLFeature {
 	
 	public URLType(URL url) {
 		super(EncodingType.EIGHT_BIT, ParameterTypeStyle.PARAMETER_VALUE_LIST);
+		urlParameterTypes = new ArrayList<URLParameterType>();
+		xtendedUrlParameterTypes = new ArrayList<XURLParameterType>();
 		setURL(url);
 	}
 	
@@ -97,6 +108,144 @@ public class URLType extends Type implements URLFeature {
 	public String getTypeString()
 	{
 		return VCardType.URL.getType();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public Iterator<URLParameterType> getURLParameterTypes()
+	{
+		return urlParameterTypes.listIterator();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public List<URLParameterType> getURLParameterTypesList()
+	{
+		return Collections.unmodifiableList(urlParameterTypes);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getURLParameterSize()
+	{
+		return urlParameterTypes.size();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void addURLParameterType(URLParameterType urlParameterType) {
+		urlParameterTypes.add(urlParameterType);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void removeURLParameterType(URLParameterType urlParameterType) {
+		urlParameterTypes.remove(urlParameterType);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean containsURLParameterType(URLParameterType urlParameterType)
+	{
+		return urlParameterTypes.contains(urlParameterType);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean containsAllURLParameterTypes(List<URLParameterType> urlParameterTypes)
+	{
+		return this.urlParameterTypes.containsAll(urlParameterTypes);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean hasURLParameterTypes()
+	{
+		return !urlParameterTypes.isEmpty();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void clearURLParameterTypes() {
+		urlParameterTypes.clear();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public Iterator<XURLParameterType> getExtendedURLParameterTypes()
+	{
+		return xtendedUrlParameterTypes.listIterator();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public List<XURLParameterType> getExtendedURLParameterTypesList()
+	{
+		return Collections.unmodifiableList(xtendedUrlParameterTypes);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getExtendedURLParameterSize()
+	{
+		return xtendedUrlParameterTypes.size();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void addExtendedURLParameterType(XURLParameterType xtendedUrlParameterType) {
+		xtendedUrlParameterTypes.add(xtendedUrlParameterType);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void removeExtendedURLParameterType(XURLParameterType xtendedUrlParameterType) {
+		xtendedUrlParameterTypes.remove(xtendedUrlParameterType);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean containsExtendedURLParameterType(XURLParameterType xtendedUrlParameterType)
+	{
+		return xtendedUrlParameterTypes.contains(xtendedUrlParameterType);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean containsAllExtendedURLParameterTypes(List<XURLParameterType> xtendedUrlParameterTypes)
+	{
+		return this.xtendedUrlParameterTypes.containsAll(xtendedUrlParameterTypes);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean hasExtendedURLParameterTypes()
+	{
+		return !xtendedUrlParameterTypes.isEmpty();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void clearExtendedURLParameterTypes() {
+		xtendedUrlParameterTypes.clear();
 	}
 	
 	/**
@@ -150,6 +299,20 @@ public class URLType extends Type implements URLFeature {
 			sb.append(url);
 			sb.append(",");
 		}
+		
+		if(!urlParameterTypes.isEmpty()) {
+			for(int i = 0; i < urlParameterTypes.size(); i++) {
+				sb.append(urlParameterTypes.get(i).getType());
+				sb.append(",");
+			}
+		}
+		
+		if(!xtendedUrlParameterTypes.isEmpty()) {
+			for(int i = 0; i < xtendedUrlParameterTypes.size(); i++) {
+				sb.append(xtendedUrlParameterTypes.get(i).getType());
+				sb.append(",");
+			}
+		}
 
 		if(super.id != null) {
 			sb.append(super.id);
@@ -175,6 +338,18 @@ public class URLType extends Type implements URLFeature {
 			}
 			catch(MalformedURLException e) {
 				cloned.setURL(null);
+			}
+		}
+		
+		if(!urlParameterTypes.isEmpty()) {
+			for(int i = 0; i < urlParameterTypes.size(); i++) {
+				cloned.addURLParameterType(urlParameterTypes.get(i));
+			}
+		}
+		
+		if(!xtendedUrlParameterTypes.isEmpty()) {
+			for(int i = 0; i < xtendedUrlParameterTypes.size(); i++) {
+				cloned.addExtendedURLParameterType(xtendedUrlParameterTypes.get(i));
 			}
 		}
 		

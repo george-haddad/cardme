@@ -68,10 +68,12 @@ import net.sourceforge.cardme.vcard.types.parameters.AddressParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.EmailParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.LabelParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.TelephoneParameterType;
+import net.sourceforge.cardme.vcard.types.parameters.URLParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XAddressParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XEmailParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XLabelParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XTelephoneParameterType;
+import net.sourceforge.cardme.vcard.types.parameters.XURLParameterType;
 
 import org.apache.commons.codec.net.QuotedPrintableCodec;
 
@@ -3014,17 +3016,38 @@ public class VCardEngine {
 						urlFeature.setLanguage(pt.getValue());
 					}
 					else {
-						if(compatMode == CompatibilityMode.MS_OUTLOOK) {
-							if(pt.getName().equals("TYPE")) {
-								//Ignore this because URL types do not have type parameters.
-								//For Outlook we will re-add it in the VCardWriter
+						switch(compatMode)
+						{
+							case MS_OUTLOOK:
+							case I_PHONE:
+							case GMAIL:
+							case MAC_ADDRESS_BOOK:
+							{
+								if(pt.getName().equals("TYPE")) {
+									if(pt.getValue().indexOf(',') != -1) {
+										String[] typeValueList = pt.getValue().split(",");
+										for(int j = 0; j < typeValueList.length; j++) {
+											setUrlParameterType(urlFeature, typeValueList[j]);
+										}
+									}
+									else {
+										setUrlParameterType(urlFeature, pt.getValue());
+									}
+								}
+								else {
+									throw new VCardBuildException("Invalid parameter type: "+pt);
+								}
+								
+								break;
 							}
-							else {
+							
+							case EVOLUTION:
+							case IOS_EXPORTER:
+							case KDE_ADDRESS_BOOK:
+							case RFC2426:
+							{
 								throw new VCardBuildException("Invalid parameter type: "+pt);
 							}
-						}
-						else {
-							throw new VCardBuildException("Invalid parameter type: "+pt);
 						}
 					}
 				}
@@ -3063,6 +3086,33 @@ public class VCardEngine {
 		}
 		catch(Exception ex) {
 			throw new VCardBuildException("URLType ("+VCardType.URL.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+		}
+	}
+	
+	/**
+	 * <p>Helper method for the above.</p>
+	 *
+	 * @param urlType
+	 * @param paramValue
+	 */
+	private void setUrlParameterType(URLType urlType, String paramValue) {
+		try {
+			URLParameterType urlParamType = URLParameterType.valueOf(paramValue);
+			urlType.addURLParameterType(urlParamType);
+		}
+		catch(IllegalArgumentException iae) {
+			XURLParameterType xUrlType = null;
+			if(paramValue.indexOf('=') != -1) {
+				String[] pTmp = paramValue.split("=");
+				xUrlType = new XURLParameterType(pTmp[0], pTmp[1]);
+				pTmp[0] = null;
+				pTmp[1] = null;
+			}
+			else {
+				xUrlType = new XURLParameterType(paramValue);
+			}
+			
+			urlType.addExtendedURLParameterType(xUrlType);
 		}
 	}
 	

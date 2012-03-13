@@ -61,6 +61,7 @@ public enum CompatibilityMode {
 	 * 	<ol>
 	 * 		<li>Encoding parameter type uses BASE64 instead of B.</li>
 	 * 		<li>Compensates for missing = sign delimiting parameter types in PHOTO, LOGO, SOUND and KEY types when parsing.</li>
+	 * 		<li>Parameter types inside the URL feature.</li>
 	 * 	</ol>
 	 * </p>
 	 */
@@ -99,5 +100,21 @@ public enum CompatibilityMode {
 	 */
 	IOS_EXPORTER,
 	
-	EVOLUTION;
+	/**
+	 * <p>
+	 * 	<ol>
+	 *		<li></li>
+	 * 	</ol>
+	 * </p>
+	 */
+	EVOLUTION,
+	
+	/**
+	 * <p>
+	 * 	<ol>
+	 *		<li>Parameter types inside the URL feature.</li>
+	 * 	</ol>
+	 * </p>
+	 */
+	GMAIL;
 }
