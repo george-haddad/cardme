@@ -4,10 +4,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.URLFeature;
+
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sourceforge.cardme.vcard.VCardType;
+import net.sourceforge.cardme.vcard.features.URLFeature;
+import net.sourceforge.cardme.vcard.types.parameters.URLParameterType;
+import net.sourceforge.cardme.vcard.types.parameters.XURLParameterType;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,6 +63,11 @@ public class URLTypeTest {
 	@Before
 	public void setUp() throws Exception {
 		urlType1 = new URLType("http://sourceforge.net");
+		urlType1.addURLParameterType(URLParameterType.WORK);
+		urlType1.addURLParameterType(URLParameterType.PREF);
+		urlType1.addExtendedURLParameterType(new XURLParameterType("X-PROTOCOL", "HTTPS"));
+		urlType1.addExtendedURLParameterType(new XURLParameterType("X-SSL"));
+		
 		urlType2 = new URLType(new URL("http://sourceforge.net"));
 		urlType3 = new URLType();
 	}
@@ -99,14 +111,71 @@ public class URLTypeTest {
 	}
 	
 	@Test
+	public void testContainsURLParameterType() {
+		assertTrue(urlType1.containsURLParameterType(URLParameterType.PREF));
+		assertTrue(urlType1.containsURLParameterType(URLParameterType.WORK));
+		assertFalse(urlType1.containsURLParameterType(URLParameterType.HOME));
+	}
+	
+	@Test
+	public void testContainsAllURLParameterTypes() {
+		List<URLParameterType> types = new ArrayList<URLParameterType>(2);
+		types.add(URLParameterType.PREF);
+		types.add(URLParameterType.WORK);
+		
+		assertTrue(urlType1.containsAllURLParameterTypes(types));
+	}
+	
+	@Test
+	public void testContainsExtendedURLParameterType() {
+		assertTrue(urlType1.containsExtendedURLParameterType(new XURLParameterType("X-PROTOCOL", "HTTPS")));
+		assertTrue(urlType1.containsExtendedURLParameterType(new XURLParameterType("X-SSL")));
+		assertFalse(urlType1.containsExtendedURLParameterType(new XURLParameterType("X-NOT-EXISTS")));
+	}
+	
+	@Test
+	public void testContainsAllExtendedURLParameterTypes() {
+		List<XURLParameterType> types = new ArrayList<XURLParameterType>(2);
+		types.add(new XURLParameterType("X-PROTOCOL", "HTTPS"));
+		types.add(new XURLParameterType("X-SSL"));
+		
+		assertTrue(urlType1.containsAllExtendedURLParameterTypes(types));
+	}
+	
+	@Test
+	public void testRemoveURLParameterType() {
+		urlType1.addURLParameterType(URLParameterType.HOME);
+		assertTrue(urlType1.containsURLParameterType(URLParameterType.HOME));
+		urlType1.removeURLParameterType(URLParameterType.HOME);
+		assertFalse(urlType1.containsURLParameterType(URLParameterType.HOME));
+	}
+	
+	@Test
+	public void testRemoveExtendedURLParameterType() {
+		urlType1.addExtendedURLParameterType(new XURLParameterType("X-REMOVEME"));
+		assertTrue(urlType1.containsExtendedURLParameterType(new XURLParameterType("X-REMOVEME")));
+		urlType1.removeExtendedURLParameterType(new XURLParameterType("X-REMOVEME"));
+		assertFalse(urlType1.containsExtendedURLParameterType(new XURLParameterType("X-REMOVEME")));
+	}
+	
+	@Test
 	public void testEquals() throws MalformedURLException {
 		URLType urlType4 = new URLType("http://sourceforge.net");
+		urlType4.addURLParameterType(URLParameterType.WORK);
+		urlType4.addURLParameterType(URLParameterType.PREF);
+		urlType4.addExtendedURLParameterType(new XURLParameterType("X-PROTOCOL", "HTTPS"));
+		urlType4.addExtendedURLParameterType(new XURLParameterType("X-SSL"));
+		
 		assertTrue(urlType1.equals(urlType4));
 	}
 	
 	@Test
 	public void testHashcode() throws MalformedURLException {
 		URLType urlType4 = new URLType("http://sourceforge.net");
+		urlType4.addURLParameterType(URLParameterType.WORK);
+		urlType4.addURLParameterType(URLParameterType.PREF);
+		urlType4.addExtendedURLParameterType(new XURLParameterType("X-PROTOCOL", "HTTPS"));
+		urlType4.addExtendedURLParameterType(new XURLParameterType("X-SSL"));
 		
 		int hcode1 = urlType1.hashCode();
 		int hcode2 = urlType4.hashCode();

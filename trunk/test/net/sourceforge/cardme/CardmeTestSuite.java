@@ -106,7 +106,8 @@ import org.junit.runners.Suite;
 		TestVCard.class,
 		TestVcardFieldMarshalling.class,
 		VCardUtilsTest.class,
-		VCardWriterTest.class
+		VCardWriterTest.class,
+		VCardsTest.class
 	}
 )
 
