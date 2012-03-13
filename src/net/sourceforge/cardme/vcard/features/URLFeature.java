@@ -1,6 +1,11 @@
 package net.sourceforge.cardme.vcard.features;
 
 import java.net.URL;
+import java.util.Iterator;
+import java.util.List;
+
+import net.sourceforge.cardme.vcard.types.parameters.URLParameterType;
+import net.sourceforge.cardme.vcard.types.parameters.XURLParameterType;
 
 /**
  * Copyright 2011 George El-Haddad. All rights reserved.
@@ -74,6 +79,133 @@ public interface URLFeature extends TypeTools {
 	 * @return boolean
 	 */
 	public boolean hasURL();
+	
+	/**
+	 * <p>Returns an iterator all parameter types.</p>
+	 *
+	 * @return {@link Iterator}&lt;URLParameterType&gt;
+	 */
+	public Iterator<URLParameterType> getURLParameterTypes();
+	
+	/**
+	 * <p>Returns an unmodifiable list of parameter types.</p>
+	 *
+	 * @return {@link List}&lt;URLParameterType&gt;
+	 */
+	public List<URLParameterType> getURLParameterTypesList();
+	
+	/**
+	 * <p>Returns the number of parameter types.</p>
+	 *
+	 * @return int
+	 */
+	public int getURLParameterSize();
+	
+	/**
+	 * <p>Adds an URL parameter type.</p>
+	 *
+	 * @param urlParameterType
+	 */
+	public void addURLParameterType(URLParameterType urlParameterType);
+	
+	/**
+	 * <p>Removes a parameter type.</p>
+	 *
+	 * @param urlParameterType
+	 */
+	public void removeURLParameterType(URLParameterType urlParameterType);
+	
+	/**
+	 * <p>Returns true if the parameter type exists.</p>
+	 *
+	 * @param urlParameterType
+	 * @return boolean
+	 */
+	public boolean containsURLParameterType(URLParameterType urlParameterType);
+	
+	/**
+	 * <p>Returns true if all the parameter types exist.</p>
+	 *
+	 * @param urlParameterTypes
+	 * @return boolean
+	 */
+	public boolean containsAllURLParameterTypes(List<URLParameterType> urlParameterTypes);
+	
+	
+	/**
+	 * <p>Returns true if URL parameter types exist.</p>
+	 *
+	 * @return boolean
+	 */
+	public boolean hasURLParameterTypes();
+	
+	/**
+	 * <p>Removes all URL parameter types.</p>
+	 */
+	public void clearURLParameterTypes();
+	
+	/**
+	 * <p>Returns an iterator all extended parameter types.</p>
+	 *
+	 * @return {@link Iterator}&lt;XURLParameterType&gt;
+	 */
+	public Iterator<XURLParameterType> getExtendedURLParameterTypes();
+	
+	/**
+	 * <p>Returns an unmodifiable list of extended parameter types.</p>
+	 *
+	 * @return {@link List}&lt;XURLParameterType&gt;
+	 */
+	public List<XURLParameterType> getExtendedURLParameterTypesList();
+	
+	/**
+	 * <p>Returns the number of extended parameter types.</p>
+	 *
+	 * @return int
+	 */
+	public int getExtendedURLParameterSize();
+	
+	/**
+	 * <p>Adds an extended URL parameter type.</p>
+	 *
+	 * @param xurlParameterType
+	 */
+	public void addExtendedURLParameterType(XURLParameterType xurlParameterType);
+	
+	/**
+	 * <p>Removes an extended parameter type.</p>
+	 *
+	 * @param xurlParameterType
+	 */
+	public void removeExtendedURLParameterType(XURLParameterType xurlParameterType);
+	
+	/**
+	 * <p>Returns true if the extended parameter type exists.</p>
+	 *
+	 * @param xurlParameterType
+	 * @return boolean
+	 */
+	public boolean containsExtendedURLParameterType(XURLParameterType xurlParameterType);
+	
+	/**
+	 * <p>Returns true if all the extended parameter types exist.</p>
+	 *
+	 * @param xurlParameterTypes
+	 * @return boolean
+	 */
+	public boolean containsAllExtendedURLParameterTypes(List<XURLParameterType> xurlParameterTypes);
+	
+	/**
+	 * <p>Returns true if extended URL parameter types exist.</p>
+	 *
+	 * @return boolean
+	 */
+	public boolean hasExtendedURLParameterTypes();
+	
+	/**
+	 * <p>Removes all extended URL parameter types.</p>
+	 */
+	public void clearExtendedURLParameterTypes();
 	
 	/**
 	 * <p>Returns a full copy of this object.</p>

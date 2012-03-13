@@ -34,49 +34,40 @@ import net.sourceforge.cardme.vcard.VCardType;
  * 
  * @author George El-Haddad
  * <br/>
- * Aug 23, 2010
- *
+ * Mar 8, 2012
+ * <p>
+ * This class is only meant to be used in certain compatibility modes
+ * such as GMAIL and IPHONE as they violate the RFC-2426 and place
+ * parameter types in the URL Type which is strictly forbidden.
+ * </p>
  */
-public class XAddressParameterType extends XTendedParameterType {
+public enum URLParameterType {
 
-	/**
-	 * <p>Creates a new extended telephone parameter type with
-	 * the extended name and value.</p>
-	 * <p>Example: <code>ADR;TYPE=X-EVOLUTION-SLOT=1;</code></p>
-	 * 
-	 * @param xtendedTypeName
-	 * @param xtendedTypeValue
-	 */
-	public XAddressParameterType(String xtendedTypeName, String xtendedTypeValue) {
-		super(xtendedTypeName, xtendedTypeValue);
+	HOME("HOME", "Home"),
+	WORK("WORK", "Work"),
+	OTHER("OTHER", "Other"),
+	PREF("PREF", "Preferred"),
+	NON_STANDARD("NON_STANDARD","Non-Standard");
+	
+	private String type;
+	private String desc;
+	URLParameterType(String t, String d) {
+		type = t;
+		desc = d;
 	}
 	
-	/**
-	 * <p>Creates a new extended telephone parameter type with
-	 * the extended name only.
-	 * <p>Example: <code>ADR;TYPE=X-COLOR-RED;</code></p>
-	 * 
-	 * @param xtendedTypeName
-	 */
-	public XAddressParameterType(String xtendedTypeName) {
-		super(xtendedTypeName);
-	}
-	
-	@Override
 	public String getType()
 	{
-		return AddressParameterType.NON_STANDARD.getType();
+		return type;
 	}
 	
-	@Override
 	public String getDescription()
 	{
-		return AddressParameterType.NON_STANDARD.getDescription();
+		return desc;
 	}
 	
-	@Override
 	public VCardType getParentType()
 	{
-		return VCardType.ADR;
+		return VCardType.URL;
 	}
 }
