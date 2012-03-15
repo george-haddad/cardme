@@ -56,6 +56,7 @@ import net.sourceforge.cardme.vcard.types.VersionType;
 import net.sourceforge.cardme.vcard.types.media.AudioMediaType;
 import net.sourceforge.cardme.vcard.types.media.ImageMediaType;
 import net.sourceforge.cardme.vcard.types.parameters.AddressParameterType;
+import net.sourceforge.cardme.vcard.types.parameters.BirthdayParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.EmailParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.LabelParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
@@ -332,11 +333,11 @@ public class VCardWriterTest {
 	public void testBuildBirthdayFeature() {
 		String vcardStr = vcardWriter.buildVCardString();
 		
-		int startIndex = vcardStr.indexOf("\r\nBDAY:")+2;
+		int startIndex = vcardStr.indexOf("\r\nBDAY")+2;
 		int stopIndex = vcardStr.indexOf('\n', startIndex)+1;
 		String line = vcardStr.substring(startIndex, stopIndex);
 		
-		assertTrue(line.compareTo("BDAY:1980-05-21\r\n") == 0);
+		assertTrue(line.compareTo("BDAY;VALUE=DATE:1980-05-21\r\n") == 0);
 	}
 	
 	@Test
@@ -416,7 +417,10 @@ public class VCardWriterTest {
 		birthday.set(Calendar.YEAR, 1980);
 		birthday.set(Calendar.MONTH, 4);
 		birthday.set(Calendar.DAY_OF_MONTH, 21);
-		vcard.setBirthday(new BirthdayType(birthday));
+		
+		BirthdayType bday = new BirthdayType(birthday);
+		bday.setBirthdayParameterType(BirthdayParameterType.DATE);
+		vcard.setBirthday(bday);
 		
 		Calendar revCal = Calendar.getInstance();
 		revCal.clear();

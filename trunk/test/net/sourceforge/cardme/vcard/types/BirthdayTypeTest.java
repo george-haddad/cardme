@@ -2,6 +2,7 @@ package net.sourceforge.cardme.vcard.types;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import net.sourceforge.cardme.util.ISOFormat;
 import net.sourceforge.cardme.vcard.VCardType;
 import net.sourceforge.cardme.vcard.features.BirthdayFeature;
 import java.util.Calendar;
@@ -59,6 +60,7 @@ public class BirthdayTypeTest {
 		cal.set(Calendar.DAY_OF_MONTH, 10);
 		
 		birthdayType.setBirthday(cal);
+		birthdayType.setISO8601Format(ISOFormat.ISO8601_DATE_EXTENDED);
 	}
 	
 	@After
