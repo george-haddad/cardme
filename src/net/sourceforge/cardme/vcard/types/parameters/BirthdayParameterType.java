@@ -1,4 +1,6 @@
-package net.sourceforge.cardme.util;
+package net.sourceforge.cardme.vcard.types.parameters;
+
+import net.sourceforge.cardme.vcard.VCardType;
 
 /**
  * Copyright 2011 George El-Haddad. All rights reserved.
@@ -32,15 +34,35 @@ package net.sourceforge.cardme.util;
  * 
  * @author George El-Haddad
  * <br/>
- * Mar 10, 2010
+ * Mar 15, 2012
  *
  */
-public enum ISOFormat {
-	ISO8601_BASIC,
-	ISO8601_EXTENDED,
-	ISO8601_UTC_TIME_BASIC,
-	ISO8601_UTC_TIME_EXTENDED,
-	ISO8601_TIME_EXTENDED,
-	ISO8601_DATE_BASIC,
-	ISO8601_DATE_EXTENDED;
+public enum BirthdayParameterType {
+
+	/**
+	 * <p>The birthday will be formatted to display
+	 * the date only. Time will be omitted.</p>
+	 */
+	DATE("DATE"),
+	
+	/**
+	 * <p>The birthday will be formatted to display
+	 * the date and time together.</p>
+	 */
+	DATE_TIME("DATE-TIME");
+	
+	private String typeName;
+	BirthdayParameterType(String _typeName) {
+		typeName = _typeName;
+	}
+	
+	public String getTypeName()
+	{
+		return typeName;
+	}
+	
+	public VCardType getParentType()
+	{
+		return VCardType.BDAY;
+	}
 }

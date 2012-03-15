@@ -71,17 +71,29 @@ public final class ISOUtils {
 		{
 			case ISO8601_BASIC:
 			{
-				builder.append(toISO8601_Date(time, format));
+				builder.append(toISO8601_Date(time, ISOFormat.ISO8601_DATE_BASIC));
 				builder.append("T");
 				paddTwoDigits(builder, time.get(Calendar.HOUR_OF_DAY));
 				paddTwoDigits(builder, time.get(Calendar.MINUTE));
 				paddTwoDigits(builder, time.get(Calendar.SECOND));
 				break;
 			}
+			
+			case ISO8601_UTC_TIME_BASIC:
+			{
+				builder.append(toISO8601_Date(time, ISOFormat.ISO8601_DATE_BASIC));
+				builder.append("T");
+				paddTwoDigits(builder, time.get(Calendar.HOUR_OF_DAY));
+				paddTwoDigits(builder, time.get(Calendar.MINUTE));
+				paddTwoDigits(builder, time.get(Calendar.SECOND));
+				builder.append("Z");
+				break;
+			}
 	
 			case ISO8601_EXTENDED:
+			case ISO8601_UTC_TIME_EXTENDED:
 			{
-				builder.append(toISO8601_Date(time, format));
+				builder.append(toISO8601_Date(time, ISOFormat.ISO8601_DATE_EXTENDED));
 				builder.append("T");
 				paddTwoDigits(builder, time.get(Calendar.HOUR_OF_DAY));
 				builder.append(":");
@@ -91,11 +103,24 @@ public final class ISOUtils {
 				builder.append("Z");
 				break;
 			}
+			
+			case ISO8601_TIME_EXTENDED:
+			{
+				builder.append(toISO8601_Date(time, ISOFormat.ISO8601_DATE_EXTENDED));
+				builder.append("T");
+				paddTwoDigits(builder, time.get(Calendar.HOUR_OF_DAY));
+				builder.append(":");
+				paddTwoDigits(builder, time.get(Calendar.MINUTE));
+				builder.append(":");
+				paddTwoDigits(builder, time.get(Calendar.SECOND));
+				builder.append("Z");
+				builder.append(toISO8601_TimeZone(time.getTimeZone(), ISOFormat.ISO8601_EXTENDED));
+				break;
+			}
 		}
 
 		return builder.toString();
 	}
-
 
 	/**
 	 * <p>Given a calendar object and a specific ISO format it will construct an
@@ -112,14 +137,16 @@ public final class ISOUtils {
 		switch (format)
 		{
 			case ISO8601_BASIC:
+			case ISO8601_DATE_BASIC: 
 			{
 				builder.append(date.get(Calendar.YEAR));
 				paddTwoDigits(builder, date.get(Calendar.MONTH)+1);
 				paddTwoDigits(builder, date.get(Calendar.DAY_OF_MONTH));
 				break;
 			}
-	
+			
 			case ISO8601_EXTENDED:
+			case ISO8601_DATE_EXTENDED:
 			{
 				builder.append(date.get(Calendar.YEAR));
 				builder.append("-");
@@ -241,6 +268,9 @@ public final class ISOUtils {
 //		System.out.println("ISO UTC Time");
 //		System.out.println(toISO8601_UTC_Time(Calendar.getInstance(), ISOFormat.ISO8601_BASIC));
 //		System.out.println(toISO8601_UTC_Time(Calendar.getInstance(), ISOFormat.ISO8601_EXTENDED));
+//		System.out.println(toISO8601_UTC_Time(Calendar.getInstance(), ISOFormat.ISO8601_UTC_TIME_BASIC));
+//		System.out.println(toISO8601_UTC_Time(Calendar.getInstance(), ISOFormat.ISO8601_UTC_TIME_EXTENDED));
+//		System.out.println(toISO8601_UTC_Time(Calendar.getInstance(), ISOFormat.ISO8601_TIME_EXTENDED));
 //		System.out.println();
 //		
 //		TimeZone tz = TimeZone.getDefault();

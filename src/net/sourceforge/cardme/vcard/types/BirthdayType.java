@@ -1,12 +1,15 @@
 package net.sourceforge.cardme.vcard.types;
 
+import java.util.Calendar;
+import java.util.Date;
+
+import net.sourceforge.cardme.util.ISOFormat;
 import net.sourceforge.cardme.util.Util;
 import net.sourceforge.cardme.vcard.EncodingType;
 import net.sourceforge.cardme.vcard.VCardType;
 import net.sourceforge.cardme.vcard.features.BirthdayFeature;
+import net.sourceforge.cardme.vcard.types.parameters.BirthdayParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Copyright 2011 George El-Haddad. All rights reserved.
@@ -46,6 +49,8 @@ import java.util.Date;
 public class BirthdayType extends Type implements BirthdayFeature {
 
 	private Calendar birthday = null;
+	private BirthdayParameterType birthdayParamType = null;
+	private ISOFormat dateTimeFormat = ISOFormat.ISO8601_DATE_EXTENDED;
 	
 	public BirthdayType() {
 		this((Calendar)null);
@@ -83,7 +88,98 @@ public class BirthdayType extends Type implements BirthdayFeature {
 	public void setBirthday(Date date) {
 		birthday.setTime(date);
 	}
-
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setBirthdayParameterType(BirthdayParameterType birthdayParamType) {
+		this.birthdayParamType = birthdayParamType;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public BirthdayParameterType getBirthdayParameterType()
+	{
+		return this.birthdayParamType;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void clearBirthdayParameterType() {
+		this.birthdayParamType = null;
+	}
+	
+	/**
+	 *  {@inheritDoc}
+	 */
+	public boolean hasBirthdayParameterType()
+	{
+		return birthdayParamType != null;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setISO8601Format(ISOFormat isoFormat) {
+		this.dateTimeFormat = isoFormat;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public ISOFormat getISO8601Format()
+	{
+		if(birthdayParamType != null) {
+			switch(birthdayParamType)
+			{
+				case DATE:
+				{
+					switch(dateTimeFormat)
+					{
+						case ISO8601_DATE_BASIC:
+						case ISO8601_DATE_EXTENDED:
+						{
+							return dateTimeFormat;
+						}
+						
+						default:
+						{
+							return ISOFormat.ISO8601_DATE_EXTENDED;
+						}
+					}
+				}
+				
+				case DATE_TIME:
+				{
+					switch(dateTimeFormat)
+					{
+						case ISO8601_TIME_EXTENDED:
+						case ISO8601_UTC_TIME_BASIC:
+						case ISO8601_UTC_TIME_EXTENDED:
+						{
+							return dateTimeFormat;
+						}
+						
+						default:
+						{
+							return ISOFormat.ISO8601_UTC_TIME_EXTENDED;
+						}
+					}
+				}
+				
+				default:
+				{
+					return ISOFormat.ISO8601_UTC_TIME_EXTENDED;
+				}
+			}
+		}
+		else {
+			return ISOFormat.ISO8601_UTC_TIME_EXTENDED;
+		}
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */

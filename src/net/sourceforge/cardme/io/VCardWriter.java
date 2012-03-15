@@ -52,6 +52,7 @@ import net.sourceforge.cardme.vcard.features.UIDFeature;
 import net.sourceforge.cardme.vcard.features.URLFeature;
 import net.sourceforge.cardme.vcard.features.VersionFeature;
 import net.sourceforge.cardme.vcard.types.parameters.AddressParameterType;
+import net.sourceforge.cardme.vcard.types.parameters.BirthdayParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.EmailParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.LabelParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.TelephoneParameterType;
@@ -2021,8 +2022,32 @@ public class VCardWriter {
 					tmpSb.append(birthdayFeature.getCharset().name());
 				}
 				
-				tmpSb.append(":");
-				tmpSb.append(ISOUtils.toISO8601_Date(birthdayFeature.getBirthday(), ISOFormat.ISO8601_EXTENDED));
+				if(birthdayFeature.hasBirthdayParameterType()) {
+					BirthdayParameterType ptype = birthdayFeature.getBirthdayParameterType();
+					tmpSb.append(";VALUE=");
+					tmpSb.append(ptype.getTypeName());
+				}
+				
+				ISOFormat isoFormat = birthdayFeature.getISO8601Format();
+				switch(isoFormat)
+				{
+					case ISO8601_DATE_BASIC:
+					case ISO8601_DATE_EXTENDED:
+					{
+						tmpSb.append(":");
+						tmpSb.append(ISOUtils.toISO8601_Date(birthdayFeature.getBirthday(), isoFormat));
+						break;
+					}
+					
+					case ISO8601_EXTENDED:
+					case ISO8601_UTC_TIME_BASIC:
+					case ISO8601_UTC_TIME_EXTENDED:
+					{
+						tmpSb.append(":");
+						tmpSb.append(ISOUtils.toISO8601_UTC_Time(birthdayFeature.getBirthday(), isoFormat));
+						break;
+					}
+				}
 				
 				String tmpBdayLine = tmpSb.toString();
 				String foldedBdayLine = VCardUtils.foldLine(tmpBdayLine, eol, foldingScheme);

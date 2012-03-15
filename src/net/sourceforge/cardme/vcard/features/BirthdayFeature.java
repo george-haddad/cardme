@@ -3,6 +3,9 @@ package net.sourceforge.cardme.vcard.features;
 import java.util.Calendar;
 import java.util.Date;
 
+import net.sourceforge.cardme.util.ISOFormat;
+import net.sourceforge.cardme.vcard.types.parameters.BirthdayParameterType;
+
 /**
  * Copyright 2011 George El-Haddad. All rights reserved.
  * 
@@ -70,6 +73,56 @@ public interface BirthdayFeature extends TypeTools {
 	 * @param date
 	 */
 	public void setBirthday(Date date);
+	
+	/**
+	 * <p>Sets the birthday parameter type. The birthday
+	 * written will be matching the type.</p>
+	 *
+	 * @see BirthdayParameterType
+	 * @param birthdayParamType
+	 */
+	public void setBirthdayParameterType(BirthdayParameterType birthdayParamType);
+	
+	/**
+	 * <p>Returns the birthday parameter type.</p>
+	 *
+	 * @return {@link BirthdayParameterType}
+	 */
+	public BirthdayParameterType getBirthdayParameterType();
+	
+	/**
+	 * <p>Clears the birthday parameter type.</p>
+	 *
+	 */
+	public void clearBirthdayParameterType();
+	
+	/**
+	 * <p>Returns true if a birthday parameter type exists.</p>
+	 *
+	 * @return boolean
+	 */
+	public boolean hasBirthdayParameterType();
+	
+	/**
+	 * <p>Set the ISO-8601 format for the output of the birthday.
+	 * The default is &quot;UTC Time Extended&quot;.</p>
+	 * 
+	 * @see ISOFormat
+	 */
+	public void setISO8601Format(ISOFormat dateTimeEnum);
+	
+	/**
+	 * <p>Returns the proper ISO-8601 date time format
+	 * according to the birthday parameter type. Should
+	 * it be miss-matching; the default shall be returned
+	 * which is <code>ISOFormat.DATE_EXTENDED</code>
+	 * for date and <code>ISOFormat.UTC_TIME_EXTENDED</code>
+	 * for date-time. Should nothing be set then the default is
+	 * to use <code>ISOFormat.UTC_TIME_EXTENDED</code>.
+	 *
+	 * @return ISOFormat
+	 */
+	public ISOFormat getISO8601Format();
 	
 	/**
 	 * <p>Returns a full copy of this object.</p>
