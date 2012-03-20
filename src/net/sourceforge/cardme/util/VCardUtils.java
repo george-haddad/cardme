@@ -302,8 +302,12 @@ public final class VCardUtils {
 	{
 		String unfold1 = vcardString.replaceAll("=\n\\p{Blank}+", "");
 		String unfold2 = unfold1.replaceAll("\n\\p{Blank}+", "");
-		String unfold3 = unfold2.replaceAll("=\n\\p{Blank}+", ""); //Remove soft line breaks
-		return unfold3;
+		String unfold3 = unfold2.replaceAll("=\n\\p{Blank}+", "");
+		String unfold4 = unfold3.replaceAll("=0D=0A=\n\\p{Blank}+", "");
+		
+		//Reformat quoted printable soft line break that violates RFC-822 (if present)
+		String unfold5 = unfold4.replaceAll("=0D=0A=\n([^\\p{Blank}]([^:\n]*))\n", "=0D=0A$1\n");
+		return unfold5;
 	}
 	
 	/**
@@ -464,8 +468,13 @@ public final class VCardUtils {
 				}
 			}
 		}
-
-		return builder.toString().trim(); // removes the extra CRLF at the end
+		
+		String finalStr = builder.toString();
+		if(finalStr.endsWith(eolDelimeter)) {
+			finalStr = finalStr.substring(0, finalStr.lastIndexOf(eolDelimeter));
+		}
+		
+		return finalStr.trim(); // removes any extra white-space at the end
 	}
 	
 	/**
