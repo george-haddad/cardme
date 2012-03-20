@@ -143,23 +143,23 @@ public class VCardsTest {
 		}
 	}
 	
-//	@Test
-//	public void testMsOutlookVCard() throws IOException {
-//		File msOutlookCard = new File(System.getProperty("user.dir")+File.separator+"test"+File.separator+"vcards"+File.separator+"John_Doe_MS_OUTLOOK.vcf");
-//		
-//		VCardEngine engine = new VCardEngine();
-//		engine.setCompatibilityMode(CompatibilityMode.MS_OUTLOOK);
-//		VCard vcard = engine.parse(msOutlookCard);
-//		
-//		VCardImpl vcard2 = (VCardImpl)vcard;
-//		
-//		if(vcard2.hasErrors()) {
-//			List<VCardError> errors = vcard2.getErrors();
-//			for(int j = 0; j < errors.size(); j++) {
-//				System.out.println(errors.get(j).getErrorMessage());
-//				System.out.println(errors.get(j).getSeverity());
-//				System.out.println(StringUtil.formatException(errors.get(j).getError()));
-//			}
-//		}
-//	}
+	@Test
+	public void testMsOutlookVCard() throws IOException {
+		File msOutlookCard = new File(System.getProperty("user.dir")+File.separator+"test"+File.separator+"vcards"+File.separator+"John_Doe_MS_OUTLOOK.vcf");
+		
+		VCardEngine engine = new VCardEngine();
+		engine.setCompatibilityMode(CompatibilityMode.MS_OUTLOOK);
+		VCard vcard = engine.parse(msOutlookCard);
+		
+		VCardImpl vcard2 = (VCardImpl)vcard;
+		
+		if(vcard2.hasErrors()) {
+			List<VCardError> errors = vcard2.getErrors();
+			for(int j = 0; j < errors.size(); j++) {
+				System.out.println(errors.get(j).getErrorMessage());
+				System.out.println(errors.get(j).getSeverity());
+				System.out.println(StringUtil.formatException(errors.get(j).getError()));
+			}
+		}
+	}
 }
