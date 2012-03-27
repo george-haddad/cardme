@@ -12,6 +12,34 @@ We want to be the best VCard library on the net, so if there is a bug or a new f
 
 -------------------
 
+Card Me Version 0.3.2.02
+
+FEATURE[3475536]
+Cardme integrated into oss.sonatype.org URL(https://oss.sonatype.org/service/local/artifact/maven/redirect?r=snapshots&g=net.sourceforge.cardme&a=cardme&v=0.3.2.01-SNAPSHOT&e=jar)
+
+BUG[3499495]
+BDAY type now has optional VALUE parameter type. VALUE parameter type may accept one of
+DATE or DATE-TIME and this option is validated against the actual value of the field.
+BDAY now holds an ISOFormat variable that dictates how it is represented when written out.
+
+BUG[3499494]
+BUG[3499492]
+URLFeature / URLType given parameter and extended parameter support.
+URLParameter and extended URL parameters are only used when using GMAIL,
+MAC_ADDRESS_BOOK, MS_OUTLOOK and I_PHONE compatibility modes.
+New test case to test parsing exported VCards from other applications.
+
+BUG[3496318]
+Handle MS Outlook improper implementation of the RFC 822 folding standard.
+Quoted-Printable strings are no longer pre-escaped before getting encoded.
+
+George El-Haddad
+Project Lead
+
+Michael Rimov
+Maven Integration Contributor
+
+
 Card Me Version 0.3.2.01
 
 BUG[3496318]

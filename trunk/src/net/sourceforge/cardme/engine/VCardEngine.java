@@ -305,6 +305,9 @@ public class VCardEngine {
 		List<String[]> arrayLines = splitLines(vcardStr);
 		String[] vLine = null;
 		for (int i = 0; i < arrayLines.size(); i++) {
+			//TODO [FEATURE-ID 3509511] 
+			//here I can detect when the type and value are begin and end.
+			
 			vLine = arrayLines.get(i);
 			String type = vLine[0].trim();	//VCard Type
 			String value = vLine[1].trim();	//VCard Value
