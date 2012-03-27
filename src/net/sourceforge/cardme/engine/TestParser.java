@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.sourceforge.cardme.io.BinaryFoldingScheme;
 import net.sourceforge.cardme.io.CompatibilityMode;
+import net.sourceforge.cardme.io.FoldingScheme;
 import net.sourceforge.cardme.io.VCardWriter;
 import net.sourceforge.cardme.util.StringUtil;
 import net.sourceforge.cardme.util.VCardUtils;
@@ -151,19 +153,19 @@ public class TestParser {
 		}
 		
 		TestParser testParser = new TestParser();
-//		testParser.setCompatibilityMode(CompatibilityMode.RFC2426);
+		testParser.setCompatibilityMode(CompatibilityMode.RFC2426);
 //		testParser.setCompatibilityMode(CompatibilityMode.I_PHONE);
 //		testParser.setCompatibilityMode(CompatibilityMode.KDE_ADDRESS_BOOK);
 //		testParser.setCompatibilityMode(CompatibilityMode.MAC_ADDRESS_BOOK);
-		testParser.setCompatibilityMode(CompatibilityMode.MS_OUTLOOK);
+//		testParser.setCompatibilityMode(CompatibilityMode.MS_OUTLOOK);
 		List<VCard> vcards = testParser.importVCards();
 		
 		VCardWriter writer = new VCardWriter();
 		writer.setOutputVersion(VCardVersion.V3_0);
-		writer.setCompatibilityMode(CompatibilityMode.MS_OUTLOOK);
+//		writer.setCompatibilityMode(CompatibilityMode.MS_OUTLOOK);
 //		writer.setCompatibilityMode(CompatibilityMode.RFC2426);
-//		writer.setFoldingScheme(FoldingScheme.MIME_DIR);
-//		writer.setBinaryfoldingScheme(BinaryFoldingScheme.MIME_DIR);
+		writer.setFoldingScheme(FoldingScheme.MIME_DIR);
+		writer.setBinaryfoldingScheme(BinaryFoldingScheme.MIME_DIR);
 		writer.setEOL(VCardUtils.LF);
 		
 		for(int i = 0; i < vcards.size(); i++) {
