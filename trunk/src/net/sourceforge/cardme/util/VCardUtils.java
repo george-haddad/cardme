@@ -300,14 +300,19 @@ public final class VCardUtils {
 	 */
 	public static String unfoldVCard(String vcardString)
 	{
-		String unfold1 = vcardString.replaceAll("=\n\\p{Blank}+", "");
-		String unfold2 = unfold1.replaceAll("\n\\p{Blank}+", "");
-		String unfold3 = unfold2.replaceAll("=\n\\p{Blank}+", "");
-		String unfold4 = unfold3.replaceAll("=0D=0A=\n\\p{Blank}+", "");
-		
 		//Reformat quoted printable soft line break that violates RFC-822 (if present)
-		String unfold5 = unfold4.replaceAll("=0D=0A=\n([^\\p{Blank}]([^:\n]*))\n", "=0D=0A$1\n");
-		return unfold5;
+		
+		String unfold1 = "=\n(\\p{Blank}*(=))";
+		String unfold2 = "=\n([^\\p{Blank}]([^:\n]*))\n";
+		String unfold3 = "\\p{Blank}+=";
+		String unfold4 = "\n\\p{Blank}+";
+		
+		String s1 = vcardString.replaceAll(unfold1, "$1");
+		String s2 = s1.replaceAll(unfold2, "$1");
+		String s3 = s2.replaceAll(unfold4, "");
+		String s4 = s3.replaceAll(unfold3, "=");
+		
+		return s4;
 	}
 	
 	/**
