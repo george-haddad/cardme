@@ -261,6 +261,98 @@ public class VCardUtilsTest {
 	}
 	
 	@Test
+	public void testUnfoldVCardMsOutlookRFC822Violation_1() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("BEGIN:VCARD\n");
+		sb.append("VERSION:3.0\n");
+		sb.append("N:Jost;John;;;\n");
+		sb.append("FN:John Doe\n");
+		sb.append("ADR;HOME:;;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=\n");
+		sb.append("=41=41=41=41=41=41=41;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=\n");
+		sb.append("=41=41=41=41=41;;\n");
+		sb.append("END:VCARD\n");
+		String foldedVCard = sb.toString();
+		
+		sb = new StringBuilder();
+		sb.append("BEGIN:VCARD\n");
+		sb.append("VERSION:3.0\n");
+		sb.append("N:Jost;John;;;\n");
+		sb.append("FN:John Doe\n");
+		sb.append("ADR;HOME:;;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41;;\n");
+		sb.append("END:VCARD\n");
+		String expectedUnfoledVCard = sb.toString();
+		
+		String unfolded = VCardUtils.unfoldVCard(foldedVCard);
+		
+		assertEquals(expectedUnfoledVCard, unfolded);
+	}
+	
+	@Test
+	public void testUnfoldVCardMsOutlookRFC822Violation_2() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("BEGIN:VCARD\n");
+		sb.append("VERSION:3.0\n");
+		sb.append("N:Jost;John;;;\n");
+		sb.append("FN:John Doe\n");
+		sb.append("ADR;HOME:;;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=\n");
+		sb.append("=41=41=41=41=41=41=41;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=\n");
+		sb.append("=41=41=41=41=41;;\n");
+		sb.append("LABEL:BLA BLA BLA\n");
+		sb.append("END:VCARD\n");
+		String foldedVCard = sb.toString();
+		
+		sb = new StringBuilder();
+		sb.append("BEGIN:VCARD\n");
+		sb.append("VERSION:3.0\n");
+		sb.append("N:Jost;John;;;\n");
+		sb.append("FN:John Doe\n");
+		sb.append("ADR;HOME:;;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41;;\n");
+		sb.append("LABEL:BLA BLA BLA\n");
+		sb.append("END:VCARD\n");
+		String expectedUnfoldedVCard = sb.toString();
+		
+		String unfolded = VCardUtils.unfoldVCard(foldedVCard);
+		
+		assertEquals(expectedUnfoldedVCard, unfolded);
+	}
+	
+	@Test
+	public void testUnfoldVCardMsOutlookRFC822Violation_3() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("BEGIN:VCARD\n");
+		sb.append("VERSION:3.0\n");
+		sb.append("N:Jost;John;;;\n");
+		sb.append("FN:John Doe\n");
+		sb.append("ADR;HOME:;;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=\n");
+		sb.append("=41=41=41=41=41=41=41;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=\n");
+		sb.append("=41=41=41=41=41;;\n");
+		sb.append("LABEL:BLA BLA BLA\n");
+		sb.append("PHOTO;ENCODING=b;TYPE=JPEG:/9j/4AAQSkZJRgABAQAAAQABAAD/4QBARXhpZgAATU0AKgAA\n");
+		sb.append(" AAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAyKADAAQAAAABAAAAyAAAAAD/2wBDAA\n");
+		sb.append(" Xw5rH/ACGE/H/0EUUV8zifiPocB/DPeP2Xv+RvsPw/9HpX3v4C/wCQbH/1zH8loor18u2PPzH4\n");
+		sb.append(" joovv1NRRX0FHY8mQ6L/AFq/UVeoor7Hh7+HP1Oer0CiiivoTE//2Q==\n");
+		sb.append("UID:0e7602cc-443e-4b82-b4b1-90f62f99a199\n");
+		sb.append("END:VCARD\n");
+		String foldedVCard = sb.toString();
+		
+		sb = new StringBuilder();
+		sb.append("BEGIN:VCARD\n");
+		sb.append("VERSION:3.0\n");
+		sb.append("N:Jost;John;;;\n");
+		sb.append("FN:John Doe\n");
+		sb.append("ADR;HOME:;;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41;;\n");
+		sb.append("LABEL:BLA BLA BLA\n");
+		sb.append("PHOTO;ENCODING=b;TYPE=JPEG:/9j/4AAQSkZJRgABAQAAAQABAAD/4QBARXhpZgAATU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAyKADAAQAAAABAAAAyAAAAAD/2wBDAAXw5rH/ACGE/H/0EUUV8zifiPocB/DPeP2Xv+RvsPw/9HpX3v4C/wCQbH/1zH8loor18u2PPzH4joovv1NRRX0FHY8mQ6L/AFq/UVeoor7Hh7+HP1Oer0CiiivoTE//2Q==\n");
+		sb.append("UID:0e7602cc-443e-4b82-b4b1-90f62f99a199\n");
+		sb.append("END:VCARD\n");
+		String expectedUnfoldedVCard = sb.toString();
+		
+		String unfolded = VCardUtils.unfoldVCard(foldedVCard);
+		
+		assertEquals(expectedUnfoldedVCard, unfolded);
+	}
+	
+	@Test
 	public void testFoldLineMimeDir() {
 		String unfoledLine = "PHOTO;BASE64:/9j/4AAQSkZJRgABAQAAAQABAAD/4gVASUNDX1BST0ZJTEUAAQEAAAUwYXBwbAIgAABtbnRyUkdCIFhZWiAH2QACABkACwAaAAthY3NwQVBQTAAAAABhcHBsAAAAAAAAAAAAAAAAAAAAAAAA9tYAAQAA3m2pOSXLr1v1k2t76G1RRRX9EHwIUUUUAFFFFABRRRQAUUUUAf/Z";
 		
