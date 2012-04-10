@@ -12,6 +12,18 @@ We want to be the best VCard library on the net, so if there is a bug or a new f
 
 -------------------
 
+Card Me Version 0.3.2.03
+
+BUG[3496318]
+Revised unfolding regular expressions to fix issue with noncompliant RFC-822 folding.
+
+George El-Haddad
+Project Lead
+
+Michael Rimov
+Maven Integration Contributor
+
+
 Card Me Version 0.3.2.02
 
 FEATURE[3475536]
