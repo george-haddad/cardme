@@ -285,6 +285,23 @@ public class VCardEngine {
 	}
 	
 	/**
+	 * <p>Returns an iterator of VCards given the path of the vcard.
+	 * This method can parse mutliple vcards in 1 file.</p>
+	 * 
+	 * <p>THIS IS EXPERIMENTAL</p>
+	 *
+	 * @param vcardPath
+	 * @return {@link Iterator}&lt;VCard&gt;
+	 * @throws IOException
+	 */
+	public Iterator<VCard> parse2(String vcardPath) throws IOException
+	{
+		String vcardStr = getContentFromFile(new File(vcardPath));
+		String unfoldedVcardStr = VCardUtils.unfoldVCard(vcardStr);
+		return parseVCard2(unfoldedVcardStr).iterator();
+	}
+	
+	/**
 	 * <p>Parses the specified VCard String and returns a VCard java object
 	 * with {@link VCardImpl}.setThrowExceptions() set to false. This method
 	 * assumes the following:
@@ -305,9 +322,6 @@ public class VCardEngine {
 		List<String[]> arrayLines = splitLines(vcardStr);
 		String[] vLine = null;
 		for (int i = 0; i < arrayLines.size(); i++) {
-			//TODO [FEATURE-ID 3509511] 
-			//here I can detect when the type and value are begin and end.
-			
 			vLine = arrayLines.get(i);
 			String type = vLine[0].trim();	//VCard Type
 			String value = vLine[1].trim();	//VCard Value
@@ -339,6 +353,57 @@ public class VCardEngine {
 		}
 
 		return vcard;
+	}
+	
+	private List<VCard> parseVCard2(String vcardStr)
+	{
+		//TODO [FEATURE-ID 3509511]
+		
+		List<VCard> vcards = new ArrayList<VCard>();
+		List<String> enumCards = enumerateVCards(vcardStr);
+		
+		for (int i = 0; i < enumCards.size(); i++) {
+			String card = enumCards.get(i);
+			VCard vcard = parseVCard(card);
+			vcards.add(vcard);
+		}
+		
+		return vcards;
+	}
+	
+	private List<String> enumerateVCards(String vcardString)
+	{
+		List<String> vcardStrings = new ArrayList<String>();
+		StringBuilder sb = new StringBuilder();
+		String[] s = vcardString.split("\r?\n");
+		boolean begin = false;
+		boolean end = false;
+		
+		for (int i = 0; i < s.length; i++) {
+			if(s[i].matches("\\p{Blank}*((BEGIN)|(begin))\\p{Blank}*:\\p{Blank}*((VCARD)|(vcard))\\p{Blank}*")) {
+				begin = true;
+			}
+			
+			if(s[i].matches("\\p{Blank}*((END)|(end))\\p{Blank}*:\\p{Blank}*((VCARD)|(vcard))\\p{Blank}*")) {
+				end = true;
+			}
+			
+			if(begin && !end) {
+				sb.append(s[i]);
+				sb.append('\n');
+			}
+			
+			if(end) {
+				sb.append(s[i]);
+				sb.append('\n');
+				begin = false;
+				end = false;
+				vcardStrings.add(sb.toString());
+				sb = new StringBuilder();
+			}
+		}
+		
+		return vcardStrings;
 	}
 	
 	/**
