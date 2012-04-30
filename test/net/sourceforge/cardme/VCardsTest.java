@@ -63,25 +63,25 @@ public class VCardsTest {
 
 	}
 	
-//	@Test
-//	public void testEvolutionVCard() throws IOException {
-//		File evoCard = new File(System.getProperty("user.dir")+File.separator+"test"+File.separator+"vcards"+File.separator+"John_Doe_EVOLUTION.vcf");
-//		
-//		VCardEngine engine = new VCardEngine();
-//		engine.setCompatibilityMode(CompatibilityMode.EVOLUTION);
-//		VCard vcard = engine.parse(evoCard);
-//		
-//		VCardImpl vcard2 = (VCardImpl)vcard;
-//		
-//		if(vcard2.hasErrors()) {
-//			List<VCardError> errors = vcard2.getErrors();
-//			for(int j = 0; j < errors.size(); j++) {
-//				System.out.println(errors.get(j).getErrorMessage());
-//				System.out.println(errors.get(j).getSeverity());
-//				System.out.println(StringUtil.formatException(errors.get(j).getError()));
-//			}
-//		}
-//	}
+	@Test
+	public void testEvolutionVCard() throws IOException {
+		File evoCard = new File(System.getProperty("user.dir")+File.separator+"test"+File.separator+"vcards"+File.separator+"John_Doe_EVOLUTION.vcf");
+		
+		VCardEngine engine = new VCardEngine();
+		engine.setCompatibilityMode(CompatibilityMode.EVOLUTION);
+		VCard vcard = engine.parse(evoCard);
+		
+		VCardImpl vcard2 = (VCardImpl)vcard;
+		
+		if(vcard2.hasErrors()) {
+			List<VCardError> errors = vcard2.getErrors();
+			for(int j = 0; j < errors.size(); j++) {
+				System.out.println(errors.get(j).getErrorMessage());
+				System.out.println(errors.get(j).getSeverity());
+				System.out.println(StringUtil.formatException(errors.get(j).getError()));
+			}
+		}
+	}
 	
 	@Test
 	public void testGmailVCard() throws IOException {

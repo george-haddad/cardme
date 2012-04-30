@@ -67,6 +67,7 @@ import net.sourceforge.cardme.vcard.types.media.KeyTextType;
 import net.sourceforge.cardme.vcard.types.parameters.AddressParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.BirthdayParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.EmailParameterType;
+import net.sourceforge.cardme.vcard.types.parameters.ExtendedParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.LabelParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.TelephoneParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.URLParameterType;
@@ -780,7 +781,8 @@ public class VCardEngine {
 						formattedNameFeature.setLanguage(pt.getValue());
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+						formattedNameFeature.addExtendedParameter(parameter);
 					}
 				}
 				
@@ -1072,7 +1074,8 @@ public class VCardEngine {
 						nicknameFeature.setLanguage(pt.getValue());
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+						nicknameFeature.addExtendedParameter(parameter);
 					}
 				}
 				
@@ -1177,7 +1180,8 @@ public class VCardEngine {
 						}
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+						photoFeature.addExtendedParameter(parameter);
 					}
 				}
 				
@@ -1238,7 +1242,8 @@ public class VCardEngine {
 						}
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+						birthdayFeature.addExtendedParameter(parameter);
 					}
 				}
 				
@@ -1513,7 +1518,8 @@ public class VCardEngine {
 						addressFeature.setLanguage(pt.getValue());
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+						addressFeature.addExtendedParameter(parameter);
 					}
 				}
 				
@@ -1687,7 +1693,8 @@ public class VCardEngine {
 						labelFeature.setLanguage(pt.getValue());
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+						labelFeature.addExtendedParameter(parameter);
 					}
 				}
 				
@@ -1843,7 +1850,8 @@ public class VCardEngine {
 						telephoneFeature.setLanguage(pt.getValue());
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+						telephoneFeature.addExtendedParameter(parameter);
 					}
 				}
 				
@@ -1965,7 +1973,8 @@ public class VCardEngine {
 						emailFeature.setLanguage(pt.getValue());
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+						emailFeature.addExtendedParameter(parameter);
 					}
 				}
 				
@@ -2059,7 +2068,8 @@ public class VCardEngine {
 						mailerFeature.setLanguage(pt.getValue());
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+						mailerFeature.addExtendedParameter(parameter);
 					}
 				}
 				
@@ -2235,7 +2245,8 @@ public class VCardEngine {
 						geographicPositionFeature.setCharset(pt.getValue());
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+						geographicPositionFeature.addExtendedParameter(parameter);
 					}
 				}
 				
@@ -2294,7 +2305,8 @@ public class VCardEngine {
 						titleFeature.setLanguage(pt.getValue());
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+						titleFeature.addExtendedParameter(parameter);
 					}
 				}
 				
@@ -2365,7 +2377,8 @@ public class VCardEngine {
 						roleFeature.setLanguage(pt.getValue());
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+						roleFeature.addExtendedParameter(parameter);
 					}
 				}
 				
@@ -2467,7 +2480,8 @@ public class VCardEngine {
 						}
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+						logoFeature.addExtendedParameter(parameter);
 					}
 				}
 				
@@ -2525,7 +2539,8 @@ public class VCardEngine {
 						organizationFeature.setLanguage(pt.getValue());
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+						organizationFeature.addExtendedParameter(parameter);
 					}
 				}
 				
@@ -2609,7 +2624,8 @@ public class VCardEngine {
 						categoriesFeature.setLanguage(pt.getValue());
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+						categoriesFeature.addExtendedParameter(parameter);
 					}
 				}
 				
@@ -2707,7 +2723,8 @@ public class VCardEngine {
 						noteFeature.setLanguage(pt.getValue());
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+						noteFeature.addExtendedParameter(parameter);
 					}
 				}
 				
@@ -2778,7 +2795,8 @@ public class VCardEngine {
 						productIdFeature.setLanguage(pt.getValue());
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+						productIdFeature.addExtendedParameter(parameter);
 					}
 				}
 				
@@ -2841,7 +2859,8 @@ public class VCardEngine {
 						revisionFeature.setCharset(pt.getValue());
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+						revisionFeature.addExtendedParameter(parameter);
 					}
 				}
 				
@@ -2985,7 +3004,8 @@ public class VCardEngine {
 						sortStringFeature.setLanguage(pt.getValue());
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+						sortStringFeature.addExtendedParameter(parameter);
 					}
 				}
 				
@@ -3087,7 +3107,8 @@ public class VCardEngine {
 						}
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+						soundFeature.addExtendedParameter(parameter);
 					}
 				}
 				
@@ -3145,7 +3166,8 @@ public class VCardEngine {
 						uidFeature.setLanguage(pt.getValue());
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+						uidFeature.addExtendedParameter(parameter);
 					}
 				}
 				
@@ -3222,6 +3244,10 @@ public class VCardEngine {
 							case I_PHONE:
 							case GMAIL:
 							case MAC_ADDRESS_BOOK:
+                            case EVOLUTION:
+                            case IOS_EXPORTER:
+                            case KDE_ADDRESS_BOOK:
+                            case RFC2426:
 							{
 								if(pt.getName().equals("TYPE")) {
 									if(pt.getValue().indexOf(',') != -1) {
@@ -3235,16 +3261,13 @@ public class VCardEngine {
 									}
 								}
 								else {
-									throw new VCardBuildException("Invalid parameter type: "+pt);
+										ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+										urlFeature.addExtendedParameter(parameter);
 								}
 								
 								break;
 							}
-							
-							case EVOLUTION:
-							case IOS_EXPORTER:
-							case KDE_ADDRESS_BOOK:
-							case RFC2426:
+							default:
 							{
 								throw new VCardBuildException("Invalid parameter type: "+pt);
 							}
@@ -3346,7 +3369,8 @@ public class VCardEngine {
 						classFeature.setLanguage(pt.getValue());
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+						classFeature.addExtendedParameter(parameter);
 					}
 				}
 				
@@ -3436,7 +3460,8 @@ public class VCardEngine {
 						}
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+						keyFeature.addExtendedParameter(parameter);
 					}
 				}
 				
@@ -3489,7 +3514,8 @@ public class VCardEngine {
 						extendedFeature.setLanguage(pt.getValue());
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());					    					    
+						extendedFeature.addExtendedParameter(parameter);
 					}
 				}
 				
@@ -3562,7 +3588,8 @@ public class VCardEngine {
 						displayableNameFeature.setLanguage(pt.getValue());
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+						displayableNameFeature.addExtendedParameter(parameter);
 					}
 				}
 				
@@ -3634,7 +3661,8 @@ public class VCardEngine {
 						profileFeature.setLanguage(pt.getValue());
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+						profileFeature.addExtendedParameter(parameter);
 					}
 				}
 				
@@ -3705,7 +3733,8 @@ public class VCardEngine {
 						sourceFeature.setLanguage(pt.getValue());
 					}
 					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+						sourceFeature.addExtendedParameter(parameter);
 					}
 				}
 				

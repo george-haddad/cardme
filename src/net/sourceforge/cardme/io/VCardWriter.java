@@ -48,12 +48,14 @@ import net.sourceforge.cardme.vcard.features.SourceFeature;
 import net.sourceforge.cardme.vcard.features.TelephoneFeature;
 import net.sourceforge.cardme.vcard.features.TimeZoneFeature;
 import net.sourceforge.cardme.vcard.features.TitleFeature;
+import net.sourceforge.cardme.vcard.features.TypeTools;
 import net.sourceforge.cardme.vcard.features.UIDFeature;
 import net.sourceforge.cardme.vcard.features.URLFeature;
 import net.sourceforge.cardme.vcard.features.VersionFeature;
 import net.sourceforge.cardme.vcard.types.parameters.AddressParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.BirthdayParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.EmailParameterType;
+import net.sourceforge.cardme.vcard.types.parameters.ExtendedParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.LabelParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.TelephoneParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.TimeZoneParameterType;
@@ -1613,6 +1615,7 @@ public class VCardWriter {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
 					
+					buildExtendParameters(organizationFeature, tmpSb);
 					tmpSb.append(":");
 					
 					Iterator<String> orgs = organizationFeature.getOrganizations();
@@ -2184,7 +2187,9 @@ public class VCardWriter {
 					tmpSb.deleteCharAt(tmpSb.length()-1);
 				}
 				
+				buildExtendParameters(addressFeature, tmpSb);
 				tmpSb.append(":");
+				
 				if(addressFeature.hasPostOfficebox()) {
 					tmpSb.append(escapeOrEncode(addressFeature.getPostOfficeBox(), isQuotedPrintable, addressFeature.getCharset()));
 				}
@@ -3801,6 +3806,8 @@ public class VCardWriter {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
 					
+					buildExtendParameters(extendedFeature, tmpSb);
+					
 					tmpSb.append(":");
 					tmpSb.append(escapeOrEncode(extendedFeature.getExtensionData(), isQuotedPrintable, extendedFeature.getCharset()));
 					
@@ -3817,6 +3824,61 @@ public class VCardWriter {
 		catch(Exception ex) {
 			throw new VCardBuildException("ExtendedFeature ("+VCardType.XTENDED.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
+	}
+	
+	private void buildExtendParameters(TypeTools feature, StringBuilder sb)
+	{
+        if(feature.hasExtendedParameters()) {
+            Iterator<ExtendedParameterType> xParamTypes = feature.getExtendedParameters();
+            
+            switch(feature.getParameterTypeStyle())
+            {
+                case PARAMETER_LIST:
+                {
+                    sb.append(";");
+                    
+                    while(xParamTypes.hasNext()) {
+                        ExtendedParameterType xParam = xParamTypes.next();
+                        sb.append(xParam.getXtendedTypeName());
+                        if(xParam.hasXtendedTypeValue()) {
+                            sb.append("=");
+                            sb.append(xParam.getXtendedTypeValue());
+                        }
+                        
+                        sb.append(";");
+                    }
+
+                    break;
+                }
+
+                case PARAMETER_VALUE_LIST:
+                {
+                    if(feature.hasExtendedParameters()) {
+                        //Continue from the list
+                        sb.append(",");
+                    }
+                    else {
+                        //Start a new
+                        sb.append(";");
+                    }
+                    
+                    while(xParamTypes.hasNext()) {
+                        ExtendedParameterType xParam = xParamTypes.next();
+                        sb.append(xParam.getXtendedTypeName());
+                        if(xParam.hasXtendedTypeValue()) {
+                            sb.append("=");
+                            sb.append(xParam.getXtendedTypeValue());
+                        }
+                        
+                        sb.append(",");
+                    }
+
+                    break;
+                }
+            }
+
+            sb.deleteCharAt(sb.length()-1);
+        }
 	}
 	
 	/**
