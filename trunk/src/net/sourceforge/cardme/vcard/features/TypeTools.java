@@ -1,11 +1,14 @@
 package net.sourceforge.cardme.vcard.features;
 
 import java.nio.charset.Charset;
+import java.util.Iterator;
+import java.util.List;
 
 import net.sourceforge.cardme.db.Persistable;
 import net.sourceforge.cardme.vcard.EncodingType;
 import net.sourceforge.cardme.vcard.LanguageType;
 import net.sourceforge.cardme.vcard.types.Type;
+import net.sourceforge.cardme.vcard.types.parameters.ExtendedParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
 
 /**
@@ -183,4 +186,62 @@ public interface TypeTools extends Persistable {
 	 * @see Type#toString()
 	 */
 	public String toString();
+	
+    /**
+     * <p>Returns an iterator of extended address parameters.</p>
+    * 
+    * @return {@link Iterator}&lt;ExtendedParameterType&gt;
+    */
+    public Iterator<ExtendedParameterType> getExtendedParameters();
+
+    /**
+     * <p>Returns an unmodifiable list of extended parameters.</p>
+     *
+     * @return {@link List}&lt;ExtendedParameterType&gt;
+     */
+    public List<ExtendedParameterType> getExtendedParametersList();
+
+    /**
+     * <p>Returns the number of extended parameters.</p>
+     *
+     * @return int
+     */
+    public int getExtendedParameterSize();
+
+    /**
+     * <p>Adds an extended parameter.</p>
+     * 
+     * @param ExtendedParameter
+     */
+    public void addExtendedParameter(ExtendedParameterType extendedParameter);
+
+    /**
+     * <p>Removes the specified extended parameter.</p>
+     * 
+     * @param xtendedParameter
+     */
+    public void removeExtendedParameters(ExtendedParameterType xtendedParameter);
+
+    /**
+     * <p>Returns true if the specified extended address parameters exists.</p>
+     * 
+     * @param xtendedParameters
+     * @return boolean
+     */
+    public boolean containsExtendedsParameters(ExtendedParameterType xtendedParameters);
+
+    /**
+     * <p>Returns true if all the extended parameters exist.</p>
+     *
+     * @param xtendedParameters
+     * @return boolean
+     */
+    public boolean containsAllExtendedParameters(List<ExtendedParameterType> xtendedParameters);
+
+    /**
+     * <p>Returns true if this extension has extended parameters.</p>
+     * 
+     * @return boolean
+     */
+    public boolean hasExtendedParameters();
 }
