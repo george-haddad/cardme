@@ -3409,7 +3409,7 @@ public class VCardWriter {
 					
 					if(logoFeature.isURI()) {
 						tmpSb.append("VALUE=URI:");
-						tmpSb.append(logoFeature.getLogoURI().getPath());
+						tmpSb.append(logoFeature.getLogoURI().toString());
 						
 						String tmpLogoLine = tmpSb.toString();
 						foldedLogoLine = VCardUtils.foldLine(tmpLogoLine, eol, foldingScheme);

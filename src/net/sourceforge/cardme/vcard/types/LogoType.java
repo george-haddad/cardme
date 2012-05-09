@@ -265,7 +265,7 @@ public class LogoType extends Type implements LogoFeature {
 		}
 		
 		if(logoUri != null) {
-			sb.append(logoUri.getPath());
+			sb.append(logoUri.toString());
 			sb.append(",");
 		}
 		
@@ -304,7 +304,7 @@ public class LogoType extends Type implements LogoFeature {
 		
 		if(logoUri != null) {
 			try {
-				cloned.setLogoURI(new URI(logoUri.getPath()));
+				cloned.setLogoURI(new URI(logoUri.toString()));
 			}
 			catch(URISyntaxException e) {
 				cloned.setLogoURI(null);
