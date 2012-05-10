@@ -31,6 +31,9 @@ Thanks Renato for patches.
 FEATURE[3509511]
 Support parsing multiple vcards in one file.
 
+[FEATURE-ID 3525539]
+Add eclipse generated serial version uid to all classes that implement serializable.
+
 George El-Haddad
 Project Lead
 
