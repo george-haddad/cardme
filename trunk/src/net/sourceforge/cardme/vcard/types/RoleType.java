@@ -43,6 +43,8 @@ import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
  */
 public class RoleType extends Type implements RoleFeature {
 
+	private static final long serialVersionUID = 614607702382971884L;
+	
 	private String role = null;
 	
 	public RoleType() {

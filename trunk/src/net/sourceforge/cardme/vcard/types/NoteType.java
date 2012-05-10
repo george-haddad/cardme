@@ -43,6 +43,8 @@ import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
  */
 public class NoteType extends Type implements NoteFeature {
 
+	private static final long serialVersionUID = 2669864787867253808L;
+	
 	private String note = null;
 	
 	public NoteType() {

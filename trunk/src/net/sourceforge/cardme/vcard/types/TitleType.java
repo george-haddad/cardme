@@ -43,6 +43,8 @@ import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
  */
 public class TitleType extends Type implements TitleFeature {
 
+	private static final long serialVersionUID = 2935273649277335950L;
+	
 	private String title = null;
 	
 	public TitleType() {

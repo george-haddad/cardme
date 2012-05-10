@@ -46,6 +46,8 @@ import java.util.List;
  */
 public class CategoriesType extends Type implements CategoriesFeature {
 
+	private static final long serialVersionUID = -4808509971616993206L;
+	
 	private List<String> categories = null;
 	
 	public CategoriesType() {

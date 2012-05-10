@@ -43,6 +43,8 @@ import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
  */
 public class GeographicPositionType extends Type implements GeographicPositionFeature {
 
+	private static final long serialVersionUID = 8844192367405540617L;
+	
 	public static final String regexValidator = "\\-?\\d{1,3}\\.\\d{1,6}";
 	private double lon = 0.0d;
 	private double lat = 0.0d;

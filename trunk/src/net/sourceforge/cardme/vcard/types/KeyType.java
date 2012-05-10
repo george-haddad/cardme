@@ -46,6 +46,8 @@ import java.util.Arrays;
  */
 public class KeyType extends Type implements KeyFeature {
 
+	private static final long serialVersionUID = 4106254442611479828L;
+	
 	private byte[] keyBytes = null;
 	private KeyTextType keyTextType = null;
 	private boolean isSetCompression = false;

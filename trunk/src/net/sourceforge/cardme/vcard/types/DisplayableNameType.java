@@ -42,6 +42,8 @@ import net.sourceforge.cardme.vcard.features.DisplayableNameFeature;
  */
 public class DisplayableNameType extends Type implements DisplayableNameFeature {
 
+	private static final long serialVersionUID = 3559747222624145905L;
+	
 	private String name = null;
 	
 	public DisplayableNameType() {

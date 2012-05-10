@@ -44,6 +44,8 @@ import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
  */
 public class VersionType extends Type implements VersionFeature {
 
+	private static final long serialVersionUID = -8083962158834088113L;
+	
 	private VCardVersion version = null;
 	
 	/**

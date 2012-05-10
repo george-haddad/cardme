@@ -51,6 +51,8 @@ import java.util.Arrays;
  */
 public class LogoType extends Type implements LogoFeature {
 
+	private static final long serialVersionUID = -6903814012469842353L;
+	
 	private byte[] logoBytes = null;
 	private URI logoUri = null;
 	private LogoParameterType logoParameterType = null;

@@ -42,6 +42,8 @@ import net.sourceforge.cardme.vcard.features.EndFeature;
  */
 public class EndType extends Type implements EndFeature {
 
+	private static final long serialVersionUID = -1385583606173367312L;
+
 	public EndType() {
 		super(EncodingType.EIGHT_BIT);
 	}

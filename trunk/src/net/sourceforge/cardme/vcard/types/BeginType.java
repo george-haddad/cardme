@@ -42,6 +42,8 @@ import net.sourceforge.cardme.vcard.features.BeginFeature;
  */
 public class BeginType extends Type implements BeginFeature {
 
+	private static final long serialVersionUID = 2629950822404192997L;
+
 	public BeginType() {
 		super(EncodingType.EIGHT_BIT);
 	}

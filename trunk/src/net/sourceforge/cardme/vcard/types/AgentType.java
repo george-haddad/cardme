@@ -49,7 +49,9 @@ import java.util.List;
  *
  */
 public class AgentType extends Type implements AgentFeature {
-
+	
+	private static final long serialVersionUID = -1260393269571892216L;
+	
 	private URI agentUri = null;
 	private VCard agent = null;
 	private List<AgentParameterType> agentParameterTypes = null;

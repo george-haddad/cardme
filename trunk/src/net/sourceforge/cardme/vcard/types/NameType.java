@@ -47,6 +47,8 @@ import java.util.List;
  */
 public class NameType extends Type implements NameFeature {
 
+	private static final long serialVersionUID = 2488518447572144187L;
+	
 	private String familyName = null;
 	private String givenName = null;
 	private List<String> additionalNames = null;

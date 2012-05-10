@@ -90,6 +90,8 @@ import net.sourceforge.cardme.vcard.types.VersionType;
  */
 public class VCardImpl implements VCard, VCardErrorHandling, Persistable, Serializable {
 
+	private static final long serialVersionUID = 5206904105882073869L;
+	
 	private String id = null;
 	private MarkType markType = MarkType.UNMARKED;
 	private BeginFeature begin = null;

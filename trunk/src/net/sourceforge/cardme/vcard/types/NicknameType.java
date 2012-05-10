@@ -47,6 +47,8 @@ import java.util.List;
  */
 public class NicknameType extends Type implements NicknameFeature {
 
+	private static final long serialVersionUID = -4213177039299977049L;
+	
 	private List<String> nicknames = null;
 	
 	public NicknameType() {

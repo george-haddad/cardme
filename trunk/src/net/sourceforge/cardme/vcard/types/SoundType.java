@@ -51,6 +51,8 @@ import java.util.Arrays;
  */
 public class SoundType extends Type implements SoundFeature {
 
+	private static final long serialVersionUID = -1314657498192254406L;
+	
 	private byte[] soundBytes = null;
 	private URI soundUri = null;
 	private SoundParameterType soundParameterType = null;
