@@ -290,10 +290,10 @@ public class VCardEngine {
 	 * contain an arbitrary number of vcards inside it.</p>
 	 * 
 	 * @param vcardPath
-	 * @return {@link Iterator}&lt;VCard&gt;
+	 * @return {@link List}&lt;VCard&gt;
 	 * @throws IOException
 	 */
-	public Iterator<VCard> parseMultiple(String vcardPath) throws IOException
+	public List<VCard> parseMultiple(String vcardPath) throws IOException
 	{
 		return parseMultiple(new File(vcardPath));
 	}
@@ -303,14 +303,14 @@ public class VCardEngine {
 	 * contain an arbitrary number of vcards inside it.</p>
 	 *
 	 * @param vcardFile
-	 * @return
+	 * @return {@link List}&lt;VCard&gt;
 	 * @throws IOException
 	 */
-	public Iterator<VCard> parseMultiple(File vcardFile) throws IOException
+	public List<VCard> parseMultiple(File vcardFile) throws IOException
 	{
 		String vcardStr = getContentFromFile(vcardFile);
 		String unfoldedVcardStr = VCardUtils.unfoldVCard(vcardStr);
-		return parseManyInOneVCard(unfoldedVcardStr).iterator();
+		return parseManyInOneVCard(unfoldedVcardStr);
 	}
 	
 	/**
