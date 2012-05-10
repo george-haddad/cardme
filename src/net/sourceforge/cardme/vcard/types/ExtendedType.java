@@ -43,6 +43,8 @@ import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
  */
 public class ExtendedType extends Type implements ExtendedFeature {
 
+	private static final long serialVersionUID = -3691263043608520321L;
+	
 	private String extensionName = null;
 	private String extensionData = null;
 	

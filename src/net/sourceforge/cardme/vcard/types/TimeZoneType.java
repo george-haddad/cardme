@@ -47,6 +47,8 @@ import java.util.TimeZone;
  */
 public class TimeZoneType extends Type implements TimeZoneFeature {
 
+	private static final long serialVersionUID = -6582710679559128155L;
+	
 	private TimeZone timeZone = null;
 	private int hourOffset = 0;
 	private int minuteOffset = 0;

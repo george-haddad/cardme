@@ -49,6 +49,8 @@ import java.util.List;
  */
 public class EmailType extends Type implements EmailFeature {
 
+	private static final long serialVersionUID = 5369053015805412586L;
+	
 	private String email = null;
 	private List<EmailParameterType> emailParameterTypes = null;
 	private List<XEmailParameterType> xtendedEmailParameterTypes = null;

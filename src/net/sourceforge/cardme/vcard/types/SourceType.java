@@ -42,6 +42,8 @@ import net.sourceforge.cardme.vcard.features.SourceFeature;
  */
 public class SourceType extends Type implements SourceFeature {
 
+	private static final long serialVersionUID = -4083725439445597960L;
+	
 	private String source = null;
 	
 	public SourceType() {

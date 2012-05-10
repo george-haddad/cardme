@@ -46,6 +46,8 @@ import java.util.List;
  */
 public class OrganizationType extends Type implements OrganizationFeature {
 
+	private static final long serialVersionUID = -2102777767684961308L;
+	
 	private List<String> organizations = null;
 	
 	public OrganizationType() {

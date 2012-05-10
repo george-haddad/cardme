@@ -51,6 +51,8 @@ import java.util.Arrays;
  */
 public class PhotoType extends Type implements PhotoFeature {
 
+	private static final long serialVersionUID = -5694085688015496065L;
+	
 	private byte[] photoBytes = null;
 	private URI photoUri = null;
 	private PhotoParameterType photoParameterType = null;

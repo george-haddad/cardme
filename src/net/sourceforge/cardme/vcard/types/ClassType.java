@@ -43,6 +43,8 @@ import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
  */
 public class ClassType extends Type implements ClassFeature {
 
+	private static final long serialVersionUID = -8695053679461899356L;
+	
 	private String securityClass = null;
 	
 	public ClassType() {

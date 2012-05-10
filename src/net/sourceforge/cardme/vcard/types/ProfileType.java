@@ -42,6 +42,8 @@ import net.sourceforge.cardme.vcard.features.ProfileFeature;
  */
 public class ProfileType extends Type implements ProfileFeature {
 
+	private static final long serialVersionUID = 8574166157122806348L;
+	
 	private String profile = null;
 	
 	public ProfileType() {

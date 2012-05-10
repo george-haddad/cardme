@@ -49,6 +49,8 @@ import java.util.List;
  */
 public class LabelType extends Type implements LabelFeature {
 
+	private static final long serialVersionUID = 8281074789466782452L;
+	
 	private String label = null;
 	private List<LabelParameterType> labelParameterTypes = null;
 	private List<XLabelParameterType> xtendedLabelParameterTypes = null;

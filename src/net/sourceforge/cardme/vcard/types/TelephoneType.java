@@ -49,6 +49,8 @@ import java.util.List;
  */
 public class TelephoneType extends Type implements TelephoneFeature {
 
+	private static final long serialVersionUID = 7932103322126989668L;
+	
 	private String telephone = null;
 	private List<TelephoneParameterType> telephoneParameterTypes = null;
 	private List<XTelephoneParameterType> xtendedTelephoneParameterTypes = null;

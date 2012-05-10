@@ -43,6 +43,8 @@ import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
  */
 public class FormattedNameType extends Type implements FormattedNameFeature {
 
+	private static final long serialVersionUID = -7441244210502359257L;
+	
 	private String formattedName = null;
 	
 	public FormattedNameType() {

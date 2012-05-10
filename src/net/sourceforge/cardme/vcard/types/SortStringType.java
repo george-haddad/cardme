@@ -43,6 +43,8 @@ import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
  */
 public class SortStringType extends Type implements SortStringFeature {
 
+	private static final long serialVersionUID = 4978956560890872649L;
+	
 	private String sortString = null;
 	
 	public SortStringType() {

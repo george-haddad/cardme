@@ -43,6 +43,8 @@ import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
  */
 public class UIDType extends Type implements UIDFeature {
 
+	private static final long serialVersionUID = 4569937555209069573L;
+	
 	private String uid = null;
 	
 	public UIDType() {

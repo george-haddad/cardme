@@ -52,6 +52,8 @@ import net.sourceforge.cardme.vcard.types.parameters.XURLParameterType;
  */
 public class URLType extends Type implements URLFeature {
 
+	private static final long serialVersionUID = 4110983706732337413L;
+	
 	private URL url = null;
 	private List<URLParameterType> urlParameterTypes = null;
 	private List<XURLParameterType> xtendedUrlParameterTypes = null;

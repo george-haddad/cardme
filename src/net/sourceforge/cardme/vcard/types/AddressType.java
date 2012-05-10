@@ -49,6 +49,8 @@ import java.util.List;
  */
 public class AddressType extends Type implements AddressFeature {
 
+	private static final long serialVersionUID = 1841762380980580662L;
+	
 	private String postOfficeBox = null;
 	private String extendedAddress = null;
 	private String streetAddress = null;

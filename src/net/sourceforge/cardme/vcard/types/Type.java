@@ -51,6 +51,8 @@ import java.util.List;
  */
 public abstract class Type implements Persistable, Cloneable, Serializable {
 	
+	private static final long serialVersionUID = 1780437071417330296L;
+	
 	protected String id = null;
 	protected MarkType markType = MarkType.UNMARKED;
 	protected EncodingType encodingType = null;

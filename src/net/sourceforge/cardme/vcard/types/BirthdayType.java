@@ -48,6 +48,8 @@ import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
  */
 public class BirthdayType extends Type implements BirthdayFeature {
 
+	private static final long serialVersionUID = 1849014633349749198L;
+	
 	private Calendar birthday = null;
 	private BirthdayParameterType birthdayParamType = null;
 	private ISOFormat dateTimeFormat = ISOFormat.ISO8601_DATE_EXTENDED;

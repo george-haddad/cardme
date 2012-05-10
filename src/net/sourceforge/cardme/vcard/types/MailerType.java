@@ -43,6 +43,8 @@ import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
  */
 public class MailerType extends Type implements MailerFeature {
 
+	private static final long serialVersionUID = 6929011701487135112L;
+	
 	private String mailer = null;
 	
 	public MailerType() {

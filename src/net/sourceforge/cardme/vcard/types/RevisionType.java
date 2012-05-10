@@ -45,6 +45,8 @@ import java.util.Date;
  */
 public class RevisionType extends Type implements RevisionFeature {
 
+	private static final long serialVersionUID = -8483959222221373402L;
+	
 	private Calendar revision = null;
 	
 	public RevisionType() {

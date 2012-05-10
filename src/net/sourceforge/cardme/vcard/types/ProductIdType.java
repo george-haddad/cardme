@@ -43,6 +43,8 @@ import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
  */
 public class ProductIdType extends Type implements ProductIdFeature {
 
+	private static final long serialVersionUID = 5893073410461059565L;
+	
 	private String productId = null;
 	
 	public ProductIdType() {
