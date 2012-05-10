@@ -115,7 +115,7 @@ public interface LogoFeature extends TypeTools, TypeData {
 	/**
 	 * <p>Sets the logo's URL.</p>
 	 *
-	 * @param photoUrl
+	 * @param logoUrl
 	 * @throws URISyntaxException
 	 */
 	public void setLogoURL(URL logoUrl) throws URISyntaxException;

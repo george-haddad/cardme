@@ -72,7 +72,7 @@ public interface SoundFeature extends TypeTools, TypeData {
 	/**
 	 * <p>Returns the sound's URL representation of the URI.</p>
 	 *
-	 * @return
+	 * @return {@link URL}
 	 * @throws MalformedURLException
 	 */
 	public URL getSoundURL() throws MalformedURLException;

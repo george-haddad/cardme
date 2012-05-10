@@ -79,7 +79,7 @@ public interface RevisionFeature extends TypeTools {
 	/**
 	 * <p>Returns true if the revision exists.</p>
 	 *
-	 * @return
+	 * @return boolean
 	 */
 	public boolean hasRevision();
 	
