@@ -211,7 +211,7 @@ public interface TypeTools extends Persistable {
     /**
      * <p>Adds an extended parameter.</p>
      * 
-     * @param ExtendedParameter
+     * @param extendedParameter
      */
     public void addExtendedParameter(ExtendedParameterType extendedParameter);
 

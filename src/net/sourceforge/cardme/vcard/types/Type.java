@@ -372,7 +372,7 @@ public abstract class Type implements Persistable, Cloneable, Serializable {
     /**
      * <p>Adds an extended parameter.</p>
      * 
-     * @param ExtendedParameter
+     * @param extendedParameter
      */
     public void addExtendedParameter(ExtendedParameterType extendedParameter) {
         extendedParameters.add(extendedParameter);   

@@ -256,7 +256,7 @@ public class VCardEngine {
 	 * parsed.</p>
 	 *
 	 * @param vcardStrings
-	 * @return
+	 * @return {@link VCard}[]
 	 * @throws IOException
 	 */
 	public VCard[] parse(String[] vcardStrings) throws IOException

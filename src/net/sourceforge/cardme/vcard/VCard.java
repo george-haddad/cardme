@@ -328,7 +328,7 @@ public interface VCard extends Cloneable, Persistable {
 	/**
 	 * <p>Returns true if this vcard has photos.</p>
 	 * 
-	 * @param boolean
+	 * @return boolean
 	 */
 	public boolean hasPhotos();
 	

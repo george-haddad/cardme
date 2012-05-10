@@ -70,7 +70,7 @@ public interface Persistable {
 	/**
 	 * <p>Returns the mark type.</p>
 	 * 
-	 * @Return {@link MarkType}
+	 * @return {@link MarkType}
 	 */
 	public MarkType getMarkType();
 }

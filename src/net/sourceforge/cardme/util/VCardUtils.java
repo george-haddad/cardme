@@ -426,7 +426,7 @@ public final class VCardUtils {
 	 * @param eolDelimeter
 	 * @param maxChars
 	 * @param indent
-	 * @return
+	 * @return {@link String}
 	 */
 	public static String foldLine(String thisLine, String eolDelimeter, int maxChars, String indent)
 	{

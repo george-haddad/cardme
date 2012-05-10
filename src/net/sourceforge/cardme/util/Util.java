@@ -53,9 +53,8 @@ public final class Util {
 	 * <p>Given an array of a particular type, it will return it
 	 * as a List of the same type.</p>
 	 * 
-	 * @param &lt;E&gt;
 	 * @param array
-	 * @return &lt;E&gt; {@link List}&lt;E&gt;
+	 * @return {@link List}
 	 */
 	public static <E> List<E> asList(E[] array)
 	{
