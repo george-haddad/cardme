@@ -286,20 +286,31 @@ public class VCardEngine {
 	}
 	
 	/**
-	 * <p>Returns an iterator of VCards given the path of the vcard.
-	 * This method can parse mutliple vcards in 1 file.</p>
+	 * <p>Returns an iterator of VCards given a path that can
+	 * contain an arbitrary number of vcards inside it.</p>
 	 * 
-	 * <p>THIS IS EXPERIMENTAL</p>
-	 *
 	 * @param vcardPath
 	 * @return {@link Iterator}&lt;VCard&gt;
 	 * @throws IOException
 	 */
-	public Iterator<VCard> parse2(String vcardPath) throws IOException
+	public Iterator<VCard> parseMultiple(String vcardPath) throws IOException
 	{
-		String vcardStr = getContentFromFile(new File(vcardPath));
+		return parseMultiple(new File(vcardPath));
+	}
+	
+	/**
+	 * <p>Returns an iterator of VCards given a file that can
+	 * contain an arbitrary number of vcards inside it.</p>
+	 *
+	 * @param vcardFile
+	 * @return
+	 * @throws IOException
+	 */
+	public Iterator<VCard> parseMultiple(File vcardFile) throws IOException
+	{
+		String vcardStr = getContentFromFile(vcardFile);
 		String unfoldedVcardStr = VCardUtils.unfoldVCard(vcardStr);
-		return parseVCard2(unfoldedVcardStr).iterator();
+		return parseManyInOneVCard(unfoldedVcardStr).iterator();
 	}
 	
 	/**
@@ -356,10 +367,8 @@ public class VCardEngine {
 		return vcard;
 	}
 	
-	private List<VCard> parseVCard2(String vcardStr)
+	private List<VCard> parseManyInOneVCard(String vcardStr)
 	{
-		//TODO [FEATURE-ID 3509511]
-		
 		List<VCard> vcards = new ArrayList<VCard>();
 		List<String> enumCards = enumerateVCards(vcardStr);
 		

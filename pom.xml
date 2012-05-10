@@ -9,7 +9,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.sourceforge.cardme</groupId>
 	<artifactId>cardme</artifactId>
-	<version>0.3.2.03-SNAPSHOT</version>
+	<version>0.3.3-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Cardme VCard Library</name>
 	<url>http://dma.pixel-act.com/</url>
