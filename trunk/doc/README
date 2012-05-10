@@ -12,6 +12,32 @@ We want to be the best VCard library on the net, so if there is a bug or a new f
 
 -------------------
 
+Card Me Version 0.3.3
+
+BUG[3525098]
+BUG[3524948]
+VCardWriter buildLogoFeature() writing truncated URI.
+LogoType URI should use toString() instead of getPath()
+Thanks John Yeary for patches.
+
+BUG[3499490]
+Full Evolution VCard support parsing extended parameter types.
+Thanks Renato for patches.
+
+PATCH[3521375]
+Add extended parameters support for all types.
+Thanks Renato for patches.
+
+FEATURE[3509511]
+Support parsing multiple vcards in one file.
+
+George El-Haddad
+Project Lead
+
+Michael Rimov
+Maven Integration Contributor
+
+
 Card Me Version 0.3.2.03
 
 BUG[3496318]
