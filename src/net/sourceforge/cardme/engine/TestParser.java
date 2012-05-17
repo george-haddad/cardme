@@ -154,8 +154,8 @@ public class TestParser {
 		}
 		
 		TestParser testParser = new TestParser();
-//		testParser.setCompatibilityMode(CompatibilityMode.RFC2426);
-		testParser.setCompatibilityMode(CompatibilityMode.I_PHONE);
+		testParser.setCompatibilityMode(CompatibilityMode.RFC2426);
+//		testParser.setCompatibilityMode(CompatibilityMode.I_PHONE);
 //		testParser.setCompatibilityMode(CompatibilityMode.KDE_ADDRESS_BOOK);
 //		testParser.setCompatibilityMode(CompatibilityMode.MAC_ADDRESS_BOOK);
 //		testParser.setCompatibilityMode(CompatibilityMode.MS_OUTLOOK);
@@ -164,8 +164,8 @@ public class TestParser {
 		VCardWriter writer = new VCardWriter();
 		writer.setOutputVersion(VCardVersion.V3_0);
 //		writer.setCompatibilityMode(CompatibilityMode.MS_OUTLOOK);
-//		writer.setCompatibilityMode(CompatibilityMode.RFC2426);
-		writer.setCompatibilityMode(CompatibilityMode.I_PHONE);
+		writer.setCompatibilityMode(CompatibilityMode.RFC2426);
+//		writer.setCompatibilityMode(CompatibilityMode.I_PHONE);
 		writer.setFoldingScheme(FoldingScheme.MIME_DIR);
 		writer.setBinaryfoldingScheme(BinaryFoldingScheme.MIME_DIR);
 		writer.setEOL(VCardUtils.LF);
