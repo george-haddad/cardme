@@ -1,6 +1,7 @@
 package net.sourceforge.cardme.engine;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -153,8 +154,8 @@ public class TestParser {
 		}
 		
 		TestParser testParser = new TestParser();
-		testParser.setCompatibilityMode(CompatibilityMode.RFC2426);
-//		testParser.setCompatibilityMode(CompatibilityMode.I_PHONE);
+//		testParser.setCompatibilityMode(CompatibilityMode.RFC2426);
+		testParser.setCompatibilityMode(CompatibilityMode.I_PHONE);
 //		testParser.setCompatibilityMode(CompatibilityMode.KDE_ADDRESS_BOOK);
 //		testParser.setCompatibilityMode(CompatibilityMode.MAC_ADDRESS_BOOK);
 //		testParser.setCompatibilityMode(CompatibilityMode.MS_OUTLOOK);
@@ -164,6 +165,7 @@ public class TestParser {
 		writer.setOutputVersion(VCardVersion.V3_0);
 //		writer.setCompatibilityMode(CompatibilityMode.MS_OUTLOOK);
 //		writer.setCompatibilityMode(CompatibilityMode.RFC2426);
+		writer.setCompatibilityMode(CompatibilityMode.I_PHONE);
 		writer.setFoldingScheme(FoldingScheme.MIME_DIR);
 		writer.setBinaryfoldingScheme(BinaryFoldingScheme.MIME_DIR);
 		writer.setEOL(VCardUtils.LF);
@@ -198,6 +200,16 @@ public class TestParser {
 					System.out.println(errors.get(j).getSeverity());
 					System.out.println(StringUtil.formatException(errors.get(j).getError()));
 				}
+			}
+			
+			try {
+				FileWriter fw = new FileWriter(new File("/home/pcs/Desktop/George/output.vcf"));
+				fw.write(vstring);
+				fw.flush();
+				fw.close();
+			}
+			catch(Exception ex) {
+				ex.printStackTrace();
 			}
 			
 			System.out.println(vstring);

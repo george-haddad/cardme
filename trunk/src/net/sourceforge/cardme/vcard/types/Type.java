@@ -56,7 +56,7 @@ public abstract class Type implements Persistable, Cloneable, Serializable {
 	protected String id = null;
 	protected MarkType markType = MarkType.UNMARKED;
 	protected EncodingType encodingType = null;
-	protected ParameterTypeStyle paramTypeStyle = null;
+	protected ParameterTypeStyle paramTypeStyle = ParameterTypeStyle.PARAMETER_VALUE_LIST;
 	protected String group = null;
 	protected Charset charset = null;
 	protected LanguageType languageType = null;

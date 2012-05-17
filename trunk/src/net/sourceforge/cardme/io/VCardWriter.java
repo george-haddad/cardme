@@ -3283,6 +3283,62 @@ public class VCardWriter {
 							tmpSb.append("TYPE=");
 							tmpSb.append(photoFeature.getImageMediaType().getTypeName());
 						}
+						
+						// TODO check this out later -------------------------------------
+						
+						if(photoFeature.hasExtendedParameters()) {
+							Iterator<ExtendedParameterType> xParamTypes = photoFeature.getExtendedParameters();
+							switch(photoFeature.getParameterTypeStyle())
+							{
+								case PARAMETER_LIST:
+								{
+									tmpSb.append(";");
+									
+									while(xParamTypes.hasNext()) {
+										ExtendedParameterType xtendedType = xParamTypes.next();
+										tmpSb.append("TYPE=");
+										tmpSb.append(xtendedType.getXtendedTypeName());
+										if(xtendedType.hasXtendedTypeValue()) {
+											tmpSb.append("=");
+											tmpSb.append(xtendedType.getXtendedTypeValue());
+										}
+										
+										tmpSb.append(";");
+									}
+
+									break;
+								}
+
+								case PARAMETER_VALUE_LIST:
+								{
+									if(photoFeature.hasPhotoParameterType()) {
+										//Continue from the list
+										tmpSb.append(",");
+									}
+									else {
+										//Start a new
+										tmpSb.append(";TYPE=");
+									}
+									
+									while(xParamTypes.hasNext()) {
+										ExtendedParameterType xtendedType = xParamTypes.next();
+										tmpSb.append(xtendedType.getXtendedTypeName());
+										if(xtendedType.hasXtendedTypeValue()) {
+											tmpSb.append("=");
+											tmpSb.append(xtendedType.getXtendedTypeValue());
+										}
+										
+										tmpSb.append(",");
+									}
+
+									break;
+								}
+							}
+
+							tmpSb.deleteCharAt(tmpSb.length()-1);
+						}
+						
+						//-------------------------------------
 
 						tmpSb.append(":");
 						
