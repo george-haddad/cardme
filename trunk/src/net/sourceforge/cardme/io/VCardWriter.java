@@ -1083,6 +1083,11 @@ public class VCardWriter {
 				}
 				
 				sb.append(versionFeature.getTypeString());
+				
+				if(versionFeature.hasExtendedParameters()) {
+					buildExtendParameters(versionFeature, sb);
+				}
+				
 				sb.append(":");
 				sb.append(versionFeature.getVersion().getVersion());
 				sb.append(eol);
@@ -1133,6 +1138,10 @@ public class VCardWriter {
 				
 				if(isQuotedPrintable) {
 					tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+				}
+				
+				if(nameFeature.hasExtendedParameters()) {
+					buildExtendParameters(nameFeature, tmpSb);
 				}
 				
 				tmpSb.append(":");
@@ -1238,6 +1247,10 @@ public class VCardWriter {
 					tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 				}
 				
+				if(formattedNameFeature.hasExtendedParameters()) {
+					buildExtendParameters(formattedNameFeature, tmpSb);
+				}
+				
 				tmpSb.append(":");
 				tmpSb.append(escapeOrEncode(formattedName, isQuotedPrintable, formattedNameFeature.getCharset()));
 				
@@ -1291,6 +1304,10 @@ public class VCardWriter {
 				
 				if(isQuotedPrintable) {
 					tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+				}
+				
+				if(displayableNameFeature.hasExtendedParameters()) {
+					buildExtendParameters(displayableNameFeature, tmpSb);
 				}
 				
 				tmpSb.append(":");
@@ -1348,6 +1365,10 @@ public class VCardWriter {
 					tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 				}
 				
+				if(profileFeature.hasExtendedParameters()) {
+					buildExtendParameters(profileFeature, tmpSb);
+				}
+				
 				tmpSb.append(":");
 				tmpSb.append(escapeOrEncode(profile, isQuotedPrintable, profileFeature.getCharset()));
 				
@@ -1401,6 +1422,10 @@ public class VCardWriter {
 				
 				if(isQuotedPrintable) {
 					tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+				}
+				
+				if(sourceFeature.hasExtendedParameters()) {
+					buildExtendParameters(sourceFeature, tmpSb);
 				}
 				
 				tmpSb.append(":");
@@ -1457,6 +1482,10 @@ public class VCardWriter {
 					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+					}
+					
+					if(titleFeature.hasExtendedParameters()) {
+						buildExtendParameters(titleFeature, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -1516,6 +1545,10 @@ public class VCardWriter {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
 					
+					if(roleFeature.hasExtendedParameters()) {
+						buildExtendParameters(roleFeature, tmpSb);
+					}
+					
 					tmpSb.append(":");
 					tmpSb.append(escapeOrEncode(role, isQuotedPrintable, roleFeature.getCharset()));
 					
@@ -1559,6 +1592,10 @@ public class VCardWriter {
 				if(geographicPositionFeature.hasCharset()) {
 					tmpSb.append(";CHARSET=");
 					tmpSb.append(geographicPositionFeature.getCharset().name());
+				}
+				
+				if(geographicPositionFeature.hasExtendedParameters()) {
+					buildExtendParameters(geographicPositionFeature, tmpSb);
 				}
 				
 				tmpSb.append(":");
@@ -1615,7 +1652,10 @@ public class VCardWriter {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
 					
-					buildExtendParameters(organizationFeature, tmpSb);
+					if(organizationFeature.hasExtendedParameters()) {
+						buildExtendParameters(organizationFeature, tmpSb);
+					}
+					
 					tmpSb.append(":");
 					
 					Iterator<String> orgs = organizationFeature.getOrganizations();
@@ -1678,6 +1718,10 @@ public class VCardWriter {
 					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+					}
+					
+					if(mailerFeature.hasExtendedParameters()) {
+						buildExtendParameters(mailerFeature, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -1877,6 +1921,10 @@ public class VCardWriter {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
 					
+					if(urlFeature.hasExtendedParameters()) {
+						buildExtendParameters(urlFeature, tmpSb);
+					}
+					
 					tmpSb.append(":");
 					tmpSb.append(escapeOrEncode(url, isQuotedPrintable, urlFeature.getCharset()));
 					
@@ -1921,6 +1969,10 @@ public class VCardWriter {
 					if(revisionFeature.hasCharset()) {
 						tmpSb.append(";CHARSET=");
 						tmpSb.append(revisionFeature.getCharset().name());
+					}
+					
+					if(revisionFeature.hasExtendedParameters()) {
+						buildExtendParameters(revisionFeature, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -1980,6 +2032,10 @@ public class VCardWriter {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
 					
+					if(uidFeature.hasExtendedParameters()) {
+						buildExtendParameters(uidFeature, tmpSb);
+					}
+					
 					tmpSb.append(":");
 					tmpSb.append(escapeOrEncode(uid, isQuotedPrintable, uidFeature.getCharset()));
 					
@@ -2029,6 +2085,10 @@ public class VCardWriter {
 					BirthdayParameterType ptype = birthdayFeature.getBirthdayParameterType();
 					tmpSb.append(";VALUE=");
 					tmpSb.append(ptype.getTypeName());
+				}
+				
+				if(birthdayFeature.hasExtendedParameters()) {
+					buildExtendParameters(birthdayFeature, tmpSb);
 				}
 				
 				ISOFormat isoFormat = birthdayFeature.getISO8601Format();
@@ -2187,7 +2247,10 @@ public class VCardWriter {
 					tmpSb.deleteCharAt(tmpSb.length()-1);
 				}
 				
-				buildExtendParameters(addressFeature, tmpSb);
+				if(addressFeature.hasExtendedParameters()) {
+					buildExtendParameters(addressFeature, tmpSb);
+				}
+				
 				tmpSb.append(":");
 				
 				if(addressFeature.hasPostOfficebox()) {
@@ -2364,6 +2427,10 @@ public class VCardWriter {
 						tmpSb.deleteCharAt(tmpSb.length()-1);
 					}
 					
+					if(labelFeature.hasExtendedParameters()) {
+						buildExtendParameters(labelFeature, tmpSb);
+					}
+					
 					tmpSb.append(":");
 					tmpSb.append(escapeOrEncode(labelFeature.getLabel(), isQuotedPrintable, labelFeature.getCharset()));
 					String tmpLabelLine = tmpSb.toString();
@@ -2511,6 +2578,10 @@ public class VCardWriter {
 						}
 
 						tmpSb.deleteCharAt(tmpSb.length()-1);
+					}
+					
+					if(telephoneFeature.hasExtendedParameters()) {
+						buildExtendParameters(telephoneFeature, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -2746,6 +2817,10 @@ public class VCardWriter {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
 					
+					if(noteFeature.hasExtendedParameters()) {
+						buildExtendParameters(noteFeature, tmpSb);
+					}
+					
 					tmpSb.append(":");
 					tmpSb.append(escapeOrEncode(noteFeature.getNote(), isQuotedPrintable, noteFeature.getCharset()));
 					
@@ -2800,6 +2875,10 @@ public class VCardWriter {
 					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+					}
+					
+					if(nicknameFeature.hasExtendedParameters()) {
+						buildExtendParameters(nicknameFeature, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -2863,6 +2942,10 @@ public class VCardWriter {
 					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+					}
+					
+					if(categoriesFeature.hasExtendedParameters()) {
+						buildExtendParameters(categoriesFeature, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -2942,6 +3025,10 @@ public class VCardWriter {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
 					
+					if(classFeature.hasExtendedParameters()) {
+						buildExtendParameters(classFeature, tmpSb);
+					}
+					
 					tmpSb.append(":");
 					tmpSb.append(escapeOrEncode(classFeature.getSecurityClass(), isQuotedPrintable, classFeature.getCharset()));
 					
@@ -2998,6 +3085,10 @@ public class VCardWriter {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
 					
+					if(productIdFeature.hasExtendedParameters()) {
+						buildExtendParameters(productIdFeature, tmpSb);
+					}
+					
 					tmpSb.append(":");
 					tmpSb.append(escapeOrEncode(productIdFeature.getProductId(), isQuotedPrintable, productIdFeature.getCharset()));
 					
@@ -3052,6 +3143,10 @@ public class VCardWriter {
 					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+					}
+					
+					if(sortStringFeature.hasExtendedParameters()) {
+						buildExtendParameters(sortStringFeature, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -3128,6 +3223,10 @@ public class VCardWriter {
 						tmpSb.append(";");
 						tmpSb.append("TYPE=");
 						tmpSb.append(keyFeature.getKeyTextType().getTypeName());
+					}
+					
+					if(keyFeature.hasExtendedParameters()) {
+						buildExtendParameters(keyFeature, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -3284,62 +3383,10 @@ public class VCardWriter {
 							tmpSb.append(photoFeature.getImageMediaType().getTypeName());
 						}
 						
-						// TODO check this out later -------------------------------------
-						
 						if(photoFeature.hasExtendedParameters()) {
-							Iterator<ExtendedParameterType> xParamTypes = photoFeature.getExtendedParameters();
-							switch(photoFeature.getParameterTypeStyle())
-							{
-								case PARAMETER_LIST:
-								{
-									tmpSb.append(";");
-									
-									while(xParamTypes.hasNext()) {
-										ExtendedParameterType xtendedType = xParamTypes.next();
-										tmpSb.append("TYPE=");
-										tmpSb.append(xtendedType.getXtendedTypeName());
-										if(xtendedType.hasXtendedTypeValue()) {
-											tmpSb.append("=");
-											tmpSb.append(xtendedType.getXtendedTypeValue());
-										}
-										
-										tmpSb.append(";");
-									}
-
-									break;
-								}
-
-								case PARAMETER_VALUE_LIST:
-								{
-									if(photoFeature.hasPhotoParameterType()) {
-										//Continue from the list
-										tmpSb.append(",");
-									}
-									else {
-										//Start a new
-										tmpSb.append(";TYPE=");
-									}
-									
-									while(xParamTypes.hasNext()) {
-										ExtendedParameterType xtendedType = xParamTypes.next();
-										tmpSb.append(xtendedType.getXtendedTypeName());
-										if(xtendedType.hasXtendedTypeValue()) {
-											tmpSb.append("=");
-											tmpSb.append(xtendedType.getXtendedTypeValue());
-										}
-										
-										tmpSb.append(",");
-									}
-
-									break;
-								}
-							}
-
-							tmpSb.deleteCharAt(tmpSb.length()-1);
+							buildExtendParameters(photoFeature, tmpSb);
 						}
 						
-						//-------------------------------------
-
 						tmpSb.append(":");
 						
 						switch(compatMode)
@@ -3496,6 +3543,10 @@ public class VCardWriter {
 							tmpSb.append(";");
 							tmpSb.append("TYPE=");
 							tmpSb.append(logoFeature.getImageMediaType().getTypeName());
+						}
+						
+						if(logoFeature.hasExtendedParameters()) {
+							buildExtendParameters(logoFeature, tmpSb);
 						}
 
 						tmpSb.append(":");
@@ -3655,7 +3706,11 @@ public class VCardWriter {
 							tmpSb.append("TYPE=");
 							tmpSb.append(soundFeature.getAudioMediaType().getTypeName());
 						}
-
+						
+						if(soundFeature.hasExtendedParameters()) {
+							buildExtendParameters(soundFeature, tmpSb);
+						}
+						
 						tmpSb.append(":");
 						
 						switch(compatMode)
@@ -3862,7 +3917,9 @@ public class VCardWriter {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
 					
-					buildExtendParameters(extendedFeature, tmpSb);
+					if(extendedFeature.hasExtendedParameters()) {
+						buildExtendParameters(extendedFeature, tmpSb);
+					}
 					
 					tmpSb.append(":");
 					tmpSb.append(escapeOrEncode(extendedFeature.getExtensionData(), isQuotedPrintable, extendedFeature.getCharset()));
@@ -3882,59 +3939,64 @@ public class VCardWriter {
 		}
 	}
 	
+	/**
+	 * <p>Builds the extended parameter types given a string builder and the
+	 * specified feature that is guaranteed to have extended parameters.</p>
+	 *
+	 * @param feature
+	 * @param sb
+	 */
 	private void buildExtendParameters(TypeTools feature, StringBuilder sb)
 	{
-        if(feature.hasExtendedParameters()) {
-            Iterator<ExtendedParameterType> xParamTypes = feature.getExtendedParameters();
-            
-            switch(feature.getParameterTypeStyle())
-            {
-                case PARAMETER_LIST:
-                {
-                    sb.append(";");
-                    
-                    while(xParamTypes.hasNext()) {
-                        ExtendedParameterType xParam = xParamTypes.next();
-                        sb.append(xParam.getXtendedTypeName());
-                        if(xParam.hasXtendedTypeValue()) {
-                            sb.append("=");
-                            sb.append(xParam.getXtendedTypeValue());
-                        }
-                        
-                        sb.append(";");
-                    }
+		Iterator<ExtendedParameterType> xParamTypes = feature.getExtendedParameters();
+		
+		switch(feature.getParameterTypeStyle())
+		{
+			case PARAMETER_LIST:
+			{
+				sb.append(";");
+	
+				while(xParamTypes.hasNext()) {
+					ExtendedParameterType xParam = xParamTypes.next();
+					sb.append(xParam.getXtendedTypeName());
+					if(xParam.hasXtendedTypeValue()) {
+						sb.append("=");
+						sb.append(xParam.getXtendedTypeValue());
+					}
+	
+					sb.append(";");
+				}
+	
+				break;
+			}
 
-                    break;
-                }
+			case PARAMETER_VALUE_LIST:
+			{
+				if(feature.hasExtendedParameters()) {
+					//Continue from the list
+					sb.append(",");
+				}
+				else {
+					//Start a new
+					sb.append(";");
+				}
+	
+				while(xParamTypes.hasNext()) {
+					ExtendedParameterType xParam = xParamTypes.next();
+					sb.append(xParam.getXtendedTypeName());
+					if(xParam.hasXtendedTypeValue()) {
+						sb.append("=");
+						sb.append(xParam.getXtendedTypeValue());
+					}
+	
+					sb.append(",");
+				}
+	
+				break;
+			}
+		}
 
-                case PARAMETER_VALUE_LIST:
-                {
-                    if(feature.hasExtendedParameters()) {
-                        //Continue from the list
-                        sb.append(",");
-                    }
-                    else {
-                        //Start a new
-                        sb.append(";");
-                    }
-                    
-                    while(xParamTypes.hasNext()) {
-                        ExtendedParameterType xParam = xParamTypes.next();
-                        sb.append(xParam.getXtendedTypeName());
-                        if(xParam.hasXtendedTypeValue()) {
-                            sb.append("=");
-                            sb.append(xParam.getXtendedTypeValue());
-                        }
-                        
-                        sb.append(",");
-                    }
-
-                    break;
-                }
-            }
-
-            sb.deleteCharAt(sb.length()-1);
-        }
+		sb.deleteCharAt(sb.length()-1);
 	}
 	
 	/**

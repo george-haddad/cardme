@@ -12,6 +12,18 @@ We want to be the best VCard library on the net, so if there is a bug or a new f
 
 -------------------
 
+Card Me Version 0.3.3.01
+
+BUG[3527560]
+VCardWriter not building extended parameter types for certain VCard features.
+
+George El-Haddad
+Project Lead
+
+Michael Rimov
+Maven Integration Contributor
+
+
 Card Me Version 0.3.3
 
 BUG[3525098]
