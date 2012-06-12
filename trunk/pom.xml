@@ -9,7 +9,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.sourceforge.cardme</groupId>
 	<artifactId>cardme</artifactId>
-	<version>0.3.3-SNAPSHOT</version>
+	<version>0.3.3</version>
 	<packaging>jar</packaging>
 	<name>Cardme VCard Library</name>
 	<url>http://dma.pixel-act.com/</url>
@@ -51,9 +51,9 @@
 		<url>https://sourceforge.net/tracker/?group_id=99914&amp;atid=625723</url>
 	</issueManagement>
 	<scm>
-		<connection>scm:svn:https://cardme.svn.sourceforge.net/svnroot/cardme</connection>
-		<developerConnection>scm:svn:https://cardme.svn.sourceforge.net/svnroot/cardme</developerConnection>
-		<url>http://cardme.svn.sourceforge.net/viewvc/cardme/</url>
+		<connection>scm:svn:https://cardme.svn.sourceforge.net/svnroot/cardme/tags/cardme-0.3.3</connection>
+		<developerConnection>scm:svn:https://cardme.svn.sourceforge.net/svnroot/cardme/tags/cardme-0.3.3</developerConnection>
+		<url>http://cardme.svn.sourceforge.net/viewvc/cardme/tags/cardme-0.3.3</url>
 	</scm>
 	<dependencies>
 		<dependency>
