@@ -62,6 +62,7 @@ public enum CompatibilityMode {
 	 * 		<li>Encoding parameter type uses BASE64 instead of B.</li>
 	 * 		<li>Compensates for missing = sign delimiting parameter types in PHOTO, LOGO, SOUND and KEY types when parsing.</li>
 	 * 		<li>Parameter types inside the URL feature.</li>
+	 * 		<li>Escapes special characters in URL feature.</li>
 	 * 	</ol>
 	 * </p>
 	 */
@@ -95,6 +96,7 @@ public enum CompatibilityMode {
 	 * <p>Compatibility mode to emulate iOS Exporter's quirks
 	 * <ol>
 	 * 		<li>Escapes special characters in the TEL type value.</p>
+	 * 		<li>Escapes special characters in URL feature.</li>
 	 * </ol>
 	 * </p>
 	 */
@@ -113,6 +115,7 @@ public enum CompatibilityMode {
 	 * <p>
 	 * 	<ol>
 	 *		<li>Parameter types inside the URL feature.</li>
+	 *		<li>Escapes special characters in URL feature.</li>
 	 * 	</ol>
 	 * </p>
 	 */

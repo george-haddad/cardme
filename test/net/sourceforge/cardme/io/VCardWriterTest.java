@@ -304,7 +304,7 @@ public class VCardWriterTest {
 		int stopIndex = vcardStr.indexOf('\n', startIndex)+1;
 		String line = vcardStr.substring(startIndex, stopIndex);
 		
-		assertTrue(line.compareTo("URL:http\\://www.sun.com\r\n") == 0);
+		assertTrue(line.compareTo("URL:http://www.sun.com\r\n") == 0);
 	}
 	
 	@Test

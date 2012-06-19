@@ -1926,7 +1926,23 @@ public class VCardWriter {
 					}
 					
 					tmpSb.append(":");
-					tmpSb.append(escapeOrEncode(url, isQuotedPrintable, urlFeature.getCharset()));
+					
+					switch(compatMode)
+					{
+						case GMAIL:
+						case I_PHONE:
+						case IOS_EXPORTER:
+						{
+							tmpSb.append(VCardUtils.escapeString(url));
+							break;
+						}
+						
+						default:
+						{
+							tmpSb.append(url);
+							break;
+						}
+					}
 					
 					String tmpUrlLine = tmpSb.toString();
 					String foldedUrlLine = VCardUtils.foldLine(tmpUrlLine, eol, foldingScheme);

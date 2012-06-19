@@ -93,11 +93,11 @@ public class TestVcardFieldMarshalling {
 		appyBasicName(vcard);
 		vcard.addURL(new URLType("http://www.example.org/"));
 		String result = getSerializedString(vcard);
-		assertTrue(result.contains("URL:http\\://www.example.org/"));	
+		assertTrue(result.contains("URL:http://www.example.org/"));	
 		
 		vcard.addURL(new URLType("ftp://ftp.example.org/"));
 		result = getSerializedString(vcard);
-		assertTrue(result.contains("URL:ftp\\://ftp.example.org/"));	
+		assertTrue(result.contains("URL:ftp://ftp.example.org/"));	
 	}
 	
 	@Test
