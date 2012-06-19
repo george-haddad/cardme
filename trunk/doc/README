@@ -12,10 +12,13 @@ We want to be the best VCard library on the net, so if there is a bug or a new f
 
 -------------------
 
-Card Me Version 0.3.3.01
+Card Me Version 0.3.4
 
 BUG[3527560]
 VCardWriter not building extended parameter types for certain VCard features.
+
+BUG[3536146]
+Escape URL feature only when I_PHONE, GMAIL and IOS_EXPORTER compatibility modes are turned on for VCardWriter. 
 
 George El-Haddad
 Project Lead
