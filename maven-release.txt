@@ -1,0 +1,21 @@
+Have a 100% clean checkout, no modified files, no added files.
+
+mvn release:clean
+mvn -Prelease,dist release:prepare 
+
+You will need to manually enter the gpg passphrase.
+
+mvn -Prelease,dist release:perform 
+
+After the relase is uploaded go to:
+https://oss.sonatype.org/
+
+Login, and then click on "Staging Repositories" on the left hand side.
+
+Click on the cardme upload item.  Browse through the archives on the lower left side to make sure they look right.
+
+If it doesn't look right, click "Drop"  to delete the item.
+
+If it looks correct, click "Close"
+
+Click the checkbox next to the repository and then click "relase"
