@@ -59,12 +59,14 @@ public class VCardUtilsTest {
 		 * \
 		 * <EOL>
 		 * \N
+		 * \r
 		 */
 		
 		assertTrue(VCardUtils.needsEscaping(","));
 		assertTrue(VCardUtils.needsEscaping(";"));
 		assertTrue(VCardUtils.needsEscaping(":"));
 		assertTrue(VCardUtils.needsEscaping("\\"));
+		assertTrue(VCardUtils.needsEscaping("\r"));
 		assertTrue(VCardUtils.needsEscaping("\n"));
 		assertTrue(VCardUtils.needsEscaping("\\N"));
 		assertTrue(VCardUtils.needsEscaping("\n,;:\\"));
@@ -85,26 +87,27 @@ public class VCardUtilsTest {
 		 * \:
 		 */
 		
+		assertTrue(VCardUtils.needsUnEscaping("\\r"));
 		assertTrue(VCardUtils.needsUnEscaping("\\n"));
 		assertTrue(VCardUtils.needsUnEscaping("\\N")); 
 		assertTrue(VCardUtils.needsUnEscaping("\\\\"));
 		assertTrue(VCardUtils.needsUnEscaping("\\,"));
 		assertTrue(VCardUtils.needsUnEscaping("\\;"));
 		assertTrue(VCardUtils.needsUnEscaping("\\:"));
-		assertTrue(VCardUtils.needsUnEscaping("\\n\\N\\,\\;\\:\\\\"));
+		assertTrue(VCardUtils.needsUnEscaping("\\n\\N\\r\\,\\;\\:\\\\"));
 		assertTrue(VCardUtils.needsUnEscaping("GE\\,O\\;R\\:GE"));
 	}
 	
 	@Test
 	public void testUnescapeString() {
-		String unescaped = VCardUtils.unescapeString("This\\n string\\, needs\\; to\\: be\\N unescaped.\\\\");
-		assertEquals("This\n string, needs; to: be\n unescaped.\\", unescaped);
+		String unescaped = VCardUtils.unescapeString("This\\r\\n string\\, needs\\; to\\: be\\N unescaped.\\\\");
+		assertEquals("This\r\n string, needs; to: be\n unescaped.\\", unescaped);
 	}
 	
 	@Test
 	public void testEscapeString() {
-		String escaped = VCardUtils.escapeString("This\n string, needs; to: be\n unescaped.\\");
-		assertEquals("This\\n string\\, needs\\; to\\: be\\n unescaped.\\\\", escaped);
+		String escaped = VCardUtils.escapeString("This\r\n string, needs; to: be\n unescaped.\\");
+		assertEquals("This\\r\\n string\\, needs\\; to\\: be\\n unescaped.\\\\", escaped);
 	}
 	
 	@Test

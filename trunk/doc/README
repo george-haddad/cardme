@@ -12,6 +12,18 @@ We want to be the best VCard library on the net, so if there is a bug or a new f
 
 -------------------
 
+Card Me Version 0.3.4.01
+
+BUG[3538061]
+VCardUtils is not escaping carriage return (CR or \r) when escaping strings.
+
+George El-Haddad
+Project Lead
+
+Michael Rimov
+Maven Integration Contributor
+
+
 Card Me Version 0.3.4
 
 BUG[3527560]
