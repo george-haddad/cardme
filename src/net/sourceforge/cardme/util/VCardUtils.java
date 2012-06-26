@@ -83,13 +83,15 @@ public final class VCardUtils {
 		';',
 		':',
 		'\\',
-		'\n'
+		'\n',
+		'\r'
 	};
 	
 	/**
 	 * <p>List of characters that need un-escaping.</p>
 	 */
 	private static final String[] NEED_UNESCAPING = new String[] {
+		"\\r",
 		"\\n",
 		"\\N",
 		"\\\\",
@@ -166,6 +168,7 @@ public final class VCardUtils {
 	public static String unescapeString(String text)
 	{
 		String unescaped = text.replaceAll("\\\\n", "\n");
+		unescaped = unescaped.replaceAll("\\\\r", "\r");
 		unescaped = unescaped.replaceAll("\\\\N", "\n");
 		unescaped = unescaped.replaceAll("\\\\\\\\", "\\\\");
 		unescaped = unescaped.replaceAll("\\\\,", ",");
@@ -202,6 +205,13 @@ public final class VCardUtils {
 				{
 					sb.append('\\');
 					sb.append('n');
+					break;
+				}
+				
+				case '\r':
+				{
+					sb.append('\\');
+					sb.append('r');
 					break;
 				}
 				
