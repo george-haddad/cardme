@@ -162,4 +162,24 @@ public class VCardsTest {
 			}
 		}
 	}
+	
+	@Test
+	public void testMacAddressBookVCard() throws IOException {
+		File macAddressBookCard = new File(System.getProperty("user.dir")+File.separator+"test"+File.separator+"vcards"+File.separator+"John_Doe_MAC_ADDRESS_BOOK.vcf");
+		
+		VCardEngine engine = new VCardEngine();
+		engine.setCompatibilityMode(CompatibilityMode.MAC_ADDRESS_BOOK);
+		VCard vcard = engine.parse(macAddressBookCard);
+		
+		VCardImpl vcard2 = (VCardImpl)vcard;
+		
+		if(vcard2.hasErrors()) {
+			List<VCardError> errors = vcard2.getErrors();
+			for(int j = 0; j < errors.size(); j++) {
+				System.out.println(errors.get(j).getErrorMessage());
+				System.out.println(errors.get(j).getSeverity());
+				System.out.println(StringUtil.formatException(errors.get(j).getError()));
+			}
+		}
+	}
 }
