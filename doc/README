@@ -12,13 +12,28 @@ We want to be the best VCard library on the net, so if there is a bug or a new f
 
 -------------------
 
+Card Me Version 0.3.4.02
+
+BUG[3538443]
+Photo not showing when using compatibility mode MAC_ADDRESS_BOOK.
+
+George El-Haddad
+Project Leader
+
+Michael Rimov
+Maven Integration Contributor
+
+Hector Guilarte
+Developer
+
+
 Card Me Version 0.3.4.01
 
 BUG[3538061]
 VCardUtils is not escaping carriage return (CR or \r) when escaping strings.
 
 George El-Haddad
-Project Lead
+Project Leader
 
 Michael Rimov
 Maven Integration Contributor
@@ -33,7 +48,7 @@ BUG[3536146]
 Escape URL feature only when I_PHONE, GMAIL and IOS_EXPORTER compatibility modes are turned on for VCardWriter. 
 
 George El-Haddad
-Project Lead
+Project Leader
 
 Michael Rimov
 Maven Integration Contributor
@@ -62,7 +77,7 @@ Support parsing multiple vcards in one file.
 Add eclipse generated serial version uid to all classes that implement serializable.
 
 George El-Haddad
-Project Lead
+Project Leader
 
 Michael Rimov
 Maven Integration Contributor
@@ -74,7 +89,7 @@ BUG[3496318]
 Revised unfolding regular expressions to fix issue with noncompliant RFC-822 folding.
 
 George El-Haddad
-Project Lead
+Project Leader
 
 Michael Rimov
 Maven Integration Contributor
@@ -102,7 +117,7 @@ Handle MS Outlook improper implementation of the RFC 822 folding standard.
 Quoted-Printable strings are no longer pre-escaped before getting encoded.
 
 George El-Haddad
-Project Lead
+Project Leader
 
 Michael Rimov
 Maven Integration Contributor
@@ -116,7 +131,7 @@ Do not throw exception when encountering TYPE parameters in URL type when in MS_
 Force VCard version 3.0 on VCards which have been set to v2.1 when writing.
 
 George El-Haddad
-Project Lead
+Project Leader
 
 Michael Rimov
 Maven Integration Contributor
@@ -130,7 +145,7 @@ Fixed CardMe behavior for encoding and decoding Quoted-Printable strings to use 
 Allow users to force a charset for use with Quoted-Printable strings in the VCardEngine and VCardWriter
 
 George El-Haddad
-Project Lead
+Project Leader
 
 Michael Rimov
 Maven Integration Contributor
@@ -143,7 +158,7 @@ Allow the definition of custom End of Line (EOL) characters to be used.
 If none defined then default CR+LF (Carriage Return and Line Feed) characters are used.
 
 George El-Haddad
-Project Lead
+Project Leader
 
 Michael Rimov
 Maven Integration Contributor
@@ -159,7 +174,7 @@ Implement containsAll(List) method to check if a list of parameter types exists 
 Unit tests also implemented to make sure these methods work as expected.
 
 George El-Haddad
-Project Lead
+Project Leader
 
 Michael Rimov
 Maven Integration Contributor
@@ -171,7 +186,7 @@ BUG[3459920]
 Fix accidental truncation of first character when parsing a string with escaped delimiter. - Lev Stipakov
 
 George El-Haddad
-Project Lead
+Project Leader
 
 Michael Rimov
 Maven Integration Contributor
@@ -214,7 +229,7 @@ BUG[3452302]
 https://sourceforge.net/tracker/?group_id=99914&atid=625723
 
 George El-Haddad
-Project Lead
+Project Leader
 
 Michael Rimov
 Maven Integration Contributor
@@ -245,7 +260,7 @@ PATCH[3401873]
 Geographic Position number formatter now formatting properly to 6 decimal digits.
 
 George El-Haddad
-Project Lead
+Project Leader
 
 Michael Rimov
 Maven Integration Contributor
@@ -283,7 +298,7 @@ BUG[3073287]
 Parses mixed parameter styles in TEL, ADR, and EMAIL types.
 
 George El-Haddad
-Project Lead
+Project Leader
 
 
 Card Me Version 0.2.4
@@ -300,7 +315,7 @@ Known Bugs
 BUG[3071705] has been filed as a side-effect of the above feature being implemented.
 
 George El-Haddad
-Project Lead
+Project Leader
 
 Card Me Version 0.2.3
 ---
@@ -331,7 +346,7 @@ Bug[3042332]
 By default 3.0 vcards can omit the TYPE parameter name in PHOTO, LOGO and SOUND types.
 
 George El-Haddad
-Project Lead
+Project Leader
 
 
 Card Me Version 0.2.2
@@ -348,7 +363,7 @@ BUG[3042152]
 Added I_PHONE compatibility mode for reading photo, sound or logo parameter types without the encoding, type or value prefix.
 
 George El-Haddad
-Project Lead
+Project Leader
 
 
 Card Me Version 0.2.1
@@ -362,7 +377,7 @@ Added feature to parse Non-Standard / Custom Email parameter type
 Added feature to parse Non-Standard / Custom Telephone parameter type
 
 George El-Haddad
-Project Lead
+Project Leader
 
 
 Card Me Version 0.2.0
@@ -402,7 +417,7 @@ Cardme now is in its V3.0 testing phase and all errors should be reported
 as bugs and will be fixed as soon as possible.
 
 George El-Haddad
-Project Lead
+Project Leader
 
 Wolfgang Fahl
 Project Contributer
@@ -418,7 +433,7 @@ Wolfgang Fahl
 Project Contributer
 
 George El-Haddad
-Project Lead
+Project Leader
 
 
 Card Me Version 0.1.3
@@ -442,8 +457,8 @@ which should allow for more flexibility. As for version 0.1.1 card me depends on
 the mime-dir-j libray. This library can be downloaded from cardme website.
 
 George El-Haddad
-Project Lead
+Project Leader
 
 Chris Hubick
-Mime-Dir-J Project Lead
+Mime-Dir-J Project Leader
 Cardme Contributer
