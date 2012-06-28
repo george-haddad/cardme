@@ -39,9 +39,24 @@ import net.sourceforge.cardme.util.VCardUtils;
  */
 public enum BinaryFoldingScheme {
 
+	/**
+	 * <p>Folds lines at 75 characters (not including CRLF) and uses 1 space as indentation.</p>
+	 */
 	MIME_DIR(75, VCardUtils.SP),
+	
+	/**
+	 * <p>Folds lines at 72 characters (not including CRLF) and uses 1 space as indentation.</p>
+	 */
 	MS_OUTLOOK(72, VCardUtils.SP),
+	
+	/**
+	 * <p>Folds lines at 76 characters (not including CRLF) and uses 2 spaces as indentation.</p>
+	 */
 	MAC_ADDRESS_BOOK(76, VCardUtils.SP+VCardUtils.SP),
+	
+	/**
+	 * <p>No folding is done.</p>
+	 */
 	NONE(-1, "");
 	
 	private int maxChars = -1;

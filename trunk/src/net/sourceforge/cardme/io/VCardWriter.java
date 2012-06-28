@@ -3214,22 +3214,28 @@ public class VCardWriter {
 					tmpSb.append(";");
 					
 					String foldedKeyLine = null;
-					tmpSb.append("ENCODING=");
 					
 					switch(compatMode)
 					{
 						case MS_OUTLOOK:
 						{
+							tmpSb.append("ENCODING=");
 							tmpSb.append(EncodingType.BASE64.getType());
 							break;
 						}
 						
 						case MAC_ADDRESS_BOOK:
+						{
+							tmpSb.append(EncodingType.BASE64.getType());
+							break;
+						}
+						
 						case EVOLUTION:
 						case KDE_ADDRESS_BOOK:
 						case RFC2426:
 						case I_PHONE:
 						{
+							tmpSb.append("ENCODING=");
 							tmpSb.append(keyFeature.getEncodingType().getType());
 							break;
 						}
@@ -3249,6 +3255,7 @@ public class VCardWriter {
 					
 					switch(compatMode)
 					{
+						case MAC_ADDRESS_BOOK:
 						case MS_OUTLOOK:
 						{
 							String b64str = null;
@@ -3275,7 +3282,6 @@ public class VCardWriter {
 							break;
 						}
 						
-						case MAC_ADDRESS_BOOK:
 						case EVOLUTION:
 						case KDE_ADDRESS_BOOK:
 						case RFC2426:
@@ -3372,22 +3378,27 @@ public class VCardWriter {
 						foldedPhotoLine = VCardUtils.foldLine(tmpPhotoLine, eol, foldingScheme);
 					}
 					else if(photoFeature.isInline()) {
-						tmpSb.append("ENCODING=");
-						
 						switch(compatMode)
 						{
 							case MS_OUTLOOK:
 							{
+								tmpSb.append("ENCODING=");
 								tmpSb.append(EncodingType.BASE64.getType());
 								break;
 							}
 							
 							case MAC_ADDRESS_BOOK:
+							{
+								tmpSb.append(EncodingType.BASE64.getType());
+								break;
+							}
+							
 							case EVOLUTION:
 							case KDE_ADDRESS_BOOK:
 							case RFC2426:
 							case I_PHONE:
 							{
+								tmpSb.append("ENCODING=");
 								tmpSb.append(photoFeature.getEncodingType().getType());
 								break;
 							}
@@ -3408,6 +3419,7 @@ public class VCardWriter {
 						switch(compatMode)
 						{
 							case MS_OUTLOOK:
+							case MAC_ADDRESS_BOOK:
 							{
 								String b64str = null;
 								try {
@@ -3433,7 +3445,6 @@ public class VCardWriter {
 								break;
 							}
 							
-							case MAC_ADDRESS_BOOK:
 							case RFC2426:
 							case EVOLUTION:
 							case KDE_ADDRESS_BOOK:
@@ -3534,22 +3545,27 @@ public class VCardWriter {
 						foldedLogoLine = VCardUtils.foldLine(tmpLogoLine, eol, foldingScheme);
 					}
 					else if(logoFeature.isInline()) {
-						tmpSb.append("ENCODING=");
-						
 						switch(compatMode)
 						{
 							case MS_OUTLOOK:
 							{
+								tmpSb.append("ENCODING=");
 								tmpSb.append(EncodingType.BASE64.getType());
 								break;
 							}
 								
 							case MAC_ADDRESS_BOOK:
+							{
+								tmpSb.append(EncodingType.BASE64.getType());
+								break;
+							}
+							
 							case EVOLUTION:
 							case KDE_ADDRESS_BOOK:
 							case RFC2426:
 							case I_PHONE:
 							{
+								tmpSb.append("ENCODING=");
 								tmpSb.append(logoFeature.getEncodingType().getType());
 								break;
 							}
@@ -3569,6 +3585,7 @@ public class VCardWriter {
 						
 						switch(compatMode)
 						{
+							case MAC_ADDRESS_BOOK:
 							case MS_OUTLOOK:
 							{
 								String b64str = null;
@@ -3595,7 +3612,6 @@ public class VCardWriter {
 								break;
 							}
 							
-							case MAC_ADDRESS_BOOK:
 							case RFC2426:
 							case EVOLUTION:
 							case KDE_ADDRESS_BOOK:
@@ -3696,22 +3712,27 @@ public class VCardWriter {
 						foldedSoundLine = VCardUtils.foldLine(tmpSoundLine, eol, foldingScheme);
 					}
 					else if(soundFeature.isInline()) {
-						tmpSb.append("ENCODING=");
-						
 						switch(compatMode)
 						{
 							case MS_OUTLOOK:
 							{
+								tmpSb.append("ENCODING=");
 								tmpSb.append(EncodingType.BASE64.getType());
 								break;
 							}
 							
 							case MAC_ADDRESS_BOOK:
+							{
+								tmpSb.append(EncodingType.BASE64.getType());
+								break;
+							}
+							
 							case EVOLUTION:
 							case KDE_ADDRESS_BOOK:
 							case RFC2426:
 							case I_PHONE:
 							{
+								tmpSb.append("ENCODING=");
 								tmpSb.append(soundFeature.getEncodingType().getType());
 								break;
 							}
@@ -3731,6 +3752,7 @@ public class VCardWriter {
 						
 						switch(compatMode)
 						{
+							case MAC_ADDRESS_BOOK:
 							case MS_OUTLOOK:
 							{
 								String b64str = null;
@@ -3757,7 +3779,6 @@ public class VCardWriter {
 								break;
 							}
 							
-							case MAC_ADDRESS_BOOK:
 							case RFC2426:
 							case EVOLUTION:
 							case KDE_ADDRESS_BOOK:

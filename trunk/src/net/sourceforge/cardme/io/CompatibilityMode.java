@@ -39,6 +39,9 @@ public enum CompatibilityMode {
 
 	/**
 	 * <p>Pure RFC-2426 compatibility.</p>
+	 * 
+	 * @see BinaryFoldingScheme
+	 * @see FoldingScheme
 	 */
 	RFC2426,
 	
@@ -48,11 +51,13 @@ public enum CompatibilityMode {
 	 *		<li>The parameter type &quot;WORK&quot; is added to the URL feature.</li>
 	 * 		<li>Encoding parameter type uses BASE64 instead of B.</li>
 	 * 		<li>Base64 encoded text start on a new line and end with a new line (v2.1 style)</li>
-	 * 		<li>Folds base64 encoded text at 72 characters instead of 75.</li>
 	 * 		<li>Compensates for missing mandatory semi-colons in name (N type) when parsing.</li>
 	 * 		<li>Compensates for missing = sign delimiting parameter types in PHOTO, LOGO, SOUND and KEY types when parsing.</li>
 	 * 	</ol>
 	 * </p>
+	 * 
+	 * @see BinaryFoldingScheme
+	 * @see FoldingScheme
 	 */
 	MS_OUTLOOK,
 	
@@ -65,18 +70,22 @@ public enum CompatibilityMode {
 	 * 		<li>Escapes special characters in URL feature.</li>
 	 * 	</ol>
 	 * </p>
+	 * 
+	 * @see BinaryFoldingScheme
+	 * @see FoldingScheme
 	 */
 	I_PHONE,
 	
 	/**
 	 * <p>
 	 * 	<ol>
-	 * 		<li>Folds lines at 76 characters instead of 75 only for non-binary data.</li>
-	 * 		<li>Folds base64 encoded text like standard MIME-DIR.</li>
-	 * 		<li>Does not include the ENCODING parameter type for PHOTOs.</li>
+	 * 		<li>Does not include the ENCODING parameter type for PHOTO, LOGO, SOUND or KEY.</li>
 	 * 		<li>Compensates for missing = sign delimiting parameter types in PHOTO, LOGO, SOUND and KEY types when parsing.</li>
 	 * 	</ol>
 	 * </p>
+	 * 
+	 * @see BinaryFoldingScheme
+	 * @see FoldingScheme
 	 */
 	MAC_ADDRESS_BOOK,
 	
@@ -89,6 +98,9 @@ public enum CompatibilityMode {
 	 * 		<li>Escapes commas in CATEGORIES feature when writing vcard.</li>
 	 * 	</ol>
 	 * </p>
+	 * 
+	 * @see BinaryFoldingScheme
+	 * @see FoldingScheme
 	 */
 	KDE_ADDRESS_BOOK,
 	
@@ -99,6 +111,9 @@ public enum CompatibilityMode {
 	 * 		<li>Escapes special characters in URL feature.</li>
 	 * </ol>
 	 * </p>
+	 * 
+	 * @see BinaryFoldingScheme
+	 * @see FoldingScheme
 	 */
 	IOS_EXPORTER,
 	
@@ -108,6 +123,9 @@ public enum CompatibilityMode {
 	 *		<li></li>
 	 * 	</ol>
 	 * </p>
+	 * 
+	 * @see BinaryFoldingScheme
+	 * @see FoldingScheme
 	 */
 	EVOLUTION,
 	
@@ -118,6 +136,9 @@ public enum CompatibilityMode {
 	 *		<li>Escapes special characters in URL feature.</li>
 	 * 	</ol>
 	 * </p>
+	 * 
+	 * @see BinaryFoldingScheme
+	 * @see FoldingScheme
 	 */
 	GMAIL;
 }
