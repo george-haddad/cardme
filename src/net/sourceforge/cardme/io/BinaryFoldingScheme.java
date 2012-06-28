@@ -41,7 +41,7 @@ public enum BinaryFoldingScheme {
 
 	MIME_DIR(75, VCardUtils.SP),
 	MS_OUTLOOK(72, VCardUtils.SP),
-	MAC_ADDRESS_BOOK(74, VCardUtils.SP),
+	MAC_ADDRESS_BOOK(76, VCardUtils.SP+VCardUtils.SP),
 	NONE(-1, "");
 	
 	private int maxChars = -1;

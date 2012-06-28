@@ -48,11 +48,6 @@ public enum FoldingScheme {
 	 */
 	MAC_ADDRESS_BOOK(76, VCardUtils.SP+VCardUtils.SP),
 	
-	/**
-	 * <p>This is used internally for folding binary data.</p>
-	 */
-	MAC_ADDRESS_BOOK_B(74, VCardUtils.SP),
-	
 	NONE(-1, "");
 	
 	private int maxChars = -1;
