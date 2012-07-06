@@ -1,5 +1,6 @@
 package net.sourceforge.cardme.util;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -429,42 +430,25 @@ public class VCardUtilsTest {
 		
 	}
 	
+	/**
+	 * @author Michael Angstadt
+	 * <br/>
+	 * Jul 06, 2012
+	 */
 	@Test
 	public void testParseStringWithEscappedDelimiter() {
 		String nameOnly = ";Ge\\,o\\;r\\:g\\\\e;;;";
 		
 		String[] name = VCardUtils.parseStringWithEscappedDelimiter(nameOnly, ';');
-		StringBuilder sb = new StringBuilder();
-		for (String part : name) {
-			if(!part.isEmpty()) {
-				sb.append(part);
-				sb.append("\n");
-			}
-			else {
-				sb.append("\n");
-			}
-		}
-		
-		String expected = "\nGe\\,o\\;r\\:g\\\\e\n\n\n\n";
-		assertEquals(expected, sb.toString());
+		String[] expected = new String[]{"", "Ge\\,o\\;r\\:g\\\\e", "", "", ""};
+		assertArrayEquals(expected, name);
 		
 		// ----------------------------------------
 		
 		String fullName = "Mr;Ge\\,o\\;r\\:g\\\\e;Gilbert;Smith;Jr.";
 		
 		name = VCardUtils.parseStringWithEscappedDelimiter(fullName, ';');
-		sb = new StringBuilder();
-		for (String part : name) {
-			if(!part.isEmpty()) {
-				sb.append(part);
-				sb.append("\n");
-			}
-			else {
-				sb.append("\n");
-			}
-		}
-		
-		expected = "Mr\nGe\\,o\\;r\\:g\\\\e\nGilbert\nSmith\nJr.\n";
-		assertEquals(expected, sb.toString());
+		expected = new String[]{"Mr", "Ge\\,o\\;r\\:g\\\\e", "Gilbert", "Smith", "Jr."};
+		assertArrayEquals(expected, name);
 	}
 }

@@ -55,8 +55,9 @@ public enum TelephoneParameterType {
 	PREF("PREF", "Preferred"),
 	NON_STANDARD("NON_STANDARD","Non-Standard");
 	
-	private String type;
-	private String desc;
+	private final String type;
+	private final String desc;
+	
 	TelephoneParameterType(String t, String d) {
 		type = t;
 		desc = d;
@@ -75,13 +76,5 @@ public enum TelephoneParameterType {
 	public VCardType getParentType()
 	{
 		return VCardType.TEL;
-	}
-	
-	public void setType(String type) {
-		this.type = type.toUpperCase();
-	}
-	
-	public void setDescription(String desc) {
-		this.desc = desc;
 	}
 }

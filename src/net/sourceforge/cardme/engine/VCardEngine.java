@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.io.StringReader;
 import java.net.URI;
 import java.net.URL;
@@ -11,6 +12,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -112,6 +114,10 @@ import org.apache.commons.codec.net.QuotedPrintableCodec;
  * @author George El-Haddad
  * <br/>
  * May 6, 2009 - 11:29:02 AM
+ * <p>
+ * @author Michael Angstadt
+ * <br/>
+ * Jul 06, 2012
  * 
  */
 public class VCardEngine {
@@ -332,9 +338,7 @@ public class VCardEngine {
 		vcard.setThrowExceptions(false);
 		
 		List<String[]> arrayLines = splitLines(vcardStr);
-		String[] vLine = null;
-		for (int i = 0; i < arrayLines.size(); i++) {
-			vLine = arrayLines.get(i);
+		for (String[] vLine : arrayLines) {
 			String type = vLine[0].trim();	//VCard Type
 			String value = vLine[1].trim();	//VCard Value
 			String paramTypes = null;
@@ -372,8 +376,7 @@ public class VCardEngine {
 		List<VCard> vcards = new ArrayList<VCard>();
 		List<String> enumCards = enumerateVCards(vcardStr);
 		
-		for (int i = 0; i < enumCards.size(); i++) {
-			String card = enumCards.get(i);
+		for (String card : enumCards) {
 			VCard vcard = parseVCard(card);
 			vcards.add(vcard);
 		}
@@ -383,28 +386,28 @@ public class VCardEngine {
 	
 	private List<String> enumerateVCards(String vcardString)
 	{
-		List<String> vcardStrings = new ArrayList<String>();
+		List<String> vcardStrings = new LinkedList<String>();
 		StringBuilder sb = new StringBuilder();
-		String[] s = vcardString.split("\r?\n");
+		String[] split = vcardString.split("\r?\n");
 		boolean begin = false;
 		boolean end = false;
 		
-		for (int i = 0; i < s.length; i++) {
-			if(s[i].matches("\\p{Blank}*((BEGIN)|(begin))\\p{Blank}*:\\p{Blank}*((VCARD)|(vcard))\\p{Blank}*")) {
+		for (String s : split) {
+			if(s.matches("\\p{Blank}*((BEGIN)|(begin))\\p{Blank}*:\\p{Blank}*((VCARD)|(vcard))\\p{Blank}*")) {
 				begin = true;
 			}
 			
-			if(s[i].matches("\\p{Blank}*((END)|(end))\\p{Blank}*:\\p{Blank}*((VCARD)|(vcard))\\p{Blank}*")) {
+			if(s.matches("\\p{Blank}*((END)|(end))\\p{Blank}*:\\p{Blank}*((VCARD)|(vcard))\\p{Blank}*")) {
 				end = true;
 			}
 			
 			if(begin && !end) {
-				sb.append(s[i]);
+				sb.append(s);
 				sb.append('\n');
 			}
 			
 			if(end) {
-				sb.append(s[i]);
+				sb.append(s);
 				sb.append('\n');
 				begin = false;
 				end = false;
@@ -774,9 +777,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						formattedNameFeature.setCharset(pt.getValue());
 						value = new String(value.getBytes(), formattedNameFeature.getCharset());
@@ -794,8 +795,6 @@ public class VCardEngine {
 						formattedNameFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(formattedNameFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
@@ -813,13 +812,8 @@ public class VCardEngine {
 					}
 				}
 			}
-			
-			if(VCardUtils.needsUnEscaping(value)) {
-				formattedNameFeature.setFormattedName(VCardUtils.unescapeString(value));
-			}
-			else {
-				formattedNameFeature.setFormattedName(value);
-			}
+
+			formattedNameFeature.setFormattedName(VCardUtils.unescapeString(value));
 			
 			if(group != null) {
 				formattedNameFeature.setGroup(group);
@@ -847,9 +841,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						nameFeature.setCharset(pt.getValue());
 					}
@@ -865,8 +857,7 @@ public class VCardEngine {
 						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
 				}
-				
-				paramTypeList = null;
+
 			}
 			
 			if(nameFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
@@ -920,24 +911,14 @@ public class VCardEngine {
 			{
 				case 0:
 				{
-					if(VCardUtils.needsUnEscaping(names[0])) {
-						nameFeature.setFamilyName(VCardUtils.unescapeString(names[0]));					
-					}
-					else {
-						nameFeature.setFamilyName(names[0]);
-					}
+					nameFeature.setFamilyName(VCardUtils.unescapeString(names[0]));					
 					
 					break;
 				}
 				
 				case 1:
 				{
-					if(VCardUtils.needsUnEscaping(names[1])) {
-						nameFeature.setGivenName(VCardUtils.unescapeString(names[1]));
-					}
-					else {
-						nameFeature.setGivenName(names[1]);
-					}
+					nameFeature.setGivenName(VCardUtils.unescapeString(names[1]));
 					
 					break;
 				}
@@ -946,12 +927,7 @@ public class VCardEngine {
 				{
 					String[] addNames = names[2].split(",");
 					for(int j = 0; j < addNames.length; j++) {
-						if(VCardUtils.needsUnEscaping(addNames[j])) {
-							nameFeature.addAdditionalName(VCardUtils.unescapeString(addNames[j]));
-						}
-						else {
-							nameFeature.addAdditionalName(addNames[j]);
-						}
+						nameFeature.addAdditionalName(VCardUtils.unescapeString(addNames[j]));
 					}
 					
 					break;
@@ -961,12 +937,7 @@ public class VCardEngine {
 				{
 					String[] prefixes = names[3].split(",");
 					for(int j = 0; j < prefixes.length; j++) {
-						if(VCardUtils.needsUnEscaping(prefixes[j])) {
-							nameFeature.addHonorificPrefix(VCardUtils.unescapeString(prefixes[j]));
-						}
-						else {
-							nameFeature.addHonorificPrefix(prefixes[j]);
-						}
+						nameFeature.addHonorificPrefix(VCardUtils.unescapeString(prefixes[j]));
 					}
 					
 					break;
@@ -976,12 +947,7 @@ public class VCardEngine {
 				{
 					String[] suffixes = names[4].split(",");
 					for(int j = 0; j < suffixes.length; j++) {
-						if(VCardUtils.needsUnEscaping(suffixes[j])) {
-							nameFeature.addHonorificSuffix(VCardUtils.unescapeString(suffixes[j]));
-						}
-						else {
-							nameFeature.addHonorificSuffix(suffixes[j]);
-						}
+						nameFeature.addHonorificSuffix(VCardUtils.unescapeString(suffixes[j]));
 					}
 					
 					break;
@@ -996,26 +962,29 @@ public class VCardEngine {
 	{
 		String[] names = VCardUtils.parseStringWithEscappedDelimiter(value, ';');
 		
-		if(names[0] != null) {
-			if(VCardUtils.needsUnEscaping(names[0])) {
-				nameFeature.setFamilyName(VCardUtils.unescapeString(names[0]));					
+		int cur = 0;
+		if(names.length > cur && names[cur] != null) {
+			if(VCardUtils.needsUnEscaping(names[cur])) {
+				nameFeature.setFamilyName(VCardUtils.unescapeString(names[cur]));					
 			}
 			else {
-				nameFeature.setFamilyName(names[0]);
+				nameFeature.setFamilyName(names[cur]);
 			}
 		}
+		cur++;
 		
-		if(names[1] != null) {
-			if(VCardUtils.needsUnEscaping(names[1])) {
-				nameFeature.setGivenName(VCardUtils.unescapeString(names[1]));
+		if(names.length > cur && names[cur] != null) {
+			if(VCardUtils.needsUnEscaping(names[cur])) {
+				nameFeature.setGivenName(VCardUtils.unescapeString(names[cur]));
 			}
 			else {
-				nameFeature.setGivenName(names[1]);
+				nameFeature.setGivenName(names[cur]);
 			}
 		}
+		cur++;
 		
-		if(names[2] != null) {
-			String[] addNames = names[2].split(",");
+		if(names.length > cur && names[cur] != null) {
+			String[] addNames = names[cur].split(",");
 			for(int i = 0; i < addNames.length; i++) {
 				if(VCardUtils.needsUnEscaping(addNames[i])) {
 					nameFeature.addAdditionalName(VCardUtils.unescapeString(addNames[i]));
@@ -1025,9 +994,10 @@ public class VCardEngine {
 				}
 			}
 		}
+		cur++;
 		
-		if(names[3] != null) {
-			String[] prefixes = names[3].split(",");
+		if(names.length > cur && names[cur] != null) {
+			String[] prefixes = names[cur].split(",");
 			for(int i = 0; i < prefixes.length; i++) {
 				if(VCardUtils.needsUnEscaping(prefixes[i])) {
 					nameFeature.addHonorificPrefix(VCardUtils.unescapeString(prefixes[i]));
@@ -1037,9 +1007,10 @@ public class VCardEngine {
 				}
 			}
 		}
+		cur++;
 		
-		if(names[4] != null) {
-			String[] suffixes = names[4].split(",");
+		if(names.length > cur && names[cur] != null) {
+			String[] suffixes = names[cur].split(",");
 			for(int i = 0; i < suffixes.length; i++) {
 				if(VCardUtils.needsUnEscaping(suffixes[i])) {
 					nameFeature.addHonorificSuffix(VCardUtils.unescapeString(suffixes[i]));
@@ -1068,9 +1039,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						nicknameFeature.setCharset(pt.getValue());
 					}
@@ -1087,8 +1056,6 @@ public class VCardEngine {
 						nicknameFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(nicknameFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
@@ -1107,7 +1074,7 @@ public class VCardEngine {
 				}
 			}
 			
-			String[] nicknames = value.split(",");
+			String[] nicknames = VCardUtils.parseStringWithEscappedDelimiter(value, ',');
 			for(int i = 0; i < nicknames.length; i++) {
 				if(VCardUtils.needsUnEscaping(nicknames[i])) {
 					nicknameFeature.addNickname(VCardUtils.unescapeString(nicknames[i]));
@@ -1144,9 +1111,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						photoFeature.setCharset(pt.getValue());
 					}
@@ -1164,20 +1129,11 @@ public class VCardEngine {
 						}
 					}
 					else if(pt.getName().equals("TYPE")) {
-						ImageMediaType mediaType = null;
-						try {
-							mediaType = ImageMediaType.valueOf(pt.getValue());
-							photoFeature.setImageMediaType(mediaType);
+						ImageMediaType mediaType = ImageMediaType.valueOf(pt.getValue());
+						if (mediaType == null){
+							mediaType = new ImageMediaType(pt.getValue(), pt.getValue(), pt.getValue());
 						}
-						catch(IllegalArgumentException iae) {
-							mediaType = ImageMediaType.NON_STANDARD;
-							mediaType.setTypeName(pt.getValue().trim());
-							mediaType.setIanaRegisteredName(pt.getValue().trim());
-							mediaType.setExtension(pt.getValue().trim());
-						}
-						finally {
-							photoFeature.setImageMediaType(mediaType);
-						}
+						photoFeature.setImageMediaType(mediaType);
 					}
 					else if(pt.getName().equals("VALUE")) {
 						if(pt.getValue().compareToIgnoreCase("URI") == 0) {
@@ -1193,8 +1149,6 @@ public class VCardEngine {
 						photoFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(isBinary) {
@@ -1233,9 +1187,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						birthdayFeature.setCharset(pt.getValue());
 					}
@@ -1255,8 +1207,6 @@ public class VCardEngine {
 						birthdayFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(birthdayFeature.getBirthdayParameterType() != null) {
@@ -1501,9 +1451,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						addressFeature.setCharset(pt.getValue());
 					}
@@ -1515,8 +1463,8 @@ public class VCardEngine {
 					else if(pt.getName().equals("TYPE")) {
 						if(pt.getValue().indexOf(',') != -1) {
 							String[] typeValueList = pt.getValue().split(",");
-							for(int j = 0; j < typeValueList.length; j++) {
-								setAdrParameterType(addressFeature, typeValueList[j]);
+							for(String typeValue : typeValueList) {
+								setAdrParameterType(addressFeature, typeValue);
 							}
 						}
 						else {
@@ -1531,8 +1479,6 @@ public class VCardEngine {
 						addressFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(addressFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
@@ -1551,14 +1497,21 @@ public class VCardEngine {
 				}
 			}
 			
-			String[] address = value.split(";",7);
-			String postOfficeBox = address[0];
-			String extendedAddress = address[1];
-			String streetAddress = address[2];
-			String locality = address[3];
-			String region = address[4];
-			String postalCode = address[5];
-			String countryName = address[6];
+			String[] address = VCardUtils.parseStringWithEscappedDelimiter(value, ';');
+			int i = 0;
+			String postOfficeBox = (address.length > i) ? address[i] : null;
+			i++;
+			String extendedAddress = (address.length > i) ? address[i] : null;
+			i++;
+			String streetAddress = (address.length > i) ? address[i] : null;
+			i++;
+			String locality = (address.length > i) ? address[i] : null;
+			i++;
+			String region = (address.length > i) ? address[i] : null;
+			i++;
+			String postalCode = (address.length > i) ? address[i] : null;
+			i++;
+			String countryName = (address.length > i) ? address[i] : null;
 			
 			if(postOfficeBox != null) {
 				if(VCardUtils.needsUnEscaping(postOfficeBox)) {
@@ -1642,7 +1595,8 @@ public class VCardEngine {
 	 */
 	private void setAdrParameterType(AddressType adrType, String paramValue) {
 		try {
-			AddressParameterType adrParamType = AddressParameterType.valueOf(paramValue);
+			String enumParamValue = paramValue.replace("-", "_").toUpperCase();
+			AddressParameterType adrParamType = AddressParameterType.valueOf(enumParamValue);
 			adrType.addAddressParameterType(adrParamType);
 		}
 		catch(IllegalArgumentException iae) {
@@ -1650,8 +1604,6 @@ public class VCardEngine {
 			if(paramValue.indexOf('=') != -1) {
 				String[] pTmp = paramValue.split("=");
 				xAdrType = new XAddressParameterType(pTmp[0], pTmp[1]);
-				pTmp[0] = null;
-				pTmp[1] = null;
 			}
 			else {
 				xAdrType = new XAddressParameterType(paramValue);
@@ -1676,9 +1628,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						labelFeature.setCharset(pt.getValue());
 					}
@@ -1690,8 +1640,8 @@ public class VCardEngine {
 					else if(pt.getName().equals("TYPE")) {
 						if(pt.getValue().indexOf(',') != -1) {
 							String[] typeValueList = pt.getValue().split(",");
-							for(int j = 0; j < typeValueList.length; j++) {
-								setLabelParameterType(labelFeature, typeValueList[j]);
+							for(String typeValue : typeValueList) {
+								setLabelParameterType(labelFeature, typeValue);
 							}
 						}
 						else {
@@ -1706,8 +1656,6 @@ public class VCardEngine {
 						labelFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(labelFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
@@ -1726,12 +1674,7 @@ public class VCardEngine {
 				}
 			}
 			
-			if(VCardUtils.needsUnEscaping(value)) {
-				labelFeature.setLabel(VCardUtils.unescapeString(value));
-			}
-			else {
-				labelFeature.setLabel(value);
-			}
+			labelFeature.setLabel(VCardUtils.unescapeString(value));
 			
 			if(group != null) {
 				labelFeature.setGroup(group);
@@ -1753,8 +1696,8 @@ public class VCardEngine {
 				int paramsMatched = 0;
 				while(lPrmIter.hasNext()) {
 					LabelParameterType labelParamType = lPrmIter.next();
-					for(int i = 0; i < aPrmList.size(); i++) {
-						if(aPrmList.get(i).getType().equals(labelParamType.getType())) {
+					for(AddressParameterType aPrm : aPrmList) {
+						if(aPrm.getType().equals(labelParamType.getType())) {
 							paramsMatched++;
 						}
 					}
@@ -1764,8 +1707,8 @@ public class VCardEngine {
 				int xparamsMatched = 0;
 				while(lXPrmIter.hasNext()) {
 					XLabelParameterType xlabelParamType = lXPrmIter.next();
-					for(int i = 0; i < aXPrmList.size(); i++) {
-						if(aXPrmList.get(i).getType().equals(xlabelParamType.getType())) {
+					for(XAddressParameterType aXPrm : aXPrmList) {
+						if(aXPrm.getType().equals(xlabelParamType.getType())) {
 							xparamsMatched++;
 						}
 					}
@@ -1799,7 +1742,8 @@ public class VCardEngine {
 	 */
 	private void setLabelParameterType(LabelType labelType, String paramValue) {
 		try {
-			LabelParameterType adrParamType = LabelParameterType.valueOf(paramValue);
+			String enumParamValue = paramValue.replace("-", "_").toUpperCase();
+			LabelParameterType adrParamType = LabelParameterType.valueOf(enumParamValue);
 			labelType.addLabelParameterType(adrParamType);
 		}
 		catch(IllegalArgumentException iae) {
@@ -1807,8 +1751,6 @@ public class VCardEngine {
 			if(paramValue.indexOf('=') != -1) {
 				String[] pTmp = paramValue.split("=");
 				xLabelType = new XLabelParameterType(pTmp[0], pTmp[1]);
-				pTmp[0] = null;
-				pTmp[1] = null;
 			}
 			else {
 				xLabelType = new XLabelParameterType(paramValue);
@@ -1833,9 +1775,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						telephoneFeature.setCharset(pt.getValue());
 					}
@@ -1847,8 +1787,8 @@ public class VCardEngine {
 					else if(pt.getName().equals("TYPE")) {
 						if(pt.getValue().indexOf(',') != -1) {
 							String[] typeValueList = pt.getValue().split(",");
-							for(int j = 0; j < typeValueList.length; j++) {
-								setTelParameterType(telephoneFeature, typeValueList[j]);
+							for(String typeValue : typeValueList) {
+								setTelParameterType(telephoneFeature, typeValue);
 							}
 						}
 						else {
@@ -1863,8 +1803,6 @@ public class VCardEngine {
 						telephoneFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(telephoneFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
@@ -1883,13 +1821,7 @@ public class VCardEngine {
 				}
 			}
 			
-			if(VCardUtils.needsUnEscaping(value)) {
-				telephoneFeature.setTelephone(VCardUtils.unescapeString(value));
-			}
-			else {
-				telephoneFeature.setTelephone(value);
-			}
-			
+			telephoneFeature.setTelephone(VCardUtils.unescapeString(value));
 			if(group != null) {
 				telephoneFeature.setGroup(group);
 			}
@@ -1909,7 +1841,8 @@ public class VCardEngine {
 	 */
 	private void setTelParameterType(TelephoneType telType, String paramValue) {
 		try {
-			TelephoneParameterType telParamType = TelephoneParameterType.valueOf(paramValue);
+			String enumParamValue = paramValue.replace("-", "_").toUpperCase();
+			TelephoneParameterType telParamType = TelephoneParameterType.valueOf(enumParamValue);
 			telType.addTelephoneParameterType(telParamType);
 		}
 		catch(IllegalArgumentException iae) {
@@ -1917,8 +1850,6 @@ public class VCardEngine {
 			if(paramValue.indexOf('=') != -1) {
 				String[] pTmp = paramValue.split("=");
 				xTelType = new XTelephoneParameterType(pTmp[0], pTmp[1]);
-				pTmp[0] = null;
-				pTmp[1] = null;
 			}
 			else {
 				xTelType = new XTelephoneParameterType(paramValue);
@@ -1944,17 +1875,15 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						emailFeature.setCharset(pt.getValue());
 					}
 					else if(pt.getName().equals("TYPE")) {
 						if(pt.getValue().indexOf(',') != -1) {
 							String[] typeValueList = pt.getValue().split(",");
-							for(int j = 0; j < typeValueList.length; j++) {
-								setEmailParameterType(emailFeature, typeValueList[j]);
+							for(String typeValue : typeValueList) {
+								setEmailParameterType(emailFeature, typeValue);
 							}
 						}
 						else {
@@ -1986,8 +1915,6 @@ public class VCardEngine {
 						emailFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(isBinary) {
@@ -2028,7 +1955,8 @@ public class VCardEngine {
 	 */
 	private void setEmailParameterType(EmailType emailType, String paramValue) {
 		try {
-			EmailParameterType emailParamType = EmailParameterType.valueOf(paramValue);
+			String enumParamValue = paramValue.replace("-", "_").toUpperCase();
+			EmailParameterType emailParamType = EmailParameterType.valueOf(enumParamValue);
 			emailType.addEmailParameterType(emailParamType);
 		}
 		catch(IllegalArgumentException iae) {
@@ -2036,8 +1964,6 @@ public class VCardEngine {
 			if(paramValue.indexOf('=') != -1) {
 				String[] pTmp = paramValue.split("=");
 				xEmailType = new XEmailParameterType(pTmp[0], pTmp[1]);
-				pTmp[0] = null;
-				pTmp[1] = null;
 			}
 			else {
 				xEmailType = new XEmailParameterType(paramValue);
@@ -2062,9 +1988,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						mailerFeature.setCharset(pt.getValue());
 					}
@@ -2081,8 +2005,6 @@ public class VCardEngine {
 						mailerFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(mailerFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
@@ -2101,13 +2023,7 @@ public class VCardEngine {
 				}
 			}
 			
-			if(VCardUtils.needsUnEscaping(value)) {
-				mailerFeature.setMailer(VCardUtils.unescapeString(value));
-			}
-			else {
-				mailerFeature.setMailer(value);
-			}
-			
+			mailerFeature.setMailer(VCardUtils.unescapeString(value));
 			if(group != null) {
 				mailerFeature.setGroup(group);
 			}
@@ -2247,9 +2163,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						geographicPositionFeature.setCharset(pt.getValue());
 					}
@@ -2258,8 +2172,6 @@ public class VCardEngine {
 						geographicPositionFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(value.matches("-?\\d{1,3}\\.\\d{1,6}\\;-?\\d{1,3}\\.\\d{1,6}")) {
@@ -2299,9 +2211,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						titleFeature.setCharset(pt.getValue());
 					}
@@ -2318,8 +2228,6 @@ public class VCardEngine {
 						titleFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(titleFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
@@ -2338,13 +2246,7 @@ public class VCardEngine {
 				}
 			}
 			
-			if(VCardUtils.needsUnEscaping(value)) {
-				titleFeature.setTitle(VCardUtils.unescapeString(value));
-			}
-			else {
-				titleFeature.setTitle(value);
-			}
-			
+			titleFeature.setTitle(VCardUtils.unescapeString(value));
 			if(group != null) {
 				titleFeature.setGroup(group);
 			}
@@ -2371,9 +2273,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						roleFeature.setCharset(pt.getValue());
 					}
@@ -2390,8 +2290,6 @@ public class VCardEngine {
 						roleFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(roleFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
@@ -2410,13 +2308,7 @@ public class VCardEngine {
 				}
 			}
 			
-			if(VCardUtils.needsUnEscaping(value)) {
-				roleFeature.setRole(VCardUtils.unescapeString(value));
-			}
-			else {
-				roleFeature.setRole(value);
-			}
-			
+			roleFeature.setRole(VCardUtils.unescapeString(value));
 			if(group != null) {
 				roleFeature.setGroup(group);
 			}
@@ -2444,9 +2336,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						logoFeature.setCharset(pt.getValue());
 					}
@@ -2464,20 +2354,11 @@ public class VCardEngine {
 						}
 					}
 					else if(pt.getName().equals("TYPE")) {
-						ImageMediaType mediaType = null;
-						try {
-							mediaType = ImageMediaType.valueOf(pt.getValue());
-							logoFeature.setImageMediaType(mediaType);
+						ImageMediaType mediaType = ImageMediaType.valueOf(pt.getValue());
+						if (mediaType == null){
+							mediaType = new ImageMediaType(pt.getValue(), pt.getValue(), pt.getValue());
 						}
-						catch(IllegalArgumentException iae) {
-							mediaType = ImageMediaType.NON_STANDARD;
-							mediaType.setTypeName(pt.getValue().trim());
-							mediaType.setIanaRegisteredName(pt.getValue().trim());
-							mediaType.setExtension(pt.getValue().trim());
-						}
-						finally {
-							logoFeature.setImageMediaType(mediaType);
-						}
+						logoFeature.setImageMediaType(mediaType);
 					}
 					else if(pt.getName().equals("VALUE")) {
 						if(pt.getValue().compareToIgnoreCase("URI") == 0) {
@@ -2493,8 +2374,6 @@ public class VCardEngine {
 						logoFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(isBinary) {
@@ -2533,9 +2412,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						organizationFeature.setCharset(pt.getValue());
 					}
@@ -2552,8 +2429,6 @@ public class VCardEngine {
 						organizationFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(organizationFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
@@ -2572,23 +2447,15 @@ public class VCardEngine {
 				}
 			}
 			
-			/*
-			 * If escaped semi-colons exist in the list then replace them
-			 * with this temporary sequence. Then after splitting put it
-			 * back in.
-			 */
-			if(value.contains("\\;")) {
-				value = value.replaceAll("\\\\;", "!SEMI!");
-			}
-			
-			String[] orgs = value.split(";");
+			String[] orgs = VCardUtils.parseStringWithEscappedDelimiter(value, ';');
 			for(int i = 0; i < orgs.length; i++) {
 				if(VCardUtils.needsUnEscaping(orgs[i])) {
+					//TODO may not need the !SEMI!
 					String unesc = VCardUtils.unescapeString(orgs[i]);
-					organizationFeature.addOrganization(unesc.replaceAll("\\!SEMI\\!", ";"));
+					organizationFeature.addOrganization(unesc);
 				}
 				else {
-					organizationFeature.addOrganization(orgs[i].replaceAll("\\!SEMI\\!", ";"));
+					organizationFeature.addOrganization(orgs[i]);
 				}
 			}
 			
@@ -2618,9 +2485,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						categoriesFeature.setCharset(pt.getValue());
 					}
@@ -2637,8 +2502,6 @@ public class VCardEngine {
 						categoriesFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(categoriesFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
@@ -2662,33 +2525,19 @@ public class VCardEngine {
 			{
 				case KDE_ADDRESS_BOOK:
 				{
-					if(VCardUtils.needsUnEscaping(value)) {
-						categories = VCardUtils.unescapeString(value).split(",");
-					}
-					else {
-						categories = value.split(",");
-					}
+					categories = VCardUtils.unescapeString(value).split(",");
 					break;
 				}
 				
 				default:
 				{
-					if(value.contains("\\,")) {
-						value = value.replaceAll("\\\\,", " ");
-					}
-					
-					categories = value.split(",");
+					categories = VCardUtils.parseStringWithEscappedDelimiter(value, ',');
 					break;
 				}
 			}
 			
 			for(int i = 0; i < categories.length; i++) {
-				if(VCardUtils.needsUnEscaping(categories[i])) {
-					categoriesFeature.addCategory(VCardUtils.unescapeString(categories[i]));
-				}
-				else {
-					categoriesFeature.addCategory(categories[i]);
-				}
+				categoriesFeature.addCategory(VCardUtils.unescapeString(categories[i]));
 			}
 			
 			if(group != null) {
@@ -2717,9 +2566,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						noteFeature.setCharset(pt.getValue());
 					}
@@ -2736,8 +2583,6 @@ public class VCardEngine {
 						noteFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(noteFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
@@ -2756,12 +2601,7 @@ public class VCardEngine {
 				}
 			}
 			
-			if(VCardUtils.needsUnEscaping(value)) {
-				noteFeature.setNote(VCardUtils.unescapeString(value));
-			}
-			else {
-				noteFeature.setNote(value);
-			}
+			noteFeature.setNote(VCardUtils.unescapeString(value));
 			
 			if(group != null) {
 				noteFeature.setGroup(group);
@@ -2789,9 +2629,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						productIdFeature.setCharset(pt.getValue());
 					}
@@ -2808,8 +2646,6 @@ public class VCardEngine {
 						productIdFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(productIdFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
@@ -2828,12 +2664,7 @@ public class VCardEngine {
 				}
 			}
 			
-			if(VCardUtils.needsUnEscaping(value)) {
-				productIdFeature.setProductId(VCardUtils.unescapeString(value));
-			}
-			else {
-				productIdFeature.setProductId(value);
-			}
+			productIdFeature.setProductId(VCardUtils.unescapeString(value));
 			
 			if(group != null) {
 				productIdFeature.setGroup(group);
@@ -2861,9 +2692,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						revisionFeature.setCharset(pt.getValue());
 					}
@@ -2872,8 +2701,6 @@ public class VCardEngine {
 						revisionFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(value.matches(ISOUtils.ISO8601_DATE_EXTENDED_REGEX)) {
@@ -2998,9 +2825,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						sortStringFeature.setCharset(pt.getValue());
 					}
@@ -3017,8 +2842,6 @@ public class VCardEngine {
 						sortStringFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(sortStringFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
@@ -3037,12 +2860,7 @@ public class VCardEngine {
 				}
 			}
 			
-			if(VCardUtils.needsUnEscaping(value)) {
-				sortStringFeature.setSortString(VCardUtils.unescapeString(value));
-			}
-			else {
-				sortStringFeature.setSortString(value);
-			}
+			sortStringFeature.setSortString(VCardUtils.unescapeString(value));
 			
 			if(group != null) {
 				sortStringFeature.setGroup(group);
@@ -3071,9 +2889,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						soundFeature.setCharset(pt.getValue());
 					}
@@ -3091,20 +2907,11 @@ public class VCardEngine {
 						}
 					}
 					else if(pt.getName().equals("TYPE")) {
-						AudioMediaType mediaType = null;
-						try {
-							mediaType = AudioMediaType.valueOf(pt.getValue().trim());
-							soundFeature.setAudioMediaType(mediaType);
+						AudioMediaType mediaType = AudioMediaType.valueOf(pt.getValue());
+						if (mediaType == null){
+							mediaType = new AudioMediaType(pt.getValue(), pt.getValue(), pt.getValue());
 						}
-						catch(IllegalArgumentException iae) {
-							mediaType = AudioMediaType.NON_STANDARD;
-							mediaType.setTypeName(pt.getValue().trim());
-							mediaType.setIanaRegisteredName(pt.getValue().trim());
-							mediaType.setExtension(pt.getValue().trim());
-						}
-						finally {
-							soundFeature.setAudioMediaType(mediaType);
-						}
+						soundFeature.setAudioMediaType(mediaType);
 					}
 					else if(pt.getName().equals("VALUE")) {
 						if(pt.getValue().compareToIgnoreCase("URI") == 0) {
@@ -3120,8 +2927,6 @@ public class VCardEngine {
 						soundFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(isBinary) {
@@ -3160,9 +2965,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						uidFeature.setCharset(pt.getValue());
 					}
@@ -3179,8 +2982,6 @@ public class VCardEngine {
 						uidFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(uidFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
@@ -3199,12 +3000,7 @@ public class VCardEngine {
 				}
 			}
 			
-			if(VCardUtils.needsUnEscaping(value)) {
-				uidFeature.setUID(VCardUtils.unescapeString(value));
-			}
-			else {
-				uidFeature.setUID(value);
-			}
+			uidFeature.setUID(VCardUtils.unescapeString(value));
 			
 			if(group != null) {
 				uidFeature.setGroup(group);
@@ -3232,9 +3028,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						urlFeature.setCharset(pt.getValue());
 					}
@@ -3261,8 +3055,8 @@ public class VCardEngine {
 								if(pt.getName().equals("TYPE")) {
 									if(pt.getValue().indexOf(',') != -1) {
 										String[] typeValueList = pt.getValue().split(",");
-										for(int j = 0; j < typeValueList.length; j++) {
-											setUrlParameterType(urlFeature, typeValueList[j]);
+										for(String typeValue : typeValueList) {
+											setUrlParameterType(urlFeature, typeValue);
 										}
 									}
 									else {
@@ -3283,8 +3077,6 @@ public class VCardEngine {
 						}
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(urlFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
@@ -3303,12 +3095,7 @@ public class VCardEngine {
 				}
 			}
 			
-			if(VCardUtils.needsUnEscaping(value)) {
-				urlFeature.setURL(new URL(VCardUtils.unescapeString(value)));
-			}
-			else {
-				urlFeature.setURL(new URL(value));
-			}
+			urlFeature.setURL(new URL(VCardUtils.unescapeString(value)));
 			
 			if(group != null) {
 				urlFeature.setGroup(group);
@@ -3329,7 +3116,8 @@ public class VCardEngine {
 	 */
 	private void setUrlParameterType(URLType urlType, String paramValue) {
 		try {
-			URLParameterType urlParamType = URLParameterType.valueOf(paramValue);
+			String enumParamValue = paramValue.replace("-", "_").toUpperCase();
+			URLParameterType urlParamType = URLParameterType.valueOf(enumParamValue);
 			urlType.addURLParameterType(urlParamType);
 		}
 		catch(IllegalArgumentException iae) {
@@ -3337,8 +3125,6 @@ public class VCardEngine {
 			if(paramValue.indexOf('=') != -1) {
 				String[] pTmp = paramValue.split("=");
 				xUrlType = new XURLParameterType(pTmp[0], pTmp[1]);
-				pTmp[0] = null;
-				pTmp[1] = null;
 			}
 			else {
 				xUrlType = new XURLParameterType(paramValue);
@@ -3363,9 +3149,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						classFeature.setCharset(pt.getValue());
 					}
@@ -3382,8 +3166,6 @@ public class VCardEngine {
 						classFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(classFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
@@ -3402,12 +3184,7 @@ public class VCardEngine {
 				}
 			}
 			
-			if(VCardUtils.needsUnEscaping(value)) {
-				classFeature.setSecurityClass(VCardUtils.unescapeString(value));
-			}
-			else {
-				classFeature.setSecurityClass(value);
-			}
+			classFeature.setSecurityClass(VCardUtils.unescapeString(value));
 			
 			if(group != null) {
 				classFeature.setGroup(group);
@@ -3435,9 +3212,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						keyFeature.setCharset(pt.getValue());
 					}
@@ -3453,28 +3228,17 @@ public class VCardEngine {
 						}
 					}
 					else if(pt.getName().equals("TYPE")) {
-						KeyTextType keyTextType = null;
-						try {
-							keyTextType = KeyTextType.valueOf(pt.getValue().trim());
-							keyFeature.setKeyTextType(keyTextType);
+						KeyTextType keyTextType = KeyTextType.valueOf(pt.getValue());
+						if (keyTextType == null){
+							keyTextType = new KeyTextType(pt.getValue(), pt.getValue(), pt.getValue());
 						}
-						catch(IllegalArgumentException iae) {
-							keyTextType = KeyTextType.NON_STANDARD;
-							keyTextType.setTypeName(pt.getValue().trim());
-							keyTextType.setIanaRegisteredName(pt.getValue().trim());
-							keyTextType.setExtension(pt.getValue().trim());
-						}
-						finally {
-							keyFeature.setKeyTextType(keyTextType);
-						}
+						keyFeature.setKeyTextType(keyTextType);
 					}
 					else {
 						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
 						keyFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			byte[] keyBytes = Base64Wrapper.decode(value);
@@ -3508,9 +3272,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						extendedFeature.setCharset(pt.getValue());
 					}
@@ -3527,8 +3289,6 @@ public class VCardEngine {
 						extendedFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(extendedFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
@@ -3547,14 +3307,8 @@ public class VCardEngine {
 				}
 			}
 			
-			if(VCardUtils.needsUnEscaping(value)) {
-				extendedFeature.setExtensionName(typeName);
-				extendedFeature.setExtensionData(VCardUtils.unescapeString(value));
-			}
-			else {
-				extendedFeature.setExtensionName(typeName);
-				extendedFeature.setExtensionData(value);
-			}
+			extendedFeature.setExtensionName(typeName);
+			extendedFeature.setExtensionData(VCardUtils.unescapeString(value));
 			
 			if(group != null) {
 				extendedFeature.setGroup(group);
@@ -3582,9 +3336,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						displayableNameFeature.setCharset(pt.getValue());
 					}
@@ -3601,8 +3353,6 @@ public class VCardEngine {
 						displayableNameFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(displayableNameFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
@@ -3621,12 +3371,7 @@ public class VCardEngine {
 				}
 			}
 			
-			if(VCardUtils.needsUnEscaping(value)) {
-				displayableNameFeature.setName(VCardUtils.unescapeString(value));
-			}
-			else {
-				displayableNameFeature.setName(value);
-			}
+			displayableNameFeature.setName(VCardUtils.unescapeString(value));
 			
 			if(group != null) {
 				displayableNameFeature.setGroup(group);
@@ -3655,9 +3400,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {					
 					if(pt.getName().equals("CHARSET")) {
 						profileFeature.setCharset(pt.getValue());
 					}
@@ -3674,8 +3417,6 @@ public class VCardEngine {
 						profileFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(profileFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
@@ -3694,12 +3435,7 @@ public class VCardEngine {
 				}
 			}
 			
-			if(VCardUtils.needsUnEscaping(value)) {
-				profileFeature.setProfile(VCardUtils.unescapeString(value));
-			}
-			else {
-				profileFeature.setProfile(value);
-			}
+			profileFeature.setProfile(VCardUtils.unescapeString(value));
 			
 			if(group != null) {
 				profileFeature.setGroup(group);
@@ -3727,9 +3463,7 @@ public class VCardEngine {
 			
 			if(paramTypes != null) {
 				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (int i = 0; i < paramTypeList.size(); i++) {
-					ParameterType pt = paramTypeList.get(i);
-					
+				for (ParameterType pt : paramTypeList) {
 					if(pt.getName().equals("CHARSET")) {
 						sourceFeature.setCharset(pt.getValue());
 					}
@@ -3746,8 +3480,6 @@ public class VCardEngine {
 						sourceFeature.addExtendedParameter(parameter);
 					}
 				}
-				
-				paramTypeList = null;
 			}
 			
 			if(sourceFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
@@ -3766,12 +3498,7 @@ public class VCardEngine {
 				}
 			}
 			
-			if(VCardUtils.needsUnEscaping(value)) {
-				sourceFeature.setSource(VCardUtils.unescapeString(value));
-			}
-			else {
-				sourceFeature.setSource(value);
-			}
+			sourceFeature.setSource(VCardUtils.unescapeString(value));
 			
 			if(group != null) {
 				sourceFeature.setGroup(group);
@@ -3819,44 +3546,44 @@ public class VCardEngine {
 	 */
 	private List<ParameterType> parseParamTypes(String paramTypes) throws VCardBuildException
 	{
-		List<ParameterType> parameterTypes = new ArrayList<ParameterType>();
-		String[] params = paramTypes.split(";");
-		for(int i = 0; i < params.length; i++) {
-			if(params[i].contains("=")) {
-				String[] paramType = params[i].trim().split("=");
-				parameterTypes.add(new ParameterType(paramType[0], paramType[1]));
-			}
-			else {
-					//When the parameter types are missing we try to guess what they are.
-					//We really should not as it breaks RFC rules but some apps do broken exports.
-					
-					if(params[i].trim().equals(EncodingType.BASE64.getType())) {
-						parameterTypes.add(new ParameterType("ENCODING", params[i].trim()));
-					}
-					else if(params[i].trim().equals(EncodingType.BINARY.getType())) {
-						parameterTypes.add(new ParameterType("ENCODING", params[i].trim()));
-					}
-					else if(params[i].trim().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
-						parameterTypes.add(new ParameterType("ENCODING", params[i].trim()));
-					}
-					else if(params[i].trim().equals("URI")) {
-						parameterTypes.add(new ParameterType("VALUE", params[i].trim()));
-					}
-					else if(Charset.isSupported(params[i].trim())) {
-						//Hell, it could even be a charset
-						parameterTypes.add(new ParameterType("CHARSET", params[i].trim()));
-					}
-					else {
-						
-						/*
+		List<ParameterType> parameterTypes = new LinkedList<ParameterType>();
+ 		String[] params = paramTypes.split(";");
+		for(String param : params) {
+			param = param.trim();
+			if(param.contains("=")) {
+				String[] paramType = param.split("=");
+				parameterTypes.add(new ParameterType(paramType[0].trim(), paramType[1].trim()));
+ 			}
+ 			else {
+ 					//When the parameter types are missing we try to guess what they are.
+ 					//We really should not as it breaks RFC rules but some apps do broken exports.
+ 					
+					if(param.equals(EncodingType.BASE64.getType())) {
+						parameterTypes.add(new ParameterType("ENCODING", param));
+ 					}
+					else if(param.equals(EncodingType.BINARY.getType())) {
+						parameterTypes.add(new ParameterType("ENCODING", param));
+ 					}
+					else if(param.equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+						parameterTypes.add(new ParameterType("ENCODING", param));
+ 					}
+					else if(param.equals("URI")) {
+						parameterTypes.add(new ParameterType("VALUE", param));
+ 					}
+					else if(Charset.isSupported(param)) {
+ 						//Hell, it could even be a charset
+						parameterTypes.add(new ParameterType("CHARSET", param));
+ 					}
+ 					else {
+ 						/*
 						 * Type special notes: The type can include the type parameter "TYPE" to
 						 * specify the graphic image format type. The TYPE parameter values MUST
 						 * be one of the IANA registered image formats or a non-standard image format.
 						 */
 						
-						parameterTypes.add(new ParameterType("TYPE", params[i].trim()));
-					}
-			}
+						parameterTypes.add(new ParameterType("TYPE", param));
+ 					}
+ 			}
 		}
 		
 		return parameterTypes;
@@ -3874,11 +3601,9 @@ public class VCardEngine {
 	private List<String[]> splitLines(String vcardString)
 	{
 		String[] strArray = vcardString.split("\n");
-		List<String[]> arrayLines = new ArrayList<String[]>(strArray.length);
-		String line = null;
+		List<String[]> arrayLines = new LinkedList<String[]>();
 
-		for (int i = 0; i < strArray.length; i++) {
-			line = strArray[i];
+		for (String line : strArray) {
 			String[] subLine = line.split(":", 2);
 			arrayLines.add(subLine);
 		}
@@ -3896,20 +3621,7 @@ public class VCardEngine {
 	 */
 	private String getContentFromFile(File vcardFile) throws IOException
 	{
-		BufferedReader br = new BufferedReader(new FileReader(vcardFile));
-		String line = "";
-		StringBuilder sb = new StringBuilder();
-
-		while((line = br.readLine()) != null) {
-			// skips blank lines
-			if(!line.matches("$")) {
-				sb.append(line);
-				sb.append("\n");
-			}
-		}
-
-		br.close();
-		return sb.toString();
+		return getContent(new FileReader(vcardFile));
 	}
 	
 	/**
@@ -3922,19 +3634,36 @@ public class VCardEngine {
 	 */
 	private String getContentFromString(String vcardString) throws IOException
 	{
-		BufferedReader br = new BufferedReader(new StringReader(vcardString));
-		String line = "";
-		StringBuilder sb = new StringBuilder();
-
-		while((line = br.readLine()) != null) {
-			// skips blank lines
-			if(!line.matches("$")) {
-				sb.append(line);
-				sb.append("\n");
+		return getContent(new StringReader(vcardString));
+	}
+	
+	/**
+	 * <p>Reads the contents of a Reader where each line is delimited with
+	 * the standard java EOL char '\n' This is still a folded vcard String.</p>
+	 *
+	 * @param reader
+	 * @return {@link String}
+	 * @throws IOException
+	 */
+	private String getContent(Reader reader) throws IOException
+	{
+		BufferedReader br = null;
+		try	{
+			br = new BufferedReader(reader);
+			String line;
+			StringBuilder sb = new StringBuilder();
+			while((line = br.readLine()) != null) {
+				// skips blank lines
+				if(!line.matches("$")) {
+					sb.append(line);
+					sb.append("\n");
+				}
+			}
+			return sb.toString();
+		} finally {
+			if (br != null) {
+				br.close();
 			}
 		}
-
-		br.close();
-		return sb.toString();
 	}
 }
