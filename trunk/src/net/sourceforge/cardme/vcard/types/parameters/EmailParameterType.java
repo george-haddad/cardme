@@ -58,8 +58,9 @@ public enum EmailParameterType {
 	TYPE("TYPE", "type"),
 	NON_STANDARD("NON_STANDARD","Non-Standard");
 	
-	private String type;
-	private String desc;
+	private final String type;
+	private final String desc;
+	
 	EmailParameterType(String t, String d) {
 		type = t;
 		desc = d;
@@ -78,13 +79,5 @@ public enum EmailParameterType {
 	public VCardType getParentType()
 	{
 		return VCardType.EMAIL;
-	}
-	
-	public void setType(String type) {
-		this.type = type.toUpperCase();
-	}
-	
-	public void setDescription(String desc) {
-		this.desc = desc;
 	}
 }

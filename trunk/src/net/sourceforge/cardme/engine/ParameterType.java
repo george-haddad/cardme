@@ -33,20 +33,28 @@ package net.sourceforge.cardme.engine;
  * @author George El-Haddad
  * <br/>
  * Nov 12, 2011
+ * <p>
+ * @author Michael Angstadt
+ * <br/>
+ * Jul 06, 2012
  *
  */
 public class ParameterType {
 
-	private String name = null;
-	private String value = null;
-	
-	public ParameterType() {
-		
-	}
+	private final String name;
+	private final String value;
 	
 	public ParameterType(String name, String value) {
-		setName(name);
-		setValue(value);
+		if(name == null) {
+			throw new NullPointerException("Parameter type name cannot be set to null.");
+		}
+		
+		if(value == null) {
+			throw new NullPointerException("Parameter type value cannot be set to null.");
+		}
+		
+		this.name = name;
+		this.value = value;
 	}
 
 	/**
@@ -60,20 +68,6 @@ public class ParameterType {
 	}
 
 	/**
-	 * <p>Sets the parameter type name.</p>
-	 *
-	 * @param name
-	 * @throws NullPointerException
-	 */
-	public void setName(String name) throws NullPointerException {
-		if(name == null) {
-			throw new NullPointerException("Parameter type name cannot be set to null.");
-		}
-		
-		this.name = new String(name);
-	}
-
-	/**
 	 * <p>Returns the parameter type value.</p>
 	 *
 	 * @return {@link String}
@@ -84,27 +78,13 @@ public class ParameterType {
 	}
 	
 	/**
-	 * <p>Sets the parameter type value.</p>
-	 *
-	 * @param value
-	 * @throws NullPointerException
-	 */
-	public void setValue(String value) throws NullPointerException {
-		if(value == null) {
-			throw new NullPointerException("Parameter type value cannot be set to null.");
-		}
-		
-		this.value = new String(value);
-	}
-	
-	/**
 	 * <p>Returns true if the name is not null.</p>
 	 *
 	 * @return boolean
 	 */
 	public boolean hasName()
 	{
-		return name != null;
+		return true;
 	}
 	
 	/**
@@ -114,7 +94,7 @@ public class ParameterType {
 	 */
 	public boolean hasValue()
 	{
-		return value != null;
+		return true;
 	}
 	
 	@Override

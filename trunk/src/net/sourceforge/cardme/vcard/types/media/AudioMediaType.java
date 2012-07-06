@@ -1,5 +1,7 @@
 package net.sourceforge.cardme.vcard.types.media;
 
+import java.lang.reflect.Field;
+
 /**
  * Copyright 2011 George El-Haddad. All rights reserved.
  * 
@@ -33,144 +35,155 @@ package net.sourceforge.cardme.vcard.types.media;
  * @author George El-Haddad
  * <br/>
  * Mar 10, 2010
+ * <p>
+ * @author Michael Angstadt
+ * <br/>
+ * Jul 06, 2012
  *
  */
-public enum AudioMediaType {
+public class AudioMediaType {
 
 	/*
 	 * IANA Registered Sound Types.
 	 * Some may not have registered an extension.
 	 */
 	
-	GPP3("GPP3", "aduio/3gpp", ""),
-	GPP2("GPP2", "aduio/3gpp2", ""),
-	AC3("AC3", "aduio/ac3", "ac3"),
-	AMR("AMR", "aduio/amr", "amr"),
-	AMR_WB("AMR_WB", "aduio/amr-wb", "amr-wb"),
-	AMR_WB_PLUS("AMR_WB_PLUS", "aduio/amr-wb+", "amr-wb+"),
-	ASC("ASC", "aduio/asc", ""),
-	ATRAC_ADVANCED_LOSSLESS("ATRAC_ADVANCED_LOSSLESS", "aduio/atrac-advanced-lossless", ""),
-	ATRAC_X("ATRAC_X", "aduio/atrac-x", ""),
-	ATRAC3("ATRAC3", "aduio/atrac3", ""),
-	BASIC("BASIC", "aduio/basic", ""),
-	BV16("BV16", "aduio/bv16", ""),
-	BV32("BV32", "aduio/bv32", ""),
-	CLEARMODE("CLEARMODE", "aduio/clearmode", ""),
-	CN("CN", "aduio/cn", ""),
-	DAT12("DAT12", "aduio/dat12", ""),
-	DLS("DLS", "aduio/dls", ""),
-	DSR_ES201108("DSR_ES201108", "aduio/dsr-es201108", ""),
-	DSR_ES202050("DSR_ES202050", "aduio/dsr-es202050", ""),
-	DSR_ES202211("DSR_ES202211", "aduio/dsr-es202211", ""),
-	DSR_ES202212("DSR_ES202212", "aduio/dsr-es202212", ""),
-	EAC3("EAC3", "aduio/eac3", "eac3"),
-	DVI4("DVI4", "aduio/dvi4", ""),
-	EVRC("EVRC", "aduio/evrc", ""),
-	EVRC0("EVRC0", "aduio/evrc0", ""),
-	EVRC1("EVRC1", "aduio/evrc1", ""),
-	EVRCB("EVRCB", "aduio/evrcb", ""),
-	EVRCB0("EVRCB0", "aduio/evrcb0", ""),
-	EVRCB1("EVRCB1", "aduio/evrcb1", ""),
-	EVRC_QCP("EVRC_QCP", "aduio/evrc-qcp", ""),
-	EVRCWB("EVRCWB", "aduio/evrcwb", ""),
-	EVRCWB0("EVRCWB0", "aduio/evrcwb0", ""),
-	EVRCWB1("EVRCWB1", "aduio/evrcwb1", ""),
-	G719("G719", "aduio/g719", ""),
-	G722("G722", "aduio/g722", ""),
-	G7221("G7221", "aduio/g7221", ""),
-	G723("G723", "aduio/g723", ""),
-	G726_16("G726_16", "aduio/g726-16", ""),
-	G726_24("G726_24", "aduio/g726-24", ""),
-	G726_32("G726_32", "aduio/g726-32", ""),
-	G726_40("G726_40", "aduio/g726-40", ""),
-	G728("G728", "aduio/g728", ""),
-	G729("G729", "aduio/g729", ""),
-	G7291("G7291", "aduio/g7291", ""),
-	G729D("G729D", "aduio/g729d", ""),
-	G729E("G729E", "aduio/g729e", ""),
-	GSM("GSM", "aduio/gsm", ""),
-	GSM_EFR("GSM_EFR", "aduio/gsm-efr", ""),
-	ILBC("ILBC", "aduio/ilbc", ""),
-	L8("L8", "aduio/l8", ""),
-	L16("L16", "aduio/l16", ""),
-	L20("L20", "aduio/l20", ""),
-	L24("L24", "aduio/l24", ""),
-	LPC("LPC", "aduio/lpc", ""),
-	MOBILE_XMF("MOBILE_XMF", "aduio/mobile-xmf", ""),
-	MPA("MPA", "aduio/mpa", "mpa"),
-	MP4("MP4", "aduio/mp4", "mp4"),
-	MP4A_LATM("MP$_LATM", "aduio/mp4-latm", ""),
-	MPA_ROBUST("MPA_ROBUST", "aduio/mpa-robust", ""),
-	MPEG("MPEG", "aduio/mpeg", "mpeg"),
-	MPEG4_GENERIC("MPEG4_GENERIC", "aduio/mpeg4-generic", "mpeg"),
-	OGG("OGG", "aduio/ogg", "ogg"),
-	PARITYFEC_1D_INT("PARITYFEC_1D_INT", "audio/1d-interleaved-parityfec", ""),
-	PARITYFEC("PARITYFEC", "aduio/parityfec", ""),
-	PCMA("PCMA", "aduio/pcma", ""),
-	PCMA_WB("PCMA_WB", "aduio/pcma-wb", ""),
-	PCMU("PCMU", "aduio/pcmu", ""),
-	PCMU_WB("PCMU_WB", "aduio/pcmu-wb", ""),
-	PRS_SID("PRS_SID", "aduio/prs.sid", "sid"),
-	QCELP("QCELP", "aduio/qcelp", ""),
-	RED("RED", "aduio/red", ""),
-	RTP_MIDI("RTP_MIDI", "aduio/rtp-midi", ""),
-	RTX("RTX", "aduio/rtx", ""),
-	SMV("SMV", "aduio/smv", ""),
-	SMV0("SMV0", "aduio/smv0", ""),
-	SMV_QCP("SMV_QCP", "aduio/smv-qcp", ""),
-	SPEEX("SPEEX", "aduio/speex", ""),
-	T140C("T140C", "aduio/t140c", ""),
-	T38("T38", "aduio/t38", ""),
-	TELEPHONE_EVENT("TELEPHONE_EVENT", "aduio/telephone-event", ""),
-	TONE("TONE", "aduio/tone", ""),
-	UEMCLIP("UEMCLIP", "aduio/uemclip", ""),
-	ULPFEC("ULPFEC", "aduio/ulpfec", ""),
-	VDVI("VDVI", "aduio/vdvi", ""),
-	VMR_WB("VMR_WB", "aduio/vmr-wb", ""),
-	VORBIS("VORBIS", "aduio/vorbis", ""),
-	VORBIS_CONFIG("VORBIS_CONFIG", "aduio/vorbis-config", ""),
-	RTP_ENC_AESCM128("RTP_ENC_AESCM128", "aduio/rtp-enc-aescm128", ""),
-	SP_MIDI("SP_MIDI", "aduio/sp-midi ", "mid"),
-	GPP3_IUFP("GPP3_IUFP", "aduio/vnd.3gpp.iufp", ""),
-	SB4("SB4", "aduio/vnd.4sb", ""),
-	AUDIOKOZ("AUDIOKOZ", "aduio/vnd.audiokoz", "koz"),
-	CELP("CELP", "aduio/vnd.CELP", ""),
-	NSE("NSE", "aduio/vnd.cisco.com", ""),
-	CMLES_RADIO_EVENTS("CMLES_RADIO_EVENTS", "aduio/vnd.cmles.radio-events", ""),
-	CNS_ANP1("CNS_ANP1", "aduio/vnd.cns.anp1", ""),
-	CND_INF1("CNS_INF1", "aduio/vnd.cns.inf1", ""),
-	EOL("EOL", "aduio/vnd.digital-winds", "eol"),
-	DLNA_ADTS("DLNA_ADTS", "aduio/vnd.dlna.adts", ""),
-	HEAAC1("HEAAC1", "aduio/vnd.dolby.heaac.1", ""),
-	HEAAC2("HEAAC2", "aduio/vnd.dolby.heaac.2", ""),
-	MPL("MPL", "aduio/vnd.dolby.mlp", "mpl"),
-	MPS("MPS", "aduio/vnd.dolby.mps", ""),
-	PL2("PL2", "aduio/vnd.dolby.pl2", ""),
-	PL2X("PL2X", "aduio/vnd.dolby.pl2x", ""),
-	PL2Z("PL2Z", "aduio/vnd.dolby.pl2z", ""),
-	PULSE_1("PULSE_1", "aduio/vnd.dolby.pulse.1", ""),
-	DRA("DRA", "aduio/vnd.dra", ""),
-	DTS("DTS", "aduio/vnd.dts", "WAV"),				//wav, cpt, dts
-	DTSHD("DTSHD", "aduio/vnd.dts.hd", "dtshd"),
-	PLJ("PLJ", "aduio/vnd.everad.plj", "plj"),
-	AUDIO("AUDIO", "aduio/vnd.hns.audio", "rm"),
-	VOICE("LVP", "aduio/vnd.lucent.voice", "lvp"),
-	PYA("PYA", "aduio/vnd.ms-playready.media.pya", "pya"),
-	MXMF("MXMF", "aduio/vnd.nokia.mobile-xmf", "mxmf"),
-	VBK("VBK", "aduio/vnd.nortel.vbk", "vbk"),
-	ECELP4800("ECELP4800", "aduio/vnd.nuera.ecelp4800", "ecelp4800"),
-	ECELP7470("ECELP7470", "aduio/vnd.nuera.ecelp7470", "ecelp7470"),
-	ECELP9600("ECELP9600", "aduio/vnd.nuera.ecelp9600", "ecelp9600"),
-	SBC("SBC", "aduio/vnd.octel.sbc", ""),
-	KADPCM32("KADPCM32", "aduio/vnd.rhetorex.32kadpcm", ""),
-	SMP3("SMP3", "aduio/vnd.sealedmedia.softseal.mpeg", "smp3"),	//smp3, smp, s1m
-	CVSD("CVSD", "aduio/vnd.vmx.cvsd", ""),
-	NON_STANDARD("NON_STANDARD","","");
+	public static final AudioMediaType GPP3 = new AudioMediaType("GPP3", "audio/3gpp", "");
+	public static final AudioMediaType GPP2 = new AudioMediaType("GPP2", "audio/3gpp2", "");
+	public static final AudioMediaType AC3 = new AudioMediaType("AC3", "audio/ac3", "ac3");
+	public static final AudioMediaType AMR = new AudioMediaType("AMR", "audio/amr", "amr");
+	public static final AudioMediaType AMR_WB = new AudioMediaType("AMR_WB", "audio/amr-wb", "amr-wb");
+	public static final AudioMediaType AMR_WB_PLUS = new AudioMediaType("AMR_WB_PLUS", "audio/amr-wb+", "amr-wb+");
+	public static final AudioMediaType ASC = new AudioMediaType("ASC", "audio/asc", "");
+	public static final AudioMediaType ATRAC_ADVANCED_LOSSLESS = new AudioMediaType("ATRAC_ADVANCED_LOSSLESS", "audio/atrac-advanced-lossless", "");
+	public static final AudioMediaType ATRAC_X = new AudioMediaType("ATRAC_X", "audio/atrac-x", "");
+	public static final AudioMediaType ATRAC3 = new AudioMediaType("ATRAC3", "audio/atrac3", "");
+	public static final AudioMediaType BASIC = new AudioMediaType("BASIC", "audio/basic", "");
+	public static final AudioMediaType BV16 = new AudioMediaType("BV16", "audio/bv16", "");
+	public static final AudioMediaType BV32 = new AudioMediaType("BV32", "audio/bv32", "");
+	public static final AudioMediaType CLEARMODE = new AudioMediaType("CLEARMODE", "audio/clearmode", "");
+	public static final AudioMediaType CN = new AudioMediaType("CN", "audio/cn", "");
+	public static final AudioMediaType DAT12 = new AudioMediaType("DAT12", "audio/dat12", "");
+	public static final AudioMediaType DLS = new AudioMediaType("DLS", "audio/dls", "");
+	public static final AudioMediaType DSR_ES201108 = new AudioMediaType("DSR_ES201108", "audio/dsr-es201108", "");
+	public static final AudioMediaType DSR_ES202050 = new AudioMediaType("DSR_ES202050", "audio/dsr-es202050", "");
+	public static final AudioMediaType DSR_ES202211 = new AudioMediaType("DSR_ES202211", "audio/dsr-es202211", "");
+	public static final AudioMediaType DSR_ES202212 = new AudioMediaType("DSR_ES202212", "audio/dsr-es202212", "");
+	public static final AudioMediaType EAC3 = new AudioMediaType("EAC3", "audio/eac3", "eac3");
+	public static final AudioMediaType DVI4 = new AudioMediaType("DVI4", "audio/dvi4", "");
+	public static final AudioMediaType EVRC = new AudioMediaType("EVRC", "audio/evrc", "");
+	public static final AudioMediaType EVRC0 = new AudioMediaType("EVRC0", "audio/evrc0", "");
+	public static final AudioMediaType EVRC1 = new AudioMediaType("EVRC1", "audio/evrc1", "");
+	public static final AudioMediaType EVRCB = new AudioMediaType("EVRCB", "audio/evrcb", "");
+	public static final AudioMediaType EVRCB0 = new AudioMediaType("EVRCB0", "audio/evrcb0", "");
+	public static final AudioMediaType EVRCB1 = new AudioMediaType("EVRCB1", "audio/evrcb1", "");
+	public static final AudioMediaType EVRC_QCP = new AudioMediaType("EVRC_QCP", "audio/evrc-qcp", "");
+	public static final AudioMediaType EVRCWB = new AudioMediaType("EVRCWB", "audio/evrcwb", "");
+	public static final AudioMediaType EVRCWB0 = new AudioMediaType("EVRCWB0", "audio/evrcwb0", "");
+	public static final AudioMediaType EVRCWB1 = new AudioMediaType("EVRCWB1", "audio/evrcwb1", "");
+	public static final AudioMediaType G719 = new AudioMediaType("G719", "audio/g719", "");
+	public static final AudioMediaType G722 = new AudioMediaType("G722", "audio/g722", "");
+	public static final AudioMediaType G7221 = new AudioMediaType("G7221", "audio/g7221", "");
+	public static final AudioMediaType G723 = new AudioMediaType("G723", "audio/g723", "");
+	public static final AudioMediaType G726_16 = new AudioMediaType("G726_16", "audio/g726-16", "");
+	public static final AudioMediaType G726_24 = new AudioMediaType("G726_24", "audio/g726-24", "");
+	public static final AudioMediaType G726_32 = new AudioMediaType("G726_32", "audio/g726-32", "");
+	public static final AudioMediaType G726_40 = new AudioMediaType("G726_40", "audio/g726-40", "");
+	public static final AudioMediaType G728 = new AudioMediaType("G728", "audio/g728", "");
+	public static final AudioMediaType G729 = new AudioMediaType("G729", "audio/g729", "");
+	public static final AudioMediaType G7291 = new AudioMediaType("G7291", "audio/g7291", "");
+	public static final AudioMediaType G729D = new AudioMediaType("G729D", "audio/g729d", "");
+	public static final AudioMediaType G729E = new AudioMediaType("G729E", "audio/g729e", "");
+	public static final AudioMediaType GSM = new AudioMediaType("GSM", "audio/gsm", "");
+	public static final AudioMediaType GSM_EFR = new AudioMediaType("GSM_EFR", "audio/gsm-efr", "");
+	public static final AudioMediaType ILBC = new AudioMediaType("ILBC", "audio/ilbc", "");
+	public static final AudioMediaType L8 = new AudioMediaType("L8", "audio/l8", "");
+	public static final AudioMediaType L16 = new AudioMediaType("L16", "audio/l16", "");
+	public static final AudioMediaType L20 = new AudioMediaType("L20", "audio/l20", "");
+	public static final AudioMediaType L24 = new AudioMediaType("L24", "audio/l24", "");
+	public static final AudioMediaType LPC = new AudioMediaType("LPC", "audio/lpc", "");
+	public static final AudioMediaType MOBILE_XMF = new AudioMediaType("MOBILE_XMF", "audio/mobile-xmf", "");
+	public static final AudioMediaType MPA = new AudioMediaType("MPA", "audio/mpa", "mpa");
+	public static final AudioMediaType MP4 = new AudioMediaType("MP4", "audio/mp4", "mp4");
+	public static final AudioMediaType MP4A_LATM = new AudioMediaType("MP$_LATM", "audio/mp4-latm", "");
+	public static final AudioMediaType MPA_ROBUST = new AudioMediaType("MPA_ROBUST", "audio/mpa-robust", "");
+	public static final AudioMediaType MPEG = new AudioMediaType("MPEG", "audio/mpeg", "mpeg");
+	public static final AudioMediaType MPEG4_GENERIC = new AudioMediaType("MPEG4_GENERIC", "audio/mpeg4-generic", "mpeg");
+	public static final AudioMediaType OGG = new AudioMediaType("OGG", "audio/ogg", "ogg");
+	public static final AudioMediaType PARITYFEC_1D_INT = new AudioMediaType("PARITYFEC_1D_INT", "audio/1d-interleaved-parityfec", "");
+	public static final AudioMediaType PARITYFEC = new AudioMediaType("PARITYFEC", "audio/parityfec", "");
+	public static final AudioMediaType PCMA = new AudioMediaType("PCMA", "audio/pcma", "");
+	public static final AudioMediaType PCMA_WB = new AudioMediaType("PCMA_WB", "audio/pcma-wb", "");
+	public static final AudioMediaType PCMU = new AudioMediaType("PCMU", "audio/pcmu", "");
+	public static final AudioMediaType PCMU_WB = new AudioMediaType("PCMU_WB", "audio/pcmu-wb", "");
+	public static final AudioMediaType PRS_SID = new AudioMediaType("PRS_SID", "audio/prs.sid", "sid");
+	public static final AudioMediaType QCELP = new AudioMediaType("QCELP", "audio/qcelp", "");
+	public static final AudioMediaType RED = new AudioMediaType("RED", "audio/red", "");
+	public static final AudioMediaType RTP_MIDI = new AudioMediaType("RTP_MIDI", "audio/rtp-midi", "");
+	public static final AudioMediaType RTX = new AudioMediaType("RTX", "audio/rtx", "");
+	public static final AudioMediaType SMV = new AudioMediaType("SMV", "audio/smv", "");
+	public static final AudioMediaType SMV0 = new AudioMediaType("SMV0", "audio/smv0", "");
+	public static final AudioMediaType SMV_QCP = new AudioMediaType("SMV_QCP", "audio/smv-qcp", "");
+	public static final AudioMediaType SPEEX = new AudioMediaType("SPEEX", "audio/speex", "");
+	public static final AudioMediaType T140C = new AudioMediaType("T140C", "audio/t140c", "");
+	public static final AudioMediaType T38 = new AudioMediaType("T38", "audio/t38", "");
+	public static final AudioMediaType TELEPHONE_EVENT = new AudioMediaType("TELEPHONE_EVENT", "audio/telephone-event", "");
+	public static final AudioMediaType TONE = new AudioMediaType("TONE", "audio/tone", "");
+	public static final AudioMediaType UEMCLIP = new AudioMediaType("UEMCLIP", "audio/uemclip", "");
+	public static final AudioMediaType ULPFEC = new AudioMediaType("ULPFEC", "audio/ulpfec", "");
+	public static final AudioMediaType VDVI = new AudioMediaType("VDVI", "audio/vdvi", "");
+	public static final AudioMediaType VMR_WB = new AudioMediaType("VMR_WB", "audio/vmr-wb", "");
+	public static final AudioMediaType VORBIS = new AudioMediaType("VORBIS", "audio/vorbis", "");
+	public static final AudioMediaType VORBIS_CONFIG = new AudioMediaType("VORBIS_CONFIG", "audio/vorbis-config", "");
+	public static final AudioMediaType RTP_ENC_AESCM128 = new AudioMediaType("RTP_ENC_AESCM128", "audio/rtp-enc-aescm128", "");
+	public static final AudioMediaType SP_MIDI = new AudioMediaType("SP_MIDI", "audio/sp-midi ", "mid");
+	public static final AudioMediaType GPP3_IUFP = new AudioMediaType("GPP3_IUFP", "audio/vnd.3gpp.iufp", "");
+	public static final AudioMediaType SB4 = new AudioMediaType("SB4", "audio/vnd.4sb", "");
+	public static final AudioMediaType AUDIOKOZ = new AudioMediaType("AUDIOKOZ", "audio/vnd.audiokoz", "koz");
+	public static final AudioMediaType CELP = new AudioMediaType("CELP", "audio/vnd.CELP", "");
+	public static final AudioMediaType NSE = new AudioMediaType("NSE", "audio/vnd.cisco.com", "");
+	public static final AudioMediaType CMLES_RADIO_EVENTS = new AudioMediaType("CMLES_RADIO_EVENTS", "audio/vnd.cmles.radio-events", "");
+	public static final AudioMediaType CNS_ANP1 = new AudioMediaType("CNS_ANP1", "audio/vnd.cns.anp1", "");
+	public static final AudioMediaType CND_INF1 = new AudioMediaType("CNS_INF1", "audio/vnd.cns.inf1", "");
+	public static final AudioMediaType EOL = new AudioMediaType("EOL", "audio/vnd.digital-winds", "eol");
+	public static final AudioMediaType DLNA_ADTS = new AudioMediaType("DLNA_ADTS", "audio/vnd.dlna.adts", "");
+	public static final AudioMediaType HEAAC1 = new AudioMediaType("HEAAC1", "audio/vnd.dolby.heaac.1", "");
+	public static final AudioMediaType HEAAC2 = new AudioMediaType("HEAAC2", "audio/vnd.dolby.heaac.2", "");
+	public static final AudioMediaType MPL = new AudioMediaType("MPL", "audio/vnd.dolby.mlp", "mpl");
+	public static final AudioMediaType MPS = new AudioMediaType("MPS", "audio/vnd.dolby.mps", "");
+	public static final AudioMediaType PL2 = new AudioMediaType("PL2", "audio/vnd.dolby.pl2", "");
+	public static final AudioMediaType PL2X = new AudioMediaType("PL2X", "audio/vnd.dolby.pl2x", "");
+	public static final AudioMediaType PL2Z = new AudioMediaType("PL2Z", "audio/vnd.dolby.pl2z", "");
+	public static final AudioMediaType PULSE_1 = new AudioMediaType("PULSE_1", "audio/vnd.dolby.pulse.1", "");
+	public static final AudioMediaType DRA = new AudioMediaType("DRA", "audio/vnd.dra", "");
+	public static final AudioMediaType DTS = new AudioMediaType("DTS", "audio/vnd.dts", "WAV");				//wav, cpt, dts
+	public static final AudioMediaType DTSHD = new AudioMediaType("DTSHD", "audio/vnd.dts.hd", "dtshd");
+	public static final AudioMediaType PLJ = new AudioMediaType("PLJ", "audio/vnd.everad.plj", "plj");
+	public static final AudioMediaType AUDIO = new AudioMediaType("AUDIO", "audio/vnd.hns.audio", "rm");
+	public static final AudioMediaType VOICE = new AudioMediaType("LVP", "audio/vnd.lucent.voice", "lvp");
+	public static final AudioMediaType PYA = new AudioMediaType("PYA", "audio/vnd.ms-playready.media.pya", "pya");
+	public static final AudioMediaType MXMF = new AudioMediaType("MXMF", "audio/vnd.nokia.mobile-xmf", "mxmf");
+	public static final AudioMediaType VBK = new AudioMediaType("VBK", "audio/vnd.nortel.vbk", "vbk");
+	public static final AudioMediaType ECELP4800 = new AudioMediaType("ECELP4800", "audio/vnd.nuera.ecelp4800", "ecelp4800");
+	public static final AudioMediaType ECELP7470 = new AudioMediaType("ECELP7470", "audio/vnd.nuera.ecelp7470", "ecelp7470");
+	public static final AudioMediaType ECELP9600 = new AudioMediaType("ECELP9600", "audio/vnd.nuera.ecelp9600", "ecelp9600");
+	public static final AudioMediaType SBC = new AudioMediaType("SBC", "audio/vnd.octel.sbc", "");
+	public static final AudioMediaType KADPCM32 = new AudioMediaType("KADPCM32", "audio/vnd.rhetorex.32kadpcm", "");
+	public static final AudioMediaType SMP3 = new AudioMediaType("SMP3", "audio/vnd.sealedmedia.softseal.mpeg", "smp3");	//smp3, smp, s1m
+	public static final AudioMediaType CVSD = new AudioMediaType("CVSD", "audio/vnd.vmx.cvsd", "");
 	
-	private String typeName;
-	private String ianaRegisteredName;
-	private String extension;
-	AudioMediaType(String _typeName, String _ianaRegisteredName, String _extension) {
+	private final String typeName;
+	private final String ianaRegisteredName;
+	private final String extension;
+	
+	/**
+	 * Use of this constructor is discouraged. Please use one of the predefined
+	 * static objects.
+	 * @param _typeName the type name (e.g. "MPEG")
+	 * @param _ianaRegisteredName the IANA registered name (e.g. "audio/mpeg")
+	 * @param _extension the file extension used for this type (e.g. "mpeg")
+	 */
+	public AudioMediaType(String _typeName, String _ianaRegisteredName, String _extension) {
 		typeName = _typeName;
 		ianaRegisteredName = _ianaRegisteredName;
 		extension = _extension;
@@ -191,22 +204,31 @@ public enum AudioMediaType {
 		return extension;
 	}
 	
-	public void setTypeName(String typeName) {
-		this.typeName = typeName;
-	}
-	
-	public void setIanaRegisteredName(String ianaRegisteredName) {
-		this.ianaRegisteredName = ianaRegisteredName;
-	}
-	
-	public void setExtension(String extension) {
-		this.extension = extension;
-	}
-	
 	@Override
 	public String toString()
 	{
-
 		return typeName;
+	}
+	
+	/**
+	 * Retrieves one of the static objects in this class by name.
+	 * @param typeName the type name (e.g. "MPEG")
+	 * @return the object associated with the given type name or null if none was found
+	 */
+	public static AudioMediaType valueOf(String typeName)
+	{
+		typeName = typeName.replaceAll("-", "_").toUpperCase();
+		try {
+			Field f = AudioMediaType.class.getField(typeName);
+			Object obj = f.get(null);
+			if (obj instanceof AudioMediaType) {
+				return (AudioMediaType)obj;
+			}
+		}
+		catch (Exception ex) {
+			//static field not found
+		}
+		
+		return null;
 	}
 }

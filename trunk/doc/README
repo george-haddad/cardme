@@ -12,10 +12,34 @@ We want to be the best VCard library on the net, so if there is a bug or a new f
 
 -------------------
 
-Card Me Version 0.3.4.02
+Card Me Version 0.3.5
 
 BUG[3538443]
 Photo not showing when using compatibility mode MAC_ADDRESS_BOOK.
+
+PATCH[3540604]
+Fixes with splitting strings.
+
+PATCH[3540601]
+Rectifies error-prone usage of Enums.
+
+PATCH[3540602]
+Fix potential index out of bounds error.
+
+PATCH[3540603]
+Fix extended parameter type bug.
+
+PATCH[3540606]
+Refactoring usage of "VCardUtils.needsUnEscaping()"
+
+PATCH[3540605]
+Refactoring of trimming ParameterType names/values.
+
+PATCH[3540607]
+Miscellaneous refactoring in "VCardEngine" class.
+
+PATCH[3540608]
+Enhanced test case for VCardUtilsTest.testParseStringWithEscappedDelimiter()
 
 George El-Haddad
 Project Leader
@@ -24,6 +48,9 @@ Michael Rimov
 Maven Integration Contributor
 
 Hector Guilarte
+Developer
+
+Michael Angstadt
 Developer
 
 

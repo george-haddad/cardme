@@ -167,6 +167,10 @@ public final class VCardUtils {
 	 */
 	public static String unescapeString(String text)
 	{
+		if (!needsUnEscaping(text)){
+			return text;
+		}
+		
 		String unescaped = text.replaceAll("\\\\n", "\n");
 		unescaped = unescaped.replaceAll("\\\\r", "\r");
 		unescaped = unescaped.replaceAll("\\\\N", "\n");

@@ -1,5 +1,7 @@
 package net.sourceforge.cardme.vcard.types.media;
 
+import java.lang.reflect.Field;
+
 /**
  * Copyright 2011 George El-Haddad. All rights reserved.
  * 
@@ -33,20 +35,32 @@ package net.sourceforge.cardme.vcard.types.media;
  * @author George El-Haddad
  * <br/>
  * Mar 10, 2010
+ * <p>
+ * @author Michael Angstadt
+ * <br/>
+ * Jul 06, 2012
  *
  */
-public enum KeyTextType {
+public class KeyTextType {
 
-	PGP("PGP", "PGP", "pgp"),
-	GPG("GPG", "GPG", "gpg"),
-	X509("X509", "X509", ""),
-	B("B", "B", ""),
-	NON_STANDARD("NON_STANDARD","","");
+	public static final KeyTextType PGP = new KeyTextType("PGP", "PGP", "pgp");
+	public static final KeyTextType GPG = new KeyTextType("GPG", "GPG", "gpg");
+	public static final KeyTextType X509 = new KeyTextType("X509", "X509", "");
+	public static final KeyTextType B = new KeyTextType("B", "B", "");
+
+	private final String typeName;
+	private final String ianaRegisteredName;
+	private final String extension;
 	
-	private String typeName;
-	private String ianaRegisteredName;
-	private String extension;
-	KeyTextType(String _typeName, String _ianaRegisteredName, String _extension) {
+	/**
+	 * Use of this constructor is discouraged. Please use one of the predefined
+	 * static objects.
+	 * @param _typeName the type name (e.g. "PGP")
+	 * @param _ianaRegisteredName the IANA registered name (e.g. "PGP")
+	 * @param _extension the file extension used for this type (e.g. "pgp")
+	 */
+	public KeyTextType(String _typeName, String _ianaRegisteredName, String _extension)
+	{
 		typeName = _typeName;
 		ianaRegisteredName = _ianaRegisteredName;
 		extension = _extension;
@@ -67,22 +81,31 @@ public enum KeyTextType {
 		return extension;
 	}
 	
-	public void setTypeName(String typeName) {
-		this.typeName = typeName;
-	}
-	
-	public void setIanaRegisteredName(String ianaRegisteredName) {
-		this.ianaRegisteredName = ianaRegisteredName;
-	}
-	
-	public void setExtension(String extension) {
-		this.extension = extension;
-	}
-	
 	@Override
 	public String toString()
 	{
-
 		return typeName;
+	}
+	
+	/**
+	 * Retrieves one of the static objects in this class by name.
+	 * @param typeName the type name (e.g. "PGP")
+	 * @return the object associated with the given type name or null if none was found
+	 */
+	public static KeyTextType valueOf(String typeName)
+	{
+		typeName = typeName.replaceAll("-", "_").toUpperCase();
+		try {
+			Field f = KeyTextType.class.getField(typeName);
+			Object obj = f.get(null);
+			if (obj instanceof KeyTextType) {
+				return (KeyTextType)obj;
+			}
+		}
+		catch (Exception ex) {
+			//static field not found
+		}
+		
+		return null;
 	}
 }
