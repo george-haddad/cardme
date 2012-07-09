@@ -366,10 +366,6 @@ public class TestVCard {
 	
 	@Test
 	public void testHashcode() throws Exception {
-		
-		//FIXME for some reason this test fails
-		//3 in 30 times, or 1 in 10 times.
-		
 		VCard vcardCopy = getFullVCardNoErrors();
 		
 		int h1 = vcardFull.hashCode();
@@ -507,7 +503,13 @@ public class TestVCard {
 		birthday.set(Calendar.DAY_OF_MONTH, 21);
 		vcard.setBirthday(new BirthdayType(birthday));
 
-		vcard.setRevision(new RevisionType(Calendar.getInstance()));
+		Calendar revision = Calendar.getInstance();
+		revision.clear();
+		revision.set(Calendar.YEAR, 2012);
+		revision.set(Calendar.MONTH, 6);
+		revision.set(Calendar.DAY_OF_MONTH, 8);
+		vcard.setRevision(new RevisionType(revision));
+		
 		vcard.setTimeZone(new TimeZoneType(Calendar.getInstance().getTimeZone()));
 		
 		AddressFeature address1 = new AddressType();
