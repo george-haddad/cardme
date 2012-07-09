@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
-import java.util.TimeZone;
 
 import net.sourceforge.cardme.io.CompatibilityMode;
 import net.sourceforge.cardme.util.Base64Wrapper;
@@ -2050,15 +2049,31 @@ public class VCardEngine {
 				//VALUE=TEXT
 				//-05:00; EST; Raleigh/North America
 				String paramValue = paramTypes.substring(paramTypes.indexOf('=')+1);
+				
 				if(paramValue.compareToIgnoreCase("TEXT") == 0) {
-					timeZoneFeature.setTextValue(value);
+					String split[] = VCardUtils.parseStringWithEscappedDelimiter(value, ';');
+					int cur = 0;
+					
+					if (split.length > cur && split[cur].length() > 0){
+						timeZoneFeature.parseTimeZoneOffset(VCardUtils.unescapeString(split[cur]));
+					}
+					
+					cur++;
+					if (split.length > cur && split[cur].length() > 0){
+						timeZoneFeature.setShortText(VCardUtils.unescapeString(split[cur]));
+					}
+					
+					cur++;
+					if (split.length > cur && split[cur].length() > 0){
+						timeZoneFeature.setLongText(VCardUtils.unescapeString(split[cur]));
+					}
 				}
 				else {
-					setTzType(timeZoneFeature, value);
+					timeZoneFeature.parseTimeZoneOffset(value);
 				}
 			}
 			else {
-				setTzType(timeZoneFeature, value);
+				timeZoneFeature.parseTimeZoneOffset(value);
 			}
 			
 			if(group != null) {
@@ -2069,81 +2084,6 @@ public class VCardEngine {
 		}
 		catch(Exception ex) {
 			throw new VCardBuildException("TimeZoneType ("+VCardType.TZ.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
-		}
-	}
-	
-	/**
-	 * <p>Helper method for the above.</p>
-	 *
-	 * @param timeZoneType
-	 * @param value
-	 * @throws VCardBuildException
-	 */
-	private void setTzType(TimeZoneType timeZoneType, String value) throws VCardBuildException {
-		if(value.matches(ISOUtils.ISO8601_TIMEZONE_BASIC_REGEX)) {
-			//-500 or -0500
-			if(value.startsWith("-")) {
-				String hour = null;
-				String minute = null;
-				if(value.length() == 4) {
-					hour = value.substring(0, 2);
-					minute = value.substring(2);
-				}
-				else if(value.length() == 5) {
-					hour = value.substring(0, 3);
-					minute = value.substring(3);
-				}
-				else {
-					throw new VCardBuildException("TimeZoneType ("+VCardType.TZ.getType()+") Timezone value is not a valid ISO-8601 text.");
-				}
-					
-				int offsetMillis = Integer.parseInt(hour) + (Integer.parseInt(minute) / 10);
-				offsetMillis = (((offsetMillis * 60) * 60) * 1000);
-				
-				TimeZone tz = TimeZone.getDefault();
-				tz.setRawOffset(offsetMillis);
-				timeZoneType.setTimeZone(tz);
-				
-			}
-			else {
-				//500 or 0500
-				String hour = null;
-				String minute = null;
-				if(value.length() == 3) {
-					hour = value.substring(0, 1);
-					minute = value.substring(1);
-				}
-				else if(value.length() == 4) {
-					hour = value.substring(0, 2);
-					minute = value.substring(2);
-				}
-				else {
-					throw new VCardBuildException("TimeZoneType ("+VCardType.TZ.getType()+") Timezone value is not a valid ISO-8601 text.");
-				}
-				
-				int offsetMillis = Integer.parseInt(hour) + (Integer.parseInt(minute) / 10);
-				offsetMillis = (((offsetMillis * 60) * 60) * 1000);
-				
-				TimeZone tz = TimeZone.getDefault();
-				tz.setRawOffset(offsetMillis);
-				timeZoneType.setTimeZone(tz);
-			}
-		}
-		else if(value.matches(ISOUtils.ISO8601_TIMEZONE_EXTENDED_REGEX)) {
-			//-5:00 or -05:00 or 5:00 or 05:00
-			String[] split = value.split(":");
-			String hour = split[0];
-			String minute = split[1];
-			
-			int offsetMillis = Integer.parseInt(hour) + (Integer.parseInt(minute) / 10);
-			offsetMillis = (((offsetMillis * 60) * 60) * 1000);
-			
-			TimeZone tz = TimeZone.getDefault();
-			tz.setRawOffset(offsetMillis);
-			timeZoneType.setTimeZone(tz);
-		}
-		else {
-			throw new VCardBuildException("TimeZoneType ("+VCardType.TZ.getType()+") Timezone value is not a valid ISO-8601 text.");
 		}
 	}
 	
@@ -2449,7 +2389,6 @@ public class VCardEngine {
 			String[] orgs = VCardUtils.parseStringWithEscappedDelimiter(value, ';');
 			for(int i = 0; i < orgs.length; i++) {
 				if(VCardUtils.needsUnEscaping(orgs[i])) {
-					//TODO may not need the !SEMI!
 					String unesc = VCardUtils.unescapeString(orgs[i]);
 					organizationFeature.addOrganization(unesc);
 				}

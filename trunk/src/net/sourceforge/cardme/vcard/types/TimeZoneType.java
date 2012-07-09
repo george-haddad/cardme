@@ -1,5 +1,10 @@
 package net.sourceforge.cardme.vcard.types;
 
+import java.util.SimpleTimeZone;
+import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import net.sourceforge.cardme.util.ISOFormat;
 import net.sourceforge.cardme.util.ISOUtils;
 import net.sourceforge.cardme.util.Util;
@@ -8,7 +13,6 @@ import net.sourceforge.cardme.vcard.VCardType;
 import net.sourceforge.cardme.vcard.features.TimeZoneFeature;
 import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
 import net.sourceforge.cardme.vcard.types.parameters.TimeZoneParameterType;
-import java.util.TimeZone;
 
 /**
  * Copyright 2011 George El-Haddad. All rights reserved.
@@ -43,16 +47,21 @@ import java.util.TimeZone;
  * @author George El-Haddad
  * <br/>
  * Feb 4, 2010
+ * <p>
+ * @author Michael Angstadt
+ * <br/>
+ * Jul 06, 2012
  *
  */
 public class TimeZoneType extends Type implements TimeZoneFeature {
 
-	private static final long serialVersionUID = -6582710679559128155L;
+	private static final long serialVersionUID = 6773373072976797733L;
 	
 	private TimeZone timeZone = null;
 	private int hourOffset = 0;
 	private int minuteOffset = 0;
-	private String textValue = null;
+	private String shortText;
+	private String longText;
 	private TimeZoneParameterType timeZoneParameterType = null;
 	
 	public TimeZoneType() {
@@ -60,19 +69,21 @@ public class TimeZoneType extends Type implements TimeZoneFeature {
 	}
 	
 	public TimeZoneType(TimeZone timeZone) {
-		super(EncodingType.EIGHT_BIT, ParameterTypeStyle.PARAMETER_VALUE_LIST);
+		this();
 		setTimeZone(timeZone);
 	}
 	
 	public TimeZoneType(int hourOffset, int minuteOffset) {
-		super(EncodingType.EIGHT_BIT, ParameterTypeStyle.PARAMETER_VALUE_LIST);
-		setHourOffset(hourOffset);
-		setMinuteOffset(minuteOffset);
+		this(hourOffset, minuteOffset, null, null);
 	}
 	
-	public TimeZoneType(String textValue) {
-		super(EncodingType.EIGHT_BIT, ParameterTypeStyle.PARAMETER_VALUE_LIST);
-		setTextValue(textValue);
+	public TimeZoneType(int hourOffset, int minuteOffset, String shortText, String longText) {
+		this();
+		this.hourOffset = hourOffset;
+		this.minuteOffset = minuteOffset;
+		this.shortText = shortText;
+		this.longText = longText;
+		calculateTimeZone();
 	}
 	
 	/**
@@ -98,6 +109,22 @@ public class TimeZoneType extends Type implements TimeZoneFeature {
 	{
 		return minuteOffset;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getShortText()
+	{
+		return shortText;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getLongText()
+	{
+		return longText;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -110,23 +137,49 @@ public class TimeZoneType extends Type implements TimeZoneFeature {
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getTextValue()
-	{
-		return textValue;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public TimeZoneParameterType getTimeZoneParameterType()
 	{
 		return timeZoneParameterType;
 	}
 	
 	public void parseTimeZoneOffset(String iso8601Offset) {
-		String[] tz = iso8601Offset.split(":");
-		hourOffset = Integer.parseInt(tz[0]);
-		minuteOffset = Integer.parseInt(tz[1]);
+		Pattern p = Pattern.compile("^([-\\+])?(\\d{1,2})(:?(\\d{2}))?$");
+		Matcher m = p.matcher(iso8601Offset);
+		
+		if (!m.find()){
+			throw new IllegalArgumentException("Offset string is not in ISO8610 format: " + iso8601Offset);
+		}
+		
+		boolean positive;
+		String sign = m.group(1);
+		
+		if ("+".equals(sign)){
+			positive = true;
+		}
+		else if ("-".equals(sign)){
+			positive = false;
+		}
+		else {
+			positive = true;
+		}
+		
+		String hourStr = m.group(2);
+		hourOffset = Integer.parseInt(hourStr);
+		
+		if (!positive){
+			hourOffset *= -1;
+		}
+		
+		String minuteStr = m.group(4);
+		
+		if(minuteStr == null) {
+			minuteOffset  = 0;
+		}
+		else {
+			minuteOffset = Integer.parseInt(minuteStr);
+		}
+		
+		
 		calculateTimeZone();
 	}
 
@@ -134,6 +187,11 @@ public class TimeZoneType extends Type implements TimeZoneFeature {
 	 * {@inheritDoc}
 	 */
 	public void setTimeZone(TimeZone timeZone) {
+		int offsetMillis = timeZone.getRawOffset();
+		hourOffset = offsetMillis / 1000 / 60 / 60;
+		minuteOffset = Math.abs((offsetMillis / 1000 / 60) % 60); //minute value must be positive
+		shortText = null;
+		longText = timeZone.getDisplayName();
 		this.timeZone = timeZone;
 	}
 
@@ -156,28 +214,41 @@ public class TimeZoneType extends Type implements TimeZoneFeature {
 	 * {@inheritDoc}
 	 */
 	public void setMinuteOffset(int minuteOffset) {
+		if (minuteOffset < 0 || minuteOffset > 59){
+			throw new IllegalArgumentException("Minute offset must be a positive value between 0 and 59.");
+		}
+
 		this.minuteOffset = minuteOffset;
 		calculateTimeZone();
 	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setTextValue(String textValue) {
-		this.textValue = textValue;
-		hourOffset = 0;
-		minuteOffset = 0;
-		timeZone = null;
+	public void setShortText(String shortText){
+		this.shortText = shortText;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setLongText(String longText){
+		this.longText = longText;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * <p>Re-builds the TimeZone field based on the offset fields in this class.</p>
 	 */
 	private void calculateTimeZone() {
-		int offsetMillis = hourOffset + (minuteOffset / 10);
-		offsetMillis = (((offsetMillis * 60) * 60) * 1000);
-		timeZone.setRawOffset(offsetMillis);
-		textValue = ISOUtils.toISO8601_TimeZone(timeZone, ISOFormat.ISO8601_EXTENDED);
+		int offsetMillis = hourOffset * 1000 * 60 * 60;
+		int offsetMinuteMillis = minuteOffset * 1000 * 60;
+		
+		if (hourOffset < 0){
+			offsetMinuteMillis *= -1; //minuteOffset is always positive, so negate this if hourOffset is negative
+		}
+		
+		offsetMillis += offsetMinuteMillis;
+		timeZone = new SimpleTimeZone(offsetMillis, "");
 	}
 
 	/**
@@ -264,23 +335,15 @@ public class TimeZoneType extends Type implements TimeZoneFeature {
 	{
 		TimeZoneType cloned = new TimeZoneType();
 		
-		if(timeZone != null) {
-			TimeZone tz = TimeZone.getDefault();
-			tz.setRawOffset(timeZone.getRawOffset());
-			cloned.setTimeZone(tz);
-		}
-		else if(textValue != null) {
-			cloned.setTextValue(new String(textValue));
-		}
-		else {
-			cloned.setTextValue(null);
-			cloned.setTimeZone(null);
+		if (timeZone != null){
+			cloned.timeZone = (TimeZone)timeZone.clone();
 		}
 		
-		if(timeZoneParameterType != null) {
-			cloned.setTimeZoneParameterType(timeZoneParameterType);
-		}
-		
+		cloned.shortText = shortText;
+		cloned.longText = longText;
+		cloned.hourOffset = hourOffset;
+		cloned.minuteOffset = minuteOffset;
+		cloned.setTimeZoneParameterType(timeZoneParameterType);
 		cloned.setParameterTypeStyle(getParameterTypeStyle());
 		cloned.setEncodingType(getEncodingType());
 		cloned.setID(getID());

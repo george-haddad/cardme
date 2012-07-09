@@ -1,6 +1,7 @@
 package net.sourceforge.cardme;
 
 import net.sourceforge.cardme.io.VCardWriterTest;
+import net.sourceforge.cardme.util.ISOUtilsTest;
 import net.sourceforge.cardme.util.VCardUtilsTest;
 import net.sourceforge.cardme.vcard.types.AddressTypeTest;
 import net.sourceforge.cardme.vcard.types.AgentTypeTest;
@@ -107,7 +108,8 @@ import org.junit.runners.Suite;
 		TestVcardFieldMarshalling.class,
 		VCardUtilsTest.class,
 		VCardWriterTest.class,
-		VCardsTest.class
+		VCardsTest.class,
+		ISOUtilsTest.class
 	}
 )
 

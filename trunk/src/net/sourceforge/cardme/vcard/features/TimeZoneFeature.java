@@ -65,6 +65,20 @@ public interface TimeZoneFeature extends TypeTools {
 	public int getMinuteOffset();
 	
 	/**
+	 * <p>Returns the short text description (e.g. "EST").</p>
+	 *
+	 * @return string
+	 */
+	public String getShortText();
+	
+	/**
+	 * <p>Returns the long text description (e.g. "America/New_York").</p>
+	 *
+	 * @return string
+	 */
+	public String getLongText();
+	
+	/**
 	 * <p>Returns the time zone.</p>
 	 *
 	 * @return {@link TimeZone}
@@ -77,13 +91,6 @@ public interface TimeZoneFeature extends TypeTools {
 	 * @return {@link String}
 	 */
 	public String getIso8601Offset();
-	
-	/**
-	 * <p>Returns the time zone as a text value.</p>
-	 *
-	 * @return {@link String}
-	 */
-	public String getTextValue();
 	
 	/**
 	 * <p>Returns the parameter type.</p>
@@ -100,11 +107,25 @@ public interface TimeZoneFeature extends TypeTools {
 	public void setHourOffset(int hourOffset);
 	
 	/**
-	 * <p>Sets the minute offset.</p>
+	 * <p>Sets the minute offset.  Must be a value between 0 and 59.</p>
 	 *
 	 * @param minuteOffset
 	 */
 	public void setMinuteOffset(int minuteOffset);
+	
+	/**
+	 * <p>Sets the short text description (e.g. "EST").</p>
+	 *
+	 * @param shortText
+	 */
+	public void setShortText(String shortText);
+	
+	/**
+	 * <p>Sets the long text description (e.g. "America/New_York").</p>
+	 *
+	 * @param longText
+	 */
+	public void setLongText(String longText);
 	
 	/**
 	 * <p>Sets the time zone</p>
@@ -126,13 +147,6 @@ public interface TimeZoneFeature extends TypeTools {
 	 * @param iso8601Offset
 	 */
 	public void parseTimeZoneOffset(String iso8601Offset);
-	
-	/**
-	 * <p>Sets the time zone as a text value.</p>
-	 *
-	 * @param textValue
-	 */
-	public void setTextValue(String textValue);
 	
 	/**
 	 * <p>Returns a full copy of this object.</p>

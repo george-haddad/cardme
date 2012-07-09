@@ -1764,11 +1764,22 @@ public class VCardWriter {
 				
 				tmpSb.append(timeZoneFeature.getTypeString());
 
-				if(timeZoneFeature.getTimeZone() == null && timeZoneFeature.getTextValue() != null) {
+				if(timeZoneFeature.getShortText() != null || timeZoneFeature.getLongText() != null) {
 					tmpSb.append(";");
 					tmpSb.append(TimeZoneParameterType.VALUE.getType());
 					tmpSb.append("=TEXT:");
-					tmpSb.append(timeZoneFeature.getTextValue());
+					tmpSb.append(timeZoneFeature.getIso8601Offset());
+					tmpSb.append(';');
+					
+					if (timeZoneFeature.getShortText() != null){
+						tmpSb.append(timeZoneFeature.getShortText());
+					}
+					
+					tmpSb.append(';');
+					
+					if (timeZoneFeature.getLongText() != null){
+						tmpSb.append(timeZoneFeature.getLongText());
+					}
 				}
 				else {
 					tmpSb.append(":");

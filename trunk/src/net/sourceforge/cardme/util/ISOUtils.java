@@ -172,69 +172,29 @@ public final class ISOUtils {
 	public static String toISO8601_TimeZone(TimeZone timeZone, ISOFormat format)
 	{
 		StringBuilder sb = new StringBuilder();
-		double offset = (((timeZone.getRawOffset() / 1000) / 60) / 60);
-		String sOffset = String.valueOf(offset);
+		boolean positive = timeZone.getRawOffset() >= 0;
+		int hours = Math.abs(((timeZone.getRawOffset() / 1000) / 60) / 60);
+		int minutes = Math.abs((timeZone.getRawOffset() / 1000) / 60) % 60;
 		
-		if (sOffset.indexOf(".") != -1) {
-			int num = Integer.parseInt(sOffset.substring(sOffset.indexOf(".") + 1));
-			if (num > 4) {
-				sb.append(sOffset.substring(0, sOffset.indexOf(".")));
-				switch (format)
-				{
-					case ISO8601_BASIC:
-					{
-						sb.append("30");
-						break;
-					}
-					
-					case ISO8601_EXTENDED:
-					{
-						sb.append(":30");
-						break;
-					}
-				}
-			}
-			else {
-				sb.append(sOffset.substring(0, sOffset.indexOf(".")));
-
-				switch (format)
-				{
-					case ISO8601_BASIC:
-					{
-						sb.append("00");
-						break;
-					}
-					
-					case ISO8601_EXTENDED:
-					{
-						sb.append(":00");
-						break;
-					}
-				}
-			}
+		sb.append(positive ? '+' : '-');
+		
+		if (hours < 10){
+			sb.append('0');
 		}
-		else {
-			sb.append(sOffset);
-			
-			switch (format)
-			{
-				case ISO8601_BASIC:
-				{
-					sb.append("00");
-					break;
-				}
-				
-				case ISO8601_EXTENDED:
-				{
-					sb.append(":00");
-					break;
-				}
-			}
+		
+		sb.append(hours);
+		
+		if (format == ISOFormat.ISO8601_EXTENDED){
+			sb.append(':');
 		}
-
+		
+		if (minutes < 10){
+			sb.append('0');
+		}
+		
+		sb.append(minutes);
 		return sb.toString();
 	}
-	
 	
 	/**
 	 * <p>Pads a number with an extra zero if it is less than 10.</p>
