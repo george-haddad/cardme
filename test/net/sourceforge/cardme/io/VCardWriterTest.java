@@ -289,11 +289,12 @@ public class VCardWriterTest {
 	public void testBuildTimeZoneFeature() {
 		String vcardStr = vcardWriter.buildVCardString();
 		
-		int startIndex = vcardStr.indexOf("\r\nTZ:")+2;
+		int startIndex = vcardStr.indexOf("\r\nTZ")+2;
 		int stopIndex = vcardStr.indexOf('\n', startIndex)+1;
 		String line = vcardStr.substring(startIndex, stopIndex);
 		
-		assertTrue(line.compareTo("TZ:2:00\r\n") == 0);
+		TimeZone tz = TimeZone.getTimeZone("Asia/Beirut");
+		assertTrue(line.compareTo("TZ;VALUE=TEXT:+02:00;;" + tz.getDisplayName() + "\r\n") == 0);
 	}
 	
 	@Test
