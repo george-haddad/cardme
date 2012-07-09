@@ -41,6 +41,12 @@ Miscellaneous refactoring in "VCardEngine" class.
 PATCH[3540608]
 Enhanced test case for VCardUtilsTest.testParseStringWithEscappedDelimiter()
 
+PATCH[3541403]
+Fixed hashcode equality problem in TestVCard.
+
+BUG[3452302]
+TestVCard Test Fails 1 in 10 times.
+
 George El-Haddad
 Project Leader
 
