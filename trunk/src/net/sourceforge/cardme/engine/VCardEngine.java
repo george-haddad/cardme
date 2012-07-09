@@ -12,7 +12,6 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -386,7 +385,7 @@ public class VCardEngine {
 	
 	private List<String> enumerateVCards(String vcardString)
 	{
-		List<String> vcardStrings = new LinkedList<String>();
+		List<String> vcardStrings = new ArrayList<String>();
 		StringBuilder sb = new StringBuilder();
 		String[] split = vcardString.split("\r?\n");
 		boolean begin = false;
@@ -3546,7 +3545,7 @@ public class VCardEngine {
 	 */
 	private List<ParameterType> parseParamTypes(String paramTypes) throws VCardBuildException
 	{
-		List<ParameterType> parameterTypes = new LinkedList<ParameterType>();
+		List<ParameterType> parameterTypes = new ArrayList<ParameterType>();
  		String[] params = paramTypes.split(";");
 		for(String param : params) {
 			param = param.trim();
@@ -3601,7 +3600,7 @@ public class VCardEngine {
 	private List<String[]> splitLines(String vcardString)
 	{
 		String[] strArray = vcardString.split("\n");
-		List<String[]> arrayLines = new LinkedList<String[]>();
+		List<String[]> arrayLines = new ArrayList<String[]>();
 
 		for (String line : strArray) {
 			String[] subLine = line.split(":", 2);
