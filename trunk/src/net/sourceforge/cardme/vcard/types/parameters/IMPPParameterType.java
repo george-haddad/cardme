@@ -34,49 +34,36 @@ import net.sourceforge.cardme.vcard.VCardType;
  * 
  * @author George El-Haddad
  * <br/>
- * Mar 8, 2012
+ * Jul 10, 2012
  *
  */
-public class XURLParameterType extends XTendedParameterType {
+public enum IMPPParameterType {
 
-	/**
-	 * <p>Creates a new extended url parameter type with
-	 * the extended name and value.</p>
-	 * <p>Example: <code>URL;TYPE=X-EVOLUTION-SLOT=1;</code></p>
-	 * 
-	 * @param xtendedTypeName
-	 * @param xtendedTypeValue
-	 */
-	public XURLParameterType(String xtendedTypeName, String xtendedTypeValue) {
-		super(xtendedTypeName, xtendedTypeValue);
+	HOME("HOME", "Home"),
+	WORK("WORK", "Work"),
+	OTHER("MOBILE", "Mobile"),
+	PREF("PREF", "Preferred"),
+	NON_STANDARD("NON_STANDARD","Non-Standard");
+	
+	private String type;
+	private String desc;
+	IMPPParameterType(String t, String d) {
+		type = t;
+		desc = d;
 	}
 	
-	/**
-	 * <p>Creates a new extended url parameter type with
-	 * the extended name only.
-	 * <p>Example: <code>URL;TYPE=X-COLOR-RED;</code></p>
-	 * 
-	 * @param xtendedTypeName
-	 */
-	public XURLParameterType(String xtendedTypeName) {
-		super(xtendedTypeName);
-	}
-	
-	@Override
 	public String getType()
 	{
-		return URLParameterType.NON_STANDARD.getType();
+		return type;
 	}
 	
-	@Override
 	public String getDescription()
 	{
-		return URLParameterType.NON_STANDARD.getDescription();
+		return desc;
 	}
 	
-	@Override
 	public VCardType getParentType()
 	{
-		return VCardType.URL;
+		return VCardType.IMPP;
 	}
 }
