@@ -100,6 +100,14 @@ public interface TimeZoneFeature extends TypeTools {
 	public TimeZoneParameterType getTimeZoneParameterType();
 	
 	/**
+	 * <p>Sets the offset.</p>
+	 *
+	 * @param hourOffset the hour offset (must be between -12 and 12)
+	 * @param minuteOffset the minute offset (must be between 0 and 59)
+	 */
+	public void setOffset(int hourOffset, int minuteOffset);
+	
+	/**
 	 * <p>Sets the short text description (e.g. "EST").</p>
 	 *
 	 * @param shortText
