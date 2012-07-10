@@ -79,11 +79,9 @@ public class TimeZoneType extends Type implements TimeZoneFeature {
 	
 	public TimeZoneType(int hourOffset, int minuteOffset, String shortText, String longText) {
 		this();
-		this.hourOffset = hourOffset;
-		this.minuteOffset = minuteOffset;
+		setOffset(hourOffset, minuteOffset);
 		this.shortText = shortText;
 		this.longText = longText;
-		calculateTimeZone();
 	}
 	
 	/**
@@ -164,23 +162,15 @@ public class TimeZoneType extends Type implements TimeZoneFeature {
 		}
 		
 		String hourStr = m.group(2);
-		hourOffset = Integer.parseInt(hourStr);
-		
+		int hourOffset = Integer.parseInt(hourStr);
 		if (!positive){
 			hourOffset *= -1;
 		}
 		
 		String minuteStr = m.group(4);
+		int minuteOffset = (minuteStr == null) ? 0 : Integer.parseInt(minuteStr);
 		
-		if(minuteStr == null) {
-			minuteOffset  = 0;
-		}
-		else {
-			minuteOffset = Integer.parseInt(minuteStr);
-		}
-		
-		
-		calculateTimeZone();
+		setOffset(hourOffset, minuteOffset);
 	}
 
 	/**
@@ -201,23 +191,18 @@ public class TimeZoneType extends Type implements TimeZoneFeature {
 	public void setTimeZoneParameterType(TimeZoneParameterType timeZoneParameterType) {
 		this.timeZoneParameterType = timeZoneParameterType;
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setHourOffset(int hourOffset) {
-		this.hourOffset = hourOffset;
-		calculateTimeZone();
-	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setMinuteOffset(int minuteOffset) {
+	public void setOffset(int hourOffset, int minuteOffset){
+		if (hourOffset < -12 || hourOffset > 12){
+			throw new IllegalArgumentException("Hour offset must be a value between -12 and 12.");
+		}
 		if (minuteOffset < 0 || minuteOffset > 59){
 			throw new IllegalArgumentException("Minute offset must be a positive value between 0 and 59.");
 		}
-
+		this.hourOffset = hourOffset;
 		this.minuteOffset = minuteOffset;
 		calculateTimeZone();
 	}
