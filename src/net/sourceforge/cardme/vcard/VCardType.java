@@ -69,7 +69,8 @@ public enum VCardType {
 	VERSION("VERSION"),
 	CLASS("CLASS"),
 	KEY("KEY"),
-	XTENDED("X-");
+	XTENDED("X-"),
+	IMPP("IMPP");
 
 	private String type = null;
 	VCardType(String _type) {
