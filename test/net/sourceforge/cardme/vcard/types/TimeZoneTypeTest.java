@@ -185,26 +185,46 @@ public class TimeZoneTypeTest {
 		timeZoneType.parseTimeZoneOffset("-05:30");
 		assertEquals(-5, timeZoneType.getHourOffset());
 		assertEquals(30, timeZoneType.getMinuteOffset());
+		
+		//invalid hour value
+		try{
+			timeZoneType.parseTimeZoneOffset("-15:30");
+			fail();
+		} catch (IllegalArgumentException e){
+			//should be thrown
+		}
+		
+		//invalid hour value
+		try{
+			timeZoneType.parseTimeZoneOffset("+15:30");
+			fail();
+		} catch (IllegalArgumentException e){
+			//should be thrown
+		}
+		
+		//invalid minute value
+		try{
+			timeZoneType.parseTimeZoneOffset("-05:60");
+			fail();
+		} catch (IllegalArgumentException e){
+			//should be thrown
+		}
 	}
 	
 	@Test
 	public void testGetIso8601Offset(){
 		assertEquals("+00:00", timeZoneType.getIso8601Offset());
 		
-		timeZoneType.setHourOffset(5);
-		timeZoneType.setMinuteOffset(0);
+		timeZoneType.setOffset(5, 0);
 		assertEquals("+05:00", timeZoneType.getIso8601Offset());
 		
-		timeZoneType.setHourOffset(-5);
-		timeZoneType.setMinuteOffset(0);
+		timeZoneType.setOffset(-5, 0);
 		assertEquals("-05:00", timeZoneType.getIso8601Offset());
 		
-		timeZoneType.setHourOffset(5);
-		timeZoneType.setMinuteOffset(30);
+		timeZoneType.setOffset(5, 30);
 		assertEquals("+05:30", timeZoneType.getIso8601Offset());
 	
-		timeZoneType.setHourOffset(-5);
-		timeZoneType.setMinuteOffset(30);
+		timeZoneType.setOffset(-5, 30);
 		assertEquals("-05:30", timeZoneType.getIso8601Offset());
 	}
 	
@@ -214,32 +234,59 @@ public class TimeZoneTypeTest {
 	}
 	
 	@Test
-	public void testSetMinuteOffset(){
+	public void testGetHourOffset(){
+		assertEquals(0, timeZoneType.getHourOffset());
+	}
+	
+	@Test
+	public void testSetOffset(){
+		//hour cannot be less than -12
 		try{
-			timeZoneType.setMinuteOffset(-30);
+			timeZoneType.setOffset(-13, 0);
 			fail();
 		}
 		catch (IllegalArgumentException e){
 			//should be thrown
 		}
 		
-		//make sure the TimeZone is updated
-		timeZoneType.setMinuteOffset(30);
-		assertEquals(30*60*1000, timeZoneType.getTimeZone().getRawOffset());
-	}
-	
-	@Test
-	public void testGetHourOffset(){
-		assertEquals(0, timeZoneType.getHourOffset());
-	}
-	
-	@Test
-	public void testSetHourOffset(){
-		timeZoneType.setHourOffset(1);
+		//hour cannot be greater than 12
+		try{
+			timeZoneType.setOffset(13, 0);
+			fail();
+		}
+		catch (IllegalArgumentException e){
+			//should be thrown
+		}
+		
+		//minute cannot be less than 0
+		try{
+			timeZoneType.setOffset(1, -30);
+			fail();
+		}
+		catch (IllegalArgumentException e){
+			//should be thrown
+		}
+		
+		//minute cannot be greater than 59
+		try{
+			timeZoneType.setOffset(1, 60);
+			fail();
+		}
+		catch (IllegalArgumentException e){
+			//should be thrown
+		}
+		
+		timeZoneType.setOffset(1, 0);
 		assertEquals(1*60*60*1000, timeZoneType.getTimeZone().getRawOffset());
 		
-		timeZoneType.setHourOffset(-1);
+		timeZoneType.setOffset(-1, 0);
 		assertEquals(-1*60*60*1000, timeZoneType.getTimeZone().getRawOffset());
+		
+		timeZoneType.setOffset(1, 30);
+		assertEquals(1*60*60*1000+30*60*1000, timeZoneType.getTimeZone().getRawOffset());
+		
+		timeZoneType.setOffset(-1, 30);
+		assertEquals(-(1*60*60*1000+30*60*1000), timeZoneType.getTimeZone().getRawOffset());
 	}
 
 	@Test
