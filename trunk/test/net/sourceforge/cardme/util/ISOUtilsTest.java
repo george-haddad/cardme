@@ -21,33 +21,33 @@ public class ISOUtilsTest {
 		TimeZone tz = TimeZone.getTimeZone("Asia/Beirut");
 
 		String expected = "+0200";
-		String actual = ISOUtils.toISO8601_TimeZone(tz, ISOFormat.ISO8601_BASIC);
+		String actual = ISOUtils.toISO8601_TimeZone(tz, false);
 		assertEquals(expected, actual);
 
 		expected = "+02:00";
-		actual = ISOUtils.toISO8601_TimeZone(tz, ISOFormat.ISO8601_EXTENDED);
+		actual = ISOUtils.toISO8601_TimeZone(tz, true);
 		assertEquals(expected, actual);
 
 		//negative
 		tz = TimeZone.getTimeZone("America/New_York");
 
 		expected = "-0500";
-		actual = ISOUtils.toISO8601_TimeZone(tz, ISOFormat.ISO8601_BASIC);
+		actual = ISOUtils.toISO8601_TimeZone(tz, false);
 		assertEquals(expected, actual);
 
 		expected = "-05:00";
-		actual = ISOUtils.toISO8601_TimeZone(tz, ISOFormat.ISO8601_EXTENDED);
+		actual = ISOUtils.toISO8601_TimeZone(tz, true);
 		assertEquals(expected, actual);
 
 		//zero
 		tz = TimeZone.getTimeZone("UTC");
 
 		expected = "+0000";
-		actual = ISOUtils.toISO8601_TimeZone(tz, ISOFormat.ISO8601_BASIC);
+		actual = ISOUtils.toISO8601_TimeZone(tz, false);
 		assertEquals(expected, actual);
 
 		expected = "+00:00";
-		actual = ISOUtils.toISO8601_TimeZone(tz, ISOFormat.ISO8601_EXTENDED);
+		actual = ISOUtils.toISO8601_TimeZone(tz, true);
 		assertEquals(expected, actual);
 	}
 }

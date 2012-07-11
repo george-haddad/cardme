@@ -111,7 +111,7 @@ public final class ISOUtils {
 				builder.append(":");
 				paddTwoDigits(builder, time.get(Calendar.SECOND));
 				builder.append("Z");
-				builder.append(toISO8601_TimeZone(time.getTimeZone(), ISOFormat.ISO8601_EXTENDED));
+				builder.append(toISO8601_TimeZone(time.getTimeZone(), true));
 				break;
 			}
 		}
@@ -158,15 +158,17 @@ public final class ISOUtils {
 	}
 
 	/**
-	 * <p>Returns a TimeZone object as a ISO-8601 format. This can be either basic
-	 * or extended format. Depending on the format parameter it will return it
-	 * in basic or extended format.</p>
+	 * <p>
+	 * Converts a TimeZone object to a string that's in ISO-8601 format. It can
+	 * be either basic or extended format.
+	 * </p>
 	 * 
-	 * @param timeZone
-	 * @param format
-	 * @return {@link String}
+	 * @param timeZone the timezone to format
+	 * @param extended true to use "extended" format, false not to. Extended
+	 * format will put a colon between the hour and minute.
+	 * @return the formatted timezone (e.g. "+0530" or "+05:30")
 	 */
-	public static String toISO8601_TimeZone(TimeZone timeZone, ISOFormat format)
+	public static String toISO8601_TimeZone(TimeZone timeZone, boolean extended)
 	{
 		StringBuilder sb = new StringBuilder();
 		boolean positive = timeZone.getRawOffset() >= 0;
@@ -181,7 +183,7 @@ public final class ISOUtils {
 		
 		sb.append(hours);
 		
-		if (format == ISOFormat.ISO8601_EXTENDED){
+		if (extended){
 			sb.append(':');
 		}
 		
