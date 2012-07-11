@@ -5,7 +5,6 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.sourceforge.cardme.util.ISOFormat;
 import net.sourceforge.cardme.util.ISOUtils;
 import net.sourceforge.cardme.util.Util;
 import net.sourceforge.cardme.vcard.EncodingType;
@@ -129,7 +128,7 @@ public class TimeZoneType extends Type implements TimeZoneFeature {
 	 */
 	public String getIso8601Offset()
 	{
-		return ISOUtils.toISO8601_TimeZone(timeZone, ISOFormat.ISO8601_EXTENDED);
+		return ISOUtils.toISO8601_TimeZone(timeZone, true);
 	}
 
 	/**
