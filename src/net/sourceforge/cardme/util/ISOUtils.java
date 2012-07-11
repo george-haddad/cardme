@@ -41,15 +41,12 @@ import java.util.TimeZone;
  */
 public final class ISOUtils {
 
-	public static final String ISO8601_UTC_TIME_BASIC_REGEX = "\\d\\d\\d\\d\\d\\d\\d\\dT\\d\\d\\d\\d\\d\\dZ";
-	public static final String ISO8601_UTC_TIME_EXTENDED_REGEX = "\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d\\:\\d\\d\\:\\d\\dZ";
-	public static final String ISO8601_TIME_EXTENDED_REGEX = "\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d\\:\\d\\d\\:\\d\\d[-\\+]\\d\\d\\:\\d\\d";
+	public static final String ISO8601_UTC_TIME_BASIC_REGEX = "\\d{8}T\\d{6}Z";
+	public static final String ISO8601_UTC_TIME_EXTENDED_REGEX = "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z";
+	public static final String ISO8601_TIME_EXTENDED_REGEX = "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[-\\+]\\d{2}:\\d{2}";
 	
-	public static final String ISO8601_DATE_BASIC_REGEX = "\\d\\d\\d\\d\\d\\d\\d\\d";
-	public static final String ISO8601_DATE_EXTENDED_REGEX = "\\d\\d\\d\\d-\\d\\d-\\d\\d";
-	
-	public static final String ISO8601_TIMEZONE_BASIC_REGEX = "-?\\d{3,4}";
-	public static final String ISO8601_TIMEZONE_EXTENDED_REGEX = "-?\\d{1,2}:\\d\\d";
+	public static final String ISO8601_DATE_BASIC_REGEX = "\\d{8}";
+	public static final String ISO8601_DATE_EXTENDED_REGEX = "\\d{4}-\\d{2}-\\d{2}";
 	
 	private ISOUtils() {
 
