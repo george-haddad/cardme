@@ -54,7 +54,7 @@ import net.sourceforge.cardme.vcard.types.parameters.TimeZoneParameterType;
  */
 public class TimeZoneType extends Type implements TimeZoneFeature {
 
-	private static final long serialVersionUID = 6773373072976797733L;
+	private static final long serialVersionUID = 2878988794989684983L;
 	
 	private TimeZone timeZone = null;
 	private int hourOffset = 0;
@@ -139,6 +139,9 @@ public class TimeZoneType extends Type implements TimeZoneFeature {
 		return timeZoneParameterType;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void parseTimeZoneOffset(String iso8601Offset) {
 		Pattern p = Pattern.compile("^([-\\+])?(\\d{1,2})(:?(\\d{2}))?$");
 		Matcher m = p.matcher(iso8601Offset);
@@ -195,9 +198,6 @@ public class TimeZoneType extends Type implements TimeZoneFeature {
 	 * {@inheritDoc}
 	 */
 	public void setOffset(int hourOffset, int minuteOffset){
-		if (hourOffset < -12 || hourOffset > 12){
-			throw new IllegalArgumentException("Hour offset must be a value between -12 and 12.");
-		}
 		if (minuteOffset < 0 || minuteOffset > 59){
 			throw new IllegalArgumentException("Minute offset must be a positive value between 0 and 59.");
 		}
