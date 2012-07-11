@@ -2,10 +2,12 @@ package net.sourceforge.cardme.vcard.types;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+
+import java.util.TimeZone;
+
 import net.sourceforge.cardme.vcard.VCardType;
 import net.sourceforge.cardme.vcard.features.TimeZoneFeature;
-import java.util.TimeZone;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -185,14 +187,21 @@ public class TimeZoneTypeTest {
 		timeZoneType.parseTimeZoneOffset("-05:30");
 		assertEquals(-5, timeZoneType.getHourOffset());
 		assertEquals(30, timeZoneType.getMinuteOffset());
-		
-		//invalid minute value
-		try{
-			timeZoneType.parseTimeZoneOffset("-05:60");
-			fail();
-		} catch (IllegalArgumentException e){
-			//should be thrown
-		}
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testParseTimeZoneOffsetIllegalArgument_1() {
+		timeZoneType.parseTimeZoneOffset("-05:60");
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testParseTimeZoneOffsetIllegalArgument_2() {
+		timeZoneType.parseTimeZoneOffset("99:99");
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testParseTimeZoneOffsetIllegalArgument_3() {
+		timeZoneType.parseTimeZoneOffset("random string");
 	}
 	
 	@Test
@@ -224,24 +233,6 @@ public class TimeZoneTypeTest {
 	
 	@Test
 	public void testSetOffset(){
-		//minute cannot be less than 0
-		try{
-			timeZoneType.setOffset(1, -30);
-			fail();
-		}
-		catch (IllegalArgumentException e){
-			//should be thrown
-		}
-		
-		//minute cannot be greater than 59
-		try{
-			timeZoneType.setOffset(1, 60);
-			fail();
-		}
-		catch (IllegalArgumentException e){
-			//should be thrown
-		}
-		
 		timeZoneType.setOffset(1, 0);
 		assertEquals(1*60*60*1000, timeZoneType.getTimeZone().getRawOffset());
 		
@@ -253,6 +244,18 @@ public class TimeZoneTypeTest {
 		
 		timeZoneType.setOffset(-1, 30);
 		assertEquals(-(1*60*60*1000+30*60*1000), timeZoneType.getTimeZone().getRawOffset());
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testSetOffsetIllegalArgument_1() {
+		//minute cannot be less than 0
+		timeZoneType.setOffset(1, -30);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testSetOffsetIllegalArgument_2() {
+		//minute cannot be greater than 59
+		timeZoneType.setOffset(1, 60);
 	}
 
 	@Test
