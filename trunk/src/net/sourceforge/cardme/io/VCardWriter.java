@@ -2003,7 +2003,7 @@ public class VCardWriter {
 					}
 					
 					tmpSb.append(":");
-					tmpSb.append(ISOUtils.toISO8601_UTC_Time(revisionFeature.getRevision(), ISOFormat.ISO8601_EXTENDED));
+					tmpSb.append(ISOUtils.formatISO8601Date(revisionFeature.getRevision(), ISOFormat.ISO8601_UTC_TIME_EXTENDED));
 					
 					String tmpRevisionLine = tmpSb.toString();
 					String foldedRevisionLine = VCardUtils.foldLine(tmpRevisionLine, eol, foldingScheme);
@@ -2119,25 +2119,8 @@ public class VCardWriter {
 				}
 				
 				ISOFormat isoFormat = birthdayFeature.getISO8601Format();
-				switch(isoFormat)
-				{
-					case ISO8601_DATE_BASIC:
-					case ISO8601_DATE_EXTENDED:
-					{
-						tmpSb.append(":");
-						tmpSb.append(ISOUtils.toISO8601_Date(birthdayFeature.getBirthday(), isoFormat));
-						break;
-					}
-					
-					case ISO8601_EXTENDED:
-					case ISO8601_UTC_TIME_BASIC:
-					case ISO8601_UTC_TIME_EXTENDED:
-					{
-						tmpSb.append(":");
-						tmpSb.append(ISOUtils.toISO8601_UTC_Time(birthdayFeature.getBirthday(), isoFormat));
-						break;
-					}
-				}
+				tmpSb.append(":");
+				tmpSb.append(ISOUtils.formatISO8601Date(birthdayFeature.getBirthday(), isoFormat));
 				
 				String tmpBdayLine = tmpSb.toString();
 				String foldedBdayLine = VCardUtils.foldLine(tmpBdayLine, eol, foldingScheme);

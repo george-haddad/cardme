@@ -128,7 +128,7 @@ public class TimeZoneType extends Type implements TimeZoneFeature {
 	 */
 	public String getIso8601Offset()
 	{
-		return ISOUtils.toISO8601_TimeZone(timeZone, true);
+		return ISOUtils.formatISO8601TimeZone(timeZone, true);
 	}
 
 	/**
