@@ -1,6 +1,10 @@
 package net.sourceforge.cardme.util;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -41,120 +45,82 @@ import java.util.TimeZone;
  */
 public final class ISOUtils {
 
-	public static final String ISO8601_UTC_TIME_BASIC_REGEX = "\\d{8}T\\d{6}Z";
-	public static final String ISO8601_UTC_TIME_EXTENDED_REGEX = "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z";
-	public static final String ISO8601_TIME_EXTENDED_REGEX = "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[-\\+]\\d{2}:\\d{2}";
+	private static final String ISO8601_UTC_TIME_BASIC_REGEX = "\\d{8}T\\d{6}Z";
+	private static final String ISO8601_UTC_TIME_EXTENDED_REGEX = "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z";
 	
-	public static final String ISO8601_DATE_BASIC_REGEX = "\\d{8}";
-	public static final String ISO8601_DATE_EXTENDED_REGEX = "\\d{4}-\\d{2}-\\d{2}";
+	private static final String ISO8601_TIME_BASIC_REGEX = "\\d{4}\\d{2}\\d{2}T\\d{2}\\d{2}\\d{2}[-\\+]\\d{2}\\d{2}";
+	private static final String ISO8601_TIME_EXTENDED_REGEX = "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[-\\+]\\d{2}:\\d{2}";
+	
+	private static final String ISO8601_DATE_BASIC_REGEX = "\\d{8}";
+	private static final String ISO8601_DATE_EXTENDED_REGEX = "\\d{4}-\\d{2}-\\d{2}";
 	
 	private ISOUtils() {
-
+		//hide the constructor
 	}
-
-	/**
-	 * <p>Builds a ISO-8601 UTC time formatted string. The format can either be
-	 * basic or extended. Depending on the format parameter it will return it in
-	 * basic or extended format.</p>
-	 * 
-	 * @param time
-	 * @param format
-	 * @return {@link String}
-	 */
-	public static String toISO8601_UTC_Time(Calendar time, ISOFormat format)
-	{
-		StringBuilder builder = new StringBuilder();
-		switch (format)
-		{
-			case ISO8601_BASIC:
-			{
-				builder.append(toISO8601_Date(time, ISOFormat.ISO8601_DATE_BASIC));
-				builder.append("T");
-				paddTwoDigits(builder, time.get(Calendar.HOUR_OF_DAY));
-				paddTwoDigits(builder, time.get(Calendar.MINUTE));
-				paddTwoDigits(builder, time.get(Calendar.SECOND));
-				break;
-			}
-			
-			case ISO8601_UTC_TIME_BASIC:
-			{
-				builder.append(toISO8601_Date(time, ISOFormat.ISO8601_DATE_BASIC));
-				builder.append("T");
-				paddTwoDigits(builder, time.get(Calendar.HOUR_OF_DAY));
-				paddTwoDigits(builder, time.get(Calendar.MINUTE));
-				paddTwoDigits(builder, time.get(Calendar.SECOND));
-				builder.append("Z");
-				break;
-			}
 	
-			case ISO8601_EXTENDED:
-			case ISO8601_UTC_TIME_EXTENDED:
-			{
-				builder.append(toISO8601_Date(time, ISOFormat.ISO8601_DATE_EXTENDED));
-				builder.append("T");
-				paddTwoDigits(builder, time.get(Calendar.HOUR_OF_DAY));
-				builder.append(":");
-				paddTwoDigits(builder, time.get(Calendar.MINUTE));
-				builder.append(":");
-				paddTwoDigits(builder, time.get(Calendar.SECOND));
-				builder.append("Z");
-				break;
-			}
-			
-			case ISO8601_TIME_EXTENDED:
-			{
-				builder.append(toISO8601_Date(time, ISOFormat.ISO8601_DATE_EXTENDED));
-				builder.append("T");
-				paddTwoDigits(builder, time.get(Calendar.HOUR_OF_DAY));
-				builder.append(":");
-				paddTwoDigits(builder, time.get(Calendar.MINUTE));
-				builder.append(":");
-				paddTwoDigits(builder, time.get(Calendar.SECOND));
-				builder.append("Z");
-				builder.append(toISO8601_TimeZone(time.getTimeZone(), true));
-				break;
-			}
-		}
-
-		return builder.toString();
-	}
-
 	/**
-	 * <p>Given a calendar object and a specific ISO format it will construct an
-	 * ISO8601 calendar date string. Depending on the format parameter it will
-	 * return it in basic or extended format.</p>
+	 * <p>
+	 * Given a calendar object and a specific ISO format it will construct an
+	 * ISO8601 calendar date or datetime string.
+	 * </p>
+	 * <p>
+	 * If an {@link ISOFormat} of {@link ISOFormat.ISO8601_UTC_TIME_BASIC
+	 * ISO8601_UTC_TIME_BASIC} or {@link ISOFormat.ISO8601_UTC_TIME_EXTENDED
+	 * ISO8601_UTC_TIME_EXTENDED} is specified, then the timezone in the
+	 * Calendar object will be converted to UTC.
+	 * </p>
+	 * <p>
+	 * If any other {@link ISOFormat} is specified, then the date will be
+	 * formatted according to the timezone in the Calendar object.
+	 * </p>
 	 * 
-	 * @param date
-	 * @param format
-	 * @return {@link String}
+	 * @param time the date/datetime
+	 * @param format the date format to use
+	 * @return the formatted date
 	 */
-	public static String toISO8601_Date(Calendar date, ISOFormat format)
-	{
-		StringBuilder builder = new StringBuilder();
-		switch (format)
-		{
-			case ISO8601_BASIC:
-			case ISO8601_DATE_BASIC: 
-			{
-				builder.append(date.get(Calendar.YEAR));
-				paddTwoDigits(builder, date.get(Calendar.MONTH)+1);
-				paddTwoDigits(builder, date.get(Calendar.DAY_OF_MONTH));
-				break;
-			}
-			
-			case ISO8601_EXTENDED:
-			case ISO8601_DATE_EXTENDED:
-			{
-				builder.append(date.get(Calendar.YEAR));
-				builder.append("-");
-				paddTwoDigits(builder, date.get(Calendar.MONTH)+1);
-				builder.append("-");
-				paddTwoDigits(builder, date.get(Calendar.DAY_OF_MONTH));
-				break;
-			}
+	public static String formatISO8601Date(Calendar time, ISOFormat format) {
+		String formatStr;
+		TimeZone timezone = time.getTimeZone();
+		switch (format) {
+		case ISO8601_BASIC:
+		case ISO8601_DATE_BASIC:
+			formatStr = "yyyyMMdd";
+			break;
+		case ISO8601_EXTENDED:
+		case ISO8601_DATE_EXTENDED:
+			formatStr = "yyyy-MM-dd";
+			break;
+		case ISO8601_TIME_BASIC:
+			formatStr = "yyyyMMdd'T'HHmmssZ";
+			break;
+		case ISO8601_TIME_EXTENDED:
+			formatStr = "yyyy-MM-dd'T'HH:mm:ssZ";
+			break;
+		case ISO8601_UTC_TIME_BASIC:
+			formatStr = "yyyyMMdd'T'HHmmss'Z'";
+			timezone = TimeZone.getTimeZone("UTC");
+			break;
+		case ISO8601_UTC_TIME_EXTENDED:
+			formatStr = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+			timezone = TimeZone.getTimeZone("UTC");
+			break;
+		default:
+			throw new IllegalArgumentException("The given ISOFormat is not supported: " + format);
 		}
 
-		return builder.toString();
+		DateFormat df = new SimpleDateFormat(formatStr);
+		df.setTimeZone(timezone);
+		String str = df.format(time.getTime());
+
+		switch (format) {
+		case ISO8601_TIME_EXTENDED:
+			//add a colon to the timezone (SimpleDateFormat cannot do this)
+			//example: converts "2012-07-05T22:31:41-0400" to "2012-07-05T22:31:41-04:00"
+			str = str.replaceAll("([-\\+]\\d{2})(\\d{2})$", "$1:$2");
+			break;
+		}
+
+		return str;
 	}
 
 	/**
@@ -168,7 +134,7 @@ public final class ISOUtils {
 	 * format will put a colon between the hour and minute.
 	 * @return the formatted timezone (e.g. "+0530" or "+05:30")
 	 */
-	public static String toISO8601_TimeZone(TimeZone timeZone, boolean extended)
+	public static String formatISO8601TimeZone(TimeZone timeZone, boolean extended)
 	{
 		StringBuilder sb = new StringBuilder();
 		boolean positive = timeZone.getRawOffset() >= 0;
@@ -180,7 +146,6 @@ public final class ISOUtils {
 		if (hours < 10){
 			sb.append('0');
 		}
-		
 		sb.append(hours);
 		
 		if (extended){
@@ -190,79 +155,64 @@ public final class ISOUtils {
 		if (minutes < 10){
 			sb.append('0');
 		}
-		
 		sb.append(minutes);
+		
 		return sb.toString();
 	}
 	
 	/**
-	 * <p>Pads a number with an extra zero if it is less than 10.</p>
+	 * <p>
+	 * Parses a date that's in ISO8601 format.
+	 * </p>
 	 * 
-	 * @param sb
-	 * @param number
+	 * @param dateStr the date string (e.g. "2012-07-01T10:31:22+02:00")
+	 * @return the parsed date (converted to the local timezone)
+	 * @throws ParseException if there's a problem parsing the date
+	 * @throws IllegalArgumentException if the date string is not recognized as
+	 * an ISO8601 date
 	 */
-	private static void paddTwoDigits(StringBuilder sb, int number) {
-		if(number < 10) {
-			sb.append("0");
-			sb.append(number);
+	public static Calendar parseISO8601Date(String dateStr) throws ParseException {
+		String format;
+		if (dateStr.matches(ISO8601_DATE_BASIC_REGEX)) {
+			//Example: 19960415
+			format = "yyyyMMdd";
+		} else if (dateStr.matches(ISO8601_DATE_EXTENDED_REGEX)) {
+			//Example: 1996-04-15
+			format = "yyyy-MM-dd";
+		} else if (dateStr.matches(ISO8601_TIME_BASIC_REGEX)) {
+			//Example: 19960415T231000-0600
+			format = "yyyyMMdd'T'HHmmssZ";
+		}else if (dateStr.matches(ISO8601_TIME_EXTENDED_REGEX)) {
+			//Example: 1996-04-15T23:10:00-06:00
+
+			//remove the colon from the timezone
+			dateStr = dateStr.replaceAll("([-\\+]\\d{2}):(\\d{2})$", "$1$2");
+
+			format = "yyyy-MM-dd'T'HH:mm:ssZ";
+		} else if (dateStr.matches(ISO8601_UTC_TIME_BASIC_REGEX)) {
+			//Example: 19960415T231000Z
+
+			//SimpleDateFormat doesn't recognize "Z"
+			dateStr = dateStr.replace("Z", "+0000");
+
+			format = "yyyyMMdd'T'HHmmssZ";
+			//c.setTimeZone(TimeZone.getTimeZone("GMT"));
+		} else if (dateStr.matches(ISO8601_UTC_TIME_EXTENDED_REGEX)) {
+			//Example: 1996-04-15T23:10:00Z
+
+			//SimpleDateFormat doesn't recognize "Z"
+			dateStr = dateStr.replace("Z", "+0000");
+
+			format = "yyyy-MM-dd'T'HH:mm:ssZ";
+		} else {
+			throw new IllegalArgumentException("Date string is not in a valid ISO-8601 format.");
 		}
-		else {
-			sb.append(number);
-		}
+
+		DateFormat df = new SimpleDateFormat(format);
+		Date date = df.parse(dateStr);
+
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		return c;
 	}
-	
-//	/**
-//	 * <p>Un-comment this for testing purposes.</p>
-//	 * 
-//	 * @param args
-//	 */
-//	public static void main(String[] args) {
-//		
-//		System.out.println("Test Current Date/Time");
-//		System.out.println("ISO Date");
-//		System.out.println(toISO8601_Date(Calendar.getInstance(), ISOFormat.ISO8601_BASIC));
-//		System.out.println(toISO8601_Date(Calendar.getInstance(), ISOFormat.ISO8601_EXTENDED));
-//		System.out.println();
-//		
-//		System.out.println("ISO UTC Time");
-//		System.out.println(toISO8601_UTC_Time(Calendar.getInstance(), ISOFormat.ISO8601_BASIC));
-//		System.out.println(toISO8601_UTC_Time(Calendar.getInstance(), ISOFormat.ISO8601_EXTENDED));
-//		System.out.println(toISO8601_UTC_Time(Calendar.getInstance(), ISOFormat.ISO8601_UTC_TIME_BASIC));
-//		System.out.println(toISO8601_UTC_Time(Calendar.getInstance(), ISOFormat.ISO8601_UTC_TIME_EXTENDED));
-//		System.out.println(toISO8601_UTC_Time(Calendar.getInstance(), ISOFormat.ISO8601_TIME_EXTENDED));
-//		System.out.println();
-//		
-//		TimeZone tz = TimeZone.getDefault();
-//		tz.setRawOffset(((4*1000)*60)*60);	//Offset it four hours somewhere
-//		
-//		System.out.println("ISO Timezone");
-//		System.out.println(toISO8601_TimeZone(tz, ISOFormat.ISO8601_BASIC));
-//		System.out.println(toISO8601_TimeZone(tz, ISOFormat.ISO8601_EXTENDED));
-//		System.out.println();
-//		
-//		System.out.println("ISO Timezone");
-//		System.out.println(toISO8601_TimeZone(TimeZone.getDefault(), ISOFormat.ISO8601_BASIC));
-//		System.out.println(toISO8601_TimeZone(TimeZone.getDefault(), ISOFormat.ISO8601_EXTENDED));
-//		System.out.println();
-//		
-//		System.out.println("Test Single Digit Date/Time");
-//		Calendar cal = Calendar.getInstance();
-//		cal.clear();
-//		cal.set(Calendar.YEAR, 2006);
-//		cal.set(Calendar.MONTH, Calendar.JANUARY);
-//		cal.set(Calendar.DAY_OF_MONTH, 1);
-//		cal.set(Calendar.HOUR_OF_DAY, 1);
-//		cal.set(Calendar.MINUTE, 1);
-//		cal.set(Calendar.SECOND, 1);
-//		
-//		System.out.println("ISO Date");
-//		System.out.println(toISO8601_Date(cal, ISOFormat.ISO8601_BASIC));
-//		System.out.println(toISO8601_Date(cal, ISOFormat.ISO8601_EXTENDED));
-//		System.out.println();
-//		
-//		System.out.println("ISO UTC Time");
-//		System.out.println(toISO8601_UTC_Time(cal, ISOFormat.ISO8601_BASIC));
-//		System.out.println(toISO8601_UTC_Time(cal, ISOFormat.ISO8601_EXTENDED));
-//		System.out.println();
-//	}
 }

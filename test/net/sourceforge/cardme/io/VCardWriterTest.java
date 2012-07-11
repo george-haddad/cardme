@@ -316,7 +316,7 @@ public class VCardWriterTest {
 		int stopIndex = vcardStr.indexOf('\n', startIndex)+1;
 		String line = vcardStr.substring(startIndex, stopIndex);
 		
-		assertTrue(line.compareTo("REV:2011-12-22T16:30:05Z\r\n") == 0);
+		assertTrue(line.compareTo("REV:2011-12-22T14:30:05Z\r\n") == 0);
 	}
 	
 	@Test
