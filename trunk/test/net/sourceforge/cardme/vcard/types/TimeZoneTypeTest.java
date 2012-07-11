@@ -186,22 +186,6 @@ public class TimeZoneTypeTest {
 		assertEquals(-5, timeZoneType.getHourOffset());
 		assertEquals(30, timeZoneType.getMinuteOffset());
 		
-		//invalid hour value
-		try{
-			timeZoneType.parseTimeZoneOffset("-15:30");
-			fail();
-		} catch (IllegalArgumentException e){
-			//should be thrown
-		}
-		
-		//invalid hour value
-		try{
-			timeZoneType.parseTimeZoneOffset("+15:30");
-			fail();
-		} catch (IllegalArgumentException e){
-			//should be thrown
-		}
-		
 		//invalid minute value
 		try{
 			timeZoneType.parseTimeZoneOffset("-05:60");
@@ -240,24 +224,6 @@ public class TimeZoneTypeTest {
 	
 	@Test
 	public void testSetOffset(){
-		//hour cannot be less than -12
-		try{
-			timeZoneType.setOffset(-13, 0);
-			fail();
-		}
-		catch (IllegalArgumentException e){
-			//should be thrown
-		}
-		
-		//hour cannot be greater than 12
-		try{
-			timeZoneType.setOffset(13, 0);
-			fail();
-		}
-		catch (IllegalArgumentException e){
-			//should be thrown
-		}
-		
 		//minute cannot be less than 0
 		try{
 			timeZoneType.setOffset(1, -30);
