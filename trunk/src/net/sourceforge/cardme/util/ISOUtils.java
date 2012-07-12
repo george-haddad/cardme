@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.regex.Pattern;
 
 /**
  * Copyright 2011 George El-Haddad. All rights reserved.
@@ -45,14 +46,14 @@ import java.util.TimeZone;
  */
 public final class ISOUtils {
 
-	private static final String ISO8601_UTC_TIME_BASIC_REGEX = "\\d{8}T\\d{6}Z";
-	private static final String ISO8601_UTC_TIME_EXTENDED_REGEX = "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z";
+	private static final Pattern ISO8601_UTC_TIME_BASIC_REGEX = Pattern.compile("\\d{8}T\\d{6}Z");
+	private static final Pattern ISO8601_UTC_TIME_EXTENDED_REGEX = Pattern.compile("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z");
 	
-	private static final String ISO8601_TIME_BASIC_REGEX = "\\d{4}\\d{2}\\d{2}T\\d{2}\\d{2}\\d{2}[-\\+]\\d{2}\\d{2}";
-	private static final String ISO8601_TIME_EXTENDED_REGEX = "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[-\\+]\\d{2}:\\d{2}";
+	private static final Pattern ISO8601_TIME_BASIC_REGEX = Pattern.compile("\\d{8}T\\d{6}[-\\+]\\d{4}");
+	private static final Pattern ISO8601_TIME_EXTENDED_REGEX = Pattern.compile("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[-\\+]\\d{2}:\\d{2}");
 	
-	private static final String ISO8601_DATE_BASIC_REGEX = "\\d{8}";
-	private static final String ISO8601_DATE_EXTENDED_REGEX = "\\d{4}-\\d{2}-\\d{2}";
+	private static final Pattern ISO8601_DATE_BASIC_REGEX = Pattern.compile("\\d{8}");
+	private static final Pattern ISO8601_DATE_EXTENDED_REGEX = Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
 	
 	private ISOUtils() {
 		//hide the constructor
@@ -173,31 +174,31 @@ public final class ISOUtils {
 	 */
 	public static Calendar parseISO8601Date(String dateStr) throws ParseException {
 		String format;
-		if (dateStr.matches(ISO8601_DATE_BASIC_REGEX)) {
+		if (ISO8601_DATE_BASIC_REGEX.matcher(dateStr).matches()) {
 			//Example: 19960415
 			format = "yyyyMMdd";
-		} else if (dateStr.matches(ISO8601_DATE_EXTENDED_REGEX)) {
+		} else if (ISO8601_DATE_EXTENDED_REGEX.matcher(dateStr).matches()) {
 			//Example: 1996-04-15
 			format = "yyyy-MM-dd";
-		} else if (dateStr.matches(ISO8601_TIME_BASIC_REGEX)) {
+		} else if (ISO8601_TIME_BASIC_REGEX.matcher(dateStr).matches()) {
 			//Example: 19960415T231000-0600
 			format = "yyyyMMdd'T'HHmmssZ";
-		}else if (dateStr.matches(ISO8601_TIME_EXTENDED_REGEX)) {
+		}else if (ISO8601_TIME_EXTENDED_REGEX.matcher(dateStr).matches()) {
 			//Example: 1996-04-15T23:10:00-06:00
 
-			//remove the colon from the timezone
+			//SimpleDateFormat doesn't recognize timezone offsets that have colons
+			//so remove the colon from the timezone offset
 			dateStr = dateStr.replaceAll("([-\\+]\\d{2}):(\\d{2})$", "$1$2");
 
 			format = "yyyy-MM-dd'T'HH:mm:ssZ";
-		} else if (dateStr.matches(ISO8601_UTC_TIME_BASIC_REGEX)) {
+		} else if (ISO8601_UTC_TIME_BASIC_REGEX.matcher(dateStr).matches()) {
 			//Example: 19960415T231000Z
 
 			//SimpleDateFormat doesn't recognize "Z"
 			dateStr = dateStr.replace("Z", "+0000");
 
 			format = "yyyyMMdd'T'HHmmssZ";
-			//c.setTimeZone(TimeZone.getTimeZone("GMT"));
-		} else if (dateStr.matches(ISO8601_UTC_TIME_EXTENDED_REGEX)) {
+		} else if (ISO8601_UTC_TIME_EXTENDED_REGEX.matcher(dateStr).matches()) {
 			//Example: 1996-04-15T23:10:00Z
 
 			//SimpleDateFormat doesn't recognize "Z"
