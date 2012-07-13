@@ -3,16 +3,17 @@ package net.sourceforge.cardme.vcard.types;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import net.sourceforge.cardme.util.Util;
 import net.sourceforge.cardme.vcard.EncodingType;
+import net.sourceforge.cardme.vcard.VCardType;
 import net.sourceforge.cardme.vcard.features.IMPPFeature;
 import net.sourceforge.cardme.vcard.types.parameters.IMPPParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
-import net.sourceforge.cardme.vcard.types.parameters.URLParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XIMPPParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.XURLParameterType;
 
 /**
  * Copyright 2011 George El-Haddad. All rights reserved.
@@ -51,6 +52,8 @@ import net.sourceforge.cardme.vcard.types.parameters.XURLParameterType;
  */
 public class IMPPType extends Type implements IMPPFeature {
 
+	private static final long serialVersionUID = -2442145247654294068L;
+	
 	private URI uri = null;
 	private List<IMPPParameterType> imppParameterTypes = null;
 	private List<XIMPPParameterType> xtendedImppParameterTypes = null;
@@ -70,150 +73,209 @@ public class IMPPType extends Type implements IMPPFeature {
 		setURI(uri);
 	}
 	
-	public URI getURI() {
-		// TODO Auto-generated method stub
-		return null;
+	public URI getURI()
+	{
+		return uri;
 	}
 
 	public void setURI(URI uri) {
-		// TODO Auto-generated method stub
-		
+		this.uri = uri;
 	}
 
 	public void clearURI() {
-		// TODO Auto-generated method stub
-		
+		uri = null;
 	}
 
-	public boolean hasURI() {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean hasURI()
+	{
+		return uri != null;
 	}
 
-	public Iterator<IMPPParameterType> getIMPPParameterTypes() {
-		// TODO Auto-generated method stub
-		return null;
+	public Iterator<IMPPParameterType> getIMPPParameterTypes()
+	{
+		return imppParameterTypes.listIterator();
 	}
 
-	public List<IMPPParameterType> getIMPPParameterTypesList() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<IMPPParameterType> getIMPPParameterTypesList()
+	{
+		return Collections.unmodifiableList(imppParameterTypes);
 	}
 
-	public int getIMPPParameterSize() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getIMPPParameterSize()
+	{
+		return imppParameterTypes.size();
 	}
 
 	public void addIMPPParameterType(IMPPParameterType imppParameterType) {
-		// TODO Auto-generated method stub
-		
+		imppParameterTypes.add(imppParameterType);
 	}
 
 	public void removeIMPPParameterType(IMPPParameterType imppParameterType) {
-		// TODO Auto-generated method stub
-		
+		imppParameterTypes.remove(imppParameterType);
 	}
 
-	public boolean containsIMPPParameterType(IMPPParameterType imppParameterType) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean containsIMPPParameterType(IMPPParameterType imppParameterType)
+	{
+		return imppParameterTypes.contains(imppParameterType);
 	}
 
-	public boolean containsAllIMPPParameterTypes(
-			List<IMPPParameterType> imppParameterTypes) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean containsAllIMPPParameterTypes(List<IMPPParameterType> imppParameterTypes) {
+		return this.imppParameterTypes.containsAll(imppParameterTypes);
 	}
 
-	public boolean hasIMPPParameterTypes() {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean hasIMPPParameterTypes()
+	{
+		return !imppParameterTypes.isEmpty();
 	}
 
 	public void clearIMPPParameterTypes() {
-		// TODO Auto-generated method stub
-		
+		imppParameterTypes.clear();
 	}
 
-	public Iterator<XIMPPParameterType> getExtendedIMPPParameterTypes() {
-		// TODO Auto-generated method stub
-		return null;
+	public Iterator<XIMPPParameterType> getExtendedIMPPParameterTypes()
+	{
+		return xtendedImppParameterTypes.listIterator();
 	}
 
-	public List<XIMPPParameterType> getExtendedIMPPParameterTypesList() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<XIMPPParameterType> getExtendedIMPPParameterTypesList()
+	{
+		return Collections.unmodifiableList(xtendedImppParameterTypes);
 	}
 
-	public int getExtendedIMPPParameterSize() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getExtendedIMPPParameterSize()
+	{
+		return xtendedImppParameterTypes.size();
 	}
 
-	public void addExtendedIMPPParameterType(
-			XIMPPParameterType xImppParameterType) {
-		// TODO Auto-generated method stub
-		
+	public void addExtendedIMPPParameterType(XIMPPParameterType xImppParameterType) {
+		xtendedImppParameterTypes.add(xImppParameterType);
 	}
 
-	public void removeExtendedIMPPParameterType(
-			XIMPPParameterType xImppParameterType) {
-		// TODO Auto-generated method stub
-		
+	public void removeExtendedIMPPParameterType(XIMPPParameterType xImppParameterType) {
+		xtendedImppParameterTypes.remove(xImppParameterType);
 	}
 
-	public boolean containsExtendedIMPPParameterType(
-			XIMPPParameterType xImppParameterType) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean containsExtendedIMPPParameterType(XIMPPParameterType xImppParameterType)
+	{
+		return xtendedImppParameterTypes.contains(xImppParameterType);
 	}
 
-	public boolean containsAllExtendedIMPPParameterTypes(
-			List<XIMPPParameterType> xImppParameterTypes) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean containsAllExtendedIMPPParameterTypes(List<XIMPPParameterType> xImppParameterTypes)
+	{
+		return this.xtendedImppParameterTypes.containsAll(xImppParameterTypes);
 	}
 
-	public boolean hasExtendedIMPPParameterTypes() {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean hasExtendedIMPPParameterTypes()
+	{
+		return !xtendedImppParameterTypes.isEmpty();
 	}
 
 	public void clearExtendedIMPPParameterTypes() {
-		// TODO Auto-generated method stub
+		xtendedImppParameterTypes.clear();
+	}
+
+	@Override
+	public String getTypeString()
+	{
+		return VCardType.IMPP.getType();
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(obj != null) {
+			if(obj instanceof IMPPType) {
+				if(this == obj || ((IMPPType)obj).hashCode() == this.hashCode()) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Util.generateHashCode(toString());
+	}
+
+	@Override
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(this.getClass().getName());
+		sb.append("[ ");
+		if(encodingType != null) {
+			sb.append(encodingType.getType());
+			sb.append(",");
+		}
 		
-	}
+		if(uri != null) {
+			sb.append(uri);
+			sb.append(",");
+		}
+		
+		if(!imppParameterTypes.isEmpty()) {
+			for(int i = 0; i < imppParameterTypes.size(); i++) {
+				sb.append(imppParameterTypes.get(i).getType());
+				sb.append(",");
+			}
+		}
+		
+		if(!xtendedImppParameterTypes.isEmpty()) {
+			for(int i = 0; i < xtendedImppParameterTypes.size(); i++) {
+				sb.append(xtendedImppParameterTypes.get(i).getType());
+				sb.append(",");
+			}
+		}
 
-	@Override
-	public String getTypeString() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public int hashCode() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return null;
+		if(super.id != null) {
+			sb.append(super.id);
+			sb.append(",");
+		}
+		
+		sb.deleteCharAt(sb.length()-1);	//Remove last comma.
+		sb.append(" ]");
+		return sb.toString();
 	}
 	
 	@Override
 	public IMPPFeature clone()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		IMPPType cloned = new IMPPType();
+		
+		if(uri != null) {
+			try {
+				cloned.setURI(new URI(uri.toString()));
+			}
+			catch(URISyntaxException e) {
+				cloned.setURI(null);
+			}
+		}
+		
+		if(!imppParameterTypes.isEmpty()) {
+			for(int i = 0; i < imppParameterTypes.size(); i++) {
+				cloned.addIMPPParameterType(imppParameterTypes.get(i));
+			}
+		}
+		
+		if(!xtendedImppParameterTypes.isEmpty()) {
+			for(int i = 0; i < xtendedImppParameterTypes.size(); i++) {
+				cloned.addExtendedIMPPParameterType(xtendedImppParameterTypes.get(i));
+			}
+		}
+		
+		cloned.setParameterTypeStyle(getParameterTypeStyle());
+		cloned.setEncodingType(getEncodingType());
+		cloned.setID(getID());
+		return cloned;
 	}
-
 }

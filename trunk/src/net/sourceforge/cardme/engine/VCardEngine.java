@@ -39,6 +39,7 @@ import net.sourceforge.cardme.vcard.types.EndType;
 import net.sourceforge.cardme.vcard.types.ExtendedType;
 import net.sourceforge.cardme.vcard.types.FormattedNameType;
 import net.sourceforge.cardme.vcard.types.GeographicPositionType;
+import net.sourceforge.cardme.vcard.types.IMPPType;
 import net.sourceforge.cardme.vcard.types.KeyType;
 import net.sourceforge.cardme.vcard.types.LabelType;
 import net.sourceforge.cardme.vcard.types.LogoType;
@@ -68,11 +69,13 @@ import net.sourceforge.cardme.vcard.types.parameters.AddressParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.BirthdayParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.EmailParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.ExtendedParameterType;
+import net.sourceforge.cardme.vcard.types.parameters.IMPPParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.LabelParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.TelephoneParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.URLParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XAddressParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XEmailParameterType;
+import net.sourceforge.cardme.vcard.types.parameters.XIMPPParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XLabelParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XTelephoneParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XURLParameterType;
@@ -664,6 +667,12 @@ public class VCardEngine {
 			case SOURCE:
 			{
 				parseSourceType(group, value, paramTypes, vcard);
+				break;
+			}
+			
+			case IMPP:
+			{
+				parseImppType(group, value, paramTypes, vcard);
 				break;
 			}
 
@@ -3142,6 +3151,90 @@ public class VCardEngine {
 			throw new VCardBuildException("SourceType ("+VCardType.SOURCE.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
+	
+	/**
+	 * <p>Parses the IMPP type.</p>
+	 *
+	 * @param group
+	 * @param value
+	 * @param paramTypes
+	 * @param vcard
+	 * @throws VCardBuildException
+	 */
+	private void parseImppType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+		try {
+			IMPPType imppFeature = new IMPPType();
+			
+			if(paramTypes != null) {
+				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
+				for (ParameterType pt : paramTypeList) {					
+					if(pt.getName().equals("ENCODING")) {
+						if(pt.getValue().equals(EncodingType.EIGHT_BIT.getType())) {
+							imppFeature.setEncodingType(EncodingType.EIGHT_BIT);
+						}
+						else {
+							throw new VCardBuildException("IMPP's encoding must be 8bit.");
+						}
+					}
+					else {
+						if(pt.getName().equals("TYPE")) {
+							if(pt.getValue().indexOf(',') != -1) {
+								String[] typeValueList = pt.getValue().split(",");
+								for(String typeValue : typeValueList) {
+									setImppParameterType(imppFeature, typeValue);
+								}
+							}
+							else {
+								setImppParameterType(imppFeature, pt.getValue());
+							}
+						}
+						else {
+								ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+								imppFeature.addExtendedParameter(parameter);
+						}
+					}
+				}
+			}
+			
+			imppFeature.setURI(new URI(value));
+			
+			if(group != null) {
+				imppFeature.setGroup(group);
+			}
+			
+			vcard.addIMPP(imppFeature);
+		}
+		catch(Exception ex) {
+			throw new VCardBuildException("IMPPType ("+VCardType.IMPP.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+		}
+	}
+	
+	/**
+	 * <p>Helper method for the above.</p>
+	 *
+	 * @param imppType
+	 * @param paramValue
+	 */
+	private void setImppParameterType(IMPPType imppType, String paramValue) {
+		try {
+			String enumParamValue = paramValue.replace("-", "_").toUpperCase();
+			IMPPParameterType imppParamType = IMPPParameterType.valueOf(enumParamValue);
+			imppType.addIMPPParameterType(imppParamType);
+		}
+		catch(IllegalArgumentException iae) {
+			XIMPPParameterType xImppType = null;
+			if(paramValue.indexOf('=') != -1) {
+				String[] pTmp = paramValue.split("=");
+				xImppType = new XIMPPParameterType(pTmp[0], pTmp[1]);
+			}
+			else {
+				xImppType = new XIMPPParameterType(paramValue);
+			}
+			
+			imppType.addExtendedIMPPParameterType(xImppType);
+		}
+	}
+	
 	
 	/**
 	 * <p>Creates a VCardError object and sets the specified error information
