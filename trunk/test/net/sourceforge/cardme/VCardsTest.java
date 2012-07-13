@@ -22,6 +22,7 @@ import net.sourceforge.cardme.vcard.features.AddressFeature;
 import net.sourceforge.cardme.vcard.features.BirthdayFeature;
 import net.sourceforge.cardme.vcard.features.CategoriesFeature;
 import net.sourceforge.cardme.vcard.features.EmailFeature;
+import net.sourceforge.cardme.vcard.features.ExtendedFeature;
 import net.sourceforge.cardme.vcard.features.FormattedNameFeature;
 import net.sourceforge.cardme.vcard.features.NameFeature;
 import net.sourceforge.cardme.vcard.features.NicknameFeature;
@@ -278,8 +279,45 @@ public class VCardsTest {
 			assertEquals(c.getTime(), actual.getTime());
 		}
 		
-		//TODO custom types
-		
+		//custom types
+		{
+			Iterator<ExtendedFeature> it = vcard.getExtendedTypes();
+			ExtendedFeature f = it.next();
+			assertEquals("X-COUCHDB-APPLICATION-ANNOTATIONS", f.getExtensionName());
+			assertEquals("{\"Evolution\":{\"revision\":\"2012-03-05T13:32:54Z\"}}", f.getExtensionData());
+			
+			f = it.next();
+			assertEquals("X-AIM", f.getExtensionName());
+			assertEquals("johnny5@aol.com", f.getExtensionData());
+			List<ExtendedParameterType> xlist = f.getExtendedParametersList();
+			assertEquals(2, xlist.size());
+			assertEquals("TYPE", xlist.get(0).getXtendedTypeName());
+			assertEquals("HOME".toUpperCase(), xlist.get(0).getXtendedTypeValue());
+			assertEquals("X-COUCHDB-UUID", xlist.get(1).getXtendedTypeName());
+			assertEquals("\"cb9e11fc-bb97-4222-9cd8-99820c1de454\"".toUpperCase(), xlist.get(1).getXtendedTypeValue());
+			
+			f = it.next();
+			assertEquals("X-EVOLUTION-FILE-AS", f.getExtensionName());
+			assertEquals("Doe, John", f.getExtensionData());
+			
+			f = it.next();
+			assertEquals("X-EVOLUTION-SPOUSE", f.getExtensionName());
+			assertEquals("Maria", f.getExtensionData());
+
+			f = it.next();
+			assertEquals("X-EVOLUTION-MANAGER", f.getExtensionName());
+			assertEquals("Big Blue", f.getExtensionData());
+			
+			f = it.next();
+			assertEquals("X-EVOLUTION-ASSISTANT", f.getExtensionName());
+			assertEquals("Little Red", f.getExtensionData());
+			
+			f = it.next();
+			assertEquals("X-EVOLUTION-ANNIVERSARY", f.getExtensionName());
+			assertEquals("1980-03-22", f.getExtensionData());
+			
+			assertFalse(it.hasNext());
+		}
 		
 		VCardImpl vcard2 = (VCardImpl)vcard;
 		
