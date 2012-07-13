@@ -29,6 +29,7 @@ import net.sourceforge.cardme.vcard.features.EndFeature;
 import net.sourceforge.cardme.vcard.features.ExtendedFeature;
 import net.sourceforge.cardme.vcard.features.FormattedNameFeature;
 import net.sourceforge.cardme.vcard.features.GeographicPositionFeature;
+import net.sourceforge.cardme.vcard.features.IMPPFeature;
 import net.sourceforge.cardme.vcard.features.KeyFeature;
 import net.sourceforge.cardme.vcard.features.LabelFeature;
 import net.sourceforge.cardme.vcard.features.LogoFeature;
@@ -56,12 +57,14 @@ import net.sourceforge.cardme.vcard.types.parameters.AddressParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.BirthdayParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.EmailParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.ExtendedParameterType;
+import net.sourceforge.cardme.vcard.types.parameters.IMPPParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.LabelParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.TelephoneParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.TimeZoneParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.URLParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XAddressParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XEmailParameterType;
+import net.sourceforge.cardme.vcard.types.parameters.XIMPPParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XLabelParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XTelephoneParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XURLParameterType;
@@ -943,6 +946,28 @@ public class VCardWriter {
 				AgentFeature agent = agents.next();
 				try {
 					buildAgentFeature(sb, agent);
+				}
+				catch(VCardBuildException vbe) {
+					if(isThrowsExceptions) {
+						throw new VCardException(vbe.getMessage(), vbe);
+					}
+					else {
+						handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
+					}
+				}
+			}
+		}
+		
+		/*
+		 * IMPP. RFC 4770 extension
+		 */
+		if(vcard.hasIMPPs()) {
+			Iterator<IMPPFeature> impps = vcard.getIMPPs();
+			while(impps.hasNext()) {
+				IMPPFeature imppFeature = impps.next();
+				
+				try {
+					buildImppFeature(sb, imppFeature);
 				}
 				catch(VCardBuildException vbe) {
 					if(isThrowsExceptions) {
@@ -3907,6 +3932,158 @@ public class VCardWriter {
 		}
 		catch(Exception ex) {
 			throw new VCardBuildException("AgentFeature ("+VCardType.AGENT.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+		}
+	}
+	
+	/**
+	 * <p>Builds the IMPP feature as a String.</p>
+	 *
+	 * @param sb
+	 * 	- The StringBuilder to append to
+	 * @param imppFeature
+	 * 	- The feature to output as a String
+	 * @throws VCardBuildException
+	 * 	Thrown when the IMPP feature is null
+	 */
+	private void buildImppFeature(StringBuilder sb, IMPPFeature imppFeature) throws VCardBuildException {
+		try {
+			if(imppFeature != null) {
+				if(imppFeature.hasURI()) {
+					String uri = imppFeature.getURI().toString();
+					StringBuilder tmpSb = new StringBuilder();
+					
+					if(imppFeature.hasGroup()) {
+						tmpSb.append(imppFeature.getGroup());
+						tmpSb.append(".");
+					}
+					
+					tmpSb.append(imppFeature.getTypeString());
+					
+					if(imppFeature.hasIMPPParameterTypes()) {
+						tmpSb.append(";");
+						Iterator<IMPPParameterType> paramTypes = imppFeature.getIMPPParameterTypes();
+						switch(imppFeature.getParameterTypeStyle())
+						{
+							case PARAMETER_LIST:
+							{
+								while(paramTypes.hasNext()) {
+									IMPPParameterType imppType = paramTypes.next();
+									tmpSb.append("TYPE=");
+									tmpSb.append(imppType.getType());
+									tmpSb.append(";");
+								}
+
+								break;
+							}
+
+							case PARAMETER_VALUE_LIST:
+							{
+								tmpSb.append("TYPE=");
+								while(paramTypes.hasNext()) {
+									IMPPParameterType imppType = paramTypes.next();
+									tmpSb.append(imppType.getType());
+									tmpSb.append(",");
+								}
+
+								break;
+							}
+						}
+
+						tmpSb.deleteCharAt(tmpSb.length()-1);
+					}
+					
+					if(imppFeature.hasExtendedIMPPParameterTypes()) {
+						Iterator<XIMPPParameterType> xParamTypes = imppFeature.getExtendedIMPPParameterTypes();
+						switch(imppFeature.getParameterTypeStyle())
+						{
+							case PARAMETER_LIST:
+							{
+								tmpSb.append(";");
+								
+								while(xParamTypes.hasNext()) {
+									XIMPPParameterType xImppType = xParamTypes.next();
+									tmpSb.append("TYPE=");
+									tmpSb.append(xImppType.getXtendedTypeName());
+									
+									if(xImppType.hasXtendedTypeValue()) {
+										tmpSb.append("=");
+										tmpSb.append(xImppType.getXtendedTypeValue());
+									}
+									
+									tmpSb.append(";");
+								}
+
+								break;
+							}
+
+							case PARAMETER_VALUE_LIST:
+							{
+								if(imppFeature.hasIMPPParameterTypes()) {
+									//Continue from the list
+									tmpSb.append(",");
+								}
+								else {
+									//Start a new
+									tmpSb.append(";TYPE=");
+								}
+								
+								while(xParamTypes.hasNext()) {
+									XIMPPParameterType xImppType = xParamTypes.next();
+									tmpSb.append(xImppType.getXtendedTypeName());
+									
+									if(xImppType.hasXtendedTypeValue()) {
+										tmpSb.append("=");
+										tmpSb.append(xImppType.getXtendedTypeValue());
+									}
+									
+									tmpSb.append(",");
+								}
+
+								break;
+							}
+						}
+
+						tmpSb.deleteCharAt(tmpSb.length()-1);
+					}
+					
+					if(imppFeature.hasExtendedParameters()) {
+						buildExtendParameters(imppFeature, tmpSb);
+					}
+					
+					tmpSb.append(":");
+					
+					//Gmail, iPhone and iOS Exporter expect an escaped URL,
+					//so maybe they might expect the URI to be escaped too ?
+					
+					switch(compatMode)
+					{
+						case GMAIL:
+						case I_PHONE:
+						case IOS_EXPORTER:
+						{
+							tmpSb.append(VCardUtils.escapeString(uri));
+							break;
+						}
+						
+						default:
+						{
+							tmpSb.append(uri);
+							break;
+						}
+					}
+					
+					String tmpUrlLine = tmpSb.toString();
+					String foldedUrlLine = VCardUtils.foldLine(tmpUrlLine, eol, foldingScheme);
+					sb.append(foldedUrlLine);
+					sb.append(eol);
+				}
+				else {
+					throw new VCardBuildException("IMPPFeature ("+VCardType.IMPP.getType()+") exists but is empty.");
+				}
+			}
+		}
+		catch(Exception ex) {
+			throw new VCardBuildException("IMPPFeature ("+VCardType.IMPP.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	

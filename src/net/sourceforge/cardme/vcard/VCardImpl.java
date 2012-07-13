@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import net.sourceforge.cardme.db.MarkType;
 import net.sourceforge.cardme.db.Persistable;
 import net.sourceforge.cardme.util.Util;
@@ -26,6 +27,7 @@ import net.sourceforge.cardme.vcard.features.EndFeature;
 import net.sourceforge.cardme.vcard.features.ExtendedFeature;
 import net.sourceforge.cardme.vcard.features.FormattedNameFeature;
 import net.sourceforge.cardme.vcard.features.GeographicPositionFeature;
+import net.sourceforge.cardme.vcard.features.IMPPFeature;
 import net.sourceforge.cardme.vcard.features.KeyFeature;
 import net.sourceforge.cardme.vcard.features.LabelFeature;
 import net.sourceforge.cardme.vcard.features.LogoFeature;
@@ -128,6 +130,7 @@ public class VCardImpl implements VCard, VCardErrorHandling, Persistable, Serial
 	private ClassFeature securityClass = null;
 	private List<KeyFeature> keys = null;
 	private List<ExtendedFeature> extendedTypes = null;
+	private List<IMPPFeature> impps = null;
 	
 	private boolean isValid = true;
 	private boolean isThrowsExceptions = true;
@@ -153,6 +156,7 @@ public class VCardImpl implements VCard, VCardErrorHandling, Persistable, Serial
 		urls = new ArrayList<URLFeature>();
 		keys = new ArrayList<KeyFeature>();
 		extendedTypes = new ArrayList<ExtendedFeature>();
+		impps = new ArrayList<IMPPFeature>();
 		errors = new ArrayList<VCardError>();
 		begin = new BeginType();
 		end = new EndType();
@@ -1331,6 +1335,75 @@ public class VCardImpl implements VCard, VCardErrorHandling, Persistable, Serial
 	/**
 	 * {@inheritDoc}
 	 */
+	public Iterator<IMPPFeature> getIMPPs()
+	{
+		return impps.iterator();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void addIMPP(IMPPFeature impp) {
+		if(impp == null) {
+			throw new NullPointerException("Cannot add a null IMPP.");
+		}
+		
+		impps.add(impp);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void removeIMPP(IMPPFeature impp) {
+		if(impp == null) {
+			throw new NullPointerException("Cannot remove a null IMPP.");
+		}
+		
+		impps.remove(impp);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean containsIMPP(IMPPFeature impp)
+	{
+		if(impp == null) {
+			return false;
+		}
+		else {
+			return impps.contains(impp);
+		}
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void addAllIMPPs(Collection<IMPPFeature> impps) {
+		if(impps == null) {
+			throw new NullPointerException("Cannot add a null collection of impps.");
+		}
+		
+		this.impps.addAll(impps);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void clearIMPPs() {
+		impps.clear();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean hasIMPPs()
+	{
+		return !impps.isEmpty();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	public VersionFeature getVersion()
 	{
 		return version;
@@ -1782,13 +1855,7 @@ public class VCardImpl implements VCard, VCardErrorHandling, Persistable, Serial
 		}
 		
 		if(name != null) {
-			if(name.isQuotedPrintable()) {
-				sb.append(name.toString());
-			}
-			else {
-				sb.append(name.toString());
-			}
-			
+			sb.append(name.toString());
 			sb.append(",");
 		}
 		
@@ -1798,8 +1865,8 @@ public class VCardImpl implements VCard, VCardErrorHandling, Persistable, Serial
 		}
 		
 		if(!photos.isEmpty()) {
-			for(int i = 0; i < photos.size(); i++) {
-				sb.append(photos.get(i).toString());
+			for (PhotoFeature photo : photos) {
+				sb.append(photo.toString());
 				sb.append(",");
 			}
 		}
@@ -1810,8 +1877,8 @@ public class VCardImpl implements VCard, VCardErrorHandling, Persistable, Serial
 		}
 		
 		if(!addresses.isEmpty()) {
-			for(int i = 0; i < addresses.size(); i++) {
-				sb.append(addresses.toString());
+			for (AddressFeature address : addresses) {
+				sb.append(address.toString());
 				sb.append(",");
 			}
 		}
@@ -1825,15 +1892,15 @@ public class VCardImpl implements VCard, VCardErrorHandling, Persistable, Serial
 		}
 		
 		if(!telephoneNumbers.isEmpty()) {
-			for(int i = 0; i < telephoneNumbers.size(); i++) {
-				sb.append(telephoneNumbers.get(i).toString());
+			for (TelephoneFeature telephone : telephoneNumbers) {
+				sb.append(telephone.toString());
 				sb.append(",");
 			}
 		}
 		
 		if(!emailAddresses.isEmpty()) {
-			for(int i = 0; i < emailAddresses.size(); i++) {
-				sb.append(emailAddresses.get(i).toString());
+			for (EmailFeature email : emailAddresses) {
+				sb.append(email.toString());
 				sb.append(",");
 			}
 		}
@@ -1864,15 +1931,15 @@ public class VCardImpl implements VCard, VCardErrorHandling, Persistable, Serial
 		}
 		
 		if(!logos.isEmpty()) {
-			for(int i = 0; i < logos.size(); i++) {
-				sb.append(logos.get(i).toString());
+			for (LogoFeature logo : logos) {
+				sb.append(logo.toString());
 				sb.append(",");
 			}
 		}
 		
 		if(!agents.isEmpty()) {
-			for(int i = 0; i < agents.size(); i++) {
-				sb.append(agents.get(i).toString());
+			for (AgentFeature agent : agents) {
+				sb.append(agent.toString());
 				sb.append(",");
 			}
 		}
@@ -1888,8 +1955,8 @@ public class VCardImpl implements VCard, VCardErrorHandling, Persistable, Serial
 		}
 		
 		if(!notes.isEmpty()) {
-			for(int i = 0; i < notes.size(); i++) {
-				sb.append(notes.get(i).toString());
+			for (NoteFeature note : notes) {
+				sb.append(note.toString());
 				sb.append(",");
 			}
 		}
@@ -1910,8 +1977,8 @@ public class VCardImpl implements VCard, VCardErrorHandling, Persistable, Serial
 		}
 		
 		if(!sounds.isEmpty()) {
-			for(int i = 0; i < sounds.size(); i++) {
-				sb.append(sounds.get(i).toString());
+			for (SoundFeature sound : sounds) {
+				sb.append(sound.toString());
 			}
 		}
 		
@@ -1921,8 +1988,15 @@ public class VCardImpl implements VCard, VCardErrorHandling, Persistable, Serial
 		}
 		
 		if(!urls.isEmpty()) {
-			for(int i = 0; i < urls.size(); i++) {
-				sb.append(urls.get(i).toString());
+			for (URLFeature url : urls) {
+				sb.append(url.toString());
+				sb.append(",");
+			}
+		}
+		
+		if(!impps.isEmpty()) {
+			for (IMPPFeature impp : impps) {
+				sb.append(impp.toString());
 				sb.append(",");
 			}
 		}
@@ -1938,15 +2012,15 @@ public class VCardImpl implements VCard, VCardErrorHandling, Persistable, Serial
 		}
 		
 		if(!keys.isEmpty()) {
-			for(int i = 0; i < keys.size(); i++) {
-				sb.append(keys.get(i).toString());
+			for (KeyFeature key : keys) {
+				sb.append(key.toString());
 				sb.append(",");
 			}
 		}
 		
 		if(!extendedTypes.isEmpty()) {
-			for(int i = 0; i < extendedTypes.size(); i++) {
-				sb.append(extendedTypes.get(i).toString());
+			for (ExtendedFeature extendedType : extendedTypes) {
+				sb.append(extendedType.toString());
 				sb.append(",");
 			}
 		}
@@ -1955,8 +2029,8 @@ public class VCardImpl implements VCard, VCardErrorHandling, Persistable, Serial
 		sb.append(",");
 		
 		if(!errors.isEmpty()) {
-			for(int i = 0; i < errors.size(); i++) {
-				sb.append(errors.get(i).toString());
+			for (VCardError vCardError : errors) {
+				sb.append(vCardError.toString());
 				sb.append(",");
 			}
 		}
@@ -2129,6 +2203,14 @@ public class VCardImpl implements VCard, VCardErrorHandling, Persistable, Serial
 			}
 		}
 		
+		if(hasIMPPs()) {
+			Iterator<IMPPFeature> iter = getIMPPs();
+			while(iter.hasNext()) {
+				IMPPFeature impp = iter.next();
+				cloned.addIMPP(impp.clone());
+			}
+		}
+		
 		if(version != null) {
 			cloned.setVersion(version.clone());
 		}
@@ -2156,8 +2238,7 @@ public class VCardImpl implements VCard, VCardErrorHandling, Persistable, Serial
 		cloned.setThrowExceptions(isThrowsExceptions);
 		if(hasErrors()) {
 			List<VCardError> errs = getErrors();
-			for(int i = 0; i < errs.size(); i++) {
-				VCardError err = errs.get(i);
+			for (VCardError err : errs) {
 				cloned.addError(err.clone());
 			}
 		}

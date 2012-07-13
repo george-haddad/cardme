@@ -15,6 +15,7 @@ import net.sourceforge.cardme.vcard.features.EndFeature;
 import net.sourceforge.cardme.vcard.features.ExtendedFeature;
 import net.sourceforge.cardme.vcard.features.FormattedNameFeature;
 import net.sourceforge.cardme.vcard.features.GeographicPositionFeature;
+import net.sourceforge.cardme.vcard.features.IMPPFeature;
 import net.sourceforge.cardme.vcard.features.KeyFeature;
 import net.sourceforge.cardme.vcard.features.LabelFeature;
 import net.sourceforge.cardme.vcard.features.LogoFeature;
@@ -1027,6 +1028,54 @@ public interface VCard extends Cloneable, Persistable {
 	 * @return boolean
 	 */
 	public boolean hasURLs();
+	
+	/**
+	 * <p>Returns a list of IMPP URIs contained in this vcard.</p>
+	 *
+	 * @return {@link Iterator}&lt;IMPPFeature&gt;
+	 */
+	public Iterator<IMPPFeature> getIMPPs();
+	
+	/**
+	 * <p>Adds an IMPP URI to this vcard.</p>
+	 *
+	 * @param impp
+	 */
+	public void addIMPP(IMPPFeature impp);
+	
+	/**
+	 * <p>Removes an IMPP URI from this vcard.</p>
+	 *
+	 * @param impp
+	 */
+	public void removeIMPP(IMPPFeature impp);
+	
+	/**
+	 * <p>Returns true if the specified IMPP URI exists in this vcard.</p>
+	 *
+	 * @param impp
+	 * @return boolean
+	 */
+	public boolean containsIMPP(IMPPFeature impp);
+	
+	/**
+	 * <p>Adds a collection of IMPP URIs of this vcard.</p>
+	 *
+	 * @param urls
+	 */
+	public void addAllIMPPs(Collection<IMPPFeature> impps);
+	
+	/**
+	 * <p>Clears all IMPP URIs from this vcard.</p>
+	 */
+	public void clearIMPPs();
+	
+	/**
+	 * <p>Returns true if this card has IMPP URIs.</p>
+	 *
+	 * @return boolean
+	 */
+	public boolean hasIMPPs();
 	
 	/**
 	 * <p>Returns the version of this vcard.</p>

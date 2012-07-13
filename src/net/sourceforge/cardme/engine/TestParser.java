@@ -12,12 +12,11 @@ import net.sourceforge.cardme.io.CompatibilityMode;
 import net.sourceforge.cardme.io.FoldingScheme;
 import net.sourceforge.cardme.io.VCardWriter;
 import net.sourceforge.cardme.util.StringUtil;
-import net.sourceforge.cardme.util.VCardUtils;
 import net.sourceforge.cardme.vcard.VCard;
 import net.sourceforge.cardme.vcard.VCardImpl;
 import net.sourceforge.cardme.vcard.VCardVersion;
 import net.sourceforge.cardme.vcard.errors.VCardError;
-import net.sourceforge.cardme.vcard.features.EmailFeature;
+import net.sourceforge.cardme.vcard.features.IMPPFeature;
 import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
 
 /**
@@ -154,8 +153,8 @@ public class TestParser {
 		}
 		
 		TestParser testParser = new TestParser();
-		testParser.setCompatibilityMode(CompatibilityMode.MAC_ADDRESS_BOOK);
-//		testParser.setCompatibilityMode(CompatibilityMode.RFC2426);
+//		testParser.setCompatibilityMode(CompatibilityMode.MAC_ADDRESS_BOOK);
+		testParser.setCompatibilityMode(CompatibilityMode.RFC2426);
 //		testParser.setCompatibilityMode(CompatibilityMode.I_PHONE);
 //		testParser.setCompatibilityMode(CompatibilityMode.KDE_ADDRESS_BOOK);
 //		testParser.setCompatibilityMode(CompatibilityMode.MS_OUTLOOK);
@@ -163,15 +162,15 @@ public class TestParser {
 		
 		VCardWriter writer = new VCardWriter();
 		writer.setOutputVersion(VCardVersion.V3_0);
-		writer.setCompatibilityMode(CompatibilityMode.MAC_ADDRESS_BOOK);
-		writer.setFoldingScheme(FoldingScheme.MAC_ADDRESS_BOOK);
-		writer.setBinaryfoldingScheme(BinaryFoldingScheme.MAC_ADDRESS_BOOK);
-		writer.setEOL(VCardUtils.LF);
+//		writer.setCompatibilityMode(CompatibilityMode.MAC_ADDRESS_BOOK);
+//		writer.setFoldingScheme(FoldingScheme.MAC_ADDRESS_BOOK);
+//		writer.setBinaryfoldingScheme(BinaryFoldingScheme.MAC_ADDRESS_BOOK);
+//		writer.setEOL(VCardUtils.LF);
 //		writer.setCompatibilityMode(CompatibilityMode.MS_OUTLOOK);
-//		writer.setCompatibilityMode(CompatibilityMode.RFC2426);
 //		writer.setCompatibilityMode(CompatibilityMode.I_PHONE);
-//		writer.setFoldingScheme(FoldingScheme.MIME_DIR);
-//		writer.setBinaryfoldingScheme(BinaryFoldingScheme.MIME_DIR);
+		writer.setCompatibilityMode(CompatibilityMode.RFC2426);
+		writer.setFoldingScheme(FoldingScheme.MIME_DIR);
+		writer.setBinaryfoldingScheme(BinaryFoldingScheme.MIME_DIR);
 		
 		for(int i = 0; i < vcards.size(); i++) {
 			VCardImpl vcard = (VCardImpl)vcards.get(i);
@@ -188,7 +187,7 @@ public class TestParser {
 			
 //			//Uncomment to change the output style of parameter list
 //			
-			Iterator<EmailFeature> iter = vcard.getEmails();
+			Iterator<IMPPFeature> iter = vcard.getIMPPs();
 			while(iter.hasNext()) {
 				iter.next().setParameterTypeStyle(ParameterTypeStyle.PARAMETER_VALUE_LIST);
 			}
