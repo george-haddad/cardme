@@ -932,7 +932,7 @@ public class VCardEngine {
 				
 				case 2:
 				{
-					String[] addNames = names[2].split(",");
+					String[] addNames = VCardUtils.parseStringWithEscappedDelimiter(names[2], ',');
 					for(int j = 0; j < addNames.length; j++) {
 						nameFeature.addAdditionalName(VCardUtils.unescapeString(addNames[j]));
 					}
@@ -942,7 +942,7 @@ public class VCardEngine {
 				
 				case 3:
 				{
-					String[] prefixes = names[3].split(",");
+					String[] prefixes = VCardUtils.parseStringWithEscappedDelimiter(names[3], ',');
 					for(int j = 0; j < prefixes.length; j++) {
 						nameFeature.addHonorificPrefix(VCardUtils.unescapeString(prefixes[j]));
 					}
@@ -952,7 +952,7 @@ public class VCardEngine {
 				
 				case 4:
 				{
-					String[] suffixes = names[4].split(",");
+					String[] suffixes = VCardUtils.parseStringWithEscappedDelimiter(names[4], ',');
 					for(int j = 0; j < suffixes.length; j++) {
 						nameFeature.addHonorificSuffix(VCardUtils.unescapeString(suffixes[j]));
 					}
@@ -991,7 +991,7 @@ public class VCardEngine {
 		cur++;
 		
 		if(names.length > cur && names[cur] != null) {
-			String[] addNames = names[cur].split(",");
+			String[] addNames = VCardUtils.parseStringWithEscappedDelimiter(names[cur], ',');
 			for(int i = 0; i < addNames.length; i++) {
 				if(VCardUtils.needsUnEscaping(addNames[i])) {
 					nameFeature.addAdditionalName(VCardUtils.unescapeString(addNames[i]));
@@ -1004,7 +1004,7 @@ public class VCardEngine {
 		cur++;
 		
 		if(names.length > cur && names[cur] != null) {
-			String[] prefixes = names[cur].split(",");
+			String[] prefixes = VCardUtils.parseStringWithEscappedDelimiter(names[cur], ',');
 			for(int i = 0; i < prefixes.length; i++) {
 				if(VCardUtils.needsUnEscaping(prefixes[i])) {
 					nameFeature.addHonorificPrefix(VCardUtils.unescapeString(prefixes[i]));
@@ -1017,7 +1017,7 @@ public class VCardEngine {
 		cur++;
 		
 		if(names.length > cur && names[cur] != null) {
-			String[] suffixes = names[cur].split(",");
+			String[] suffixes = VCardUtils.parseStringWithEscappedDelimiter(names[cur], ',');
 			for(int i = 0; i < suffixes.length; i++) {
 				if(VCardUtils.needsUnEscaping(suffixes[i])) {
 					nameFeature.addHonorificSuffix(VCardUtils.unescapeString(suffixes[i]));
