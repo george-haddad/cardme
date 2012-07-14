@@ -182,10 +182,7 @@ public class VCardsTest {
 			assertEquals("Doe", f.getFamilyName());
 			assertEquals("John", f.getGivenName());
 			Iterator<String> it = f.getAdditionalNames();
-			//FIXME escaped commas should not be considered delimiters
-			//assertEquals("Richter, James");
-			assertEquals("Richter\\", it.next());
-			assertEquals(" James", it.next());
+			assertEquals("Richter, James", it.next());
 			assertFalse(it.hasNext());
 			it = f.getHonorificPrefixes();
 			assertEquals("Mr.", it.next());
@@ -377,10 +374,7 @@ public class VCardsTest {
 			assertEquals("Doe", f.getFamilyName());
 			assertEquals("John", f.getGivenName());
 			Iterator<String> it = f.getAdditionalNames();
-			//FIXME escaped commas should not be considered delimiters
-			//assertEquals("Richter, James", it.next());
-			assertEquals("Richter\\", it.next());
-			assertEquals(" James", it.next());
+			assertEquals("Richter, James", it.next());
 			assertFalse(it.hasNext());
 			it = f.getHonorificPrefixes();
 			assertEquals("Mr.", it.next());
@@ -1342,10 +1336,7 @@ public class VCardsTest {
 			assertEquals("Doe", f.getFamilyName());
 			assertEquals("John", f.getGivenName());
 			Iterator<String> it = f.getAdditionalNames();
-			//FIXME escaped commas should not be considered delimiters
-			//assertEquals("Richter,James", it.next());
-			assertEquals("Richter\\", it.next());
-			assertEquals("James", it.next());
+			assertEquals("Richter,James", it.next());
 			assertFalse(it.hasNext());
 			it = f.getHonorificPrefixes();
 			assertEquals("Mr.", it.next());
