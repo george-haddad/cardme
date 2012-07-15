@@ -14,6 +14,12 @@ We want to be the best VCard library on the net, so if there is a bug or a new f
 
 Card Me Version 0.3.5
 
+BUG[3543858]
+Fixed how the "N" type is parsed so that it correctly handles escaped characters.
+
+BUG[3541864]
+Improved the TimeZoneType class to ensure that the minute offset is between 0 and 59. 
+
 BUG[3538443]
 Photo not showing when using compatibility mode MAC_ADDRESS_BOOK.
 
