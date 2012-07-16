@@ -7,6 +7,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Calendar;
@@ -29,6 +31,7 @@ import net.sourceforge.cardme.vcard.features.DisplayableNameFeature;
 import net.sourceforge.cardme.vcard.features.EmailFeature;
 import net.sourceforge.cardme.vcard.features.ExtendedFeature;
 import net.sourceforge.cardme.vcard.features.FormattedNameFeature;
+import net.sourceforge.cardme.vcard.features.IMPPFeature;
 import net.sourceforge.cardme.vcard.features.KeyFeature;
 import net.sourceforge.cardme.vcard.features.LabelFeature;
 import net.sourceforge.cardme.vcard.features.LogoFeature;
@@ -50,6 +53,7 @@ import net.sourceforge.cardme.vcard.types.EmailType;
 import net.sourceforge.cardme.vcard.types.ExtendedType;
 import net.sourceforge.cardme.vcard.types.FormattedNameType;
 import net.sourceforge.cardme.vcard.types.GeographicPositionType;
+import net.sourceforge.cardme.vcard.types.IMPPType;
 import net.sourceforge.cardme.vcard.types.KeyType;
 import net.sourceforge.cardme.vcard.types.LabelType;
 import net.sourceforge.cardme.vcard.types.LogoType;
@@ -77,10 +81,12 @@ import net.sourceforge.cardme.vcard.types.media.ImageMediaType;
 import net.sourceforge.cardme.vcard.types.media.KeyTextType;
 import net.sourceforge.cardme.vcard.types.parameters.AddressParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.EmailParameterType;
+import net.sourceforge.cardme.vcard.types.parameters.IMPPParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.LabelParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
 import net.sourceforge.cardme.vcard.types.parameters.TelephoneParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XAddressParameterType;
+import net.sourceforge.cardme.vcard.types.parameters.XIMPPParameterType;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -433,7 +439,7 @@ public class TestVCard {
 		assertEquals("DÖe", _vcard.getName().getFamilyName());
 	}
 	
-	private static VCard getFullVCardNoErrors() throws IOException
+	private static VCard getFullVCardNoErrors() throws IOException, URISyntaxException
 	{
 		VCard vcard = new VCardImpl();
 		vcard.setVersion(new VersionType(VCardVersion.V3_0));
@@ -600,6 +606,16 @@ public class TestVCard {
 		
 		vcard.addExtendedType(xGenerator);
 		vcard.addExtendedType(new ExtendedType("X-LONG-STRING", "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"));
+		
+		vcard.addIMPP(new IMPPType("im:alice@example.com"));
+		vcard.addIMPP(new IMPPType(new URI("im:alice2@example.com")));
+		
+		IMPPFeature impp = new IMPPType();
+		impp.setURI(new URI("im:alice3@example.com"));
+		impp.addIMPPParameterType(IMPPParameterType.HOME);
+		impp.addIMPPParameterType(IMPPParameterType.PREF);
+		impp.addExtendedIMPPParameterType(new XIMPPParameterType("X-BLA", "BLE"));
+		vcard.addIMPP(impp);
 		
 		((VCardErrorHandling)vcard).setThrowExceptions(false);
 		
