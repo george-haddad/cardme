@@ -57,6 +57,14 @@ import net.sourceforge.cardme.vcard.types.parameters.XIMPPParameterType;
  *  </li>
  * </ul>
  * </p>
+ * 
+ * <p>
+ * The IMPP feature will not contain any specific methods to set the protocol of
+ * the URI that is set. The protocol will be embedded inside the URI such as &quot;
+ * im:alice@example.net&quot; Further more, the RFC-4770 states <strong>&quot;this
+ * document does not define any of the types&quot;</strong> so it only makes sense
+ * that cardme will not check nor enforce any protocols.
+ * </p>
  */
 public interface IMPPFeature extends TypeTools {
 

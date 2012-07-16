@@ -15,6 +15,7 @@ import net.sourceforge.cardme.vcard.types.EndTypeTest;
 import net.sourceforge.cardme.vcard.types.ExtendedTypeTest;
 import net.sourceforge.cardme.vcard.types.FormattedNameTypeTest;
 import net.sourceforge.cardme.vcard.types.GeographicPositionTypeTest;
+import net.sourceforge.cardme.vcard.types.IMPPTypeTest;
 import net.sourceforge.cardme.vcard.types.KeyTypeTest;
 import net.sourceforge.cardme.vcard.types.LabelTypeTest;
 import net.sourceforge.cardme.vcard.types.LogoTypeTest;
@@ -109,7 +110,8 @@ import org.junit.runners.Suite;
 		VCardUtilsTest.class,
 		VCardWriterTest.class,
 		VCardsTest.class,
-		ISOUtilsTest.class
+		ISOUtilsTest.class,
+		IMPPTypeTest.class
 	}
 )
 

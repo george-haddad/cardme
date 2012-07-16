@@ -57,6 +57,10 @@ PATCH[3541242]
 Fixes/refactorings to "TimeZoneType" and related classes.
 Regenerate SerialVersionUUID for TimeZoneType.
 
+FEATURE[3541962]
+Added support for IMPP type (RFC4770)
+Added JUnit test case for IMPP type.
+
 George El-Haddad
 Project Leader
 
