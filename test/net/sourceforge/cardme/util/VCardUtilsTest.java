@@ -4,10 +4,14 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.io.FoldingScheme;
 
+import java.io.BufferedReader;
+import java.io.StringReader;
 import java.text.NumberFormat;
 
+import net.sourceforge.cardme.io.FoldingScheme;
+
+import org.apache.commons.codec.net.QuotedPrintableCodec;
 import org.junit.Test;
 
 
@@ -354,6 +358,91 @@ public class VCardUtilsTest {
 		String unfolded = VCardUtils.unfoldVCard(foldedVCard);
 		
 		assertEquals(expectedUnfoldedVCard, unfolded);
+	}
+	
+	/**
+	 * Tests to make sure it can read lines that look like this
+	 * (the folded lines do not start with whitespace):
+	 * 
+	 * LABEL;HOME;ENCODING=QUOTED-PRINTABLE:Silicon Alley 5,=0D=0A=
+	 * New York, New York  12345=0D=0A=
+	 * USA
+	 *
+	 */
+	@Test
+	public void testUnfoldVCardMsOutlookRFC822Violation_4() throws Exception {
+		StringBuilder sb = new StringBuilder();
+		sb.append("BEGIN:VCARD\n");
+		sb.append("VERSION:3.0\n");
+		sb.append("N:Jost;John;;;\n");
+		sb.append("FN:John Doe\n");
+		
+		//one line
+		sb.append("LABEL;HOME;ENCODING=QUOTED-PRINTABLE:Silicon Alley 5\n");
+		
+		//two lines
+		//without "ENCODING" subtype name
+		sb.append("LABEL;HOME;QUOTED-PRINTABLE:Silicon Alley 5,=0D=0A=\n");
+		sb.append("New York, New York  12345\n");
+		
+		//three lines
+		//"quoted-printable" in lower-case
+		sb.append("LABEL;HOME;ENCODING=quoted-printable:Silicon Alley 5,=0D=0A=\n");
+		sb.append("New York, New York  12345=0D=0A=\n");
+		sb.append("USA\n");
+		
+		//it should recognize when the string "QUOTED-PRINTABLE" is not to the left of the colon
+		sb.append("LABEL;HOME:Some text QUOTED-PRINTABLE more text=\n");
+		
+		//four lines
+		sb.append("LABEL;HOME;ENCODING=QUOTED-PRINTABLE:Silicon Alley 5,=0D=0A=\n");
+		sb.append("New York, New York  12345=0D=0A=\n");
+		sb.append("USA=0D=0A=\n");
+		sb.append("4th line\n");
+		
+		//a quoted-printable line whose additional lines *are* folded
+		sb.append("LABEL;HOME;ENCODING=QUOTED-PRINTABLE:Silicon Alley 5,=0D=0A=\n");
+		sb.append(" New York, New York  12345=0D=0A=\n");
+		sb.append(" USA\n");
+		
+		sb.append("PHOTO;ENCODING=b;TYPE=JPEG:/9j/4AAQSkZJRgABAQAAAQABAAD/4QBARXhpZgAATU0AKgAA\n");
+		sb.append(" AAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAyKADAAQAAAABAAAAyAAAAAD/2wBDAA\n");
+		sb.append(" Xw5rH/ACGE/H/0EUUV8zifiPocB/DPeP2Xv+RvsPw/9HpX3v4C/wCQbH/1zH8loor18u2PPzH4\n");
+		sb.append(" joovv1NRRX0FHY8mQ6L/AFq/UVeoor7Hh7+HP1Oer0CiiivoTE//2Q==\n");
+		sb.append("UID:0e7602cc-443e-4b82-b4b1-90f62f99a199\n");
+		sb.append("END:VCARD\n");
+		String foldedVCard = sb.toString();
+		
+		sb = new StringBuilder();
+		sb.append("BEGIN:VCARD\n");
+		sb.append("VERSION:3.0\n");
+		sb.append("N:Jost;John;;;\n");
+		sb.append("FN:John Doe\n");
+		sb.append("LABEL;HOME;ENCODING=QUOTED-PRINTABLE:Silicon Alley 5\n");
+		sb.append("LABEL;HOME;QUOTED-PRINTABLE:Silicon Alley 5,=0D=0ANew York, New York  12345\n");
+		sb.append("LABEL;HOME;ENCODING=quoted-printable:Silicon Alley 5,=0D=0ANew York, New York  12345=0D=0AUSA\n");
+		sb.append("LABEL;HOME:Some text QUOTED-PRINTABLE more text=\n");
+		sb.append("LABEL;HOME;ENCODING=QUOTED-PRINTABLE:Silicon Alley 5,=0D=0ANew York, New York  12345=0D=0AUSA=0D=0A4th line\n");
+		sb.append("LABEL;HOME;ENCODING=QUOTED-PRINTABLE:Silicon Alley 5,=0D=0ANew York, New York  12345=0D=0AUSA\n");
+		sb.append("PHOTO;ENCODING=b;TYPE=JPEG:/9j/4AAQSkZJRgABAQAAAQABAAD/4QBARXhpZgAATU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAyKADAAQAAAABAAAAyAAAAAD/2wBDAAXw5rH/ACGE/H/0EUUV8zifiPocB/DPeP2Xv+RvsPw/9HpX3v4C/wCQbH/1zH8loor18u2PPzH4joovv1NRRX0FHY8mQ6L/AFq/UVeoor7Hh7+HP1Oer0CiiivoTE//2Q==\n");
+		sb.append("UID:0e7602cc-443e-4b82-b4b1-90f62f99a199\n");
+		sb.append("END:VCARD\n");
+		String expectedUnfoldedVCard = sb.toString();
+		
+		String unfolded = VCardUtils.unfoldVCard(foldedVCard);
+		
+		assertEquals(expectedUnfoldedVCard, unfolded);
+		
+		//make sure the quoted-printable lines can be properly decoded
+		BufferedReader r = new BufferedReader(new StringReader(unfolded));
+		String line;
+		QuotedPrintableCodec codec = new QuotedPrintableCodec();
+		while ((line = r.readLine()) != null){
+			String split[] = line.split(":", 2);
+			if (split[0].toUpperCase().contains("QUOTED-PRINTABLE")){
+				codec.decode(split[1]); //it will throw an exception and fail the test if it can't be decoded
+			}
+		}
 	}
 	
 	@Test

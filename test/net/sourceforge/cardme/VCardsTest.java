@@ -1156,8 +1156,6 @@ public class VCardsTest {
 			assertTrue(types.contains(AddressParameterType.WORK));
 			assertTrue(types.contains(AddressParameterType.PREF));
 			
-			//FIXME the second ADR type is not parsed (it is incorrectly included as part of the value of the LABEL above it)
-			/*
 			f = it.next();
 			assertEquals("", f.getPostOfficeBox());
 			assertEquals("", f.getExtendedAddress());
@@ -1170,7 +1168,7 @@ public class VCardsTest {
 			types = f.getAddressParameterTypesList();
 			assertEquals(1, types.size());
 			assertTrue(types.contains(AddressParameterType.HOME));
-			*/
+			
 			
 			assertFalse(it.hasNext());
 		}
@@ -1180,23 +1178,18 @@ public class VCardsTest {
 			Iterator<LabelFeature> it = vcard.getLables();
 
 			LabelFeature f = it.next();
-			//FIXME the ADR type that comes after this LABEL gets included in the LABEL's value
-			//assertEquals("Cresent moon drive\r\nAlbaney, New York  1234", f.getLabel());
-			assertEquals("Cresent moon drive\r\nAlbaney, New York  12345ADR;HOME:;;Silicon Alley 5,;New York;New York;12345;United States of America", f.getLabel());
+			assertEquals("Cresent moon drive\r\nAlbaney, New York  12345", f.getLabel());
 			
 			List<LabelParameterType> types = f.getLabelParameterTypesList();
 			assertEquals(2, types.size());
 			assertTrue(types.contains(LabelParameterType.WORK));
 			assertTrue(types.contains(LabelParameterType.PREF));
 			
-			//FIXME the second LABEL is not parsed
-			/*
 			f = it.next();
 			assertEquals("Silicon Alley 5,\r\nNew York, New York  12345", f.getLabel());
 			types = f.getLabelParameterTypesList();
 			assertEquals(1, types.size());
 			assertTrue(types.contains(LabelParameterType.HOME));
-			*/
 			
 			assertFalse(it.hasNext());
 		}
@@ -1276,12 +1269,9 @@ public class VCardsTest {
 			
 			ExtendedFeature f;
 			
-			//FIXME The "X-MS-OL-DEFAULT-POSTAL-ADDRESS" type is not parsed (it is incorrectly included as part of the value of the LABEL above it)
-			/*
 			f = it.next();
 			assertEquals("X-MS-OL-DEFAULT-POSTAL-ADDRESS", f.getExtensionName());
 			assertEquals("2", f.getExtensionData());
-			*/
 			
 			f = it.next();
 			assertEquals("X-MS-ANNIVERSARY", f.getExtensionName());
