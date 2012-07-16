@@ -41,7 +41,7 @@ public enum IMPPParameterType {
 
 	HOME("HOME", "Home"),
 	WORK("WORK", "Work"),
-	OTHER("MOBILE", "Mobile"),
+	MOBILE("MOBILE", "Mobile"),
 	PREF("PREF", "Preferred"),
 	NON_STANDARD("NON_STANDARD","Non-Standard");
 	
