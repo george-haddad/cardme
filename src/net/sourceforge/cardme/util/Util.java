@@ -1,9 +1,9 @@
 package net.sourceforge.cardme.util;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,8 +59,8 @@ public final class Util {
 	public static <E> List<E> asList(E[] array)
 	{
 		List<E> list = new ArrayList<E>(array.length);
-		for(int i=0; i < array.length; i++) {
-			list.add(array[i]);
+		for(E e : array) {
+			list.add(e);
 		}
 		
 		return list;
@@ -114,16 +114,16 @@ public final class Util {
 	 */
 	public static byte[] getFileAsBytes(File file) throws IOException
 	{
-		byte[] bytes = new byte[(int)file.length()];
-		BufferedReader br = new BufferedReader(new FileReader(file));
-		int i = 0;
-		int b = -1;
-		while((b = br.read()) != -1) {
-			bytes[i] = (byte)b;
-			i++;
+		InputStream in = null;
+		try {
+			in = new FileInputStream(file);
+			byte[] bytes = new byte[(int) file.length()];
+			in.read(bytes);
+			return bytes;
+		} finally {
+			if (in != null) {
+				in.close();
+			}
 		}
-		
-		br.close();
-		return bytes;
 	}
 }
