@@ -82,43 +82,68 @@ public final class ISOUtils {
 	public static String formatISO8601Date(Calendar time, ISOFormat format) {
 		String formatStr;
 		TimeZone timezone = time.getTimeZone();
-		switch (format) {
-		case ISO8601_BASIC:
-		case ISO8601_DATE_BASIC:
-			formatStr = "yyyyMMdd";
-			break;
-		case ISO8601_EXTENDED:
-		case ISO8601_DATE_EXTENDED:
-			formatStr = "yyyy-MM-dd";
-			break;
-		case ISO8601_TIME_BASIC:
-			formatStr = "yyyyMMdd'T'HHmmssZ";
-			break;
-		case ISO8601_TIME_EXTENDED:
-			formatStr = "yyyy-MM-dd'T'HH:mm:ssZ";
-			break;
-		case ISO8601_UTC_TIME_BASIC:
-			formatStr = "yyyyMMdd'T'HHmmss'Z'";
-			timezone = TimeZone.getTimeZone("UTC");
-			break;
-		case ISO8601_UTC_TIME_EXTENDED:
-			formatStr = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-			timezone = TimeZone.getTimeZone("UTC");
-			break;
-		default:
-			throw new IllegalArgumentException("The given ISOFormat is not supported: " + format);
+		
+		switch (format)
+		{
+			case ISO8601_BASIC:
+			case ISO8601_DATE_BASIC:
+			{
+				formatStr = "yyyyMMdd";
+				break;
+			}
+			
+			case ISO8601_EXTENDED:
+			case ISO8601_DATE_EXTENDED:
+			{
+				formatStr = "yyyy-MM-dd";
+				break;
+			}
+			
+			case ISO8601_TIME_BASIC:
+			{
+				formatStr = "yyyyMMdd'T'HHmmssZ";
+				break;
+			}
+			
+			case ISO8601_TIME_EXTENDED:
+			{
+				formatStr = "yyyy-MM-dd'T'HH:mm:ssZ";
+				break;
+			}
+			
+			case ISO8601_UTC_TIME_BASIC:
+			{
+				formatStr = "yyyyMMdd'T'HHmmss'Z'";
+				timezone = TimeZone.getTimeZone("UTC");
+				break;
+			}
+			
+			case ISO8601_UTC_TIME_EXTENDED:
+			{
+				formatStr = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+				timezone = TimeZone.getTimeZone("UTC");
+				break;
+			}
+			
+			default:
+			{
+				throw new IllegalArgumentException("The given ISOFormat is not supported: " + format);
+			}
 		}
 
 		DateFormat df = new SimpleDateFormat(formatStr);
 		df.setTimeZone(timezone);
 		String str = df.format(time.getTime());
 
-		switch (format) {
-		case ISO8601_TIME_EXTENDED:
-			//add a colon to the timezone (SimpleDateFormat cannot do this)
-			//example: converts "2012-07-05T22:31:41-0400" to "2012-07-05T22:31:41-04:00"
-			str = str.replaceAll("([-\\+]\\d{2})(\\d{2})$", "$1:$2");
-			break;
+		switch (format)
+		{
+			case ISO8601_TIME_EXTENDED:
+			{
+				//add a colon to the timezone (SimpleDateFormat cannot do this)
+				//example: converts "2012-07-05T22:31:41-0400" to "2012-07-05T22:31:41-04:00"
+				str = str.replaceAll("([-\\+]\\d{2})(\\d{2})$", "$1:$2");
+				break;
+			}
 		}
 
 		return str;
@@ -132,7 +157,7 @@ public final class ISOUtils {
 	 * 
 	 * @param timeZone the timezone to format
 	 * @param extended true to use "extended" format, false not to. Extended
-	 * format will put a colon between the hour and minute.
+	 *  format will put a colon between the hour and minute.
 	 * @return the formatted timezone (e.g. "+0530" or "+05:30")
 	 */
 	public static String formatISO8601TimeZone(TimeZone timeZone, boolean extended)
@@ -177,35 +202,38 @@ public final class ISOUtils {
 		if (ISO8601_DATE_BASIC_REGEX.matcher(dateStr).matches()) {
 			//Example: 19960415
 			format = "yyyyMMdd";
-		} else if (ISO8601_DATE_EXTENDED_REGEX.matcher(dateStr).matches()) {
+		}
+		else if (ISO8601_DATE_EXTENDED_REGEX.matcher(dateStr).matches()) {
 			//Example: 1996-04-15
 			format = "yyyy-MM-dd";
-		} else if (ISO8601_TIME_BASIC_REGEX.matcher(dateStr).matches()) {
+		}
+		else if (ISO8601_TIME_BASIC_REGEX.matcher(dateStr).matches()) {
 			//Example: 19960415T231000-0600
 			format = "yyyyMMdd'T'HHmmssZ";
-		}else if (ISO8601_TIME_EXTENDED_REGEX.matcher(dateStr).matches()) {
+		}
+		else if (ISO8601_TIME_EXTENDED_REGEX.matcher(dateStr).matches()) {
 			//Example: 1996-04-15T23:10:00-06:00
 
 			//SimpleDateFormat doesn't recognize timezone offsets that have colons
 			//so remove the colon from the timezone offset
 			dateStr = dateStr.replaceAll("([-\\+]\\d{2}):(\\d{2})$", "$1$2");
-
 			format = "yyyy-MM-dd'T'HH:mm:ssZ";
-		} else if (ISO8601_UTC_TIME_BASIC_REGEX.matcher(dateStr).matches()) {
+		}
+		else if (ISO8601_UTC_TIME_BASIC_REGEX.matcher(dateStr).matches()) {
 			//Example: 19960415T231000Z
 
 			//SimpleDateFormat doesn't recognize "Z"
 			dateStr = dateStr.replace("Z", "+0000");
-
 			format = "yyyyMMdd'T'HHmmssZ";
-		} else if (ISO8601_UTC_TIME_EXTENDED_REGEX.matcher(dateStr).matches()) {
+		}
+		else if (ISO8601_UTC_TIME_EXTENDED_REGEX.matcher(dateStr).matches()) {
 			//Example: 1996-04-15T23:10:00Z
 
 			//SimpleDateFormat doesn't recognize "Z"
 			dateStr = dateStr.replace("Z", "+0000");
-
 			format = "yyyy-MM-dd'T'HH:mm:ssZ";
-		} else {
+		}
+		else {
 			throw new IllegalArgumentException("Date string is not in a valid ISO-8601 format.");
 		}
 

@@ -120,7 +120,8 @@ public final class Util {
 			byte[] bytes = new byte[(int) file.length()];
 			in.read(bytes);
 			return bytes;
-		} finally {
+		}
+		finally {
 			if (in != null) {
 				in.close();
 			}
