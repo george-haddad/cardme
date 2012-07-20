@@ -343,9 +343,11 @@ public final class VCardUtils {
 				//remove equal sign, new line, and whitespace (in case the line is actually properly folded)
 				sb2.append(m.group(2).replaceAll("=\\n\\s*", ""));
 			}
+			
 			sb2.append(m.group(4));
 			m.appendReplacement(sb, sb2.toString());
 		}
+		
 		m.appendTail(sb);
 		String s0 = sb.toString();
 		
@@ -534,7 +536,6 @@ public final class VCardUtils {
 	{
 		return GEO_NUM_FORMATTER;
 	}
-	
 	
 	/**
 	 * <p>Parses the specified {@link String} <code>str</code> with the given
