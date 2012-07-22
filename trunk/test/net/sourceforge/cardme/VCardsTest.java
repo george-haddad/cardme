@@ -195,7 +195,7 @@ public class VCardsTest {
 		//FN
 		{
 			FormattedNameFeature f = vcard.getFormattedName();
-			assertEquals(f.getFormattedName(), "Mr. John Richter, James Doe Sr.");
+			assertEquals("Mr. John Richter, James Doe Sr.", f.getFormattedName());
 		}
 		
 		//NICKNAME
@@ -365,7 +365,7 @@ public class VCardsTest {
 		//FN
 		{
 			FormattedNameFeature f = vcard.getFormattedName();
-			assertEquals(f.getFormattedName(), "Mr. John Richter, James Doe Sr.");
+			assertEquals("Mr. John Richter, James Doe Sr.", f.getFormattedName());
 		}
 		
 		//N
@@ -565,7 +565,7 @@ public class VCardsTest {
 		//FN
 		{
 			FormattedNameFeature f = vcard.getFormattedName();
-			assertEquals(f.getFormattedName(), "Mr. John Richter James Doe Sr.");
+			assertEquals("Mr. John Richter James Doe Sr.", f.getFormattedName());
 		}
 		
 		//NICKNAME
@@ -804,7 +804,7 @@ public class VCardsTest {
 		//FN
 		{
 			FormattedNameFeature f = vcard.getFormattedName();
-			assertEquals(f.getFormattedName(), "Mr. Doe John I Johny");
+			assertEquals("Mr. Doe John I Johny", f.getFormattedName());
 		}
 		
 		//NICKNAME
@@ -1084,7 +1084,7 @@ public class VCardsTest {
 		//FN
 		{
 			FormattedNameFeature f = vcard.getFormattedName();
-			assertEquals(f.getFormattedName(), "Mr. John Richter James Doe Sr.");
+			assertEquals("Mr. John Richter James Doe Sr.", f.getFormattedName());
 		}
 		
 		//NICKNAME
@@ -1339,7 +1339,7 @@ public class VCardsTest {
 		//FN
 		{
 			FormattedNameFeature f = vcard.getFormattedName();
-			assertEquals(f.getFormattedName(), "Mr. John Richter,James Doe Sr.");
+			assertEquals("Mr. John Richter,James Doe Sr.", f.getFormattedName());
 		}
 		
 		//NICKNAME
