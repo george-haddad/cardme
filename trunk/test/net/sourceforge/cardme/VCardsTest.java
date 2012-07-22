@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Calendar;
@@ -1242,9 +1241,6 @@ public class VCardsTest {
 			PhotoFeature f = it.next();
 			assertEquals(EncodingType.BINARY, f.getEncodingType());
 			assertEquals(ImageMediaType.JPEG, f.getImageMediaType());
-			FileOutputStream out = new FileOutputStream("temp.jpg");
-			out.write(f.getPhoto());
-			out.close();
 			assertEquals(860, f.getPhoto().length);
 		}
 		
