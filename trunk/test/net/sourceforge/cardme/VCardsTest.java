@@ -129,11 +129,7 @@ public class VCardsTest {
 			List<ExtendedParameterType> xlist = f.getExtendedParametersList();
 			assertEquals(1, xlist.size());
 			assertEquals("X-COUCHDB-UUID", xlist.get(0).getXtendedTypeName());
-			//FIXME double quotes are not removed
-			//parameter values can be enclosed in double quotes to auto-escape special chars
-			//see RFC 2426 p.29 -- "param-value = ptext / quoted-string"
-			//assertEquals("0abc9b8d-0845-47d0-9a91-3db5bb74620d".toUpperCase(), xlist.get(0).getXtendedTypeValue());
-			assertEquals("\"0abc9b8d-0845-47d0-9a91-3db5bb74620d\"".toUpperCase(), xlist.get(0).getXtendedTypeValue());
+			assertEquals("0abc;9b8d-\"0845\"-47d0\r\n-9a:91-3db5bb74620d".toUpperCase(), xlist.get(0).getXtendedTypeValue());
 			
 			assertFalse(it.hasNext());
 		}
@@ -151,7 +147,7 @@ public class VCardsTest {
 			List<ExtendedParameterType> xlist = f.getExtendedParametersList();
 			assertEquals(1, xlist.size());
 			assertEquals("X-COUCHDB-UUID", xlist.get(0).getXtendedTypeName());
-			assertEquals("\"c2fa1caa-2926-4087-8971-609cfc7354ce\"".toUpperCase(), xlist.get(0).getXtendedTypeValue());
+			assertEquals("c2fa1caa-2926-4087-8971-609cfc7354ce".toUpperCase(), xlist.get(0).getXtendedTypeValue());
 			
 			f = it.next();
 			assertEquals("905-555-1234", f.getTelephone());
@@ -164,7 +160,7 @@ public class VCardsTest {
 			xlist = f.getExtendedParametersList();
 			assertEquals(1, xlist.size());
 			assertEquals("X-COUCHDB-UUID", xlist.get(0).getXtendedTypeName());
-			assertEquals("\"fbfb2722-4fd8-4dbf-9abd-eeb24072fd8e\"".toUpperCase(), xlist.get(0).getXtendedTypeValue());
+			assertEquals("fbfb2722-4fd8-4dbf-9abd-eeb24072fd8e".toUpperCase(), xlist.get(0).getXtendedTypeValue());
 			
 			assertFalse(it.hasNext());
 		}
@@ -250,7 +246,7 @@ public class VCardsTest {
 			List<ExtendedParameterType> xlist = f.getExtendedParametersList();
 			assertEquals(1, xlist.size());
 			assertEquals("X-COUCHDB-UUID", xlist.get(0).getXtendedTypeName());
-			assertEquals("\"83a75a5d-2777-45aa-bab5-76a4bd972490\"".toUpperCase(), xlist.get(0).getXtendedTypeValue());
+			assertEquals("83a75a5d-2777-45aa-bab5-76a4bd972490".toUpperCase(), xlist.get(0).getXtendedTypeValue());
 			
 			assertFalse(it.hasNext());
 		}
@@ -313,7 +309,7 @@ public class VCardsTest {
 			assertEquals("TYPE", xlist.get(0).getXtendedTypeName());
 			assertEquals("HOME".toUpperCase(), xlist.get(0).getXtendedTypeValue());
 			assertEquals("X-COUCHDB-UUID", xlist.get(1).getXtendedTypeName());
-			assertEquals("\"cb9e11fc-bb97-4222-9cd8-99820c1de454\"".toUpperCase(), xlist.get(1).getXtendedTypeValue());
+			assertEquals("cb9e11fc-bb97-4222-9cd8-99820c1de454".toUpperCase(), xlist.get(1).getXtendedTypeValue());
 			
 			f = it.next();
 			assertEquals("X-EVOLUTION-FILE-AS", f.getExtensionName());
