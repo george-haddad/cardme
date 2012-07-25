@@ -338,25 +338,12 @@ public class VCardEngine {
 		VCardImpl vcard = new VCardImpl();
 		vcard.setThrowExceptions(false);
 		
-		List<String[]> arrayLines = splitLines(vcardStr);
-		for (String[] vLine : arrayLines) {
-			String type = vLine[0].trim();	//VCard Type
-			String value = vLine[1].trim();	//VCard Value
-			String paramTypes = null;
-			String group = null;
-			
-			if(type.indexOf('.') != -1) {
-				group = type.substring(0, type.indexOf('.'));
-				type = type.substring(type.indexOf('.')+1);
-			}
-			
-			if (type.indexOf(';') != -1) {
-				paramTypes = type.substring(type.indexOf(';')+1).trim().toUpperCase();
-				type = type.substring(0, type.indexOf(';')).trim();
-			}
+		String[] lines = vcardStr.split("\n");
+		for (String vLine : lines) {
+			VCardLine parsedLine = VCardLine.parse(vLine);
 			
 			try {
-				parseLine(group, type.toUpperCase(), paramTypes, value, vcard);
+				parseLine(parsedLine, vcard);
 			}
 			catch(VCardBuildException vbe) {
 				if(vcard.isThrowExceptions()) {
@@ -432,14 +419,15 @@ public class VCardEngine {
 	 * </ul>
 	 * </p>
 	 *
-	 * @param group
-	 * @param type
-	 * @param paramTypes
-	 * @param value
+	 * @param parsedLine
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseLine(String group, String type, String paramTypes, String value, VCardImpl vcard) throws VCardBuildException {
+	private void parseLine(VCardLine parsedLine, VCardImpl vcard) throws VCardBuildException {
+		String type = parsedLine.getTypeName().trim().toUpperCase();
+		String value = parsedLine.getValue().trim();
+		List<ParameterType> paramTypes = parseParamTypes(parsedLine.getParameters());
+		String group = parsedLine.getGroup();
 		
 		VCardType vCardType = null;
 		
@@ -774,33 +762,30 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseFnType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseFnType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			FormattedNameType formattedNameFeature = new FormattedNameType();
-			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						formattedNameFeature.setCharset(pt.getValue());
-						value = new String(value.getBytes(), formattedNameFeature.getCharset());
+
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					formattedNameFeature.setCharset(pt.getValue());
+					value = new String(value.getBytes(), formattedNameFeature.getCharset());
+				}
+				else if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+						formattedNameFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 					}
-					else if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
-							formattedNameFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
-						}
-					}
-					else if(pt.getName().equals("LANGUAGE")) {
-						formattedNameFeature.setLanguage(pt.getValue());
-					}
-					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-						formattedNameFeature.addExtendedParameter(parameter);
-					}
+				}
+				else if(pt.getName().equals("LANGUAGE")) {
+					formattedNameFeature.setLanguage(pt.getValue());
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+					formattedNameFeature.addExtendedParameter(parameter);
 				}
 			}
 			
@@ -838,33 +823,29 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseNType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseNType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			NameType nameFeature = new NameType();
-			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						nameFeature.setCharset(pt.getValue());
-					}
-					else if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
-							nameFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
-						}
-					}
-					else if(pt.getName().equals("LANGUAGE")) {
-						nameFeature.setLanguage(pt.getValue());
-					}
-					else {
-						throw new VCardBuildException("Invalid parameter type: "+pt);
+
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					nameFeature.setCharset(pt.getValue());
+				}
+				else if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+						nameFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 					}
 				}
-
+				else if(pt.getName().equals("LANGUAGE")) {
+					nameFeature.setLanguage(pt.getValue());
+				}
+				else {
+					throw new VCardBuildException("Invalid parameter type: "+pt);
+				}
 			}
 			
 			if(nameFeature.getEncodingType() == EncodingType.QUOTED_PRINTABLE) {
@@ -1036,32 +1017,29 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseNicknameType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseNicknameType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			NicknameType nicknameFeature = new NicknameType();
-			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						nicknameFeature.setCharset(pt.getValue());
+
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					nicknameFeature.setCharset(pt.getValue());
+				}
+				else if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+						nicknameFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 					}
-					else if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
-							nicknameFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
-						}
-					}
-					else if(pt.getName().equals("LANGUAGE")) {
-						nicknameFeature.setLanguage(pt.getValue());
-					}
-					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-						nicknameFeature.addExtendedParameter(parameter);
-					}
+				}
+				else if(pt.getName().equals("LANGUAGE")) {
+					nicknameFeature.setLanguage(pt.getValue());
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+					nicknameFeature.addExtendedParameter(parameter);
 				}
 			}
 			
@@ -1107,54 +1085,51 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parsePhotoType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parsePhotoType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			PhotoType photoFeature = new PhotoType();
 			boolean isBinary = false;
 			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						photoFeature.setCharset(pt.getValue());
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					photoFeature.setCharset(pt.getValue());
+				}
+				else if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().compareToIgnoreCase(EncodingType.BINARY.getType()) == 0) {
+						photoFeature.setEncodingType(EncodingType.BINARY);
+						isBinary = true;
 					}
-					else if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().compareToIgnoreCase(EncodingType.BINARY.getType()) == 0) {
-							photoFeature.setEncodingType(EncodingType.BINARY);
-							isBinary = true;
-						}
-						else if(pt.getValue().compareToIgnoreCase(EncodingType.BASE64.getType()) == 0) {
-							photoFeature.setEncodingType(EncodingType.BINARY);
-							isBinary = true;
-						}
-						else {
-							throw new VCardBuildException("PhotoType ("+VCardType.PHOTO.getType()+") Invalid encoding type \""+pt.getValue()+"\"");
-						}
-					}
-					else if(pt.getName().equals("TYPE")) {
-						ImageMediaType mediaType = ImageMediaType.valueOf(pt.getValue());
-						if (mediaType == null){
-							mediaType = new ImageMediaType(pt.getValue(), pt.getValue(), pt.getValue());
-						}
-						photoFeature.setImageMediaType(mediaType);
-					}
-					else if(pt.getName().equals("VALUE")) {
-						if(pt.getValue().compareToIgnoreCase("URI") == 0) {
-							photoFeature.setEncodingType(EncodingType.EIGHT_BIT);
-							isBinary = false;
-						}
-						else {
-							throw new VCardBuildException("PhotoType ("+VCardType.PHOTO.getType()+") Invalid value type \""+pt.getValue()+"\"");
-						}
+					else if(pt.getValue().compareToIgnoreCase(EncodingType.BASE64.getType()) == 0) {
+						photoFeature.setEncodingType(EncodingType.BINARY);
+						isBinary = true;
 					}
 					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-						photoFeature.addExtendedParameter(parameter);
+						throw new VCardBuildException("PhotoType ("+VCardType.PHOTO.getType()+") Invalid encoding type \""+pt.getValue()+"\"");
 					}
+				}
+				else if(pt.getName().equals("TYPE")) {
+					ImageMediaType mediaType = ImageMediaType.valueOf(pt.getValue());
+					if (mediaType == null){
+						mediaType = new ImageMediaType(pt.getValue(), pt.getValue(), pt.getValue());
+					}
+					photoFeature.setImageMediaType(mediaType);
+				}
+				else if(pt.getName().equals("VALUE")) {
+					if(pt.getValue().compareToIgnoreCase("URI") == 0) {
+						photoFeature.setEncodingType(EncodingType.EIGHT_BIT);
+						isBinary = false;
+					}
+					else {
+						throw new VCardBuildException("PhotoType ("+VCardType.PHOTO.getType()+") Invalid value type \""+pt.getValue()+"\"");
+					}
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+					photoFeature.addExtendedParameter(parameter);
 				}
 			}
 			
@@ -1184,35 +1159,32 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseBDayType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseBDayType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			BirthdayType birthdayFeature = new BirthdayType();
 			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						birthdayFeature.setCharset(pt.getValue());
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					birthdayFeature.setCharset(pt.getValue());
+				}
+				else if(pt.getName().equals("VALUE")) {
+					if(pt.getValue().equals("DATE")) {
+						birthdayFeature.setBirthdayParameterType(BirthdayParameterType.DATE);
 					}
-					else if(pt.getName().equals("VALUE")) {
-						if(pt.getValue().equals("DATE")) {
-							birthdayFeature.setBirthdayParameterType(BirthdayParameterType.DATE);
-						}
-						else if(pt.getValue().equals("DATE-TIME")) {
-							birthdayFeature.setBirthdayParameterType(BirthdayParameterType.DATE_TIME);
-						}
-						else {
-							throw new VCardBuildException("Invalid parameter type: "+pt);
-						}
+					else if(pt.getValue().equals("DATE-TIME")) {
+						birthdayFeature.setBirthdayParameterType(BirthdayParameterType.DATE_TIME);
 					}
 					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-						birthdayFeature.addExtendedParameter(parameter);
+						throw new VCardBuildException("Invalid parameter type: "+pt);
 					}
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+					birthdayFeature.addExtendedParameter(parameter);
 				}
 			}
 			
@@ -1235,43 +1207,40 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseAdrType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseAdrType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			AddressType addressFeature = new AddressType();
-			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						addressFeature.setCharset(pt.getValue());
+
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					addressFeature.setCharset(pt.getValue());
+				}
+				else if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+						addressFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 					}
-					else if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
-							addressFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+				}
+				else if(pt.getName().equals("TYPE")) {
+					if(pt.getValue().indexOf(',') != -1) {
+						String[] typeValueList = pt.getValue().split(",");
+						for(String typeValue : typeValueList) {
+							setAdrParameterType(addressFeature, typeValue);
 						}
-					}
-					else if(pt.getName().equals("TYPE")) {
-						if(pt.getValue().indexOf(',') != -1) {
-							String[] typeValueList = pt.getValue().split(",");
-							for(String typeValue : typeValueList) {
-								setAdrParameterType(addressFeature, typeValue);
-							}
-						}
-						else {
-							setAdrParameterType(addressFeature, pt.getValue());
-						}
-					}
-					else if(pt.getName().equals("LANGUAGE")) {
-						addressFeature.setLanguage(pt.getValue());
 					}
 					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-						addressFeature.addExtendedParameter(parameter);
+						setAdrParameterType(addressFeature, pt.getValue());
 					}
+				}
+				else if(pt.getName().equals("LANGUAGE")) {
+					addressFeature.setLanguage(pt.getValue());
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+					addressFeature.addExtendedParameter(parameter);
 				}
 			}
 			
@@ -1412,43 +1381,40 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseLabelType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseLabelType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			LabelType labelFeature = new LabelType();
-			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						labelFeature.setCharset(pt.getValue());
+
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					labelFeature.setCharset(pt.getValue());
+				}
+				else if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+						labelFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 					}
-					else if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
-							labelFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+				}
+				else if(pt.getName().equals("TYPE")) {
+					if(pt.getValue().indexOf(',') != -1) {
+						String[] typeValueList = pt.getValue().split(",");
+						for(String typeValue : typeValueList) {
+							setLabelParameterType(labelFeature, typeValue);
 						}
-					}
-					else if(pt.getName().equals("TYPE")) {
-						if(pt.getValue().indexOf(',') != -1) {
-							String[] typeValueList = pt.getValue().split(",");
-							for(String typeValue : typeValueList) {
-								setLabelParameterType(labelFeature, typeValue);
-							}
-						}
-						else {
-							setLabelParameterType(labelFeature, pt.getValue());
-						}
-					}
-					else if(pt.getName().equals("LANGUAGE")) {
-						labelFeature.setLanguage(pt.getValue());
 					}
 					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-						labelFeature.addExtendedParameter(parameter);
+						setLabelParameterType(labelFeature, pt.getValue());
 					}
+				}
+				else if(pt.getName().equals("LANGUAGE")) {
+					labelFeature.setLanguage(pt.getValue());
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+					labelFeature.addExtendedParameter(parameter);
 				}
 			}
 			
@@ -1559,43 +1525,40 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseTelType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseTelType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			TelephoneType telephoneFeature = new TelephoneType();
-			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						telephoneFeature.setCharset(pt.getValue());
+
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					telephoneFeature.setCharset(pt.getValue());
+				}
+				else if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+						telephoneFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 					}
-					else if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
-							telephoneFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+				}
+				else if(pt.getName().equals("TYPE")) {
+					if(pt.getValue().indexOf(',') != -1) {
+						String[] typeValueList = pt.getValue().split(",");
+						for(String typeValue : typeValueList) {
+							setTelParameterType(telephoneFeature, typeValue);
 						}
-					}
-					else if(pt.getName().equals("TYPE")) {
-						if(pt.getValue().indexOf(',') != -1) {
-							String[] typeValueList = pt.getValue().split(",");
-							for(String typeValue : typeValueList) {
-								setTelParameterType(telephoneFeature, typeValue);
-							}
-						}
-						else {
-							setTelParameterType(telephoneFeature, pt.getValue());
-						}
-					}
-					else if(pt.getName().equals("LANGUAGE")) {
-						telephoneFeature.setLanguage(pt.getValue());
 					}
 					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-						telephoneFeature.addExtendedParameter(parameter);
+						setTelParameterType(telephoneFeature, pt.getValue());
 					}
+				}
+				else if(pt.getName().equals("LANGUAGE")) {
+					telephoneFeature.setLanguage(pt.getValue());
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+					telephoneFeature.addExtendedParameter(parameter);
 				}
 			}
 			
@@ -1658,56 +1621,53 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseEmailType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseEmailType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			EmailType emailFeature = new EmailType();
 			boolean isBinary = false;
 			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						emailFeature.setCharset(pt.getValue());
-					}
-					else if(pt.getName().equals("TYPE")) {
-						if(pt.getValue().indexOf(',') != -1) {
-							String[] typeValueList = pt.getValue().split(",");
-							for(String typeValue : typeValueList) {
-								setEmailParameterType(emailFeature, typeValue);
-							}
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					emailFeature.setCharset(pt.getValue());
+				}
+				else if(pt.getName().equals("TYPE")) {
+					if(pt.getValue().indexOf(',') != -1) {
+						String[] typeValueList = pt.getValue().split(",");
+						for(String typeValue : typeValueList) {
+							setEmailParameterType(emailFeature, typeValue);
 						}
-						else {
-							setEmailParameterType(emailFeature, pt.getValue());
-						}
-					}
-					else if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().compareToIgnoreCase(EncodingType.BINARY.getType()) == 0) {
-							emailFeature.setEncodingType(EncodingType.BINARY);
-							isBinary = true;
-						}
-						else if(pt.getValue().compareToIgnoreCase(EncodingType.BASE64.getType()) == 0) {
-							emailFeature.setEncodingType(EncodingType.BINARY);
-							isBinary = true;
-						}
-						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
-							emailFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
-						}
-						else {
-							throw new VCardBuildException("EmailType ("+VCardType.EMAIL.getType()+") Invalid encoding type \""+pt.getValue()+"\"");
-						}
-						
-					}
-					else if(pt.getName().equals("LANGUAGE")) {
-						emailFeature.setLanguage(pt.getValue());
 					}
 					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-						emailFeature.addExtendedParameter(parameter);
+						setEmailParameterType(emailFeature, pt.getValue());
 					}
+				}
+				else if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().compareToIgnoreCase(EncodingType.BINARY.getType()) == 0) {
+						emailFeature.setEncodingType(EncodingType.BINARY);
+						isBinary = true;
+					}
+					else if(pt.getValue().compareToIgnoreCase(EncodingType.BASE64.getType()) == 0) {
+						emailFeature.setEncodingType(EncodingType.BINARY);
+						isBinary = true;
+					}
+					if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+						emailFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+					}
+					else {
+						throw new VCardBuildException("EmailType ("+VCardType.EMAIL.getType()+") Invalid encoding type \""+pt.getValue()+"\"");
+					}
+					
+				}
+				else if(pt.getName().equals("LANGUAGE")) {
+					emailFeature.setLanguage(pt.getValue());
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+					emailFeature.addExtendedParameter(parameter);
 				}
 			}
 			
@@ -1772,32 +1732,29 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseMailerType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseMailerType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			MailerType mailerFeature = new MailerType();
 			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						mailerFeature.setCharset(pt.getValue());
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					mailerFeature.setCharset(pt.getValue());
+				}
+				else if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+						mailerFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 					}
-					else if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
-							mailerFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
-						}
-					}
-					else if(pt.getName().equals("LANGUAGE")) {
-						mailerFeature.setLanguage(pt.getValue());
-					}
-					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-						mailerFeature.addExtendedParameter(parameter);
-					}
+				}
+				else if(pt.getName().equals("LANGUAGE")) {
+					mailerFeature.setLanguage(pt.getValue());
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+					mailerFeature.addExtendedParameter(parameter);
 				}
 			}
 			
@@ -1834,38 +1791,38 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseTzType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseTzType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			TimeZoneType timeZoneFeature = new TimeZoneType();
-			if(paramTypes != null) {
 				//VALUE=TEXT
 				//-05:00; EST; Raleigh/North America
-				String paramValue = paramTypes.substring(paramTypes.indexOf('=')+1);
-				
-				if(paramValue.compareToIgnoreCase("TEXT") == 0) {
-					String split[] = VCardUtils.parseStringWithEscappedDelimiter(value, ';');
-					int cur = 0;
-					
-					if (split.length > cur && split[cur].length() > 0){
-						timeZoneFeature.parseTimeZoneOffset(VCardUtils.unescapeString(split[cur]));
-					}
-					
-					cur++;
-					if (split.length > cur && split[cur].length() > 0){
-						timeZoneFeature.setShortText(VCardUtils.unescapeString(split[cur]));
-					}
-					
-					cur++;
-					if (split.length > cur && split[cur].length() > 0){
-						timeZoneFeature.setLongText(VCardUtils.unescapeString(split[cur]));
-					}
+			String paramValue = null;
+			for (ParameterType pt : paramTypeList){
+				if (pt.getName().equalsIgnoreCase("VALUE")){
+					paramValue = pt.getValue();
 				}
-				else {
-					timeZoneFeature.parseTimeZoneOffset(value);
+			}
+			
+			if("TEXT".equalsIgnoreCase(paramValue)) {
+				String split[] = VCardUtils.parseStringWithEscappedDelimiter(value, ';');
+				int cur = 0;
+				
+				if (split.length > cur && split[cur].length() > 0){
+					timeZoneFeature.parseTimeZoneOffset(VCardUtils.unescapeString(split[cur]));
+				}
+				
+				cur++;
+				if (split.length > cur && split[cur].length() > 0){
+					timeZoneFeature.setShortText(VCardUtils.unescapeString(split[cur]));
+				}
+				
+				cur++;
+				if (split.length > cur && split[cur].length() > 0){
+					timeZoneFeature.setLongText(VCardUtils.unescapeString(split[cur]));
 				}
 			}
 			else {
@@ -1888,24 +1845,21 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseGeoType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseGeoType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			GeographicPositionType geographicPositionFeature = new GeographicPositionType();
-			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						geographicPositionFeature.setCharset(pt.getValue());
-					}
-					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-						geographicPositionFeature.addExtendedParameter(parameter);
-					}
+
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					geographicPositionFeature.setCharset(pt.getValue());
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+					geographicPositionFeature.addExtendedParameter(parameter);
 				}
 			}
 			
@@ -1936,32 +1890,29 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseTitleType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseTitleType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			TitleType titleFeature = new TitleType();
-			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						titleFeature.setCharset(pt.getValue());
+
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					titleFeature.setCharset(pt.getValue());
+				}
+				else if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+						titleFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 					}
-					else if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
-							titleFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
-						}
-					}
-					else if(pt.getName().equals("LANGUAGE")) {
-						titleFeature.setLanguage(pt.getValue());
-					}
-					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-						titleFeature.addExtendedParameter(parameter);
-					}
+				}
+				else if(pt.getName().equals("LANGUAGE")) {
+					titleFeature.setLanguage(pt.getValue());
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+					titleFeature.addExtendedParameter(parameter);
 				}
 			}
 			
@@ -1998,32 +1949,29 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseRoleType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseRoleType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			RoleType roleFeature = new RoleType();
-			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						roleFeature.setCharset(pt.getValue());
+
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					roleFeature.setCharset(pt.getValue());
+				}
+				else if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+						roleFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 					}
-					else if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
-							roleFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
-						}
-					}
-					else if(pt.getName().equals("LANGUAGE")) {
-						roleFeature.setLanguage(pt.getValue());
-					}
-					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-						roleFeature.addExtendedParameter(parameter);
-					}
+				}
+				else if(pt.getName().equals("LANGUAGE")) {
+					roleFeature.setLanguage(pt.getValue());
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+					roleFeature.addExtendedParameter(parameter);
 				}
 			}
 			
@@ -2060,54 +2008,51 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseLogoType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseLogoType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			LogoType logoFeature = new LogoType();
 			boolean isBinary = false;
-			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						logoFeature.setCharset(pt.getValue());
+
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					logoFeature.setCharset(pt.getValue());
+				}
+				else if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().compareToIgnoreCase(EncodingType.BINARY.getType()) == 0) {
+						logoFeature.setEncodingType(EncodingType.BINARY);
+						isBinary = true;
 					}
-					else if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().compareToIgnoreCase(EncodingType.BINARY.getType()) == 0) {
-							logoFeature.setEncodingType(EncodingType.BINARY);
-							isBinary = true;
-						}
-						else if(pt.getValue().compareToIgnoreCase(EncodingType.BASE64.getType()) == 0) {
-							logoFeature.setEncodingType(EncodingType.BINARY);
-							isBinary = true;
-						}
-						else {
-							throw new VCardBuildException("LogoType ("+VCardType.LOGO.getType()+") Invalid encoding type \""+pt.getValue()+"\"");
-						}
-					}
-					else if(pt.getName().equals("TYPE")) {
-						ImageMediaType mediaType = ImageMediaType.valueOf(pt.getValue());
-						if (mediaType == null){
-							mediaType = new ImageMediaType(pt.getValue(), pt.getValue(), pt.getValue());
-						}
-						logoFeature.setImageMediaType(mediaType);
-					}
-					else if(pt.getName().equals("VALUE")) {
-						if(pt.getValue().compareToIgnoreCase("URI") == 0) {
-							logoFeature.setEncodingType(EncodingType.EIGHT_BIT);
-							isBinary = false;
-						}
-						else {
-							throw new VCardBuildException("LogoType ("+VCardType.LOGO.getType()+") Invalid value type \""+pt.getValue()+"\"");
-						}
+					else if(pt.getValue().compareToIgnoreCase(EncodingType.BASE64.getType()) == 0) {
+						logoFeature.setEncodingType(EncodingType.BINARY);
+						isBinary = true;
 					}
 					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-						logoFeature.addExtendedParameter(parameter);
+						throw new VCardBuildException("LogoType ("+VCardType.LOGO.getType()+") Invalid encoding type \""+pt.getValue()+"\"");
 					}
+				}
+				else if(pt.getName().equals("TYPE")) {
+					ImageMediaType mediaType = ImageMediaType.valueOf(pt.getValue());
+					if (mediaType == null){
+						mediaType = new ImageMediaType(pt.getValue(), pt.getValue(), pt.getValue());
+					}
+					logoFeature.setImageMediaType(mediaType);
+				}
+				else if(pt.getName().equals("VALUE")) {
+					if(pt.getValue().compareToIgnoreCase("URI") == 0) {
+						logoFeature.setEncodingType(EncodingType.EIGHT_BIT);
+						isBinary = false;
+					}
+					else {
+						throw new VCardBuildException("LogoType ("+VCardType.LOGO.getType()+") Invalid value type \""+pt.getValue()+"\"");
+					}
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+					logoFeature.addExtendedParameter(parameter);
 				}
 			}
 			
@@ -2137,32 +2082,29 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseOrgType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseOrgType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			OrganizationType organizationFeature = new OrganizationType();
-			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						organizationFeature.setCharset(pt.getValue());
+
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					organizationFeature.setCharset(pt.getValue());
+				}
+				else if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+						organizationFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 					}
-					else if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
-							organizationFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
-						}
-					}
-					else if(pt.getName().equals("LANGUAGE")) {
-						organizationFeature.setLanguage(pt.getValue());
-					}
-					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-						organizationFeature.addExtendedParameter(parameter);
-					}
+				}
+				else if(pt.getName().equals("LANGUAGE")) {
+					organizationFeature.setLanguage(pt.getValue());
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+					organizationFeature.addExtendedParameter(parameter);
 				}
 			}
 			
@@ -2209,32 +2151,29 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseCategoriesType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseCategoriesType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			CategoriesType categoriesFeature = new CategoriesType();
-			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						categoriesFeature.setCharset(pt.getValue());
+
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					categoriesFeature.setCharset(pt.getValue());
+				}
+				else if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+						categoriesFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 					}
-					else if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
-							categoriesFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
-						}
-					}
-					else if(pt.getName().equals("LANGUAGE")) {
-						categoriesFeature.setLanguage(pt.getValue());
-					}
-					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-						categoriesFeature.addExtendedParameter(parameter);
-					}
+				}
+				else if(pt.getName().equals("LANGUAGE")) {
+					categoriesFeature.setLanguage(pt.getValue());
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+					categoriesFeature.addExtendedParameter(parameter);
 				}
 			}
 			
@@ -2290,32 +2229,29 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseNoteType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseNoteType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			NoteType noteFeature = new NoteType();
-			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						noteFeature.setCharset(pt.getValue());
+
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					noteFeature.setCharset(pt.getValue());
+				}
+				else if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+						noteFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 					}
-					else if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
-							noteFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
-						}
-					}
-					else if(pt.getName().equals("LANGUAGE")) {
-						noteFeature.setLanguage(pt.getValue());
-					}
-					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-						noteFeature.addExtendedParameter(parameter);
-					}
+				}
+				else if(pt.getName().equals("LANGUAGE")) {
+					noteFeature.setLanguage(pt.getValue());
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+					noteFeature.addExtendedParameter(parameter);
 				}
 			}
 			
@@ -2353,32 +2289,29 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseProdidType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseProdidType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			ProductIdType productIdFeature = new ProductIdType();
-			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						productIdFeature.setCharset(pt.getValue());
+
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					productIdFeature.setCharset(pt.getValue());
+				}
+				else if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+						productIdFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 					}
-					else if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
-							productIdFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
-						}
-					}
-					else if(pt.getName().equals("LANGUAGE")) {
-						productIdFeature.setLanguage(pt.getValue());
-					}
-					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-						productIdFeature.addExtendedParameter(parameter);
-					}
+				}
+				else if(pt.getName().equals("LANGUAGE")) {
+					productIdFeature.setLanguage(pt.getValue());
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+					productIdFeature.addExtendedParameter(parameter);
 				}
 			}
 			
@@ -2416,24 +2349,21 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseRevType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseRevType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			RevisionType revisionFeature = new RevisionType();
-			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						revisionFeature.setCharset(pt.getValue());
-					}
-					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-						revisionFeature.addExtendedParameter(parameter);
-					}
+
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					revisionFeature.setCharset(pt.getValue());
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+					revisionFeature.addExtendedParameter(parameter);
 				}
 			}
 			
@@ -2456,32 +2386,29 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseSortStringType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseSortStringType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			SortStringType sortStringFeature = new SortStringType();
-			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						sortStringFeature.setCharset(pt.getValue());
+
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					sortStringFeature.setCharset(pt.getValue());
+				}
+				else if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+						sortStringFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 					}
-					else if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
-							sortStringFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
-						}
-					}
-					else if(pt.getName().equals("LANGUAGE")) {
-						sortStringFeature.setLanguage(pt.getValue());
-					}
-					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-						sortStringFeature.addExtendedParameter(parameter);
-					}
+				}
+				else if(pt.getName().equals("LANGUAGE")) {
+					sortStringFeature.setLanguage(pt.getValue());
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+					sortStringFeature.addExtendedParameter(parameter);
 				}
 			}
 			
@@ -2519,57 +2446,54 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseSoundType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseSoundType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			SoundType soundFeature = new SoundType();
 			boolean isBinary = false;
-			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						soundFeature.setCharset(pt.getValue());
+
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					soundFeature.setCharset(pt.getValue());
+				}
+				else if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().compareToIgnoreCase(EncodingType.BINARY.getType()) == 0) {
+						soundFeature.setEncodingType(EncodingType.BINARY);
+						isBinary = true;
 					}
-					else if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().compareToIgnoreCase(EncodingType.BINARY.getType()) == 0) {
-							soundFeature.setEncodingType(EncodingType.BINARY);
-							isBinary = true;
-						}
-						else if(pt.getValue().compareToIgnoreCase(EncodingType.BASE64.getType()) == 0) {
-							soundFeature.setEncodingType(EncodingType.BINARY);
-							isBinary = true;
-						}
-						else {
-							throw new VCardBuildException("SoundType ("+VCardType.SOUND.getType()+") Invalid encoding type \""+pt.getValue()+"\"");
-						}
-					}
-					else if(pt.getName().equals("TYPE")) {
-						AudioMediaType mediaType = AudioMediaType.valueOf(pt.getValue());
-						if (mediaType == null){
-							mediaType = new AudioMediaType(pt.getValue(), pt.getValue(), pt.getValue());
-						}
-						soundFeature.setAudioMediaType(mediaType);
-					}
-					else if(pt.getName().equals("VALUE")) {
-						if(pt.getValue().compareToIgnoreCase("URI") == 0) {
-							soundFeature.setEncodingType(EncodingType.EIGHT_BIT);
-							isBinary = false;
-						}
-						else {
-							throw new VCardBuildException("SoundType ("+VCardType.SOUND.getType()+") Invalid value type \""+pt.getValue()+"\"");
-						}
+					else if(pt.getValue().compareToIgnoreCase(EncodingType.BASE64.getType()) == 0) {
+						soundFeature.setEncodingType(EncodingType.BINARY);
+						isBinary = true;
 					}
 					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-						soundFeature.addExtendedParameter(parameter);
+						throw new VCardBuildException("SoundType ("+VCardType.SOUND.getType()+") Invalid encoding type \""+pt.getValue()+"\"");
 					}
 				}
+				else if(pt.getName().equals("TYPE")) {
+					AudioMediaType mediaType = AudioMediaType.valueOf(pt.getValue());
+					if (mediaType == null){
+						mediaType = new AudioMediaType(pt.getValue(), pt.getValue(), pt.getValue());
+					}
+					soundFeature.setAudioMediaType(mediaType);
+				}
+				else if(pt.getName().equals("VALUE")) {
+					if(pt.getValue().compareToIgnoreCase("URI") == 0) {
+						soundFeature.setEncodingType(EncodingType.EIGHT_BIT);
+						isBinary = false;
+					}
+					else {
+						throw new VCardBuildException("SoundType ("+VCardType.SOUND.getType()+") Invalid value type \""+pt.getValue()+"\"");
+					}
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+					soundFeature.addExtendedParameter(parameter);
+				}
 			}
-			
+		
 			if(isBinary) {
 				byte[] soundBytes = Base64Wrapper.decode(value);
 				soundFeature.setCompression(false);
@@ -2596,32 +2520,29 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseUidType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseUidType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			UIDType uidFeature = new UIDType();
-			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						uidFeature.setCharset(pt.getValue());
+
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					uidFeature.setCharset(pt.getValue());
+				}
+				else if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+						uidFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 					}
-					else if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
-							uidFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
-						}
-					}
-					else if(pt.getName().equals("LANGUAGE")) {
-						uidFeature.setLanguage(pt.getValue());
-					}
-					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-						uidFeature.addExtendedParameter(parameter);
-					}
+				}
+				else if(pt.getName().equals("LANGUAGE")) {
+					uidFeature.setLanguage(pt.getValue());
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+					uidFeature.addExtendedParameter(parameter);
 				}
 			}
 			
@@ -2659,62 +2580,59 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseUrlType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseUrlType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			URLType urlFeature = new URLType();
-			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						urlFeature.setCharset(pt.getValue());
+
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					urlFeature.setCharset(pt.getValue());
+				}
+				else if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+						urlFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 					}
-					else if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
-							urlFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
-						}
-					}
-					else if(pt.getName().equals("LANGUAGE")) {
-						urlFeature.setLanguage(pt.getValue());
-					}
-					else {
-						switch(compatMode)
+				}
+				else if(pt.getName().equals("LANGUAGE")) {
+					urlFeature.setLanguage(pt.getValue());
+				}
+				else {
+					switch(compatMode)
+					{
+						case MS_OUTLOOK:
+						case I_PHONE:
+						case GMAIL:
+						case MAC_ADDRESS_BOOK:
+                        case EVOLUTION:
+                        case IOS_EXPORTER:
+                        case KDE_ADDRESS_BOOK:
+                        case RFC2426:
 						{
-							case MS_OUTLOOK:
-							case I_PHONE:
-							case GMAIL:
-							case MAC_ADDRESS_BOOK:
-                            case EVOLUTION:
-                            case IOS_EXPORTER:
-                            case KDE_ADDRESS_BOOK:
-                            case RFC2426:
-							{
-								if(pt.getName().equals("TYPE")) {
-									if(pt.getValue().indexOf(',') != -1) {
-										String[] typeValueList = pt.getValue().split(",");
-										for(String typeValue : typeValueList) {
-											setUrlParameterType(urlFeature, typeValue);
-										}
-									}
-									else {
-										setUrlParameterType(urlFeature, pt.getValue());
+							if(pt.getName().equals("TYPE")) {
+								if(pt.getValue().indexOf(',') != -1) {
+									String[] typeValueList = pt.getValue().split(",");
+									for(String typeValue : typeValueList) {
+										setUrlParameterType(urlFeature, typeValue);
 									}
 								}
 								else {
-										ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-										urlFeature.addExtendedParameter(parameter);
+									setUrlParameterType(urlFeature, pt.getValue());
 								}
-								
-								break;
 							}
-							default:
-							{
-								throw new VCardBuildException("Invalid parameter type: "+pt);
+							else {
+									ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+									urlFeature.addExtendedParameter(parameter);
 							}
+							
+							break;
+						}
+						default:
+						{
+							throw new VCardBuildException("Invalid parameter type: "+pt);
 						}
 					}
 				}
@@ -2780,32 +2698,29 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseClassType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseClassType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			ClassType classFeature = new ClassType();
 			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						classFeature.setCharset(pt.getValue());
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					classFeature.setCharset(pt.getValue());
+				}
+				else if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+						classFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 					}
-					else if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
-							classFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
-						}
-					}
-					else if(pt.getName().equals("LANGUAGE")) {
-						classFeature.setLanguage(pt.getValue());
-					}
-					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-						classFeature.addExtendedParameter(parameter);
-					}
+				}
+				else if(pt.getName().equals("LANGUAGE")) {
+					classFeature.setLanguage(pt.getValue());
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+					classFeature.addExtendedParameter(parameter);
 				}
 			}
 			
@@ -2843,42 +2758,39 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseKeyType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseKeyType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			KeyType keyFeature = new KeyType();
-			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						keyFeature.setCharset(pt.getValue());
+
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					keyFeature.setCharset(pt.getValue());
+				}
+				else if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().compareToIgnoreCase(EncodingType.BINARY.getType()) == 0) {
+						keyFeature.setEncodingType(EncodingType.BINARY);
 					}
-					else if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().compareToIgnoreCase(EncodingType.BINARY.getType()) == 0) {
-							keyFeature.setEncodingType(EncodingType.BINARY);
-						}
-						else if(pt.getValue().compareToIgnoreCase(EncodingType.BASE64.getType()) == 0) {
-							keyFeature.setEncodingType(EncodingType.BINARY);
-						}
-						else {
-							throw new VCardBuildException("KeyType ("+VCardType.KEY.getType()+") Invalid encoding type \""+pt.getValue()+"\"");
-						}
-					}
-					else if(pt.getName().equals("TYPE")) {
-						KeyTextType keyTextType = KeyTextType.valueOf(pt.getValue());
-						if (keyTextType == null){
-							keyTextType = new KeyTextType(pt.getValue(), pt.getValue(), pt.getValue());
-						}
-						keyFeature.setKeyTextType(keyTextType);
+					else if(pt.getValue().compareToIgnoreCase(EncodingType.BASE64.getType()) == 0) {
+						keyFeature.setEncodingType(EncodingType.BINARY);
 					}
 					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-						keyFeature.addExtendedParameter(parameter);
+						throw new VCardBuildException("KeyType ("+VCardType.KEY.getType()+") Invalid encoding type \""+pt.getValue()+"\"");
 					}
+				}
+				else if(pt.getName().equals("TYPE")) {
+					KeyTextType keyTextType = KeyTextType.valueOf(pt.getValue());
+					if (keyTextType == null){
+						keyTextType = new KeyTextType(pt.getValue(), pt.getValue(), pt.getValue());
+					}
+					keyFeature.setKeyTextType(keyTextType);
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+					keyFeature.addExtendedParameter(parameter);
 				}
 			}
 			
@@ -2902,33 +2814,30 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param typeName
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseXtendedType(String group, String value, String typeName, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseXtendedType(String group, String value, String typeName, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			ExtendedType extendedFeature = new ExtendedType();
-			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						extendedFeature.setCharset(pt.getValue());
+
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					extendedFeature.setCharset(pt.getValue());
+				}
+				else if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+						extendedFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 					}
-					else if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
-							extendedFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
-						}
-					}
-					else if(pt.getName().equals("LANGUAGE")) {
-						extendedFeature.setLanguage(pt.getValue());
-					}
-					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());					    					    
-						extendedFeature.addExtendedParameter(parameter);
-					}
+				}
+				else if(pt.getName().equals("LANGUAGE")) {
+					extendedFeature.setLanguage(pt.getValue());
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());					    					    
+					extendedFeature.addExtendedParameter(parameter);
 				}
 			}
 			
@@ -2967,32 +2876,29 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseDisplayableNameType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseDisplayableNameType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			DisplayableNameType displayableNameFeature = new DisplayableNameType();
-			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						displayableNameFeature.setCharset(pt.getValue());
+
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					displayableNameFeature.setCharset(pt.getValue());
+				}
+				else if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+						displayableNameFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 					}
-					else if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
-							displayableNameFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
-						}
-					}
-					else if(pt.getName().equals("LANGUAGE")) {
-						displayableNameFeature.setLanguage(pt.getValue());
-					}
-					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-						displayableNameFeature.addExtendedParameter(parameter);
-					}
+				}
+				else if(pt.getName().equals("LANGUAGE")) {
+					displayableNameFeature.setLanguage(pt.getValue());
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+					displayableNameFeature.addExtendedParameter(parameter);
 				}
 			}
 			
@@ -3030,33 +2936,29 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseProfileType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseProfileType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			ProfileType profileFeature = new ProfileType();
-			
-			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("CHARSET")) {
-						profileFeature.setCharset(pt.getValue());
+
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("CHARSET")) {
+					profileFeature.setCharset(pt.getValue());
+				}
+				else if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+						profileFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 					}
-					else if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
-							profileFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
-						}
-					}
-					else if(pt.getName().equals("LANGUAGE")) {
-						profileFeature.setLanguage(pt.getValue());
-					}
-					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-						profileFeature.addExtendedParameter(parameter);
-					}
+				}
+				else if(pt.getName().equals("LANGUAGE")) {
+					profileFeature.setLanguage(pt.getValue());
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+					profileFeature.addExtendedParameter(parameter);
 				}
 			}
 			
@@ -3094,32 +2996,29 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseSourceType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseSourceType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			SourceType sourceFeature = new SourceType();
-			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {
-					if(pt.getName().equals("CHARSET")) {
-						sourceFeature.setCharset(pt.getValue());
+
+			for (ParameterType pt : paramTypeList) {
+				if(pt.getName().equals("CHARSET")) {
+					sourceFeature.setCharset(pt.getValue());
+				}
+				else if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+						sourceFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
 					}
-					else if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().equals(EncodingType.QUOTED_PRINTABLE.getType())) {
-							sourceFeature.setEncodingType(EncodingType.QUOTED_PRINTABLE);
-						}
-					}
-					else if(pt.getName().equals("LANGUAGE")) {
-						sourceFeature.setLanguage(pt.getValue());
-					}
-					else {
-						ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-						sourceFeature.addExtendedParameter(parameter);
-					}
+				}
+				else if(pt.getName().equals("LANGUAGE")) {
+					sourceFeature.setLanguage(pt.getValue());
+				}
+				else {
+					ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+					sourceFeature.addExtendedParameter(parameter);
 				}
 			}
 			
@@ -3157,41 +3056,38 @@ public class VCardEngine {
 	 *
 	 * @param group
 	 * @param value
-	 * @param paramTypes
+	 * @param paramTypeList
 	 * @param vcard
 	 * @throws VCardBuildException
 	 */
-	private void parseImppType(String group, String value, String paramTypes, VCardImpl vcard) throws VCardBuildException {
+	private void parseImppType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			IMPPType imppFeature = new IMPPType();
-			
-			if(paramTypes != null) {
-				List<ParameterType> paramTypeList = parseParamTypes(paramTypes);
-				for (ParameterType pt : paramTypeList) {					
-					if(pt.getName().equals("ENCODING")) {
-						if(pt.getValue().equals(EncodingType.EIGHT_BIT.getType())) {
-							imppFeature.setEncodingType(EncodingType.EIGHT_BIT);
+
+			for (ParameterType pt : paramTypeList) {					
+				if(pt.getName().equals("ENCODING")) {
+					if(pt.getValue().equals(EncodingType.EIGHT_BIT.getType())) {
+						imppFeature.setEncodingType(EncodingType.EIGHT_BIT);
+					}
+					else {
+						throw new VCardBuildException("IMPP's encoding must be 8bit.");
+					}
+				}
+				else {
+					if(pt.getName().equals("TYPE")) {
+						if(pt.getValue().indexOf(',') != -1) {
+							String[] typeValueList = pt.getValue().split(",");
+							for(String typeValue : typeValueList) {
+								setImppParameterType(imppFeature, typeValue);
+							}
 						}
 						else {
-							throw new VCardBuildException("IMPP's encoding must be 8bit.");
+							setImppParameterType(imppFeature, pt.getValue());
 						}
 					}
 					else {
-						if(pt.getName().equals("TYPE")) {
-							if(pt.getValue().indexOf(',') != -1) {
-								String[] typeValueList = pt.getValue().split(",");
-								for(String typeValue : typeValueList) {
-									setImppParameterType(imppFeature, typeValue);
-								}
-							}
-							else {
-								setImppParameterType(imppFeature, pt.getValue());
-							}
-						}
-						else {
-								ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
-								imppFeature.addExtendedParameter(parameter);
-						}
+							ExtendedParameterType parameter = new ExtendedParameterType(pt.getName(), pt.getValue());                                               
+							imppFeature.addExtendedParameter(parameter);
 					}
 				}
 			}
@@ -3261,43 +3157,42 @@ public class VCardEngine {
 	}
 	
 	/**
-	 * <p>Parses the specified string of parameter types and returns
-	 * a list of <code>ParamterType</code> objects. Parameter types
-	 * are expected to be delimited by a semi-colon.</p>
+	 * <p>Parses the raw parameter names and values and returns
+	 * a list of {@link ParameterType} objects.</p>
 	 *
 	 * @param paramTypes
 	 * @return {@link List}&lt;ParameterType&gt;
 	 * @throws VCardBuildException
 	 */
-	private List<ParameterType> parseParamTypes(String paramTypes) throws VCardBuildException
+	private List<ParameterType> parseParamTypes(List<String[]> paramTypes) throws VCardBuildException
 	{
 		List<ParameterType> parameterTypes = new ArrayList<ParameterType>();
- 		String[] params = paramTypes.split(";");
-		for(String param : params) {
-			param = param.trim();
-			if(param.contains("=")) {
-				String[] paramType = param.split("=");
-				parameterTypes.add(new ParameterType(paramType[0].trim(), paramType[1].trim()));
+		for(String[] param : paramTypes) {
+			String paramName = param[0];
+			String paramValue = param[1].toUpperCase().trim();
+			if(paramName != null) {
+				paramName = paramName.toUpperCase().trim();
+				parameterTypes.add(new ParameterType(paramName, paramValue));
  			}
  			else {
  					//When the parameter types are missing we try to guess what they are.
  					//We really should not as it breaks RFC rules but some apps do broken exports.
  					
-					if(param.equals(EncodingType.BASE64.getType())) {
-						parameterTypes.add(new ParameterType("ENCODING", param));
+					if(paramValue.equals(EncodingType.BASE64.getType())) {
+						parameterTypes.add(new ParameterType("ENCODING", paramValue));
  					}
-					else if(param.equals(EncodingType.BINARY.getType())) {
-						parameterTypes.add(new ParameterType("ENCODING", param));
+					else if(paramValue.equals(EncodingType.BINARY.getType())) {
+						parameterTypes.add(new ParameterType("ENCODING", paramValue));
  					}
-					else if(param.equals(EncodingType.QUOTED_PRINTABLE.getType())) {
-						parameterTypes.add(new ParameterType("ENCODING", param));
+					else if(paramValue.equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+						parameterTypes.add(new ParameterType("ENCODING", paramValue));
  					}
-					else if(param.equals("URI")) {
-						parameterTypes.add(new ParameterType("VALUE", param));
+					else if(paramValue.equals("URI")) {
+						parameterTypes.add(new ParameterType("VALUE", paramValue));
  					}
-					else if(Charset.isSupported(param)) {
+					else if(Charset.isSupported(paramValue)) {
  						//Hell, it could even be a charset
-						parameterTypes.add(new ParameterType("CHARSET", param));
+						parameterTypes.add(new ParameterType("CHARSET", paramValue));
  					}
  					else {
  						/*
@@ -3306,34 +3201,12 @@ public class VCardEngine {
 						 * be one of the IANA registered image formats or a non-standard image format.
 						 */
 						
-						parameterTypes.add(new ParameterType("TYPE", param));
+						parameterTypes.add(new ParameterType("TYPE", paramValue));
  					}
  			}
 		}
 		
 		return parameterTypes;
-	}
-	
-	/**
-	 * <p>Splits each line of the vcard into an array of 2 cells.
-	 * The first cell contains the VCard type (may or may not include
-	 * parameter types.) The second cell contains the Type values (may
-	 * or may not contains comma or semicolon delimited lists.)</p>
-	 * 
-	 * @param vcardString
-	 * @return List&lt;String[]&gt;
-	 */
-	private List<String[]> splitLines(String vcardString)
-	{
-		String[] strArray = vcardString.split("\n");
-		List<String[]> arrayLines = new ArrayList<String[]>();
-
-		for (String line : strArray) {
-			String[] subLine = line.split(":", 2);
-			arrayLines.add(subLine);
-		}
-
-		return arrayLines;
 	}
 	
 	/**
