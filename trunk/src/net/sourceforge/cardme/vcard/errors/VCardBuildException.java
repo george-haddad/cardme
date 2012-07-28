@@ -40,7 +40,7 @@ public class VCardBuildException extends Exception {
 	private static final long serialVersionUID = 8873755852907453222L;
 
 	/**
-	 * <p>Constructor for a VCard Exception</p>
+	 * <p>Constructor for a VCard Build Exception</p>
 	 * 
 	 * @param description
 	 */
