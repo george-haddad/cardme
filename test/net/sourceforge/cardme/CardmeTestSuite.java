@@ -1,5 +1,7 @@
 package net.sourceforge.cardme;
 
+import net.sourceforge.cardme.engine.VCardEngineTest;
+import net.sourceforge.cardme.engine.VCardLineTest;
 import net.sourceforge.cardme.io.VCardWriterTest;
 import net.sourceforge.cardme.util.ISOUtilsTest;
 import net.sourceforge.cardme.util.VCardUtilsTest;
@@ -111,7 +113,9 @@ import org.junit.runners.Suite;
 		VCardWriterTest.class,
 		VCardsTest.class,
 		ISOUtilsTest.class,
-		IMPPTypeTest.class
+		IMPPTypeTest.class,
+		VCardLineTest.class,
+		VCardEngineTest.class
 	}
 )
 

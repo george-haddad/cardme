@@ -321,9 +321,12 @@ public class VCardEngine {
 	}
 	
 	/**
-	 * <p>Parses the specified VCard String and returns a VCard java object
-	 * with {@link VCardImpl}.setThrowExceptions() set to false. This method
-	 * assumes the following:
+	 * <p>Parses the specified VCard String and returns a VCard java object.
+	 * Should errors occur during the parsing of the VCard they will be handled
+	 * within the VCard error handling interface. These errors can be retrieved 
+	 * via the <code>{@link VCardImpl}.getErrors()</code> method.<br/>
+	 * 
+	 * This method assumes the following:
 	 * <ol>
 	 * 	<li>The String has only \n end of line markers instead of \r\n</li>
 	 * 	<li>All lines in the String are unfolded</li>
@@ -339,21 +342,31 @@ public class VCardEngine {
 		vcard.setThrowExceptions(false);
 		
 		String[] lines = vcardStr.split("\n");
-		for (String vLine : lines) {
+		for (int i = 0; i < lines.length; i++) {
+			String vLine = lines[i];
 			VCardLine parsedLine = VCardLine.parse(vLine);
 			
-			try {
-				parseLine(parsedLine, vcard);
+			if(parsedLine != null) {
+				try {
+					parseLine(parsedLine, vcard);
+				}
+				catch(VCardBuildException vbe) {
+					if(vcard.isThrowExceptions()) {
+						throw new VCardException(vbe.getMessage(), vbe);
+					}
+					else {
+						handleError(vcard, vbe.getMessage(), vbe, ErrorSeverity.WARNING);
+					}
+				}
 			}
-			catch(VCardBuildException vbe) {
+			else {
 				if(vcard.isThrowExceptions()) {
-					throw new VCardException(vbe.getMessage(), vbe);
+					throw new VCardException("Invalid data in VCard on line "+i);
 				}
 				else {
-					handleError(vcard, vbe.getMessage(), vbe, ErrorSeverity.WARNING);
+					handleError(vcard, "Invalid data in VCard on line "+i, null, ErrorSeverity.FATAL);
 				}
 			}
-			
 		}
 
 		return vcard;
