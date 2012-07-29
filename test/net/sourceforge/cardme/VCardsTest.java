@@ -129,7 +129,7 @@ public class VCardsTest {
 			List<ExtendedParameterType> xlist = f.getExtendedParametersList();
 			assertEquals(1, xlist.size());
 			assertEquals("X-COUCHDB-UUID", xlist.get(0).getXtendedTypeName());
-			assertEquals("0abc;9b8d-\"0845\"-47d0\r\n-9a:91-3db5bb74620d".toUpperCase(), xlist.get(0).getXtendedTypeValue());
+			assertEquals("0abc9b8d-0845-47d0-9a91-3db5bb74620d".toUpperCase(), xlist.get(0).getXtendedTypeValue());
 			
 			assertFalse(it.hasNext());
 		}
