@@ -1835,9 +1835,9 @@ public class VCardWriter {
 	private void buildUrlFeature(StringBuilder sb, URLFeature urlFeature) throws VCardBuildException {
 		try {
 			if(urlFeature != null) {
-				if(urlFeature.hasURL()) {
+				if(urlFeature.hasRawURL()) {
 					boolean isQuotedPrintable = urlFeature.isQuotedPrintable();
-					String url = urlFeature.getURL().toString();
+					String url = urlFeature.getRawURL();
 					StringBuilder tmpSb = new StringBuilder();
 					
 					if(urlFeature.hasGroup()) {

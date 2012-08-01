@@ -4,17 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
 import net.sourceforge.cardme.vcard.VCardType;
 import net.sourceforge.cardme.vcard.features.URLFeature;
 import net.sourceforge.cardme.vcard.types.parameters.URLParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XURLParameterType;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,6 +56,7 @@ public class URLTypeTest {
 	private URLType urlType1 = null;
 	private URLType urlType2 = null;
 	private URLType urlType3 = null;
+	private URLType urlType4 = null;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -70,6 +68,7 @@ public class URLTypeTest {
 		
 		urlType2 = new URLType(new URL("http://sourceforge.net"));
 		urlType3 = new URLType();
+		urlType4 = new URLType("this should be ok.");
 	}
 	
 	@After
@@ -77,6 +76,7 @@ public class URLTypeTest {
 		urlType1 = null;
 		urlType2 = null;
 		urlType3 = null;
+		urlType4 = null;
 	}
 	
 	@Test
@@ -85,6 +85,9 @@ public class URLTypeTest {
 		assertEquals(url, urlType1.getURL());
 		assertEquals(url, urlType2.getURL());
 		assertNull(urlType3.getURL());
+		assertNull(urlType4.getURL());
+		assertTrue(urlType4.hasRawURL());
+		assertEquals("this should be ok.", urlType4.getRawURL());
 	}
 	
 	@Test
@@ -92,6 +95,8 @@ public class URLTypeTest {
 		assertTrue(urlType1.hasURL());
 		assertTrue(urlType2.hasURL());
 		assertFalse(urlType3.hasURL());
+		assertFalse(urlType4.hasURL());
+		assertTrue(urlType4.hasRawURL());
 	}
 	
 	@Test
@@ -99,10 +104,13 @@ public class URLTypeTest {
 		urlType1.clearURL();
 		urlType2.clearURL();
 		urlType3.clearURL();
+		urlType4.clearURL();
 		
 		assertFalse(urlType1.hasURL());
 		assertFalse(urlType2.hasURL());
 		assertFalse(urlType3.hasURL());
+		assertFalse(urlType4.hasURL());
+		assertFalse(urlType4.hasRawURL());
 	}
 	
 	@Test
@@ -159,26 +167,26 @@ public class URLTypeTest {
 	}
 	
 	@Test
-	public void testEquals() throws MalformedURLException {
-		URLType urlType4 = new URLType("http://sourceforge.net");
-		urlType4.addURLParameterType(URLParameterType.WORK);
-		urlType4.addURLParameterType(URLParameterType.PREF);
-		urlType4.addExtendedURLParameterType(new XURLParameterType("X-PROTOCOL", "HTTPS"));
-		urlType4.addExtendedURLParameterType(new XURLParameterType("X-SSL"));
+	public void testEquals() {
+		URLType urlType5 = new URLType("http://sourceforge.net");
+		urlType5.addURLParameterType(URLParameterType.WORK);
+		urlType5.addURLParameterType(URLParameterType.PREF);
+		urlType5.addExtendedURLParameterType(new XURLParameterType("X-PROTOCOL", "HTTPS"));
+		urlType5.addExtendedURLParameterType(new XURLParameterType("X-SSL"));
 		
-		assertTrue(urlType1.equals(urlType4));
+		assertTrue(urlType1.equals(urlType5));
 	}
 	
 	@Test
-	public void testHashcode() throws MalformedURLException {
-		URLType urlType4 = new URLType("http://sourceforge.net");
-		urlType4.addURLParameterType(URLParameterType.WORK);
-		urlType4.addURLParameterType(URLParameterType.PREF);
-		urlType4.addExtendedURLParameterType(new XURLParameterType("X-PROTOCOL", "HTTPS"));
-		urlType4.addExtendedURLParameterType(new XURLParameterType("X-SSL"));
+	public void testHashcode() {
+		URLType urlType5 = new URLType("http://sourceforge.net");
+		urlType5.addURLParameterType(URLParameterType.WORK);
+		urlType5.addURLParameterType(URLParameterType.PREF);
+		urlType5.addExtendedURLParameterType(new XURLParameterType("X-PROTOCOL", "HTTPS"));
+		urlType5.addExtendedURLParameterType(new XURLParameterType("X-SSL"));
 		
 		int hcode1 = urlType1.hashCode();
-		int hcode2 = urlType4.hashCode();
+		int hcode2 = urlType5.hashCode();
 		assertEquals(hcode1, hcode2);
 	}
 	
@@ -187,5 +195,9 @@ public class URLTypeTest {
 		URLFeature cloned = urlType1.clone();
 		assertEquals(cloned, urlType1);
 		assertTrue(urlType1.equals(cloned));
+		
+		URLFeature cloned2 = urlType4.clone();
+		assertEquals(cloned2, urlType4);
+		assertTrue(urlType4.equals(cloned2));
 	}
 }

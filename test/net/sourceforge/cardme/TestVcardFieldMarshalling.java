@@ -2,6 +2,10 @@ package net.sourceforge.cardme;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import net.sourceforge.cardme.io.CompatibilityMode;
 import net.sourceforge.cardme.io.VCardWriter;
 import net.sourceforge.cardme.util.Util;
@@ -18,13 +22,6 @@ import net.sourceforge.cardme.vcard.types.TelephoneType;
 import net.sourceforge.cardme.vcard.types.URLType;
 import net.sourceforge.cardme.vcard.types.media.ImageMediaType;
 import net.sourceforge.cardme.vcard.types.parameters.TelephoneParameterType;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import org.junit.Test;
 
 public class TestVcardFieldMarshalling {
@@ -88,16 +85,20 @@ public class TestVcardFieldMarshalling {
 	}
 	
 	@Test
-	public void testURL() throws  MalformedURLException {
+	public void testURL() {
 		VCardImpl vcard = new VCardImpl();
 		appyBasicName(vcard);
 		vcard.addURL(new URLType("http://www.example.org/"));
 		String result = getSerializedString(vcard);
-		assertTrue(result.contains("URL:http://www.example.org/"));	
+		assertTrue(result.contains("URL:http://www.example.org/"));
 		
 		vcard.addURL(new URLType("ftp://ftp.example.org/"));
 		result = getSerializedString(vcard);
-		assertTrue(result.contains("URL:ftp://ftp.example.org/"));	
+		assertTrue(result.contains("URL:ftp://ftp.example.org/"));
+		
+		vcard.addURL(new URLType("this is free form text"));
+		result = getSerializedString(vcard);
+		assertTrue(result.contains("URL:this is free form text"));
 	}
 	
 	@Test

@@ -300,12 +300,8 @@ public class VCardWriterTest {
 	@Test
 	public void testBuildUrlFeature() {
 		String vcardStr = vcardWriter.buildVCardString();
-		
-		int startIndex = vcardStr.indexOf("\r\nURL:")+2;
-		int stopIndex = vcardStr.indexOf('\n', startIndex)+1;
-		String line = vcardStr.substring(startIndex, stopIndex);
-		
-		assertTrue(line.compareTo("URL:http://www.sun.com\r\n") == 0);
+		assertTrue(vcardStr.contains("URL:http://www.sun.com\r\n"));
+		assertTrue(vcardStr.contains("URL:this is free form text."));
 	}
 	
 	@Test
@@ -411,6 +407,8 @@ public class VCardWriterTest {
 		
 		vcard.setUID(new UIDType("c0ff639f-9633-4e57-bcfd-55079cfd9d65"));
 		vcard.addURL(new URLType(new URL("http://www.sun.com")));
+		vcard.addURL(new URLType("this is free form text."));
+		
 		vcard.setGeographicPosition(new GeographicPositionType(3.4f, -2.6f));
 
 		Calendar birthday = Calendar.getInstance();

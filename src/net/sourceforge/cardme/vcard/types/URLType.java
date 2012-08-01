@@ -55,6 +55,7 @@ public class URLType extends Type implements URLFeature {
 	private static final long serialVersionUID = 4110983706732337413L;
 	
 	private URL url = null;
+	private String rawUrl = null;
 	private List<URLParameterType> urlParameterTypes = null;
 	private List<XURLParameterType> xtendedUrlParameterTypes = null;
 	
@@ -62,8 +63,11 @@ public class URLType extends Type implements URLFeature {
 		this((URL)null);
 	}
 	
-	public URLType(String url) throws MalformedURLException {
-		this(new URL(url));
+	public URLType(String url) {
+		super(EncodingType.EIGHT_BIT, ParameterTypeStyle.PARAMETER_VALUE_LIST);
+		urlParameterTypes = new ArrayList<URLParameterType>();
+		xtendedUrlParameterTypes = new ArrayList<XURLParameterType>();
+		setRawURL(url);
 	}
 	
 	public URLType(URL url) {
@@ -80,12 +84,38 @@ public class URLType extends Type implements URLFeature {
 	{
 		return url;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getRawURL()
+	{
+		return rawUrl;
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public void setURL(URL url) {
 		this.url = url;
+		
+		if(url != null) {
+			rawUrl = url.toString();
+		}
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setRawURL(String rawUrl) {
+		this.rawUrl = rawUrl;
+		
+		try {
+			this.url = new URL(rawUrl);
+		}
+		catch(MalformedURLException ex) {
+			this.url = null;
+		}
 	}
 	
 	/**
@@ -93,6 +123,7 @@ public class URLType extends Type implements URLFeature {
 	 */
 	public void clearURL() {
 		url = null;
+		rawUrl = null;
 	}
 	
 	/**
@@ -101,6 +132,14 @@ public class URLType extends Type implements URLFeature {
 	public boolean hasURL()
 	{
 		return url != null;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean hasRawURL()
+	{
+		return rawUrl != null;
 	}
 
 	/**
@@ -302,6 +341,11 @@ public class URLType extends Type implements URLFeature {
 			sb.append(",");
 		}
 		
+		if(rawUrl != null) {
+			sb.append(rawUrl);
+			sb.append(",");
+		}
+		
 		if(!urlParameterTypes.isEmpty()) {
 			for(int i = 0; i < urlParameterTypes.size(); i++) {
 				sb.append(urlParameterTypes.get(i).getType());
@@ -334,13 +378,10 @@ public class URLType extends Type implements URLFeature {
 	{
 		URLType cloned = new URLType();
 		
-		if(url != null) {
-			try {
-				cloned.setURL(new URL(url.toString()));
-			}
-			catch(MalformedURLException e) {
-				cloned.setURL(null);
-			}
+		//This will set the URL as well,
+		//if it can't then it will stay null.
+		if(rawUrl != null) {
+			cloned.setRawURL(rawUrl);
 		}
 		
 		if(!urlParameterTypes.isEmpty()) {
