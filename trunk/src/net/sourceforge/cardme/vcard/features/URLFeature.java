@@ -62,14 +62,32 @@ public interface URLFeature extends TypeTools {
 	public URL getURL();
 	
 	/**
-	 * <p>Sets the URL.</p>
+	 * <p>Returns the raw URL string.</p>
+	 *
+	 * @return {@link String}
+	 */
+	public String getRawURL();
+	
+	/**
+	 * <p>Sets the URL and extract the specs
+	 * and set it as the raw url..</p>
 	 *
 	 * @param url
 	 */
 	public void setURL(URL url);
 	
 	/**
-	 * <p>Clears the URL.</p>
+	 * <p>Sets the raw URL string, this will
+	 * also attempt to set the URL object, if
+	 * the raw URL string is malformed then the
+	 * URL object will remain null.</p>
+	 *
+	 * @param rawURL
+	 */
+	public void setRawURL(String rawURL);
+	
+	/**
+	 * <p>Clears the URL and raw URL.</p>
 	 */
 	public void clearURL();
 	
@@ -79,6 +97,13 @@ public interface URLFeature extends TypeTools {
 	 * @return boolean
 	 */
 	public boolean hasURL();
+	
+	/**
+	 * <p>Returns true if there is a raw URL.</p>
+	 *
+	 * @return boolean
+	 */
+	public boolean hasRawURL();
 	
 	/**
 	 * <p>Returns an iterator all parameter types.</p>

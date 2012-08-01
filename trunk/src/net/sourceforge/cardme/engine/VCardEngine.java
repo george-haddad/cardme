@@ -7,13 +7,11 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.URI;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
-
 import net.sourceforge.cardme.io.CompatibilityMode;
 import net.sourceforge.cardme.util.Base64Wrapper;
 import net.sourceforge.cardme.util.ISOUtils;
@@ -79,7 +77,6 @@ import net.sourceforge.cardme.vcard.types.parameters.XIMPPParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XLabelParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XTelephoneParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XURLParameterType;
-
 import org.apache.commons.codec.net.QuotedPrintableCodec;
 
 /**
@@ -2620,10 +2617,10 @@ public class VCardEngine {
 						case I_PHONE:
 						case GMAIL:
 						case MAC_ADDRESS_BOOK:
-                        case EVOLUTION:
-                        case IOS_EXPORTER:
-                        case KDE_ADDRESS_BOOK:
-                        case RFC2426:
+			                        case EVOLUTION:
+			                        case IOS_EXPORTER:
+			                        case KDE_ADDRESS_BOOK:
+			                        case RFC2426:
 						{
 							if(pt.getName().equals("TYPE")) {
 								if(pt.getValue().indexOf(',') != -1) {
@@ -2667,7 +2664,7 @@ public class VCardEngine {
 				}
 			}
 			
-			urlFeature.setURL(new URL(VCardUtils.unescapeString(value)));
+			urlFeature.setRawURL(VCardUtils.unescapeString(value));
 			
 			if(group != null) {
 				urlFeature.setGroup(group);
