@@ -4051,26 +4051,26 @@ public class VCardWriter {
 					}
 					
 					tmpSb.append(":");
+					tmpSb.append(VCardUtils.escapeString(uri));
 					
 					//Gmail, iPhone and iOS Exporter expect an escaped URL,
 					//so maybe they might expect the URI to be escaped too ?
-					
-					switch(compatMode)
-					{
-						case GMAIL:
-						case I_PHONE:
-						case IOS_EXPORTER:
-						{
-							tmpSb.append(VCardUtils.escapeString(uri));
-							break;
-						}
-						
-						default:
-						{
-							tmpSb.append(uri);
-							break;
-						}
-					}
+//					switch(compatMode)
+//					{
+//						case GMAIL:
+//						case I_PHONE:
+//						case IOS_EXPORTER:
+//						{
+//							tmpSb.append(VCardUtils.escapeString(uri));
+//							break;
+//						}
+//						
+//						default:
+//						{
+//							tmpSb.append(uri);
+//							break;
+//						}
+//					}
 					
 					String tmpUrlLine = tmpSb.toString();
 					String foldedUrlLine = VCardUtils.foldLine(tmpUrlLine, eol, foldingScheme);
