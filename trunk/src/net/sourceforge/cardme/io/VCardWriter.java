@@ -4051,7 +4051,7 @@ public class VCardWriter {
 					}
 					
 					tmpSb.append(":");
-					tmpSb.append(VCardUtils.escapeString(uri));
+					tmpSb.append(uri);
 					
 					//Gmail, iPhone and iOS Exporter expect an escaped URL,
 					//so maybe they might expect the URI to be escaped too ?
