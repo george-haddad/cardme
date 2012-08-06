@@ -11,7 +11,7 @@ import net.sourceforge.cardme.vcard.types.Type;
 import net.sourceforge.cardme.vcard.types.parameters.ExtendedParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
 
-/**
+/*
  * Copyright 2011 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are

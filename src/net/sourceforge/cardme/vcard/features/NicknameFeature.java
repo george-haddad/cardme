@@ -3,7 +3,7 @@ package net.sourceforge.cardme.vcard.features;
 import java.util.Collection;
 import java.util.Iterator;
 
-/**
+/*
  * Copyright 2011 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are

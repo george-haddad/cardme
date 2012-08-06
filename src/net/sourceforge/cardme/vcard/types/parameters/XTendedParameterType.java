@@ -3,7 +3,7 @@ package net.sourceforge.cardme.vcard.types.parameters;
 import net.sourceforge.cardme.util.Util;
 import net.sourceforge.cardme.vcard.VCardType;
 
-/**
+/*
  * Copyright 2011 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are

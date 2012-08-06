@@ -6,7 +6,7 @@ import java.util.Date;
 import net.sourceforge.cardme.util.ISOFormat;
 import net.sourceforge.cardme.vcard.types.parameters.BirthdayParameterType;
 
-/**
+/*
  * Copyright 2011 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are

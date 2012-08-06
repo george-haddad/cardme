@@ -7,7 +7,7 @@ import net.sourceforge.cardme.vcard.VCardVersion;
 import net.sourceforge.cardme.vcard.features.VersionFeature;
 import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
 
-/**
+/*
  * Copyright 2011 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are

@@ -79,7 +79,7 @@ import net.sourceforge.cardme.vcard.types.parameters.XTelephoneParameterType;
 import net.sourceforge.cardme.vcard.types.parameters.XURLParameterType;
 import org.apache.commons.codec.net.QuotedPrintableCodec;
 
-/**
+/*
  * Copyright 2011 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are

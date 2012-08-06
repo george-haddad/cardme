@@ -3,7 +3,7 @@ package net.sourceforge.cardme.vcard.features;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
+/*
  * Copyright 2011 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are

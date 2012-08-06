@@ -54,7 +54,7 @@ import net.sourceforge.cardme.vcard.types.BeginType;
 import net.sourceforge.cardme.vcard.types.EndType;
 import net.sourceforge.cardme.vcard.types.VersionType;
 
-/**
+/*
  * Copyright 2011 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are

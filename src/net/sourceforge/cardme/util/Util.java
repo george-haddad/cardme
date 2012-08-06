@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
+/*
  * Copyright 2011 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
