@@ -2,7 +2,7 @@ package net.sourceforge.cardme.vcard.errors;
 
 import net.sourceforge.cardme.util.Util;
 
-/**
+/*
  * Copyright 2011 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are

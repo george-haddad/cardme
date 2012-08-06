@@ -32,28 +32,28 @@ package net.sourceforge.cardme.vcard.errors;
  * 
  * @author George El-Haddad
  * <br/>
- * Feb 8, 2010
+ * Jul 24, 2012
  *
  */
-public class VCardBuildException extends Exception {
+public class VCardParseException extends Exception {
 
-	private static final long serialVersionUID = 8873755852907453222L;
+	private static final long serialVersionUID = -4386008354054991846L;
 
 	/**
-	 * <p>Constructor for a VCard Build Exception</p>
+	 * <p>Constructor for a VCard Parse Exception</p>
 	 * 
 	 * @param description
 	 */
-	public VCardBuildException(String description) {
+	public VCardParseException(String description) {
 		super(description);
 		
 	}
 	
-	public VCardBuildException(Throwable throwable) {
+	public VCardParseException(Throwable throwable) {
 		super(throwable);
 	}
 	
-	public VCardBuildException(String description, Throwable throwable) {
+	public VCardParseException(String description, Throwable throwable) {
 		super(description, throwable);
 	}
 }

@@ -3,7 +3,7 @@ package net.sourceforge.cardme.vcard.features;
 import net.sourceforge.cardme.vcard.EncodingType;
 import net.sourceforge.cardme.vcard.types.media.KeyTextType;
 
-/**
+/*
  * Copyright 2011 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are

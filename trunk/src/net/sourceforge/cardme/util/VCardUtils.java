@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import net.sourceforge.cardme.io.BinaryFoldingScheme;
 import net.sourceforge.cardme.io.FoldingScheme;
 
-/**
+/*
  * Copyright 2011 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are

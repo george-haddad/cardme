@@ -43,7 +43,7 @@ import net.sourceforge.cardme.vcard.types.VersionTypeTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-/**
+/*
  * Copyright 2011 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
