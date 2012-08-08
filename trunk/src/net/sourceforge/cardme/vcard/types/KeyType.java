@@ -42,7 +42,9 @@ import java.util.Arrays;
  * @author George El-Haddad
  * <br/>
  * Feb 4, 2010
- *
+ * <p>
+ * @author Michael Angstadt
+ * Aug 8, 2012
  */
 public class KeyType extends Type implements KeyFeature {
 
