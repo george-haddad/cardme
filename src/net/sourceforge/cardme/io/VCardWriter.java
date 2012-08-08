@@ -3224,39 +3224,44 @@ public class VCardWriter {
 					}
 					
 					tmpSb.append(keyFeature.getTypeString());
-					
+
 					if(keyFeature.hasCharset()) {
+						tmpSb.append(";");
 						tmpSb.append("CHARSET=");
 						tmpSb.append(keyFeature.getCharset().name());
 					}
 					
-					tmpSb.append(";");
-					
-					String foldedKeyLine = null;
-					
-					switch(compatMode)
-					{
-						case MS_OUTLOOK:
+					// determine if the key contains binary data or text data
+					boolean binary = keyFeature.getEncodingType() == EncodingType.BINARY || keyFeature.getEncodingType() == EncodingType.BASE64;
+
+					// output the ENCODING parameter
+					// only do so if the key contains binary data
+					if(binary) {
+						tmpSb.append(";");
+						switch(compatMode)
 						{
-							tmpSb.append("ENCODING=");
-							tmpSb.append(EncodingType.BASE64.getType());
-							break;
-						}
-						
-						case MAC_ADDRESS_BOOK:
-						{
-							tmpSb.append(EncodingType.BASE64.getType());
-							break;
-						}
-						
-						case EVOLUTION:
-						case KDE_ADDRESS_BOOK:
-						case RFC2426:
-						case I_PHONE:
-						{
-							tmpSb.append("ENCODING=");
-							tmpSb.append(keyFeature.getEncodingType().getType());
-							break;
+							case MS_OUTLOOK:
+							{
+								tmpSb.append("ENCODING=");
+								tmpSb.append(EncodingType.BASE64.getType());
+								break;
+							}
+
+							case MAC_ADDRESS_BOOK:
+							{
+								tmpSb.append(EncodingType.BASE64.getType());
+								break;
+							}
+
+							case EVOLUTION:
+							case KDE_ADDRESS_BOOK:
+							case RFC2426:
+							case I_PHONE:
+							{
+								tmpSb.append("ENCODING=");
+								tmpSb.append(keyFeature.getEncodingType().getType());
+								break;
+							}
 						}
 					}
 					
@@ -3272,23 +3277,30 @@ public class VCardWriter {
 					
 					tmpSb.append(":");
 					
+					String foldedKeyLine = null;
+					
 					switch(compatMode)
 					{
 						case MAC_ADDRESS_BOOK:
 						case MS_OUTLOOK:
 						{
 							String b64str = null;
-							try {
-								byte[] keyBytes = keyFeature.getKey();
-								if(keyFeature.isSetCompression()) {
-									b64str = Base64Wrapper.encode(keyBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION);
+							byte[] keyBytes = keyFeature.getKey();
+							if(binary) {
+								try {
+									if(keyFeature.isSetCompression()) {
+										b64str = Base64Wrapper.encode(keyBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION);
+									}
+									else {
+										b64str = Base64Wrapper.encode(keyBytes, Base64Wrapper.OPTIONS.NO_COMPRESSION);
+									}
 								}
-								else {
-									b64str = Base64Wrapper.encode(keyBytes, Base64Wrapper.OPTIONS.NO_COMPRESSION);
+								catch(Exception ex) {
+									throw new VCardBuildException(ex.getMessage(), ex);
 								}
 							}
-							catch(Exception ex) {
-								throw new VCardBuildException(ex.getMessage(), ex);
+							else {
+								b64str = new String(keyBytes);
 							}
 							
 							String tmpKeyLine = tmpSb.toString();
@@ -3306,17 +3318,22 @@ public class VCardWriter {
 						case RFC2426:
 						case I_PHONE:
 						{
-							try {
-								byte[] keyBytes = keyFeature.getKey();
-								if(keyFeature.isSetCompression()) {
-									tmpSb.append(Base64Wrapper.encode(keyBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION));
+							byte[] keyBytes = keyFeature.getKey();
+							if(binary) {
+								try {
+									if(keyFeature.isSetCompression()) {
+										tmpSb.append(Base64Wrapper.encode(keyBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION));
+									}
+									else {
+										tmpSb.append(Base64Wrapper.encode(keyBytes, Base64Wrapper.OPTIONS.NO_COMPRESSION));
+									}
 								}
-								else {
-									tmpSb.append(Base64Wrapper.encode(keyBytes, Base64Wrapper.OPTIONS.NO_COMPRESSION));
+								catch(Exception ex) {
+									throw new VCardBuildException(ex.getMessage(), ex);
 								}
 							}
-							catch(Exception ex) {
-								throw new VCardBuildException(ex.getMessage(), ex);
+							else {
+								tmpSb.append(new String(keyBytes));
 							}
 							
 							String tmpKeyLine = tmpSb.toString();

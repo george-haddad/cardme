@@ -49,7 +49,6 @@ import net.sourceforge.cardme.vcard.types.media.KeyTextType;
  * </p>
  */
 public interface KeyFeature extends TypeTools, TypeData {
-
 	/**
 	 * <p>Returns the key as an array of bytes.</p>
 	 *
@@ -74,9 +73,16 @@ public interface KeyFeature extends TypeTools, TypeData {
 	/**
 	 * <p>Sets the key.</p>
 	 *
-	 * @param keyBytes
+	 * @param keyBytes the raw binary data of the key
 	 */
 	public void setKey(byte[] keyBytes);
+	
+	/**
+	 * <p>Sets the key.</p>
+	 *
+	 * @param keyText the key in plain text
+	 */
+	public void setKey(String keyText);
 	
 	/**
 	 * <p>Sets the encoding type of the key.</p>

@@ -15,12 +15,14 @@ import net.sourceforge.cardme.vcard.types.AddressType;
 import net.sourceforge.cardme.vcard.types.CategoriesType;
 import net.sourceforge.cardme.vcard.types.EmailType;
 import net.sourceforge.cardme.vcard.types.FormattedNameType;
+import net.sourceforge.cardme.vcard.types.KeyType;
 import net.sourceforge.cardme.vcard.types.NameType;
 import net.sourceforge.cardme.vcard.types.OrganizationType;
 import net.sourceforge.cardme.vcard.types.PhotoType;
 import net.sourceforge.cardme.vcard.types.TelephoneType;
 import net.sourceforge.cardme.vcard.types.URLType;
 import net.sourceforge.cardme.vcard.types.media.ImageMediaType;
+import net.sourceforge.cardme.vcard.types.media.KeyTextType;
 import net.sourceforge.cardme.vcard.types.parameters.TelephoneParameterType;
 import org.junit.Test;
 
@@ -184,6 +186,21 @@ public class TestVcardFieldMarshalling {
 		vcard.addPhoto(photo);
 		String result = getSerializedString(vcard);
 		assertTrue(result.contains("PHOTO;ENCODING=BASE64;TYPE=PNG:"));
+	}
+	
+	@Test
+	public void testKey() {
+		VCardImpl vcard = new VCardImpl();
+		appyBasicName(vcard);
+		
+		KeyType key = new KeyType("plain text key", KeyTextType.PGP);
+		vcard.addKey(key);
+		key = new KeyType("binary data".getBytes(), KeyTextType.X509);
+		vcard.addKey(key);
+
+		String result = getSerializedString(vcard);
+		assertTrue(result.contains("KEY;TYPE=PGP:plain text key"));
+		assertTrue(result.contains("KEY;ENCODING=B;TYPE=X509:YmluYXJ5IGRhdGE="));
 	}
 	
 
