@@ -44,6 +44,7 @@ import java.util.Arrays;
  * Feb 4, 2010
  * <p>
  * @author Michael Angstadt
+ * <br/>
  * Aug 8, 2012
  */
 public class KeyType extends Type implements KeyFeature {
