@@ -12,6 +12,27 @@ We want to be the best VCard library on the net, so if there is a bug or a new f
 
 -------------------
 
+Card Me Version 0.3.6
+
+FEATURE[3554030]
+Support text keys in KeyType
+
+BUG[3554080]
+Do not escape URI string for IMPP at all.
+
+BUG[3552438]
+Allow incomplete and user defined URLs in URL type.
+
+George El-Haddad
+Project Leader
+
+Michael Rimov
+Maven Integration Contributor
+
+Michael Angstadt
+Developer
+
+
 Card Me Version 0.3.5
 
 BUG[3544565]
