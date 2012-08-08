@@ -2775,6 +2775,8 @@ public class VCardEngine {
 	private void parseKeyType(String group, String value, List<ParameterType> paramTypeList, VCardImpl vcard) throws VCardBuildException {
 		try {
 			KeyType keyFeature = new KeyType();
+			boolean quotedPrintable = false;
+			boolean text = true; //assume that the key is encoded in text if there is no ENCODING parameter
 
 			for (ParameterType pt : paramTypeList) {					
 				if(pt.getName().equals("CHARSET")) {
@@ -2783,9 +2785,18 @@ public class VCardEngine {
 				else if(pt.getName().equals("ENCODING")) {
 					if(pt.getValue().compareToIgnoreCase(EncodingType.BINARY.getType()) == 0) {
 						keyFeature.setEncodingType(EncodingType.BINARY);
+						text = false;
 					}
 					else if(pt.getValue().compareToIgnoreCase(EncodingType.BASE64.getType()) == 0) {
 						keyFeature.setEncodingType(EncodingType.BINARY);
+						text = false;
+					}
+					else if(pt.getValue().compareToIgnoreCase(EncodingType.QUOTED_PRINTABLE.getType()) == 0) {
+						quotedPrintable = true;
+						text = true;
+					}
+					else if(pt.getValue().compareToIgnoreCase(EncodingType.SEVEN_BIT.getType()) == 0 || pt.getValue().compareToIgnoreCase(EncodingType.EIGHT_BIT.getType()) == 0) {
+						text = true;
 					}
 					else {
 						throw new VCardBuildException("KeyType ("+VCardType.KEY.getType()+") Invalid encoding type \""+pt.getValue()+"\"");
@@ -2804,9 +2815,30 @@ public class VCardEngine {
 				}
 			}
 			
-			byte[] keyBytes = Base64Wrapper.decode(value);
+			if (quotedPrintable){
+				QuotedPrintableCodec q = new QuotedPrintableCodec();
+				
+				if(isCharsetForced()) {
+					value = q.decode(value, forceCharset.name());
+				}
+				else { 
+					if(keyFeature.hasCharset()) {
+						value = q.decode(value, keyFeature.getCharset().name());
+					}
+					else {
+						value = q.decode(value);
+					}
+				}
+			}
+			
 			keyFeature.setCompression(false);
-			keyFeature.setKey(keyBytes);
+			if(text) {
+				keyFeature.setKey(value);
+			}
+			else {
+				byte[] keyBytes = Base64Wrapper.decode(value);
+				keyFeature.setKey(keyBytes);
+			}
 			
 			if(group != null) {
 				keyFeature.setGroup(group);

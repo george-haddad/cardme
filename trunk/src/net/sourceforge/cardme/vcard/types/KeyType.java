@@ -51,14 +51,32 @@ public class KeyType extends Type implements KeyFeature {
 	private byte[] keyBytes = null;
 	private KeyTextType keyTextType = null;
 	private boolean isSetCompression = false;
-	
+
 	public KeyType() {
 		super(EncodingType.BINARY, ParameterTypeStyle.PARAMETER_VALUE_LIST);
 	}
 	
-	public KeyType(byte[] keyBytes, EncodingType encodingType, KeyTextType keyTextType) {
-		super(encodingType, ParameterTypeStyle.PARAMETER_VALUE_LIST);
+	/**
+	 * @param keyBytes
+	 *                the binary data of the key
+	 * @param keyTextType
+	 *                the type of key (e.g. PGP)
+	 */
+	public KeyType(byte[] keyBytes, KeyTextType keyTextType) {
+		super(EncodingType.BINARY, ParameterTypeStyle.PARAMETER_VALUE_LIST);
 		setKey(keyBytes);
+		setKeyTextType(keyTextType);
+	}
+	
+	/**
+	 * @param keyText
+	 *                a plain text representation of the key
+	 * @param keyTextType
+	 *                the type of key (e.g. PGP)
+	 */
+	public KeyType(String keyText, KeyTextType keyTextType) {
+		super(EncodingType.EIGHT_BIT, ParameterTypeStyle.PARAMETER_VALUE_LIST);
+		setKey(keyText);
 		setKeyTextType(keyTextType);
 	}
 	
@@ -90,6 +108,15 @@ public class KeyType extends Type implements KeyFeature {
 	 */
 	public void setKey(byte[] keyBytes) {
 		this.keyBytes = keyBytes;
+		setEncodingType(EncodingType.BINARY);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setKey(String keyText) {
+		this.keyBytes = keyText.getBytes();
+		setEncodingType(EncodingType.EIGHT_BIT);
 	}
 
 	/**

@@ -1,10 +1,15 @@
 package net.sourceforge.cardme.engine;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import java.util.Iterator;
 import net.sourceforge.cardme.io.CompatibilityMode;
+import net.sourceforge.cardme.vcard.EncodingType;
 import net.sourceforge.cardme.vcard.VCardImpl;
-
+import net.sourceforge.cardme.vcard.features.KeyFeature;
+import net.sourceforge.cardme.vcard.types.media.KeyTextType;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -62,6 +67,39 @@ public class VCardEngineTest {
 	@Before
 	public void setUp() throws Exception {
 		vCardEngine.setCompatibilityMode(CompatibilityMode.RFC2426);
+	}
+	
+	@Test
+	public void testParseKeyType() throws Exception {
+		StringBuilder sb = new StringBuilder();
+		sb.append("BEGIN:VCARD\r\n");
+		sb.append("VERSION:2.1\r\n");
+		sb.append("KEY;PGP:plain text key\r\n");
+		sb.append("KEY;GPG;ENCODING=QUOTED-PRINTABLE:quoted printable=0D=0A=\r\n");
+		sb.append(" key\r\n");
+		sb.append("KEY;ENCODING=BASE64;X509:YmluYXJ5IGRhdGE=");
+		sb.append("END:VCARD\r\n");
+
+		VCardImpl vcard = (VCardImpl)vCardEngine.parse(sb.toString());
+
+		Iterator<KeyFeature> it = vcard.getKeys();
+
+		KeyFeature f = it.next();
+		assertEquals(KeyTextType.PGP, f.getKeyTextType());
+		assertArrayEquals("plain text key".getBytes(), f.getKey());
+		assertEquals(EncodingType.EIGHT_BIT, f.getEncodingType());
+
+		f = it.next();
+		assertEquals(KeyTextType.GPG, f.getKeyTextType());
+		assertArrayEquals("quoted printable\r\nkey".getBytes(), f.getKey());
+		assertEquals(EncodingType.EIGHT_BIT, f.getEncodingType());
+
+		f = it.next();
+		assertEquals(KeyTextType.X509, f.getKeyTextType());
+		assertArrayEquals("binary data".getBytes(), f.getKey());
+		assertEquals(EncodingType.BINARY, f.getEncodingType());
+
+		assertFalse(it.hasNext());
 	}
 	
 	@Test

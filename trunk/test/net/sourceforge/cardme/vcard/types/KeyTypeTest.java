@@ -1,8 +1,10 @@
 package net.sourceforge.cardme.vcard.types;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import net.sourceforge.cardme.vcard.EncodingType;
 import net.sourceforge.cardme.vcard.VCardType;
 import net.sourceforge.cardme.vcard.features.KeyFeature;
 import net.sourceforge.cardme.vcard.types.media.KeyTextType;
@@ -87,6 +89,19 @@ public class KeyTypeTest {
 	@Test
 	public void testGetTypeString() {
 		assertEquals(keyType.getTypeString(), VCardType.KEY.getType());
+	}
+	
+	@Test
+	public void testGetEncoding() {
+		assertEquals(EncodingType.BINARY, keyType.getEncodingType());
+	}
+	
+	@Test
+	public void testPlainTextKey() {
+		KeyType keyType = new KeyType("the plain text key", KeyTextType.PGP);
+		assertArrayEquals("the plain text key".getBytes(), keyType.getKey());
+		assertEquals(EncodingType.EIGHT_BIT, keyType.getEncodingType());
+		assertEquals(KeyTextType.PGP, keyType.getKeyTextType());
 	}
 	
 	@Test
