@@ -39,6 +39,7 @@ package net.sourceforge.cardme.db;
  * database. It also allows us to set a MarkType which is defined by <code>MarkType</code>.
  * </p>
  */
+@Deprecated
 public interface Persistable {
 
 	/**

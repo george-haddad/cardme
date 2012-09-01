@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
 import net.sourceforge.cardme.io.BinaryFoldingScheme;
 import net.sourceforge.cardme.io.CompatibilityMode;
 import net.sourceforge.cardme.io.FoldingScheme;
@@ -14,10 +12,12 @@ import net.sourceforge.cardme.io.VCardWriter;
 import net.sourceforge.cardme.util.StringUtil;
 import net.sourceforge.cardme.vcard.VCard;
 import net.sourceforge.cardme.vcard.VCardImpl;
-import net.sourceforge.cardme.vcard.VCardVersion;
+import net.sourceforge.cardme.vcard.arch.ParameterTypeStyle;
+import net.sourceforge.cardme.vcard.arch.VCardVersion;
 import net.sourceforge.cardme.vcard.errors.VCardError;
-import net.sourceforge.cardme.vcard.features.IMPPFeature;
-import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
+import net.sourceforge.cardme.vcard.exceptions.VCardBuildException;
+import net.sourceforge.cardme.vcard.exceptions.VCardParseException;
+import net.sourceforge.cardme.vcard.types.ImppType;
 
 /*
  * Copyright 2011 George El-Haddad. All rights reserved.
@@ -92,6 +92,10 @@ public class TestParser {
 				System.err.println("Could not read vcard file: "+vcardFiles[i].getAbsolutePath());
 				ioe.printStackTrace();
 			}
+			catch(VCardParseException ex) {
+				System.err.println("Error parsing vcard file: "+vcardFiles[i].getAbsolutePath());
+				ex.printStackTrace();
+			}
 		}
 		
 		return vcards;
@@ -145,7 +149,7 @@ public class TestParser {
 	 * 
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws VCardBuildException {
 		
 		vcardFiles = new File[args.length];
 		for (int i = 0; i < args.length; i++) {
@@ -187,9 +191,9 @@ public class TestParser {
 			
 //			//Uncomment to change the output style of parameter list
 //			
-			Iterator<IMPPFeature> iter = vcard.getIMPPs();
-			while(iter.hasNext()) {
-				iter.next().setParameterTypeStyle(ParameterTypeStyle.PARAMETER_VALUE_LIST);
+			List<ImppType> imppList = vcard.getIMPPs();
+			for(ImppType imppType : imppList) {
+				imppType.setParameterTypeStyle(ParameterTypeStyle.PARAMETER_VALUE_LIST);
 			}
 			
 			writer.setVCard(vcard);

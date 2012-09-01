@@ -1,9 +1,12 @@
 package net.sourceforge.cardme.vcard.errors;
 
+import java.io.Serializable;
+import java.util.Arrays;
+import net.sourceforge.cardme.util.StringUtil;
 import net.sourceforge.cardme.util.Util;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -34,11 +37,13 @@ import net.sourceforge.cardme.util.Util;
  * 
  * @author George El-Haddad
  * <br/>
- * Feb 5, 2010
+ * Aug 11, 2012
  *
  */
-public class VCardError implements Cloneable {
-
+public class VCardError implements Comparable<VCardError>, Cloneable, Serializable {
+	
+	private static final long serialVersionUID = 8746546867439397068L;
+	
 	private String errorMessage = null;
 	private ErrorSeverity severity = ErrorSeverity.NONE;
 	private Throwable error = null;
@@ -57,103 +62,84 @@ public class VCardError implements Cloneable {
 		setSeverity(severity);
 	}
 	
-	/**
-	 * <p>Returns the user defined error message or the message that
-	 * is present in the throwable object if the error message is null.</p>
-	 *
-	 * @return {@link String}
-	 * 	- the error message
-	 */
 	public String getErrorMessage()
 	{
-		if(errorMessage == null) {
+		if(errorMessage != null) {
+			return errorMessage;
+		}
+		else if(error != null) {
 			return error.getMessage();
 		}
 		else {
-			return errorMessage;
+			return null;
 		}
 	}
 	
-	/**
-	 * <p>Returns the severity of the error.
-	 * <ul>
-	 * 	<li>FATAL</li>
-	 * 	<li>WARNING</li>
-	 * 	<li>NONE</li>
-	 * </ul>
-	 * </p>
-	 *
-	 * @see ErrorSeverity
-	 * @return {@link ErrorSeverity}
-	 * 	- the severity of the error
-	 */
 	public ErrorSeverity getSeverity()
 	{
 		return severity;
 	}
 	
-	/**
-	 * <p>Returns the throwable object that was caught as an exception.</p>
-	 *
-	 * @return {@link Throwable}
-	 * 	- the error that was caught
-	 */
 	public Throwable getError()
 	{
 		return error;
 	}
 	
-	/**
-	 * <p>Sets the error message. If set to null then
-	 * the error message from the throwable object will be used.</p>
-	 *
-	 * @param errorMessage
-	 * 	- the error message
-	 */
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
 	}
 	
-	/**
-	 * <p>Sets the error that occurred.</p>
-	 *
-	 * @param error
-	 * 	- the exception that was caught
-	 */
 	public void setError(Throwable error) {
 		this.error = error;
 	}
 	
-	/**
-	 * <p>Sets the severity of the error.</p>
-	 *
-	 * @see ErrorSeverity
-	 * @param severity
-	 * 	- the severity of the error
-	 */
 	public void setSeverity(ErrorSeverity severity) {
 		this.severity = severity;
 	}
 	
-	/**
-	 * <p>Performs a java style equality with one extra bit of checking.
-	 * In the end we check if the hash codes of both objects are equal.
-	 * The hash code is determined by the overridden hash code function.</p>
-	 * 
-	 * @param obj
-	 * @return boolean
-	 */
+	@Override
+	public VCardError clone()
+	{
+		VCardError cloned = new VCardError();
+		cloned.setErrorMessage(errorMessage);
+		cloned.setError(error);
+		cloned.setSeverity(severity);
+		return cloned;
+	}
+	
+	public int compareTo(VCardError obj)
+	{
+		if(obj != null) {
+			String[] contents = obj.getContents();
+			String[] myContents = getContents();
+			if(Arrays.equals(myContents, contents)) {
+				return 0;
+			}
+			else {
+				return 1;
+			}
+		}
+		else {
+			return -1;
+		}
+	}
+	
+	private String[] getContents()
+	{
+		String[] contents = new String[4];
+		contents[0] = VCardError.class.getName();
+		contents[1] = StringUtil.getString(errorMessage);
+		contents[2] = (error != null ? error.getMessage() : "");
+		contents[3] = (severity != null ? ""+severity.getLevel() : "");
+		return contents;
+	}
+	
 	@Override
 	public boolean equals(Object obj)
 	{
 		if(obj != null) {
 			if(obj instanceof VCardError) {
-				if(this == obj || ((VCardError)obj).hashCode() == this.hashCode()) {
-					return true;
-				}
-				else {
-					return false;
-				}
+				return this.compareTo((VCardError)obj) == 0;
 			}
 			else {
 				return false;
@@ -164,68 +150,27 @@ public class VCardError implements Cloneable {
 		}
 	}
 
-	/**
-	 * <p>Generates a unique hash code based on all the data
-	 * contained within in the object.</p>
-	 * 
-	 * @see Util#generateHashCode(String...)
-	 * @return int
-	 */
 	@Override
 	public int hashCode()
 	{
-		return Util.generateHashCode(toString());
+		return Util.generateHashCode(getContents());
 	}
-
-	/**
-	 * <p>Concatenates all data types in the object and returns it.</p>
-	 * 
-	 * @return {@link String}
-	 */
+	
 	@Override
 	public String toString()
 	{
+		String[] args = getContents();
 		StringBuilder sb = new StringBuilder();
-		sb.append(this.getClass().getName());
-		sb.append("[ ");
+		sb.append(VCardError.class.getName());
+		sb.append(" [");
 		
-		if(errorMessage != null) {
-			sb.append(errorMessage);
+		for(int i = 0; i < args.length; i++) {
+			sb.append(args[i]);
 			sb.append(",");
 		}
 		
-		sb.append(severity.toString());
-		sb.append(",");
-		
-		if(error != null) {
-			sb.append(error.getMessage());
-			sb.append(",");
-		}
-		
-		sb.deleteCharAt(sb.length()-1);	//Remove last comma.
-		sb.append(" ]");
+		sb.deleteCharAt(sb.length()-1);
+		sb.append("]");
 		return sb.toString();
-	}
-	
-	/**
-	 * <p>Returns a cloned copy of this object.</p>
-	 * 
-	 * @return {@link VCardError}
-	 */
-	@Override
-	public VCardError clone()
-	{
-		VCardError cloned = new VCardError();
-		
-		if(errorMessage != null) {
-			cloned.setErrorMessage(new String(errorMessage));
-		}
-		
-		if(error != null) {
-			cloned.setError(new Throwable(error));
-		}
-		
-		cloned.setSeverity(severity);
-		return cloned;
 	}
 }

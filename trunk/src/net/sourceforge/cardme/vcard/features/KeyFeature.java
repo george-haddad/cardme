@@ -1,10 +1,9 @@
 package net.sourceforge.cardme.vcard.features;
 
-import net.sourceforge.cardme.vcard.EncodingType;
 import net.sourceforge.cardme.vcard.types.media.KeyTextType;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -35,7 +34,7 @@ import net.sourceforge.cardme.vcard.types.media.KeyTextType;
  * 
  * @author George El-Haddad
  * <br/>
- * Feb 4, 2010
+ * Aug 11, 2012
  * 
  * <p><b>RFC 2426</b><br/>
  * <b>3.7.2 KEY Type Definition</b>
@@ -48,93 +47,21 @@ import net.sourceforge.cardme.vcard.types.media.KeyTextType;
  * </ul>
  * </p>
  */
-public interface KeyFeature extends TypeTools, TypeData {
-	/**
-	 * <p>Returns the key as an array of bytes.</p>
-	 *
-	 * @return byte[]
-	 */
+public interface KeyFeature {
+	
 	public byte[] getKey();
 	
-	/**
-	 * <p>Returns the encoding type of the key.</p>
-	 *
-	 * @return {@link EncodingType}
-	 */
-	public EncodingType getEncodingType();
-	
-	/**
-	 * <p>Returns the format type of the key.</p>
-	 *
-	 * @return {@link KeyTextType}
-	 */
-	public KeyTextType getKeyTextType();
-	
-	/**
-	 * <p>Sets the key.</p>
-	 *
-	 * @param keyBytes the raw binary data of the key
-	 */
 	public void setKey(byte[] keyBytes);
 	
-	/**
-	 * <p>Sets the key.</p>
-	 *
-	 * @param keyText the key in plain text
-	 */
 	public void setKey(String keyText);
 	
-	/**
-	 * <p>Sets the encoding type of the key.</p>
-	 *
-	 * @param encodingType
-	 */
-	public void setEncodingType(EncodingType encodingType);
-	
-	/**
-	 * <p>Sets the format type of the key.</p>
-	 *
-	 * @param keyTextType
-	 */
-	public void setKeyTextType(KeyTextType keyTextType);
-	
-	/**
-	 * <p>Returns true if this key has a format type.</p>
-	 *
-	 * @return boolean
-	 */
-	public boolean hasKeyTextType();
-	
-	/**
-	 * <p>Returns true if this key is stored in-line.</p>
-	 *
-	 * @return boolean
-	 */
-	public boolean isInline();
-	
-	/**
-	 * <p>Returns true if the key is stored in a compressed format.</p>
-	 * 
-	 * @return boolean
-	 */
-	public boolean isSetCompression();
-	
-	/**
-	 * <p>Clears the key.</p>
-	 */
-	public void clearKey();
-	
-	/**
-	 * <p>Returns true if the key exists.</p>
-	 *
-	 * @return boolean
-	 */
 	public boolean hasKey();
 	
-	/**
-	 * <p>Returns a full copy of this object.</p>
-	 *
-	 * @return {@link KeyFeature}
-	 */
-	public KeyFeature clone();
+	public void clearKey();
+	
+	public KeyTextType getKeyTextType();
+	
+	public void setKeyTextType(KeyTextType keyTextType);
+	
+	public boolean hasKeyTextType();
 }

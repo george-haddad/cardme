@@ -1,7 +1,7 @@
 package net.sourceforge.cardme.vcard.features;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -32,7 +32,7 @@ package net.sourceforge.cardme.vcard.features;
  * 
  * @author George El-Haddad
  * <br/>
- * Feb 4, 2010
+ * Aug 9, 2012
  * 
  * <p><b>RFC 2426</b><br/>
  * <b>3.6.5 SORT-STRING Type Definition</b>
@@ -45,38 +45,13 @@ package net.sourceforge.cardme.vcard.features;
  * </ul>
  * </p>
  */
-public interface SortStringFeature extends TypeTools {
-	
-	/**
-	 * <p>Returns the sort string.</p>
-	 *
-	 * @return {@link String}
-	 */
+public interface SortStringFeature {
+
 	public String getSortString();
 	
-	/**
-	 * <p>Sets the sort string.</p>
-	 *
-	 * @param sortString
-	 */
 	public void setSortString(String sortString);
 	
-	/**
-	 * <p>Clears teh sort string.</p>
-	 */
 	public void clearSortString();
 	
-	/**
-	 * <p>Returns true if a sort string exists.</p>
-	 *
-	 * @return boolean
-	 */
 	public boolean hasSortString();
-	
-	/**
-	 * <p>Returns a full copy of this object.</p>
-	 *
-	 * @return {@link SortStringFeature}
-	 */
-	public SortStringFeature clone();
 }

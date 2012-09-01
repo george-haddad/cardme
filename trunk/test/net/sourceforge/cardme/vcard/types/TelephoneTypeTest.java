@@ -3,20 +3,17 @@ package net.sourceforge.cardme.vcard.types;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.TelephoneFeature;
-import net.sourceforge.cardme.vcard.types.parameters.TelephoneParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.XTelephoneParameterType;
-
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
+import net.sourceforge.cardme.vcard.types.params.ExtendedParamType;
+import net.sourceforge.cardme.vcard.types.params.TelParamType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -47,192 +44,183 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 4, 2011
+ * Aug 27, 2012
  *
  */
 public class TelephoneTypeTest {
 
-	private TelephoneType telephoneType = null;
+	private TelType telType = null;
 	
 	@Before
 	public void setUp() throws Exception {
-		telephoneType = new TelephoneType();
-		telephoneType.setTelephone("1234-4567-7890");
-		telephoneType.addTelephoneParameterType(TelephoneParameterType.PREF);
-		telephoneType.addTelephoneParameterType(TelephoneParameterType.CELL);
-		telephoneType.addTelephoneParameterType(TelephoneParameterType.HOME);
-		telephoneType.addExtendedTelephoneParameterType(new XTelephoneParameterType("X-3G"));
-		telephoneType.addExtendedTelephoneParameterType(new XTelephoneParameterType("X-TYPE", "SmartPhone"));
+		telType = new TelType();
+		telType.setTelephone("1234-4567-7890");
+		telType.addParam(TelParamType.PREF).addParam(TelParamType.CELL).addParam(TelParamType.HOME)
+		.addExtendedParam(new ExtendedParamType("X-3G", VCardTypeName.TEL))
+		.addExtendedParam(new ExtendedParamType("X-TYPE", "SmartPhone", VCardTypeName.TEL));
 	}
 	
 	@After
 	public void tearDown() throws Exception {
-		telephoneType = null;
+		telType = null;
 	}
 
 	@Test
 	public void testGetTelephone() {
-		assertEquals("1234-4567-7890", telephoneType.getTelephone());
+		assertEquals("1234-4567-7890", telType.getTelephone());
 	}
 
 	@Test
-	public void testGetTelephoneParameterTypes() {
-		Iterator<TelephoneParameterType> iter = telephoneType.getTelephoneParameterTypes();
-		assertEquals(TelephoneParameterType.PREF, iter.next());
-		assertEquals(TelephoneParameterType.CELL, iter.next());
-		assertEquals(TelephoneParameterType.HOME, iter.next());
+	public void testGetParams() {
+		List<TelParamType> list = telType.getParams();
+		assertEquals(TelParamType.PREF, list.get(0));
+		assertEquals(TelParamType.CELL, list.get(1));
+		assertEquals(TelParamType.HOME, list.get(2));
 		
 	}
 
 	@Test
-	public void testGetTelephoneParameterTypesList() {
-		List<TelephoneParameterType> list = telephoneType.getTelephoneParameterTypesList();
-		assertEquals(TelephoneParameterType.PREF, list.get(0));
-		assertEquals(TelephoneParameterType.CELL, list.get(1));
-		assertEquals(TelephoneParameterType.HOME, list.get(2));
+	public void testGetParamSize() {
+		assertEquals(3, telType.getParamSize());
 	}
 
 	@Test
-	public void testGetTelephoneParameterSize() {
-		assertEquals(3, telephoneType.getTelephoneParameterSize());
+	public void testAddParam() {
+		telType.addParam(TelParamType.FAX);
+		assertTrue(telType.containsParam(TelParamType.FAX));
 	}
 
 	@Test
-	public void testAddTelephoneParameterType() {
-		telephoneType.addTelephoneParameterType(TelephoneParameterType.FAX);
-		assertTrue(telephoneType.containsTelephoneParameterType(TelephoneParameterType.FAX));
+	public void testRemoveParam() {
+		telType.removeParam(TelParamType.HOME);
+		assertFalse(telType.containsParam(TelParamType.HOME));
 	}
 
 	@Test
-	public void testRemoveTelephoneParameterType() {
-		telephoneType.removeTelephoneParameterType(TelephoneParameterType.HOME);
-		assertFalse(telephoneType.containsTelephoneParameterType(TelephoneParameterType.HOME));
-	}
-
-	@Test
-	public void testContainsTelephoneParameterType() {
-		assertTrue(telephoneType.containsTelephoneParameterType(TelephoneParameterType.HOME));
+	public void testContainsParam() {
+		assertTrue(telType.containsParam(TelParamType.HOME));
 	}
 	
 	@Test
-	public void testContainsAllTelephoneParameterTypes() {
-		List<TelephoneParameterType> types = new ArrayList<TelephoneParameterType>(3);
-		types.add(TelephoneParameterType.CELL);
-		types.add(TelephoneParameterType.PREF);
-		types.add(TelephoneParameterType.HOME);
+	public void testContainsAllParams() {
+		List<TelParamType> types = new ArrayList<TelParamType>(3);
+		types.add(TelParamType.CELL);
+		types.add(TelParamType.PREF);
+		types.add(TelParamType.HOME);
 		
-		assertTrue(telephoneType.containsAllTelephoneParameterTypes(types));
+		assertTrue(telType.containsAllParams(types));
 	}
 
 	@Test
-	public void testHasTelephoneParameterTypes() {
-		assertTrue(telephoneType.hasTelephoneParameterTypes());
+	public void testHasParams() {
+		assertTrue(telType.hasParams());
 	}
 
 	@Test
-	public void testClearTelephoneParameterTypes() {
-		telephoneType.clearTelephoneParameterTypes();
-		assertFalse(telephoneType.hasTelephoneParameterTypes());
+	public void testClearParams() {
+		telType.clearParams();
+		assertFalse(telType.hasParams());
 	}
 
 	@Test
-	public void testGetExtendedTelephoneParameterTypes() {
-		Iterator<XTelephoneParameterType> iter = telephoneType.getExtendedTelephoneParameterTypes();
-		assertEquals(new XTelephoneParameterType("X-3G"), iter.next());
-		assertEquals(new XTelephoneParameterType("X-TYPE", "SmartPhone"), iter.next());
+	public void testGetExtendedParams() {
+		List<ExtendedParamType> list = telType.getExtendedParams();
+		assertEquals(new ExtendedParamType("X-3G", VCardTypeName.TEL), list.get(0));
+		assertEquals(new ExtendedParamType("X-TYPE", "SmartPhone", VCardTypeName.TEL), list.get(1));
 	}
 
 	@Test
-	public void testGetExtendedTelephoneParameterTypesList() {
-		List<XTelephoneParameterType> list = telephoneType.getExtendedTelephoneParameterTypesList();
-		assertEquals(new XTelephoneParameterType("X-3G"), list.get(0));
-		assertEquals(new XTelephoneParameterType("X-TYPE", "SmartPhone"), list.get(1));
+	public void testGetExtendedParamSize() {
+		assertEquals(2, telType.getExtendedParamSize());
 	}
 
 	@Test
-	public void testGetExtendedTelephoneParameterSize() {
-		assertEquals(2, telephoneType.getExtendedTelephoneParameterSize());
+	public void testAddExtendedParam() {
+		telType.addExtendedParam(new ExtendedParamType("X-Test", VCardTypeName.TEL));
+		assertTrue(telType.containsExtendedParam(new ExtendedParamType("X-Test", VCardTypeName.TEL)));
 	}
 
 	@Test
-	public void testAddExtendedTelephoneParameterType() {
-		telephoneType.addExtendedTelephoneParameterType(new XTelephoneParameterType("X-Test"));
-		assertTrue(telephoneType.containsExtendedTelephoneParameterType(new XTelephoneParameterType("X-Test")));
+	public void testRemoveExtendedParam() {
+		telType.removeExtendedParam(new ExtendedParamType("X-3G", VCardTypeName.TEL));
+		assertFalse(telType.containsExtendedParam(new ExtendedParamType("X-3G", VCardTypeName.TEL)));
 	}
 
 	@Test
-	public void testRemoveExtendedTelephoneParameterType() {
-		telephoneType.removeExtendedTelephoneParameterType(new XTelephoneParameterType("X-3G"));
-		assertFalse(telephoneType.containsExtendedTelephoneParameterType(new XTelephoneParameterType("X-3G")));
-	}
-
-	@Test
-	public void testContainsExtendedTelephoneParameterType() {
-		assertTrue(telephoneType.containsExtendedTelephoneParameterType(new XTelephoneParameterType("X-3G")));
+	public void testContainsExtendedParam() {
+		assertTrue(telType.containsExtendedParam(new ExtendedParamType("X-3G", VCardTypeName.TEL)));
 	}
 	
 	@Test
-	public void testContainsAllExtendedTelephoneParameterTypes() {
-		List<XTelephoneParameterType> types = new ArrayList<XTelephoneParameterType>(3);
-		types.add(new XTelephoneParameterType("X-3G"));
-		types.add(new XTelephoneParameterType("X-TYPE", "SmartPhone"));
+	public void testContainsAllExtendedParams() {
+		List<ExtendedParamType> types = new ArrayList<ExtendedParamType>(2);
+		types.add(new ExtendedParamType("X-3G", VCardTypeName.TEL));
+		types.add(new ExtendedParamType("X-TYPE", "SmartPhone", VCardTypeName.TEL));
 		
-		assertTrue(telephoneType.containsAllExtendedTelephoneParameterTypes(types));
+		assertTrue(telType.containsAllExtendedParams(types));
 	}
 
 	@Test
-	public void testHasExtendedTelephoneParameterTypes() {
-		assertTrue(telephoneType.hasExtendedTelephoneParameterTypes());
+	public void testHasExtendedParams() {
+		assertTrue(telType.hasExtendedParams());
 	}
 
 	@Test
-	public void testClearExtendedTelephoneParameterTypes() {
-		telephoneType.clearExtendedTelephoneParameterTypes();
-		assertFalse(telephoneType.hasExtendedTelephoneParameterTypes());
+	public void testClearExtendedParams() {
+		telType.clearExtendedParams();
+		assertFalse(telType.hasExtendedParams());
 	}
 
 	@Test
 	public void testHasTelephone() {
-		assertTrue(telephoneType.hasTelephone());
+		assertTrue(telType.hasTelephone());
 	}
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(telephoneType.getTypeString(), VCardType.TEL.getType());
+		assertEquals(VCardTypeName.TEL.getType(), telType.getVCardTypeName().getType());
 	}
 	
 	@Test
 	public void testEquals() {
-		TelephoneType telephoneType2 = new TelephoneType();
-		telephoneType2.setTelephone("1234-4567-7890");
-		telephoneType2.addTelephoneParameterType(TelephoneParameterType.PREF);
-		telephoneType2.addTelephoneParameterType(TelephoneParameterType.CELL);
-		telephoneType2.addTelephoneParameterType(TelephoneParameterType.HOME);
-		telephoneType2.addExtendedTelephoneParameterType(new XTelephoneParameterType("X-3G"));
-		telephoneType2.addExtendedTelephoneParameterType(new XTelephoneParameterType("X-TYPE", "SmartPhone"));
+		TelType telType2 = new TelType();
+		telType2.setTelephone("1234-4567-7890");
+		telType2.addParam(TelParamType.PREF).addParam(TelParamType.CELL).addParam(TelParamType.HOME)
+		.addExtendedParam(new ExtendedParamType("X-3G", VCardTypeName.TEL))
+		.addExtendedParam(new ExtendedParamType("X-TYPE", "SmartPhone", VCardTypeName.TEL));
 		
-		assertTrue(telephoneType.equals(telephoneType2));
+		assertTrue(telType.equals(telType2));
 	}
 	
 	@Test
 	public void testHashcode() {
-		TelephoneType telephoneType2 = new TelephoneType();
-		telephoneType2.setTelephone("1234-4567-7890");
-		telephoneType2.addTelephoneParameterType(TelephoneParameterType.PREF);
-		telephoneType2.addTelephoneParameterType(TelephoneParameterType.CELL);
-		telephoneType2.addTelephoneParameterType(TelephoneParameterType.HOME);
-		telephoneType2.addExtendedTelephoneParameterType(new XTelephoneParameterType("X-3G"));
-		telephoneType2.addExtendedTelephoneParameterType(new XTelephoneParameterType("X-TYPE", "SmartPhone"));
+		TelType telType2 = new TelType();
+		telType2.setTelephone("1234-4567-7890");
+		telType2.addParam(TelParamType.PREF).addParam(TelParamType.CELL).addParam(TelParamType.HOME)
+		.addExtendedParam(new ExtendedParamType("X-3G", VCardTypeName.TEL))
+		.addExtendedParam(new ExtendedParamType("X-TYPE", "SmartPhone", VCardTypeName.TEL));
 		
-		int hcode1 = telephoneType.hashCode();
-		int hcode2 = telephoneType2.hashCode();
+		int hcode1 = telType.hashCode();
+		int hcode2 = telType2.hashCode();
 		assertEquals(hcode1, hcode2);
 	}
 	
 	@Test
+	public void testCompareTo() {
+		TelType telType2 = new TelType();
+		telType2.setTelephone("1234-4567-7890");
+		telType2.addParam(TelParamType.PREF).addParam(TelParamType.CELL).addParam(TelParamType.HOME)
+		.addExtendedParam(new ExtendedParamType("X-3G", VCardTypeName.TEL))
+		.addExtendedParam(new ExtendedParamType("X-TYPE", "SmartPhone", VCardTypeName.TEL));
+		
+		assertTrue(telType.compareTo(telType2) == 0);
+	}
+	
+	@Test
 	public void testClone() {
-		TelephoneFeature cloned = telephoneType.clone();
-		assertEquals(cloned, telephoneType);
-		assertTrue(telephoneType.equals(cloned));
+		TelType cloned = telType.clone();
+		assertEquals(cloned, telType);
+		assertTrue(telType.equals(cloned));
+		assertTrue(telType.compareTo(cloned) == 0);
 	}
 }

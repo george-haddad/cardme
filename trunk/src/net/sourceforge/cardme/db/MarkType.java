@@ -41,6 +41,7 @@ package net.sourceforge.cardme.db;
  * check the mark type of any object and handle it appropriately.
  * </p>
  */
+@Deprecated
 public enum MarkType {
 	
 	/**

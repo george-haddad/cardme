@@ -160,4 +160,34 @@ public final class StringUtil {
 		
 		return sb.toString();
 	}
+	
+	/**
+	 * <p>Returns an empty string if the specified string is null.
+	 * and returns the same string if it's not.</p>
+	 * 
+	 * @param str
+	 * @return {@link String}
+	 */
+	public static final String getString(String str)
+	{
+		return getString(str, "");
+	}
+	
+	/**
+	 * <p>Returns a specified string <code>nullString</code> if the given string is null.
+	 * and returns the same string if it's not.</p>
+	 * 
+	 * @param str
+	 * @param nullString
+	 * @return {@link String}
+	 */
+	public static final String getString(String str, String nullString)
+	{
+		if(str == null) {
+			return nullString;
+		}
+		else {
+			return str;
+		}
+	}
 }

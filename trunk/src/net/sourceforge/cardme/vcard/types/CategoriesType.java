@@ -1,16 +1,16 @@
 package net.sourceforge.cardme.vcard.types;
 
-import net.sourceforge.cardme.util.Util;
-import net.sourceforge.cardme.vcard.EncodingType;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.CategoriesFeature;
-import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import net.sourceforge.cardme.util.StringUtil;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
+import net.sourceforge.cardme.vcard.features.CategoriesFeature;
+import net.sourceforge.cardme.vcard.types.params.ExtendedParamType;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -41,106 +41,181 @@ import java.util.List;
  * 
  * @author George El-Haddad
  * <br/>
- * Feb 4, 2010
+ * Aug 9, 2012
  *
  */
-public class CategoriesType extends Type implements CategoriesFeature {
+public class CategoriesType extends AbstractVCardType implements Comparable<CategoriesType>, Cloneable, CategoriesFeature {
 
-	private static final long serialVersionUID = -4808509971616993206L;
+	private static final long serialVersionUID = -6332417078639311282L;
 	
-	private List<String> categories = null;
+	private List<String> categories = new ArrayList<String>();
 	
 	public CategoriesType() {
-		super(EncodingType.EIGHT_BIT, ParameterTypeStyle.PARAMETER_VALUE_LIST);
-		categories = new ArrayList<String>();
+		super(VCardTypeName.CATEGORIES);
 	}
 	
 	public CategoriesType(String category) {
-		this();
+		super(VCardTypeName.CATEGORIES);
 		addCategory(category);
+		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addCategory(String category) throws NullPointerException {
+	public CategoriesType(List<String> categories) {
+		super(VCardTypeName.CATEGORIES);
+		addAllCategories(categories);
+	}
+
+	public List<String> getCategories()
+	{
+		return Collections.unmodifiableList(categories);
+	}
+
+	public CategoriesType addCategory(String category) throws NullPointerException {
 		if(category == null) {
 			throw new NullPointerException("Cannot add a null category.");
 		}
 		
 		categories.add(category);
+		return this;
+	}
+	
+	public CategoriesType addAllCategories(List<String> categories) throws NullPointerException {
+		if(categories == null) {
+			throw new NullPointerException("Cannot add a null categories list.");
+		}
+		
+		this.categories.addAll(categories);
+		return this;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public Iterator<String> getCategories()
-	{
-		return categories.listIterator();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void removeCategory(String category) throws NullPointerException {
+	public CategoriesType removeCategory(String category) throws NullPointerException {
 		if(category == null) {
 			throw new NullPointerException("Cannot remove a null category.");
 		}
 		
 		categories.remove(category);
+		return this;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public boolean containsCategory(String category)
 	{
-		if(category == null) {
-			return false;
-		}
-		else {
+		if(category != null) {
 			return categories.contains(category);
 		}
+		else {
+			return false;
+		}
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
+	
+	public boolean containsAllCategories(List<String> categories)
+	{
+		if(categories != null) {
+			return this.categories.containsAll(categories);
+		}
+		else {
+			return false;
+		}
+	}
+	
 	public boolean hasCategories()
 	{
 		return !categories.isEmpty();
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	public void clearCategories() {
 		categories.clear();
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getTypeString()
+	public boolean hasParams()
 	{
-		return VCardType.CATEGORIES.getType();
+		return false;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
+	public CategoriesType clone()
+	{
+		CategoriesType cloned = new CategoriesType();
+		cloned.setEncodingType(getEncodingType());
+		cloned.setVCardTypeName(getVCardTypeName());
+
+		if(hasCharset()) {
+			cloned.setCharset(getCharset());
+		}
+		
+		cloned.setGroup(getGroup());
+		cloned.setLanguage(getLanguage());
+		cloned.setParameterTypeStyle(getParameterTypeStyle());
+		cloned.addAllExtendedParams(getExtendedParams());
+		cloned.addAllCategories(categories);
+		return cloned;
+	}
+
+	public int compareTo(CategoriesType obj)
+	{
+		if(obj != null) {
+			String[] contents = obj.getContents();
+			String[] myContents = getContents();
+			if(Arrays.equals(myContents, contents)) {
+				return 0;
+			}
+			else {
+				return 1;
+			}
+		}
+		else {
+			return -1;
+		}
+	}
+
+	@Override
+	protected String[] getContents()
+	{
+		String[] contents = new String[8];
+		contents[0] = getVCardTypeName().getType();
+		contents[1] = getEncodingType().getType();
+		contents[2] = StringUtil.getString(getGroup());
+		contents[3] = (getCharset() != null ? getCharset().name() : "");
+		contents[4] = (getLanguage() != null ? getLanguage().getLanguageCode() : "");
+		contents[5] = getParameterTypeStyle().toString();
+		
+		if(hasExtendedParams()) {
+			List<ExtendedParamType> xParams = getExtendedParams();
+			StringBuilder sb = new StringBuilder();
+			for(ExtendedParamType xParamType : xParams) {
+				sb.append(xParamType.toString());
+				sb.append(",");
+			}
+			
+			sb.deleteCharAt(sb.length()-1);
+			contents[6] = sb.toString();
+		}
+		else {
+			contents[6] = "";
+		}
+		
+		if(!categories.isEmpty()) {
+			StringBuilder sb = new StringBuilder();
+			for(String category : categories) {
+				sb.append(category);
+				sb.append(",");
+			}
+			
+			sb.deleteCharAt(sb.length()-1);
+			contents[7] = sb.toString();
+		}
+		else {
+			contents[7] = "";
+		}
+		
+		return contents;
+	}
+
 	@Override
 	public boolean equals(Object obj)
 	{
 		if(obj != null) {
 			if(obj instanceof CategoriesType) {
-				if(this == obj || ((CategoriesType)obj).hashCode() == this.hashCode()) {
-					return true;
-				}
-				else {
-					return false;
-				}
+				return this.compareTo((CategoriesType)obj) == 0;
 			}
 			else {
 				return false;
@@ -149,65 +224,5 @@ public class CategoriesType extends Type implements CategoriesFeature {
 		else {
 			return false;
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int hashCode()
-	{
-		return Util.generateHashCode(toString());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append(this.getClass().getName());
-		sb.append("[ ");
-		if(encodingType != null) {
-			sb.append(encodingType.getType());
-			sb.append(",");
-		}
-		
-		if(!categories.isEmpty()) {
-			for(int i=0; i < categories.size(); i++) {
-				sb.append(categories.get(i));
-				sb.append(",");
-			}
-		}
-
-		if(super.id != null) {
-			sb.append(super.id);
-			sb.append(",");
-		}
-		
-		sb.deleteCharAt(sb.length()-1);	//Remove last comma.
-		sb.append(" ]");
-		return sb.toString();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public CategoriesFeature clone()
-	{
-		CategoriesType cloned = new CategoriesType();
-		
-		if(!categories.isEmpty()) {
-			for(int i = 0; i < categories.size(); i++) {
-				cloned.addCategory(new String(categories.get(i)));
-			}
-		}
-		
-		cloned.setParameterTypeStyle(getParameterTypeStyle());
-		cloned.setEncodingType(getEncodingType());
-		cloned.setID(getID());
-		return cloned;
 	}
 }

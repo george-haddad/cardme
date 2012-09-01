@@ -2,15 +2,14 @@ package net.sourceforge.cardme.vcard.types;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.VCardVersion;
-import net.sourceforge.cardme.vcard.features.VersionFeature;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
+import net.sourceforge.cardme.vcard.arch.VCardVersion;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -41,7 +40,7 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 4, 2011
+ * Aug 28, 2012
  *
  */
 public class VersionTypeTest {
@@ -66,7 +65,7 @@ public class VersionTypeTest {
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(versionType.getTypeString(), VCardType.VERSION.getType());
+		assertEquals(VCardTypeName.VERSION.getType(), versionType.getVCardTypeName().getType());
 	}
 	
 	@Test
@@ -85,9 +84,16 @@ public class VersionTypeTest {
 	}
 	
 	@Test
+	public void testCompareTo() {
+		VersionType versionType2 = new VersionType(VCardVersion.V3_0);
+		assertTrue(versionType.compareTo(versionType2) == 0);
+	}
+	
+	@Test
 	public void testClone() {
-		VersionFeature cloned = versionType.clone();
-		assertEquals(cloned, versionType);
+		VersionType cloned = versionType.clone();
+		assertEquals(versionType, cloned);
 		assertTrue(versionType.equals(cloned));
+		assertTrue(versionType.compareTo(cloned) == 0);
 	}
 }

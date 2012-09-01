@@ -3,14 +3,13 @@ package net.sourceforge.cardme.vcard.types;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.ProductIdFeature;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -41,17 +40,17 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 3, 2011
+ * Aug 27, 2012
  *
  */
 public class ProductIdTypeTest {
 
-	private ProductIdType prodIdType = null;
+	private ProdIdType prodIdType = null;
 	
 	@Before
 	public void setUp() throws Exception {
-		prodIdType = new ProductIdType();
-		prodIdType.setProductId("1234-1234-1234");
+		prodIdType = new ProdIdType();
+		prodIdType.setProdId("1234-1234-1234");
 	}
 	
 	@After
@@ -60,35 +59,47 @@ public class ProductIdTypeTest {
 	}
 	
 	@Test
-	public void testGetProductId() {
-		assertEquals("1234-1234-1234", prodIdType.getProductId());
+	public void testGetProdId() {
+		assertEquals("1234-1234-1234", prodIdType.getProdId());
 	}
 	
 	@Test
-	public void testHasProductId() {
-		assertTrue(prodIdType.hasProductId());
+	public void testSetProdIdSecure() {
+		String prodId = "1234-1234-1234";
+		prodIdType.setProdId(prodId);
+		
+		String prodIdCopy = prodIdType.getProdId();
+		
+		assertFalse(prodId == prodIdCopy);
+		assertTrue(prodId.compareTo(prodIdCopy) == 0);
+		assertTrue(prodId.equals(prodIdCopy));
 	}
 	
 	@Test
-	public void testClearProductId() {
-		prodIdType.clearProductId();
-		assertFalse(prodIdType.hasProductId());
+	public void testHasProdId() {
+		assertTrue(prodIdType.hasProdId());
+	}
+	
+	@Test
+	public void testClearProdId() {
+		prodIdType.clearProdId();
+		assertFalse(prodIdType.hasProdId());
 	}
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(prodIdType.getTypeString(), VCardType.PRODID.getType());
+		assertEquals(VCardTypeName.PRODID.getType(), prodIdType.getVCardTypeName().getType());
 	}
 	
 	@Test
 	public void testEquals() {
-		ProductIdType prodIdType2 = new ProductIdType("1234-1234-1234");
+		ProdIdType prodIdType2 = new ProdIdType("1234-1234-1234");
 		assertTrue(prodIdType.equals(prodIdType2));
 	}
 	
 	@Test
 	public void testHashcode() {
-		ProductIdType prodIdType2 = new ProductIdType("1234-1234-1234");
+		ProdIdType prodIdType2 = new ProdIdType("1234-1234-1234");
 		
 		int hcode1 = prodIdType.hashCode();
 		int hcode2 = prodIdType2.hashCode();
@@ -96,9 +107,16 @@ public class ProductIdTypeTest {
 	}
 	
 	@Test
+	public void testCompareTo() {
+		ProdIdType prodIdType2 = new ProdIdType("1234-1234-1234");
+		assertTrue(prodIdType.compareTo(prodIdType2) == 0);
+	}
+	
+	@Test
 	public void testClone() {
-		ProductIdFeature cloned = prodIdType.clone();
+		ProdIdType cloned = prodIdType.clone();
 		assertEquals(cloned, prodIdType);
 		assertTrue(prodIdType.equals(cloned));
+		assertTrue(prodIdType.compareTo(cloned) == 0);
 	}
 }

@@ -1,9 +1,9 @@
 package net.sourceforge.cardme.vcard.features;
 
-import java.util.Iterator;
+import java.util.List;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -34,7 +34,7 @@ import java.util.Iterator;
  * 
  * @author George El-Haddad
  * <br/>
- * Feb 4, 2010
+ * Aug 9, 2012
  * 
  * <p><b>RFC 2426</b><br/>
  * <b>3.6.1 CATEGORIES Type Definition</b>
@@ -46,53 +46,21 @@ import java.util.Iterator;
  * 	<li><b>Type special note:</b> </li>
  * </ul>
  */
-public interface CategoriesFeature extends TypeTools {
+public interface CategoriesFeature {
+
+	public List<String> getCategories();
 	
-	/**
-	 * <p>Returns the categories list.</p>
-	 *
-	 * @return {@link Iterator}&lt;String&gt;
-	 */
-	public Iterator<String> getCategories();
+	public CategoriesFeature addCategory(String category) throws NullPointerException;
 	
-	/**
-	 * <p>Adds a category to the list.</p>
-	 *
-	 * @param category
-	 */
-	public void addCategory(String category);
+	public CategoriesFeature addAllCategories(List<String> categories) throws NullPointerException;
 	
-	/**
-	 * <p>Removes a category from the list.</p>
-	 *
-	 * @param category
-	 */
-	public void removeCategory(String category);
+	public CategoriesFeature removeCategory(String category) throws NullPointerException;
 	
-	/**
-	 * <p>Returns true if the category exists.</p>
-	 *
-	 * @param category
-	 * @return boolean
-	 */
 	public boolean containsCategory(String category);
 	
-	/**
-	 * <p>Returns true if this categories feature has categories.</p>
-	 *
-	 * @return boolean
-	 */
+	public boolean containsAllCategories(List<String> categories);
+	
 	public boolean hasCategories();
 	
-	/**
-	 * <p>Removes all categories.</p>
-	 */
 	public void clearCategories();
-	
-	/**
-	 * <p>Returns a full copy of this object.</p>
-	 *
-	 * @return {@link CategoriesFeature}
-	 */
-	public CategoriesFeature clone();
 }

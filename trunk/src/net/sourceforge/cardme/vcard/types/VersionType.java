@@ -1,14 +1,15 @@
 package net.sourceforge.cardme.vcard.types;
 
-import net.sourceforge.cardme.util.Util;
-import net.sourceforge.cardme.vcard.EncodingType;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.VCardVersion;
+import java.util.Arrays;
+import java.util.List;
+import net.sourceforge.cardme.util.StringUtil;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
+import net.sourceforge.cardme.vcard.arch.VCardVersion;
 import net.sourceforge.cardme.vcard.features.VersionFeature;
-import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
+import net.sourceforge.cardme.vcard.types.params.ExtendedParamType;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -39,69 +40,116 @@ import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
  * 
  * @author George El-Haddad
  * <br/>
- * Feb 4, 2010
+ * Aug 9, 2012
  *
  */
-public class VersionType extends Type implements VersionFeature {
+public class VersionType extends AbstractVCardType implements Comparable<VersionType>, Cloneable, VersionFeature {
 
-	private static final long serialVersionUID = -8083962158834088113L;
+	private static final long serialVersionUID = -4518232662763006964L;
 	
-	private VCardVersion version = null;
+	private VCardVersion version = VCardVersion.V3_0;
 	
-	/**
-	 * <p>Defaults to <code>VCardVersion.V3_0</code></p> 
-	 */
 	public VersionType() {
 		this(VCardVersion.V3_0);
 	}
 	
 	public VersionType(VCardVersion version) {
-		super(EncodingType.EIGHT_BIT, ParameterTypeStyle.PARAMETER_VALUE_LIST);
+		super(VCardTypeName.VERSION);
 		setVersion(version);
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	public VCardVersion getVersion()
 	{
 		return version;
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setVersion(VCardVersion version) throws NullPointerException {
-		if(version == null) {
-			throw new NullPointerException("version cannot be null.");
+	
+	public void setVersion(VCardVersion version) {
+		if(version != null) {
+			this.version = version;
 		}
-		
-		this.version = version;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getTypeString()
-	{
-		return VCardType.VERSION.getType();
+		else {
+			this.version = VCardVersion.V3_0;
+		}
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+	public boolean hasParams()
+	{
+		return false;
+	}
+	
+	@Override
+	public VersionType clone()
+	{
+		VersionType cloned = new VersionType();
+		cloned.setEncodingType(getEncodingType());
+		cloned.setVCardTypeName(getVCardTypeName());
+
+		if(hasCharset()) {
+			cloned.setCharset(getCharset());
+		}
+		
+		cloned.setGroup(getGroup());
+		cloned.setLanguage(getLanguage());
+		cloned.setParameterTypeStyle(getParameterTypeStyle());
+		cloned.addAllExtendedParams(getExtendedParams());
+		cloned.setVersion(version);
+		return cloned;
+	}
+	
+	public int compareTo(VersionType obj)
+	{
+		if(obj != null) {
+			String[] contents = obj.getContents();
+			String[] myContents = getContents();
+			if(Arrays.equals(myContents, contents)) {
+				return 0;
+			}
+			else {
+				return 1;
+			}
+		}
+		else {
+			return -1;
+		}
+	}
+
+	@Override
+	protected String[] getContents()
+	{
+		String[] contents = new String[8];
+		contents[0] = getVCardTypeName().getType();
+		contents[1] = getEncodingType().getType();
+		contents[2] = StringUtil.getString(getGroup());
+		contents[3] = (getCharset() != null ? getCharset().name() : "");
+		contents[4] = (getLanguage() != null ? getLanguage().getLanguageCode() : "");
+		contents[5] = getParameterTypeStyle().toString();
+		
+		if(hasExtendedParams()) {
+			List<ExtendedParamType> xParams = getExtendedParams();
+			StringBuilder sb = new StringBuilder();
+			for(ExtendedParamType xParamType : xParams) {
+				sb.append(xParamType.toString());
+				sb.append(",");
+			}
+			
+			sb.deleteCharAt(sb.length()-1);
+			contents[6] = sb.toString();
+		}
+		else {
+			contents[6] = "";
+		}
+		
+		contents[7] = version.getVersion();
+		
+		return contents;
+	}
+
 	@Override
 	public boolean equals(Object obj)
 	{
 		if(obj != null) {
 			if(obj instanceof VersionType) {
-				if(this == obj || ((VersionType)obj).hashCode() == this.hashCode()) {
-					return true;
-				}
-				else {
-					return false;
-				}
+				return this.compareTo((VersionType)obj) == 0;
 			}
 			else {
 				return false;
@@ -110,61 +158,5 @@ public class VersionType extends Type implements VersionFeature {
 		else {
 			return false;
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int hashCode()
-	{
-		return Util.generateHashCode(toString());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append(this.getClass().getName());
-		sb.append("[ ");
-		if(encodingType != null) {
-			sb.append(encodingType.getType());
-			sb.append(",");
-		}
-		
-		if(version != null) {
-			sb.append(version.getVersion());
-			sb.append(",");
-		}
-
-		if(super.id != null) {
-			sb.append(super.id);
-			sb.append(",");
-		}
-		
-		sb.deleteCharAt(sb.length()-1);	//Remove last comma.
-		sb.append(" ]");
-		return sb.toString();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public VersionFeature clone()
-	{
-		VersionType cloned = new VersionType();
-		
-		if(version != null) {
-			cloned.setVersion(version);
-		}
-		
-		cloned.setParameterTypeStyle(getParameterTypeStyle());
-		cloned.setEncodingType(getEncodingType());
-		cloned.setID(getID());
-		return cloned;
 	}
 }

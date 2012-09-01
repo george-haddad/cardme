@@ -3,22 +3,17 @@ package net.sourceforge.cardme.vcard.types;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.EmailFeature;
-import net.sourceforge.cardme.vcard.types.parameters.EmailParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.XEmailParameterType;
-
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
+import net.sourceforge.cardme.vcard.types.params.EmailParamType;
+import net.sourceforge.cardme.vcard.types.params.ExtendedParamType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -49,7 +44,7 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 1, 2011
+ * Aug 24, 2012
  *
  */
 public class EmailTypeTest {
@@ -60,10 +55,9 @@ public class EmailTypeTest {
 	public void setUp() throws Exception {
 		emailType = new EmailType();
 		emailType.setEmail("george@company.com");
-		emailType.addEmailParameterType(EmailParameterType.PREF);
-		emailType.addEmailParameterType(EmailParameterType.INTERNET);
-		emailType.addExtendedEmailParameterType(new XEmailParameterType("X-SLOT", "GROUP-1"));
-		emailType.addExtendedEmailParameterType(new XEmailParameterType("X-COMPANY-ACCOUNT"));
+		emailType.addParam(EmailParamType.PREF).addParam(EmailParamType.INTERNET)
+			  .addExtendedParam(new ExtendedParamType("X-SLOT", "GROUP-1", VCardTypeName.EMAIL))
+			  .addExtendedParam(new ExtendedParamType("X-COMPANY-ACCOUNT", VCardTypeName.EMAIL));
 	}
 	
 	@After
@@ -77,117 +71,133 @@ public class EmailTypeTest {
 	}
 	
 	@Test
-	public void testGetEmailParameterTypes() {
-		Iterator<EmailParameterType> iter = emailType.getEmailParameterTypes();
-		assertEquals(EmailParameterType.PREF, iter.next());
-		assertEquals(EmailParameterType.INTERNET, iter.next());
+	public void testSetEmail() {
+		emailType.setEmail("Test");
+		assertEquals("Test", emailType.getEmail());
+		assertTrue(emailType.hasEmail());
 	}
 	
 	@Test
-	public void testGetEmailParameterTypesList() {
-		List<EmailParameterType> list = emailType.getEmailParameterTypesList();
-		assertEquals(EmailParameterType.PREF, list.get(0));
-		assertEquals(EmailParameterType.INTERNET, list.get(1));
+	public void testSetEmailNull() {
+		emailType.setEmail(null);
+		assertEquals(null, emailType.getEmail());
+		assertTrue(emailType.hasEmail());
 	}
 	
 	@Test
-	public void testGetEmailParameterSize() {
-		assertEquals(2, emailType.getEmailParameterSize());
-	}
-	
-	@Test
-	public void testAddEmailParameterType() {
-		emailType.addEmailParameterType(EmailParameterType.EWORLD);
-		assertTrue(emailType.containsEmailParameterType(EmailParameterType.EWORLD));
-	}
-	
-	@Test
-	public void testRemoveEmailParameterType() {
-		emailType.removeEmailParameterType(EmailParameterType.INTERNET);
-		assertFalse(emailType.containsEmailParameterType(EmailParameterType.INTERNET));
-	}
-	
-	@Test
-	public void testContainsEmailParameterType() {
-		assertTrue(emailType.containsEmailParameterType(EmailParameterType.PREF));
-		assertTrue(emailType.containsEmailParameterType(EmailParameterType.INTERNET));
-	}
-	
-	@Test
-	public void testContainsAllEmailParameterTypes() {
-		List<EmailParameterType> types = new ArrayList<EmailParameterType>(2);
-		types.add(EmailParameterType.PREF);
-		types.add(EmailParameterType.INTERNET);
+	public void testSetEmailSecure() {
+		String email = "george@company.com";
+		emailType.setEmail(email);
 		
-		assertTrue(emailType.containsAllEmailParameterTypes(types));
-	}
-	
-	@Test
-	public void testHasEmailParameterTypes() {
-		assertTrue(emailType.hasEmailParameterTypes());
-	}
-	
-	@Test
-	public void testClearEmailParameterTypes() {
-		emailType.clearEmailParameterTypes();
-		assertFalse(emailType.hasEmailParameterTypes());
-	}
-	
-	@Test
-	public void testGetExtendedEmailParameterTypes() {
-		Iterator<XEmailParameterType> iter = emailType.getExtendedEmailParameterTypes();
-		assertEquals(new XEmailParameterType("X-SLOT", "GROUP-1"), iter.next());
-		assertEquals(new XEmailParameterType("X-COMPANY-ACCOUNT"), iter.next()); 
-	}
-	
-	@Test
-	public void testGetExtendedEmailParameterTypesList() {
-		List<XEmailParameterType> list = emailType.getExtendedEmailParameterTypesList();
-		assertEquals(new XEmailParameterType("X-SLOT", "GROUP-1"), list.get(0));
-		assertEquals(new XEmailParameterType("X-COMPANY-ACCOUNT"), list.get(1)); 
-	}
-	
-	@Test
-	public void testGetExtendedEmailParameterSize() {
-		assertEquals(2, emailType.getExtendedEmailParameterSize());
-	}
-	
-	@Test
-	public void testAddExtendedEmailParameterType() {
-		emailType.addExtendedEmailParameterType(new XEmailParameterType("TEST"));
-		assertTrue(emailType.containsExtendedEmailParameterType(new XEmailParameterType("TEST")));
-	}
-	
-	@Test
-	public void testRemoveExtendedEmailParameterType() {
-		emailType.removeExtendedEmailParameterType(new XEmailParameterType("X-COMPANY-ACCOUNT"));
-		assertFalse(emailType.containsExtendedEmailParameterType(new XEmailParameterType("X-COMPANY-ACCOUNT")));
-	}
-	
-	@Test
-	public void testContainsExtendedEmailParameterType() {
-		assertTrue(emailType.containsExtendedEmailParameterType(new XEmailParameterType("X-SLOT", "GROUP-1")));
-		assertTrue(emailType.containsExtendedEmailParameterType(new XEmailParameterType("X-COMPANY-ACCOUNT")));
-	}
-	
-	@Test
-	public void testContainsAllExtendedEmailParameterTypes() {
-		List<XEmailParameterType> types = new ArrayList<XEmailParameterType>(2);
-		types.add(new XEmailParameterType("X-SLOT", "GROUP-1"));
-		types.add(new XEmailParameterType("X-COMPANY-ACCOUNT"));
+		String emailCopy = emailType.getEmail();
 		
-		assertTrue(emailType.containsAllExtendedEmailParameterTypes(types));
+		assertFalse(email == emailCopy);
+		assertTrue(email.compareTo(emailCopy) == 0);
+		assertTrue(email.equals(emailCopy));
 	}
 	
 	@Test
-	public void testHasExtendedEmailParameterTypes() {
-		assertTrue(emailType.hasExtendedEmailParameterTypes());
+	public void testGetParams() {
+		List<EmailParamType> list = emailType.getParams();
+		assertEquals(EmailParamType.PREF, list.get(0));
+		assertEquals(EmailParamType.INTERNET, list.get(1));
 	}
 	
 	@Test
-	public void testClearExtendedEmailParameterTypes() {
-		emailType.clearExtendedEmailParameterTypes();
-		assertFalse(emailType.hasExtendedEmailParameterTypes());
+	public void testGetParamSize() {
+		assertEquals(2, emailType.getParamSize());
+	}
+	
+	@Test
+	public void testAddParam() {
+		assertFalse(emailType.containsParam(EmailParamType.EWORLD));
+		emailType.addParam(EmailParamType.EWORLD);
+		assertTrue(emailType.containsParam(EmailParamType.EWORLD));
+	}
+	
+	@Test
+	public void testRemoveParam() {
+		assertTrue(emailType.containsParam(EmailParamType.INTERNET));
+		emailType.removeParam(EmailParamType.INTERNET);
+		assertFalse(emailType.containsParam(EmailParamType.INTERNET));
+	}
+	
+	@Test
+	public void testContainsParam() {
+		assertTrue(emailType.containsParam(EmailParamType.PREF));
+		assertTrue(emailType.containsParam(EmailParamType.INTERNET));
+	}
+	
+	@Test
+	public void testContainsAllParams() {
+		List<EmailParamType> types = new ArrayList<EmailParamType>(2);
+		types.add(EmailParamType.PREF);
+		types.add(EmailParamType.INTERNET);
+		
+		assertTrue(emailType.containsAllParams(types));
+	}
+	
+	@Test
+	public void testHasParams() {
+		assertTrue(emailType.hasParams());
+	}
+	
+	@Test
+	public void testClearParams() {
+		assertTrue(emailType.hasParams());
+		emailType.clearParams();
+		assertFalse(emailType.hasParams());
+	}
+	
+	@Test
+	public void testGetExtendedParams() {
+		List<ExtendedParamType> list = emailType.getExtendedParams();
+		assertEquals(new ExtendedParamType("X-SLOT", "GROUP-1", VCardTypeName.EMAIL), list.get(0));
+		assertEquals(new ExtendedParamType("X-COMPANY-ACCOUNT", VCardTypeName.EMAIL), list.get(1)); 
+	}
+	
+	@Test
+	public void testGetExtendedParamSize() {
+		assertEquals(2, emailType.getExtendedParamSize());
+	}
+	
+	@Test
+	public void testAddExtendedParam() {
+		emailType.addExtendedParam(new ExtendedParamType("TEST", VCardTypeName.EMAIL));
+		assertTrue(emailType.containsExtendedParam(new ExtendedParamType("TEST", VCardTypeName.EMAIL)));
+	}
+	
+	@Test
+	public void testRemoveExtendedParam() {
+		emailType.removeExtendedParam(new ExtendedParamType("X-COMPANY-ACCOUNT", VCardTypeName.EMAIL));
+		assertFalse(emailType.containsExtendedParam(new ExtendedParamType("X-COMPANY-ACCOUNT", VCardTypeName.EMAIL)));
+	}
+	
+	@Test
+	public void testContainsExtendedParam() {
+		assertTrue(emailType.containsExtendedParam(new ExtendedParamType("X-SLOT", "GROUP-1", VCardTypeName.EMAIL)));
+		assertTrue(emailType.containsExtendedParam(new ExtendedParamType("X-COMPANY-ACCOUNT", VCardTypeName.EMAIL)));
+	}
+	
+	@Test
+	public void testContainsAllExtendedParams() {
+		List<ExtendedParamType> types = new ArrayList<ExtendedParamType>(2);
+		types.add(new ExtendedParamType("X-SLOT", "GROUP-1", VCardTypeName.EMAIL));
+		types.add(new ExtendedParamType("X-COMPANY-ACCOUNT", VCardTypeName.EMAIL));
+		
+		assertTrue(emailType.containsAllExtendedParams(types));
+	}
+	
+	@Test
+	public void testHasExtendedParams() {
+		assertTrue(emailType.hasExtendedParams());
+	}
+	
+	@Test
+	public void testClearExtendedParams() {
+		assertTrue(emailType.hasExtendedParams());
+		emailType.clearExtendedParams();
+		assertFalse(emailType.hasExtendedParams());
 	}
 	
 	@Test
@@ -197,29 +207,38 @@ public class EmailTypeTest {
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(emailType.getTypeString(), VCardType.EMAIL.getType());
+		assertEquals(VCardTypeName.EMAIL.getType(), emailType.getVCardTypeName().getType());
 	}
 	
 	@Test
 	public void testEquals() {
 		EmailType emailType2 = new EmailType();
 		emailType2.setEmail("george@company.com");
-		emailType2.addEmailParameterType(EmailParameterType.PREF);
-		emailType2.addEmailParameterType(EmailParameterType.INTERNET);
-		emailType2.addExtendedEmailParameterType(new XEmailParameterType("X-SLOT", "GROUP-1"));
-		emailType2.addExtendedEmailParameterType(new XEmailParameterType("X-COMPANY-ACCOUNT"));
+		emailType2.addParam(EmailParamType.PREF).addParam(EmailParamType.INTERNET)
+			  .addExtendedParam(new ExtendedParamType("X-SLOT", "GROUP-1", VCardTypeName.EMAIL))
+			  .addExtendedParam(new ExtendedParamType("X-COMPANY-ACCOUNT", VCardTypeName.EMAIL));
 		
 		assertTrue(emailType.equals(emailType2));
+	}
+	
+	@Test
+	public void testCompareTo() {
+		EmailType emailType2 = new EmailType();
+		emailType2.setEmail("george@company.com");
+		emailType2.addParam(EmailParamType.PREF).addParam(EmailParamType.INTERNET)
+			  .addExtendedParam(new ExtendedParamType("X-SLOT", "GROUP-1", VCardTypeName.EMAIL))
+			  .addExtendedParam(new ExtendedParamType("X-COMPANY-ACCOUNT", VCardTypeName.EMAIL));
+		
+		assertTrue(emailType.compareTo(emailType2) == 0);
 	}
 	
 	@Test
 	public void testHashcode() {
 		EmailType emailType2 = new EmailType();
 		emailType2.setEmail("george@company.com");
-		emailType2.addEmailParameterType(EmailParameterType.PREF);
-		emailType2.addEmailParameterType(EmailParameterType.INTERNET);
-		emailType2.addExtendedEmailParameterType(new XEmailParameterType("X-SLOT", "GROUP-1"));
-		emailType2.addExtendedEmailParameterType(new XEmailParameterType("X-COMPANY-ACCOUNT"));
+		emailType2.addParam(EmailParamType.PREF).addParam(EmailParamType.INTERNET)
+			  .addExtendedParam(new ExtendedParamType("X-SLOT", "GROUP-1", VCardTypeName.EMAIL))
+			  .addExtendedParam(new ExtendedParamType("X-COMPANY-ACCOUNT", VCardTypeName.EMAIL));
 		
 		int hcode1 = emailType.hashCode();
 		int hcode2 = emailType2.hashCode();
@@ -228,8 +247,9 @@ public class EmailTypeTest {
 	
 	@Test
 	public void testClone() {
-		EmailFeature cloned = emailType.clone();
+		EmailType cloned = emailType.clone();
 		assertEquals(cloned, emailType);
 		assertTrue(emailType.equals(cloned));
+		assertTrue(emailType.compareTo(cloned) == 0);
 	}
 }

@@ -45,12 +45,6 @@ package net.sourceforge.cardme.vcard.features;
  * </ul>
  * </p>
  */
-public interface EndFeature extends TypeTools {
+public interface EndFeature {
 	
-	/**
-	 * <p>Returns a full copy of this object.</p>
-	 *
-	 * @return {@link EndFeature}
-	 */
-	public EndFeature clone();
 }

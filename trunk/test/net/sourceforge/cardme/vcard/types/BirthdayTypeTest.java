@@ -2,16 +2,15 @@ package net.sourceforge.cardme.vcard.types;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.util.ISOFormat;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.BirthdayFeature;
 import java.util.Calendar;
+import net.sourceforge.cardme.util.ISOFormat;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -42,16 +41,16 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 1, 2011
+ * Aug 24, 2012
  *
  */
 public class BirthdayTypeTest {
 	
-	private BirthdayType birthdayType = null;
+	private BDayType bdayType = null;
 	
 	@Before
 	public void setUp() throws Exception {
-		birthdayType = new BirthdayType();
+		bdayType = new BDayType();
 		
 		Calendar cal = Calendar.getInstance();
 		cal.clear();
@@ -59,18 +58,18 @@ public class BirthdayTypeTest {
 		cal.set(Calendar.MONTH, Calendar.MARCH);
 		cal.set(Calendar.DAY_OF_MONTH, 10);
 		
-		birthdayType.setBirthday(cal);
-		birthdayType.setISO8601Format(ISOFormat.ISO8601_DATE_EXTENDED);
+		bdayType.setBirthday(cal);
+		bdayType.setISO8601Format(ISOFormat.ISO8601_DATE_EXTENDED);
 	}
 	
 	@After
 	public void tearDown() throws Exception {
-		birthdayType = null;
+		bdayType = null;
 	}
 	
 	@Test
 	public void testGetBirthday() {
-		Calendar birthday = birthdayType.getBirthday();
+		Calendar birthday = bdayType.getBirthday();
 		assertEquals(1980, birthday.get(Calendar.YEAR));
 		assertEquals(Calendar.MARCH, birthday.get(Calendar.MONTH));
 		assertEquals(10, birthday.get(Calendar.DAY_OF_MONTH));
@@ -78,12 +77,12 @@ public class BirthdayTypeTest {
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(birthdayType.getTypeString(), VCardType.BDAY.getType());
+		assertEquals(VCardTypeName.BDAY.getType(), bdayType.getVCardTypeName().getType());
 	}
 	
 	@Test
 	public void testEquals() {
-		BirthdayType birthdayType2 = new BirthdayType();
+		BDayType bdayType2 = new BDayType();
 		
 		Calendar cal = Calendar.getInstance();
 		cal.clear();
@@ -91,14 +90,29 @@ public class BirthdayTypeTest {
 		cal.set(Calendar.MONTH, Calendar.MARCH);
 		cal.set(Calendar.DAY_OF_MONTH, 10);
 		
-		birthdayType2.setBirthday(cal);
+		bdayType2.setBirthday(cal);
 		
-		assertTrue(birthdayType.equals(birthdayType2));
+		assertTrue(bdayType.equals(bdayType2));
+	}
+	
+	@Test
+	public void testCompareTo() {
+		BDayType bdayType2 = new BDayType();
+		
+		Calendar cal = Calendar.getInstance();
+		cal.clear();
+		cal.set(Calendar.YEAR, 1980);
+		cal.set(Calendar.MONTH, Calendar.MARCH);
+		cal.set(Calendar.DAY_OF_MONTH, 10);
+		
+		bdayType2.setBirthday(cal);
+		
+		assertTrue(bdayType.compareTo(bdayType2) == 0);
 	}
 	
 	@Test
 	public void testHashcode() {
-		BirthdayType birthdayType2 = new BirthdayType();
+		BDayType bdayType2 = new BDayType();
 		
 		Calendar cal = Calendar.getInstance();
 		cal.clear();
@@ -106,17 +120,18 @@ public class BirthdayTypeTest {
 		cal.set(Calendar.MONTH, Calendar.MARCH);
 		cal.set(Calendar.DAY_OF_MONTH, 10);
 		
-		birthdayType2.setBirthday(cal);
+		bdayType2.setBirthday(cal);
 		
-		int hcode1 = birthdayType.hashCode();
-		int hcode2 = birthdayType2.hashCode();
+		int hcode1 = bdayType.hashCode();
+		int hcode2 = bdayType2.hashCode();
 		assertEquals(hcode1, hcode2);
 	}
 	
 	@Test
 	public void testClone() {
-		BirthdayFeature cloned = birthdayType.clone();
-		assertEquals(cloned, birthdayType);
-		assertTrue(birthdayType.equals(cloned));
+		BDayType cloned = bdayType.clone();
+		assertEquals(cloned, bdayType);
+		assertTrue(bdayType.equals(cloned));
+		assertTrue(bdayType.compareTo(cloned) == 0);
 	}
 }

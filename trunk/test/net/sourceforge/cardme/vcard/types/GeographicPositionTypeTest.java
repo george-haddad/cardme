@@ -2,14 +2,13 @@ package net.sourceforge.cardme.vcard.types;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.GeographicPositionFeature;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -40,81 +39,88 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 1, 2011
+ * Aug 27, 2012
  *
  */
 public class GeographicPositionTypeTest {
 
-	private GeographicPositionType geoPositionType = null;
+	private GeoType geoType = null;
 	
 	@Before
 	public void setUp() throws Exception {
-		geoPositionType = new GeographicPositionType();
-		geoPositionType.setLatitude(33.123456);
-		geoPositionType.setLongitude(22.123456);
+		geoType = new GeoType();
+		geoType.setLatitude(33.123456);
+		geoType.setLongitude(22.123456);
 	}
 	
 	@After
 	public void tearDown() throws Exception {
-		geoPositionType = null;
+		geoType = null;
 	}
 	
 	@Test
 	public void testGetLatitude() {
-		assertEquals(Double.valueOf(33.123456), Double.valueOf(geoPositionType.getLatitude()));
+		assertEquals(Double.valueOf(33.123456), Double.valueOf(geoType.getLatitude()));
 	}
 	
 	@Test
 	public void testGetLongitude() {
-		assertEquals(Double.valueOf(22.123456), Double.valueOf(geoPositionType.getLongitude()));
+		assertEquals(Double.valueOf(22.123456), Double.valueOf(geoType.getLongitude()));
 	}
 	
 	@Test
 	public void testSetLatitude() {
-		geoPositionType.setLatitude("11.123456");
-		assertEquals(Double.valueOf(11.123456), Double.valueOf(geoPositionType.getLatitude()));
+		geoType.setLatitude("11.123456");
+		assertEquals(Double.valueOf(11.123456), Double.valueOf(geoType.getLatitude()));
 	}
 	
 	@Test
 	public void testSetLongitude() {
-		geoPositionType.setLongitude("11.123456");
-		assertEquals(Double.valueOf(11.123456), Double.valueOf(geoPositionType.getLongitude()));
+		geoType.setLongitude("11.123456");
+		assertEquals(Double.valueOf(11.123456), Double.valueOf(geoType.getLongitude()));
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testSetLatitudeIllegalArgument() {
-		geoPositionType.setLatitude("1234.1234567");
+		geoType.setLatitude("1234.1234567");
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testSetLongitudeIllegalArgument() {
-		geoPositionType.setLongitude("1234.1234567");
+		geoType.setLongitude("1234.1234567");
 	}
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(geoPositionType.getTypeString(), VCardType.GEO.getType());
+		assertEquals(VCardTypeName.GEO.getType(), geoType.getVCardTypeName().getType());
 	}
 	
 	@Test
 	public void testEquals() {
-		GeographicPositionType geoPositionType2 = new GeographicPositionType(22.123456, 33.123456);
-		assertTrue(geoPositionType.equals(geoPositionType2));
+		GeoType geoType2 = new GeoType(22.123456, 33.123456);
+		assertTrue(geoType.equals(geoType2));
 	}
 	
 	@Test
 	public void testHashcode() {
-		GeographicPositionType geoPositionType2 = new GeographicPositionType(22.123456, 33.123456);
+		GeoType geoType2 = new GeoType(22.123456, 33.123456);
 		
-		int hcode1 = geoPositionType.hashCode();
-		int hcode2 = geoPositionType2.hashCode();
+		int hcode1 = geoType.hashCode();
+		int hcode2 = geoType2.hashCode();
 		assertEquals(hcode1, hcode2);
 	}
 	
 	@Test
+	public void testCompareTo() {
+		GeoType geoType2 = new GeoType(22.123456, 33.123456);
+		assertTrue(geoType.compareTo(geoType2) == 0);
+	}
+	
+	@Test
 	public void testClone() {
-		GeographicPositionFeature cloned = geoPositionType.clone();
-		assertEquals(cloned, geoPositionType);
-		assertTrue(geoPositionType.equals(cloned));
+		GeoType cloned = geoType.clone();
+		assertEquals(cloned, geoType);
+		assertTrue(geoType.equals(cloned));
+		assertTrue(geoType.compareTo(cloned) == 0);
 	}
 }

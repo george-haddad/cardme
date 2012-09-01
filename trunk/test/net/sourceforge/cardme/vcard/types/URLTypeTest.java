@@ -8,16 +8,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.URLFeature;
-import net.sourceforge.cardme.vcard.types.parameters.URLParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.XURLParameterType;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
+import net.sourceforge.cardme.vcard.types.params.ExtendedParamType;
+import net.sourceforge.cardme.vcard.types.params.UrlParamType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -48,27 +47,27 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 4, 2011
+ * Aug 28, 2012
  *
  */
 public class URLTypeTest {
 
-	private URLType urlType1 = null;
-	private URLType urlType2 = null;
-	private URLType urlType3 = null;
-	private URLType urlType4 = null;
+	private UrlType urlType1 = null;
+	private UrlType urlType2 = null;
+	private UrlType urlType3 = null;
+	private UrlType urlType4 = null;
 	
 	@Before
 	public void setUp() throws Exception {
-		urlType1 = new URLType("http://sourceforge.net");
-		urlType1.addURLParameterType(URLParameterType.WORK);
-		urlType1.addURLParameterType(URLParameterType.PREF);
-		urlType1.addExtendedURLParameterType(new XURLParameterType("X-PROTOCOL", "HTTPS"));
-		urlType1.addExtendedURLParameterType(new XURLParameterType("X-SSL"));
+		urlType1 = new UrlType("http://sourceforge.net");
+		urlType1.addParam(UrlParamType.WORK)
+			.addParam(UrlParamType.PREF)
+			.addExtendedParam(new ExtendedParamType("X-PROTOCOL", "HTTPS", VCardTypeName.URL))
+			.addExtendedParam(new ExtendedParamType("X-SSL", VCardTypeName.URL));
 		
-		urlType2 = new URLType(new URL("http://sourceforge.net"));
-		urlType3 = new URLType();
-		urlType4 = new URLType("this should be ok.");
+		urlType2 = new UrlType(new URL("http://sourceforge.net"));
+		urlType3 = new UrlType();
+		urlType4 = new UrlType("this should be ok.");
 	}
 	
 	@After
@@ -80,110 +79,110 @@ public class URLTypeTest {
 	}
 	
 	@Test
-	public void testGetURL() throws MalformedURLException {
+	public void testGetUrl() throws MalformedURLException {
 		URL url = new URL("http://sourceforge.net");
-		assertEquals(url, urlType1.getURL());
-		assertEquals(url, urlType2.getURL());
-		assertNull(urlType3.getURL());
-		assertNull(urlType4.getURL());
-		assertTrue(urlType4.hasRawURL());
-		assertEquals("this should be ok.", urlType4.getRawURL());
+		assertEquals(url, urlType1.getUrl());
+		assertEquals(url, urlType2.getUrl());
+		assertNull(urlType3.getUrl());
+		assertNull(urlType4.getUrl());
+		assertTrue(urlType4.hasRawUrl());
+		assertEquals("this should be ok.", urlType4.getRawUrl());
 	}
 	
 	@Test
-	public void testHasURL() {
-		assertTrue(urlType1.hasURL());
-		assertTrue(urlType2.hasURL());
-		assertFalse(urlType3.hasURL());
-		assertFalse(urlType4.hasURL());
-		assertTrue(urlType4.hasRawURL());
+	public void testHasUrl() {
+		assertTrue(urlType1.hasUrl());
+		assertTrue(urlType2.hasUrl());
+		assertFalse(urlType3.hasUrl());
+		assertFalse(urlType4.hasUrl());
+		assertTrue(urlType4.hasRawUrl());
 	}
 	
 	@Test
 	public void testClearURL() {
-		urlType1.clearURL();
-		urlType2.clearURL();
-		urlType3.clearURL();
-		urlType4.clearURL();
+		urlType1.clearUrl();
+		urlType2.clearUrl();
+		urlType3.clearUrl();
+		urlType4.clearUrl();
 		
-		assertFalse(urlType1.hasURL());
-		assertFalse(urlType2.hasURL());
-		assertFalse(urlType3.hasURL());
-		assertFalse(urlType4.hasURL());
-		assertFalse(urlType4.hasRawURL());
+		assertFalse(urlType1.hasUrl());
+		assertFalse(urlType2.hasUrl());
+		assertFalse(urlType3.hasUrl());
+		assertFalse(urlType4.hasUrl());
+		assertFalse(urlType4.hasRawUrl());
 	}
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(urlType1.getTypeString(), VCardType.URL.getType());
+		assertEquals(VCardTypeName.URL.getType(), urlType1.getVCardTypeName().getType());
 	}
 	
 	@Test
-	public void testContainsURLParameterType() {
-		assertTrue(urlType1.containsURLParameterType(URLParameterType.PREF));
-		assertTrue(urlType1.containsURLParameterType(URLParameterType.WORK));
-		assertFalse(urlType1.containsURLParameterType(URLParameterType.HOME));
+	public void testContainsParam() {
+		assertTrue(urlType1.containsParam(UrlParamType.PREF));
+		assertTrue(urlType1.containsParam(UrlParamType.WORK));
+		assertFalse(urlType1.containsParam(UrlParamType.HOME));
 	}
 	
 	@Test
-	public void testContainsAllURLParameterTypes() {
-		List<URLParameterType> types = new ArrayList<URLParameterType>(2);
-		types.add(URLParameterType.PREF);
-		types.add(URLParameterType.WORK);
+	public void testContainsParams() {
+		List<UrlParamType> types = new ArrayList<UrlParamType>(2);
+		types.add(UrlParamType.PREF);
+		types.add(UrlParamType.WORK);
 		
-		assertTrue(urlType1.containsAllURLParameterTypes(types));
+		assertTrue(urlType1.containsAllParams(types));
 	}
 	
 	@Test
-	public void testContainsExtendedURLParameterType() {
-		assertTrue(urlType1.containsExtendedURLParameterType(new XURLParameterType("X-PROTOCOL", "HTTPS")));
-		assertTrue(urlType1.containsExtendedURLParameterType(new XURLParameterType("X-SSL")));
-		assertFalse(urlType1.containsExtendedURLParameterType(new XURLParameterType("X-NOT-EXISTS")));
+	public void testContainsExtendedParam() {
+		assertTrue(urlType1.containsExtendedParam(new ExtendedParamType("X-PROTOCOL", "HTTPS", VCardTypeName.URL)));
+		assertTrue(urlType1.containsExtendedParam(new ExtendedParamType("X-SSL", VCardTypeName.URL)));
+		assertFalse(urlType1.containsExtendedParam(new ExtendedParamType("X-NOT-EXISTS", VCardTypeName.URL)));
 	}
 	
 	@Test
-	public void testContainsAllExtendedURLParameterTypes() {
-		List<XURLParameterType> types = new ArrayList<XURLParameterType>(2);
-		types.add(new XURLParameterType("X-PROTOCOL", "HTTPS"));
-		types.add(new XURLParameterType("X-SSL"));
+	public void testContainsAllExtendedParams() {
+		List<ExtendedParamType> types = new ArrayList<ExtendedParamType>(2);
+		types.add(new ExtendedParamType("X-PROTOCOL", "HTTPS", VCardTypeName.URL));
+		types.add(new ExtendedParamType("X-SSL", VCardTypeName.URL));
 		
-		assertTrue(urlType1.containsAllExtendedURLParameterTypes(types));
+		assertTrue(urlType1.containsAllExtendedParams(types));
 	}
 	
 	@Test
-	public void testRemoveURLParameterType() {
-		urlType1.addURLParameterType(URLParameterType.HOME);
-		assertTrue(urlType1.containsURLParameterType(URLParameterType.HOME));
-		urlType1.removeURLParameterType(URLParameterType.HOME);
-		assertFalse(urlType1.containsURLParameterType(URLParameterType.HOME));
+	public void testRemoveParam() {
+		urlType1.addParam(UrlParamType.HOME);
+		assertTrue(urlType1.containsParam(UrlParamType.HOME));
+		urlType1.removeParam(UrlParamType.HOME);
+		assertFalse(urlType1.containsParam(UrlParamType.HOME));
 	}
 	
 	@Test
-	public void testRemoveExtendedURLParameterType() {
-		urlType1.addExtendedURLParameterType(new XURLParameterType("X-REMOVEME"));
-		assertTrue(urlType1.containsExtendedURLParameterType(new XURLParameterType("X-REMOVEME")));
-		urlType1.removeExtendedURLParameterType(new XURLParameterType("X-REMOVEME"));
-		assertFalse(urlType1.containsExtendedURLParameterType(new XURLParameterType("X-REMOVEME")));
+	public void testRemoveExtendedParam() {
+		urlType1.addExtendedParam(new ExtendedParamType("X-REMOVEME", VCardTypeName.URL));
+		assertTrue(urlType1.containsExtendedParam(new ExtendedParamType("X-REMOVEME", VCardTypeName.URL)));
+		urlType1.removeExtendedParam(new ExtendedParamType("X-REMOVEME", VCardTypeName.URL));
+		assertFalse(urlType1.containsExtendedParam(new ExtendedParamType("X-REMOVEME", VCardTypeName.URL)));
 	}
 	
 	@Test
 	public void testEquals() {
-		URLType urlType5 = new URLType("http://sourceforge.net");
-		urlType5.addURLParameterType(URLParameterType.WORK);
-		urlType5.addURLParameterType(URLParameterType.PREF);
-		urlType5.addExtendedURLParameterType(new XURLParameterType("X-PROTOCOL", "HTTPS"));
-		urlType5.addExtendedURLParameterType(new XURLParameterType("X-SSL"));
+		UrlType urlType5 = new UrlType("http://sourceforge.net");
+		urlType5.addParam(UrlParamType.WORK)
+			.addParam(UrlParamType.PREF)
+			.addExtendedParam(new ExtendedParamType("X-PROTOCOL", "HTTPS", VCardTypeName.URL))
+			.addExtendedParam(new ExtendedParamType("X-SSL", VCardTypeName.URL));
 		
 		assertTrue(urlType1.equals(urlType5));
 	}
 	
 	@Test
 	public void testHashcode() {
-		URLType urlType5 = new URLType("http://sourceforge.net");
-		urlType5.addURLParameterType(URLParameterType.WORK);
-		urlType5.addURLParameterType(URLParameterType.PREF);
-		urlType5.addExtendedURLParameterType(new XURLParameterType("X-PROTOCOL", "HTTPS"));
-		urlType5.addExtendedURLParameterType(new XURLParameterType("X-SSL"));
+		UrlType urlType5 = new UrlType("http://sourceforge.net");
+		urlType5.addParam(UrlParamType.WORK)
+			.addParam(UrlParamType.PREF)
+			.addExtendedParam(new ExtendedParamType("X-PROTOCOL", "HTTPS", VCardTypeName.URL))
+			.addExtendedParam(new ExtendedParamType("X-SSL", VCardTypeName.URL));
 		
 		int hcode1 = urlType1.hashCode();
 		int hcode2 = urlType5.hashCode();
@@ -191,13 +190,26 @@ public class URLTypeTest {
 	}
 	
 	@Test
-	public void testClone() {
-		URLFeature cloned = urlType1.clone();
-		assertEquals(cloned, urlType1);
-		assertTrue(urlType1.equals(cloned));
+	public void testCompareTo() {
+		UrlType urlType5 = new UrlType("http://sourceforge.net");
+		urlType5.addParam(UrlParamType.WORK)
+			.addParam(UrlParamType.PREF)
+			.addExtendedParam(new ExtendedParamType("X-PROTOCOL", "HTTPS", VCardTypeName.URL))
+			.addExtendedParam(new ExtendedParamType("X-SSL", VCardTypeName.URL));
 		
-		URLFeature cloned2 = urlType4.clone();
-		assertEquals(cloned2, urlType4);
+		assertTrue(urlType1.compareTo(urlType5) == 0);
+	}
+	
+	@Test
+	public void testClone() {
+		UrlType cloned = urlType1.clone();
+		assertEquals(urlType1, cloned);
+		assertTrue(urlType1.equals(cloned));
+		assertTrue(urlType1.compareTo(cloned) == 0);
+		
+		UrlType cloned2 = urlType4.clone();
+		assertEquals(urlType4, cloned2);
 		assertTrue(urlType4.equals(cloned2));
+		assertTrue(urlType4.compareTo(cloned2) == 0);
 	}
 }

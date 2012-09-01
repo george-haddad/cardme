@@ -2,14 +2,13 @@ package net.sourceforge.cardme.vcard.types;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.EndFeature;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -40,7 +39,7 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 1, 2011
+ * Aug 24, 2012
  *
  */
 public class EndTypeTest {
@@ -59,7 +58,7 @@ public class EndTypeTest {
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(endType.getTypeString(), VCardType.END.getType());
+		assertEquals(VCardTypeName.END.getType(), endType.getVCardTypeName().getType());
 	}
 	
 	@Test
@@ -77,9 +76,16 @@ public class EndTypeTest {
 	}
 	
 	@Test
+	public void testCompareTo() {
+		EndType endType2 = new EndType();
+		assertTrue(endType.compareTo(endType2) == 0);
+	}
+	
+	@Test
 	public void testClone() {
-		EndFeature cloned = endType.clone();
+		EndType cloned = endType.clone();
 		assertEquals(cloned, endType);
 		assertTrue(endType.equals(cloned));
+		assertTrue(endType.compareTo(cloned) == 0);
 	}
 }

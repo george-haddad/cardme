@@ -3,17 +3,15 @@ package net.sourceforge.cardme.vcard.types;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.NicknameFeature;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -44,7 +42,7 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 3, 2011
+ * Aug 27, 2012
  *
  */
 public class NicknameTypeTest {
@@ -54,9 +52,7 @@ public class NicknameTypeTest {
 	@Before
 	public void setUp() throws Exception {
 		nicknameType = new NicknameType();
-		nicknameType.addNickname("AAA");
-		nicknameType.addNickname("BBB");
-		nicknameType.addNickname("CCC");
+		nicknameType.addNickname("AAA").addNickname("BBB").addNickname("CCC");
 	}
 	
 	@After
@@ -66,10 +62,10 @@ public class NicknameTypeTest {
 	
 	@Test
 	public void testGetNicknames() {
-		Iterator<String> iter = nicknameType.getNicknames();
-		assertEquals("AAA", iter.next());
-		assertEquals("BBB", iter.next());
-		assertEquals("CCC", iter.next());
+		List<String> list = nicknameType.getNicknames();
+		assertEquals("AAA", list.get(0));
+		assertEquals("BBB", list.get(1));
+		assertEquals("CCC", list.get(2));
 	}
 	
 	@Test
@@ -80,20 +76,20 @@ public class NicknameTypeTest {
 	
 	@Test
 	public void testAddAllNicknames() {
-		List<String> moreNicks = new ArrayList<String>();
+		List<String> moreNicks = new ArrayList<String>(3);
 		moreNicks.add("XXX");
 		moreNicks.add("YYY");
 		moreNicks.add("ZZZ");
 		
 		nicknameType.addAllNicknames(moreNicks);
 		
-		Iterator<String> iter = nicknameType.getNicknames();
-		assertEquals("AAA", iter.next());
-		assertEquals("BBB", iter.next());
-		assertEquals("CCC", iter.next());
-		assertEquals("XXX", iter.next());
-		assertEquals("YYY", iter.next());
-		assertEquals("ZZZ", iter.next());
+		List<String> list = nicknameType.getNicknames();
+		assertEquals("AAA", list.get(0));
+		assertEquals("BBB", list.get(1));
+		assertEquals("CCC", list.get(2));
+		assertEquals("XXX", list.get(3));
+		assertEquals("YYY", list.get(4));
+		assertEquals("ZZZ", list.get(5));
 	}
 	
 	@Test
@@ -122,24 +118,20 @@ public class NicknameTypeTest {
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(nicknameType.getTypeString(), VCardType.NICKNAME.getType());
+		assertEquals(VCardTypeName.NICKNAME.getType(), nicknameType.getVCardTypeName().getType());
 	}
 	
 	@Test
 	public void testEquals() {
 		NicknameType nicknameType2 = new NicknameType();
-		nicknameType2.addNickname("AAA");
-		nicknameType2.addNickname("BBB");
-		nicknameType2.addNickname("CCC");
+		nicknameType2.addNickname("AAA").addNickname("BBB").addNickname("CCC");
 		assertTrue(nicknameType.equals(nicknameType2));
 	}
 	
 	@Test
 	public void testHashcode() {
 		NicknameType nicknameType2 = new NicknameType();
-		nicknameType2.addNickname("AAA");
-		nicknameType2.addNickname("BBB");
-		nicknameType2.addNickname("CCC");
+		nicknameType2.addNickname("AAA").addNickname("BBB").addNickname("CCC");
 		
 		int hcode1 = nicknameType.hashCode();
 		int hcode2 = nicknameType2.hashCode();
@@ -147,9 +139,18 @@ public class NicknameTypeTest {
 	}
 	
 	@Test
+	public void testCompareTo() {
+		NicknameType nicknameType2 = new NicknameType();
+		nicknameType2.addNickname("AAA").addNickname("BBB").addNickname("CCC");
+		
+		assertTrue(nicknameType.compareTo(nicknameType2) == 0);
+	}
+	
+	@Test
 	public void testClone() {
-		NicknameFeature cloned = nicknameType.clone();
+		NicknameType cloned = nicknameType.clone();
 		assertEquals(cloned, nicknameType);
 		assertTrue(nicknameType.equals(cloned));
+		assertTrue(nicknameType.compareTo(cloned) == 0);
 	}
 }

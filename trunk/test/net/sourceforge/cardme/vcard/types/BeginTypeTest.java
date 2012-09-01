@@ -2,14 +2,13 @@ package net.sourceforge.cardme.vcard.types;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.BeginFeature;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -40,7 +39,7 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 1, 2011
+ * Aug 24, 2012
  *
  */
 public class BeginTypeTest {
@@ -59,13 +58,13 @@ public class BeginTypeTest {
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(beginType.getTypeString(), VCardType.BEGIN.getType());
+		assertEquals(VCardTypeName.BEGIN.getType(), beginType.getVCardTypeName().getType());
 	}
 	
 	@Test
 	public void testEquals() {
 		BeginType beginType2 = new BeginType();
-		assertTrue(beginType.equals(beginType2));
+		assertTrue(beginType2.equals(beginType));
 	}
 	
 	@Test
@@ -77,9 +76,16 @@ public class BeginTypeTest {
 	}
 	
 	@Test
+	public void testCompareTo() {
+		BeginType beginType2 = new BeginType();
+		assertTrue(beginType2.compareTo(beginType) == 0);
+	}
+	
+	@Test
 	public void testClone() {
-		BeginFeature cloned = beginType.clone();
+		BeginType cloned = beginType.clone();
 		assertEquals(cloned, beginType);
 		assertTrue(beginType.equals(cloned));
+		assertTrue(beginType.compareTo(cloned) == 0);
 	}
 }

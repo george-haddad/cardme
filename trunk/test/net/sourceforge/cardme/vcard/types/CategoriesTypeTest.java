@@ -3,15 +3,14 @@ package net.sourceforge.cardme.vcard.types;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.CategoriesFeature;
-import java.util.Iterator;
+import java.util.List;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -42,7 +41,7 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 1, 2011
+ * Aug 24, 2012
  *
  */
 public class CategoriesTypeTest {
@@ -52,9 +51,7 @@ public class CategoriesTypeTest {
 	@Before
 	public void setUp() throws Exception {
 		categoriesType = new CategoriesType();
-		categoriesType.addCategory("Test 1");
-		categoriesType.addCategory("Test 2");
-		categoriesType.addCategory("Test 3");
+		categoriesType.addCategory("Test 1").addCategory("Test 2").addCategory("Test 3");
 	}
 	
 	@After
@@ -70,6 +67,7 @@ public class CategoriesTypeTest {
 	
 	@Test
 	public void testRemoveCategory() {
+		assertTrue(categoriesType.containsCategory("Test 1"));
 		categoriesType.removeCategory("Test 1");
 		assertFalse(categoriesType.containsCategory("Test 1"));
 	}
@@ -79,20 +77,26 @@ public class CategoriesTypeTest {
 		assertTrue(categoriesType.containsCategory("Test 1"));
 		assertTrue(categoriesType.containsCategory("Test 2"));
 		assertTrue(categoriesType.containsCategory("Test 3"));
+		assertFalse(categoriesType.containsCategory("ABC"));
 		assertFalse(categoriesType.containsCategory(null));
 	}
 	
 	@Test
 	public void testGetCategories() {
-		Iterator<String> iter = categoriesType.getCategories();
-		assertEquals("Test 1", iter.next());
-		assertEquals("Test 2", iter.next());
-		assertEquals("Test 3", iter.next());
+		List<String> list = categoriesType.getCategories();
+		assertEquals("Test 1", list.get(0));
+		assertEquals("Test 2", list.get(1));
+		assertEquals("Test 3", list.get(2));
 	}
 	
 	@Test
 	public void testClearCategories() {
+		assertTrue(categoriesType.containsCategory("Test 1"));
+		assertTrue(categoriesType.containsCategory("Test 2"));
+		assertTrue(categoriesType.containsCategory("Test 3"));
+		
 		categoriesType.clearCategories();
+		
 		assertFalse(categoriesType.containsCategory("Test 1"));
 		assertFalse(categoriesType.containsCategory("Test 2"));
 		assertFalse(categoriesType.containsCategory("Test 3"));
@@ -110,25 +114,20 @@ public class CategoriesTypeTest {
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(categoriesType.getTypeString(), VCardType.CATEGORIES.getType());
+		assertEquals(VCardTypeName.CATEGORIES.getType(), categoriesType.getVCardTypeName().getType());
 	}
 	
 	@Test
 	public void testEquals() {
 		CategoriesType categoriesType2 = new CategoriesType();
-		categoriesType2.addCategory("Test 1");
-		categoriesType2.addCategory("Test 2");
-		categoriesType2.addCategory("Test 3");
-		
+		categoriesType2.addCategory("Test 1").addCategory("Test 2").addCategory("Test 3");
 		assertTrue(categoriesType.equals(categoriesType2));
 	}
 	
 	@Test
 	public void testHashcode() {
 		CategoriesType categoriesType2 = new CategoriesType();
-		categoriesType2.addCategory("Test 1");
-		categoriesType2.addCategory("Test 2");
-		categoriesType2.addCategory("Test 3");
+		categoriesType2.addCategory("Test 1").addCategory("Test 2").addCategory("Test 3");
 		
 		int hcode1 = categoriesType.hashCode();
 		int hcode2 = categoriesType2.hashCode();
@@ -136,9 +135,18 @@ public class CategoriesTypeTest {
 	}
 	
 	@Test
+	public void testCompareTo() {
+		CategoriesType categoriesType2 = new CategoriesType();
+		categoriesType2.addCategory("Test 1").addCategory("Test 2").addCategory("Test 3");
+		
+		assertTrue(categoriesType.compareTo(categoriesType2) == 0);
+	}
+	
+	@Test
 	public void testClone() {
-		CategoriesFeature cloned = categoriesType.clone();
+		CategoriesType cloned = categoriesType.clone();
 		assertEquals(cloned, categoriesType);
 		assertTrue(categoriesType.equals(cloned));
+		assertTrue(categoriesType.compareTo(cloned) == 0);
 	}
 }

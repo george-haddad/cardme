@@ -3,14 +3,13 @@ package net.sourceforge.cardme.vcard.types;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.UIDFeature;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -41,17 +40,17 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 4, 2011
+ * Aug 27, 2012
  *
  */
 public class UIDTypeTest {
 
-	private UIDType uidType = null;
+	private UidType uidType = null;
 	
 	@Before
 	public void setUp() throws Exception {
-		uidType = new UIDType();
-		uidType.setUID("123456");
+		uidType = new UidType();
+		uidType.setUid("123456");
 	}
 	
 	@After
@@ -61,34 +60,46 @@ public class UIDTypeTest {
 	
 	@Test
 	public void testGetUID() {
-		assertEquals("123456", uidType.getUID());
+		assertEquals("123456", uidType.getUid());
+	}
+	
+	@Test
+	public void testSetUidSecure() {
+		String uid = "Eudora";
+		uidType.setUid(uid);
+		
+		String uidCopy = uidType.getUid();
+		
+		assertFalse(uid == uidCopy);
+		assertTrue(uid.compareTo(uidCopy) == 0);
+		assertTrue(uid.equals(uidCopy));
 	}
 	
 	@Test
 	public void testHasUID() {
-		assertTrue(uidType.hasUID());
+		assertTrue(uidType.hasUid());
 	}
 	
 	@Test
-	public void testClearUID() {
-		uidType.clearUID();
-		assertFalse(uidType.hasUID());
+	public void testClearUid() {
+		uidType.clearUid();
+		assertFalse(uidType.hasUid());
 	}
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(uidType.getTypeString(), VCardType.UID.getType());
+		assertEquals(VCardTypeName.UID.getType(), uidType.getVCardTypeName().getType());
 	}
 	
 	@Test
 	public void testEquals() {
-		UIDType uidType2 = new UIDType("123456");
+		UidType uidType2 = new UidType("123456");
 		assertTrue(uidType.equals(uidType2));
 	}
 	
 	@Test
 	public void testHashcode() {
-		UIDType uidType2 = new UIDType("123456");
+		UidType uidType2 = new UidType("123456");
 		
 		int hcode1 = uidType.hashCode();
 		int hcode2 = uidType2.hashCode();
@@ -96,9 +107,16 @@ public class UIDTypeTest {
 	}
 	
 	@Test
+	public void testCompareTo() {
+		UidType uidType2 = new UidType("123456");
+		assertTrue(uidType.compareTo(uidType2) == 0);
+	}
+	
+	@Test
 	public void testClone() {
-		UIDFeature cloned = uidType.clone();
+		UidType cloned = uidType.clone();
 		assertEquals(cloned, uidType);
 		assertTrue(uidType.equals(cloned));
+		assertTrue(uidType.compareTo(cloned) == 0);
 	}
 }

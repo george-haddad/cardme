@@ -3,14 +3,13 @@ package net.sourceforge.cardme.vcard.types;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.ProfileFeature;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -41,7 +40,7 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 3, 2011
+ * Aug 27, 2012
  *
  */
 public class ProfileTypeTest {
@@ -64,6 +63,18 @@ public class ProfileTypeTest {
 		assertEquals("VCARD", profileType.getProfile());
 	}
 	
+	@Test
+	public void testSetProfile() {
+		String profile = "VCARD";
+		profileType.setProfile(profile);
+		
+		String profileCopy = profileType.getProfile();
+		
+		assertFalse(profile == profileCopy);
+		assertTrue(profile.compareTo(profileCopy) == 0);
+		assertTrue(profile.equals(profileCopy));
+	}
+	
 	@Test(expected=IllegalArgumentException.class)
 	public void testSetProfileIllegalArgument() {
 		profileType.setProfile("Something else other than VCARD");
@@ -82,7 +93,7 @@ public class ProfileTypeTest {
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(profileType.getTypeString(), VCardType.PROFILE.getType());
+		assertEquals(VCardTypeName.PROFILE.getType(), profileType.getVCardTypeName().getType());
 	}
 	
 	@Test
@@ -101,9 +112,16 @@ public class ProfileTypeTest {
 	}
 	
 	@Test
+	public void testCompareTo() {
+		ProfileType profileType2 = new ProfileType("VCARD");
+		assertTrue(profileType.compareTo(profileType2) == 0);
+	}
+	
+	@Test
 	public void testClone() {
-		ProfileFeature cloned = profileType.clone();
+		ProfileType cloned = profileType.clone();
 		assertEquals(cloned, profileType);
 		assertTrue(profileType.equals(cloned));
+		assertTrue(profileType.compareTo(cloned) == 0);
 	}
 }

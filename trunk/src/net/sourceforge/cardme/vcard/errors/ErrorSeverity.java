@@ -36,6 +36,7 @@ package net.sourceforge.cardme.vcard.errors;
  *
  */
 public enum ErrorSeverity {
+	
 	/**
 	 * <p>Fatal error causes the vcard to stop functioning
 	 * in a predictable and correct way. Will cause other

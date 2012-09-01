@@ -4,17 +4,17 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.EncodingType;
-import net.sourceforge.cardme.vcard.VCardType;
+import java.util.Arrays;
+import net.sourceforge.cardme.vcard.arch.EncodingType;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import net.sourceforge.cardme.vcard.features.KeyFeature;
 import net.sourceforge.cardme.vcard.types.media.KeyTextType;
-import java.util.Arrays;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -45,7 +45,7 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 1, 2011
+ * Aug 27, 2012
  *
  */
 public class KeyTypeTest {
@@ -72,8 +72,8 @@ public class KeyTypeTest {
 	}
 	
 	@Test
-	public void testIsCompression() {
-		assertFalse(keyType.isSetCompression());
+	public void testIsCompressed() {
+		assertFalse(keyType.isCompressed());
 	}
 	
 	@Test
@@ -82,13 +82,13 @@ public class KeyTypeTest {
 	}
 	
 	@Test
-	public void testIsInline() {
-		assertTrue(keyType.isInline());
+	public void testIsBinary() {
+		assertTrue(keyType.isBinary());
 	}
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(keyType.getTypeString(), VCardType.KEY.getType());
+		assertEquals(VCardTypeName.KEY.getType(), keyType.getVCardTypeName().getType());
 	}
 	
 	@Test
@@ -112,6 +112,16 @@ public class KeyTypeTest {
 		keyType2.setKey(new byte[] {0x01, 0x02, 0x03, 0x04, 0x05});
 		
 		assertTrue(keyType.equals(keyType2));
+	}
+	
+	@Test
+	public void testCompareTo() {
+		KeyType keyType2 = new KeyType();
+		keyType2.setCompression(false);
+		keyType2.setKeyTextType(KeyTextType.B);
+		keyType2.setKey(new byte[] {0x01, 0x02, 0x03, 0x04, 0x05});
+		
+		assertTrue(keyType.compareTo(keyType2) == 0);
 	}
 	
 	@Test

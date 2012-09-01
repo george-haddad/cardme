@@ -1,16 +1,14 @@
 package net.sourceforge.cardme.vcard.types;
 
-import net.sourceforge.cardme.util.Util;
-import net.sourceforge.cardme.vcard.EncodingType;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.NameFeature;
-import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Arrays;
 import java.util.List;
+import net.sourceforge.cardme.util.StringUtil;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
+import net.sourceforge.cardme.vcard.features.NameFeature;
+import net.sourceforge.cardme.vcard.types.params.ExtendedParamType;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -41,242 +39,130 @@ import java.util.List;
  * 
  * @author George El-Haddad
  * <br/>
- * Feb 4, 2010
- * 
- * 
+ * Aug 13, 2012
+ *
  */
-public class NameType extends Type implements NameFeature {
+public class NameType extends AbstractVCardType implements Comparable<NameType>, Cloneable, NameFeature {
 
-	private static final long serialVersionUID = 2488518447572144187L;
+	private static final long serialVersionUID = -5146888944626204560L;
 	
-	private String familyName = null;
-	private String givenName = null;
-	private List<String> additionalNames = null;
-	private List<String> honorificPrefixes = null;
-	private List<String> honorificSuffixes = null;
+	private String name = null;
 	
 	public NameType() {
-		this(null, null);
+		this(null);
 	}
 	
-	public NameType(String familyName) {
-		this(familyName, null);
+	public NameType(String name) {
+		super(VCardTypeName.NAME);
+		setName(name);
+	}
+
+	public String getName()
+	{
+		if(name != null) {
+			return new String(name);
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void setName(String name) {
+		if(name != null) {
+			this.name = new String(name);
+		}
+		else {
+			this.name = null;
+		}
+	}
+
+	public boolean hasName()
+	{
+		return name != null;
+	}
+
+	public void clearName() {
+		name = null;
 	}
 	
-	public NameType(String familyName, String givenName) {
-		super(EncodingType.EIGHT_BIT, ParameterTypeStyle.PARAMETER_VALUE_LIST);
-		setFamilyName(familyName);
-		setGivenName(givenName);
-		additionalNames = new ArrayList<String>();
-		honorificPrefixes = new ArrayList<String>();
-		honorificSuffixes = new ArrayList<String>();
+	public boolean hasParams()
+	{
+		return false;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getFamilyName()
-	{
-		return familyName;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getGivenName()
-	{
-		return givenName;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Iterator<String> getAdditionalNames()
-	{
-		return additionalNames.listIterator();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Iterator<String> getHonorificPrefixes()
-	{
-		return honorificPrefixes.listIterator();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Iterator<String> getHonorificSuffixes()
-	{
-		return honorificSuffixes.listIterator();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setFamilyName(String familyName) {
-		this.familyName = familyName;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setGivenName(String givenName) {
-		this.givenName = givenName;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addAdditionalName(String additionalName) {
-		additionalNames.add(additionalName);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addHonorificPrefix(String honorificPrefix) {
-		honorificPrefixes.add(honorificPrefix);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addHonorificSuffix(String honorificSuffix) {
-		honorificSuffixes.add(honorificSuffix);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void removeAdditionalName(String additionalName) {
-		additionalNames.remove(additionalName);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void removeHonorificPrefix(String honorificPrefix) {
-		honorificPrefixes.remove(honorificPrefix);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void removeHonorificSuffix(String honorificSuffix) {
-		honorificSuffixes.remove(honorificSuffix);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean containsAdditionalName(String additionalName)
-	{
-		return additionalNames.contains(additionalName);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean containsHonorificPrefix(String honorificPrefix)
-	{
-		return honorificPrefixes.contains(honorificPrefix);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean containsHonorificSuffix(String honorificSuffix)
-	{
-		return honorificSuffixes.contains(honorificSuffix);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasFamilyName()
-	{
-		return familyName != null;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasGivenName()
-	{
-		return givenName != null;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasAdditionalNames()
-	{
-		return !additionalNames.isEmpty();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasHonorificPrefixes()
-	{
-		return !honorificPrefixes.isEmpty();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasHonorificSuffixes()
-	{
-		return !honorificSuffixes.isEmpty();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void clearAdditionalNames() {
-		additionalNames.clear();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void clearHonorificPrefixes() {
-		honorificPrefixes.clear();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void clearHonorificSuffixes() {
-		honorificSuffixes.clear();
-	}
-	
-
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	public String getTypeString()
+	public NameType clone()
 	{
-		return VCardType.N.getType();
+		NameType cloned = new NameType();
+		cloned.setEncodingType(getEncodingType());
+		cloned.setVCardTypeName(getVCardTypeName());
+
+		if(hasCharset()) {
+			cloned.setCharset(getCharset());
+		}
+		
+		cloned.setGroup(getGroup());
+		cloned.setLanguage(getLanguage());
+		cloned.setParameterTypeStyle(getParameterTypeStyle());
+		cloned.addAllExtendedParams(getExtendedParams());
+		cloned.setName(name);
+		return cloned;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+	public int compareTo(NameType obj)
+	{
+		if(obj != null) {
+			String[] contents = obj.getContents();
+			String[] myContents = getContents();
+			if(Arrays.equals(myContents, contents)) {
+				return 0;
+			}
+			else {
+				return 1;
+			}
+		}
+		else {
+			return -1;
+		}
+	}
+
+	@Override
+	protected String[] getContents()
+	{
+		String[] contents = new String[8];
+		contents[0] = getVCardTypeName().getType();
+		contents[1] = getEncodingType().getType();
+		contents[2] = StringUtil.getString(getGroup());
+		contents[3] = (getCharset() != null ? getCharset().name() : "");
+		contents[4] = (getLanguage() != null ? getLanguage().getLanguageCode() : "");
+		contents[5] = getParameterTypeStyle().toString();
+		
+		if(hasExtendedParams()) {
+			List<ExtendedParamType> xParams = getExtendedParams();
+			StringBuilder sb = new StringBuilder();
+			for(ExtendedParamType xParamType : xParams) {
+				sb.append(xParamType.toString());
+				sb.append(",");
+			}
+			
+			sb.deleteCharAt(sb.length()-1);
+			contents[6] = sb.toString();
+		}
+		else {
+			contents[6] = "";
+		}
+		
+		contents[7] = StringUtil.getString(name);
+		
+		return contents;
+	}
+
 	@Override
 	public boolean equals(Object obj)
 	{
 		if(obj != null) {
 			if(obj instanceof NameType) {
-				if(this == obj || ((NameType)obj).hashCode() == this.hashCode()) {
-					return true;
-				}
-				else {
-					return false;
-				}
+				return this.compareTo((NameType)obj) == 0;
 			}
 			else {
 				return false;
@@ -285,109 +171,5 @@ public class NameType extends Type implements NameFeature {
 		else {
 			return false;
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int hashCode()
-	{
-		return Util.generateHashCode(toString());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append(this.getClass().getName());
-		sb.append("[ ");
-		if(encodingType != null) {
-			sb.append(encodingType.getType());
-			sb.append(",");
-		}
-		
-		if(!honorificPrefixes.isEmpty()) {
-			for(int i = 0; i < honorificPrefixes.size(); i++) {
-				sb.append(honorificPrefixes.get(i));
-				sb.append(",");
-			}
-		}
-		
-		if(familyName != null) {
-			sb.append(familyName);
-			sb.append(",");
-		}
-		
-		if(givenName != null) {
-			sb.append(givenName);
-			sb.append(",");
-		}
-		
-		if(!additionalNames.isEmpty()) {
-			for(int i = 0; i < additionalNames.size(); i++) {
-				sb.append(additionalNames.get(i));
-				sb.append(",");
-			}
-		}
-		
-		if(!honorificSuffixes.isEmpty()) {
-			for(int i = 0; i < honorificSuffixes.size(); i++) {
-				sb.append(honorificSuffixes.get(i));
-				sb.append(",");
-			}
-		}
-
-		if(super.id != null) {
-			sb.append(super.id);
-			sb.append(",");
-		}
-		
-		sb.deleteCharAt(sb.length()-1);	//Remove last comma.
-		sb.append(" ]");
-		return sb.toString();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public NameFeature clone()
-	{
-		NameType cloned = new NameType();
-		
-		if(familyName != null) {
-			cloned.setFamilyName(new String(familyName));
-		}
-		
-		if(givenName != null) {
-			cloned.setGivenName(new String(givenName));
-		}
-		
-		if(!additionalNames.isEmpty()) {
-			for(int i = 0; i < additionalNames.size(); i++) {
-				cloned.addAdditionalName(new String(additionalNames.get(i)));
-			}
-		}
-		
-		if(!honorificPrefixes.isEmpty()) {
-			for(int i = 0; i < honorificPrefixes.size(); i++) {
-				cloned.addHonorificPrefix(new String(honorificPrefixes.get(i)));
-			}
-		}
-		
-		if(!honorificSuffixes.isEmpty()) {
-			for(int i = 0; i < honorificSuffixes.size(); i++) {
-				cloned.addHonorificSuffix(new String(honorificSuffixes.get(i)));
-			}
-		}
-		
-		cloned.setParameterTypeStyle(getParameterTypeStyle());
-		cloned.setEncodingType(getEncodingType());
-		cloned.setID(getID());
-		return cloned;
 	}
 }

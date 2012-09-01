@@ -3,19 +3,18 @@ package net.sourceforge.cardme.vcard.types;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.EncodingType;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.LogoFeature;
-import net.sourceforge.cardme.vcard.types.media.ImageMediaType;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import net.sourceforge.cardme.vcard.arch.EncodingType;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
+import net.sourceforge.cardme.vcard.types.media.ImageMediaType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -46,7 +45,7 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 3, 2011
+ * Aug 27, 2012
  *
  */
 public class LogoTypeTest {
@@ -84,8 +83,8 @@ public class LogoTypeTest {
 	
 	@Test
 	public void testIsCompression() {
-		assertFalse(logoTypeBin.isSetCompression());
-		assertFalse(logoTypeUri.isSetCompression());
+		assertFalse(logoTypeBin.isCompressed());
+		assertFalse(logoTypeUri.isCompressed());
 	}
 	
 	@Test
@@ -95,14 +94,14 @@ public class LogoTypeTest {
 	}
 	
 	@Test
-	public void testIsInline() {
-		assertTrue(logoTypeBin.isInline());
-		assertFalse(logoTypeUri.isInline());
+	public void testIsInBinary() {
+		assertTrue(logoTypeBin.isBinary());
+		assertFalse(logoTypeUri.isBinary());
 	}
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(logoTypeBin.getTypeString(), VCardType.LOGO.getType());
+		assertEquals(VCardTypeName.LOGO.getType(), logoTypeBin.getVCardTypeName().getType());
 	}
 	
 	@Test
@@ -119,6 +118,22 @@ public class LogoTypeTest {
 		
 		assertTrue(logoTypeBin.equals(logoTypeBin2));
 		assertTrue(logoTypeUri.equals(logoTypeUri2));
+	}
+	
+	@Test
+	public void testCompareTo() throws URISyntaxException {
+		LogoType logoTypeBin2 = new LogoType();
+		logoTypeBin2.setLogo(new byte[] {0x01, 0x02, 0x03, 0x04, 0x05});
+		logoTypeBin2.setEncodingType(EncodingType.BINARY);
+		logoTypeBin2.setCompression(false);
+		logoTypeBin2.setImageMediaType(ImageMediaType.JPEG);
+		
+		LogoType logoTypeUri2 = new LogoType();
+		logoTypeUri2.setLogoURI(new URI("file://C:/my_logos/john.jpg"));
+		logoTypeUri2.setEncodingType(EncodingType.EIGHT_BIT);
+		
+		assertTrue(logoTypeBin.compareTo(logoTypeBin2) == 0);
+		assertTrue(logoTypeUri.compareTo(logoTypeUri2) == 0);
 	}
 	
 	@Test
@@ -144,13 +159,15 @@ public class LogoTypeTest {
 	
 	@Test
 	public void testClone() {
-		LogoFeature cloned1 = logoTypeBin.clone(); 
-		LogoFeature cloned2 = logoTypeUri.clone(); 
+		LogoType cloned1 = logoTypeBin.clone(); 
+		LogoType cloned2 = logoTypeUri.clone(); 
 		
 		assertEquals(cloned1, logoTypeBin);
 		assertTrue(logoTypeBin.equals(cloned1));
+		assertTrue(logoTypeBin.compareTo(cloned1) == 0);
 		
 		assertEquals(cloned2, logoTypeUri);
 		assertTrue(logoTypeUri.equals(cloned2));
+		assertTrue(logoTypeUri.compareTo(cloned2) == 0);
 	}
 }

@@ -1,7 +1,7 @@
 package net.sourceforge.cardme.vcard.features;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -32,7 +32,7 @@ package net.sourceforge.cardme.vcard.features;
  * 
  * @author George El-Haddad
  * <br/>
- * Feb 4, 2010
+ * Aug 8, 2012
  * 
  * <p><b>RFC 2426</b><br/>
  * <b>3.5.2 ROLE Type Definition</b>
@@ -45,38 +45,13 @@ package net.sourceforge.cardme.vcard.features;
  * </ul>
  * </p>
  */
-public interface RoleFeature extends TypeTools {
-	
-	/**
-	 * <p>Returns the role.</p>
-	 *
-	 * @return {@link String}
-	 */
+public interface RoleFeature {
+
 	public String getRole();
 	
-	/**
-	 * <p>Sets the role.</p>
-	 *
-	 * @param role
-	 */
 	public void setRole(String role);
 	
-	/**
-	 * <p>Clears the role.</p>
-	 */
 	public void clearRole();
 	
-	/**
-	 * <p>Returns true if the role exists.</p>
-	 *
-	 * @return boolean
-	 */
 	public boolean hasRole();
-	
-	/**
-	 * <p>Returns a full copy of this object.</p>
-	 *
-	 * @return {@link RoleFeature}
-	 */
-	public RoleFeature clone();
 }

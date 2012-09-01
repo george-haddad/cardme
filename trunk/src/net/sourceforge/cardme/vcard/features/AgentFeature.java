@@ -1,12 +1,10 @@
 package net.sourceforge.cardme.vcard.features;
 
-import net.sourceforge.cardme.vcard.VCard;
-import net.sourceforge.cardme.vcard.types.parameters.AgentParameterType;
 import java.net.URI;
-import java.util.Iterator;
+import net.sourceforge.cardme.vcard.VCard;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -37,7 +35,7 @@ import java.util.Iterator;
  * 
  * @author George El-Haddad
  * <br/>
- * Feb 4, 2010
+ * Aug 8, 2012
  * 
  * <p><b>RFC 2426</b><br/>
  * <b>3.5.4 AGENT Type Definition</b>
@@ -50,104 +48,17 @@ import java.util.Iterator;
  * </ul>
  * </p>
  */
-public interface AgentFeature extends TypeTools {
+public interface AgentFeature {
 	
-	/**
-	 * <p>Returns the agent which is a VCard.</p>
-	 *
-	 * @return {@link VCard}
-	 */
 	public VCard getAgent();
 	
-	/**
-	 * <p>Sets the agent which is a VCard.</p>
-	 *
-	 * @param agent
-	 */
 	public void setAgent(VCard agent);
 	
-	/**
-	 * <p>Returns the agent URI.</p>
-	 *
-	 * @return {@link URI}
-	 */
 	public URI getAgentURI();
 	
-	/**
-	 * <p>Returns true if the agent exists in the form
-	 * of a VCard or a URI.</p>
-	 *
-	 * @return boolean
-	 */
 	public boolean hasAgent();
 	
-	/**
-	 * <p>Returns true if the agent is in the form of a URI.</p>
-	 *
-	 * @return boolean
-	 */
 	public boolean isURI();
 	
-	/**
-	 * <p>Returns true if the agent is in the form of in line data.
-	 * This would mean an embedded VCard string.</p>
-	 *
-	 * @return boolean
-	 */
-	public boolean isInline();
-	
-	/**
-	 * <p>Sets the agent URI.</p>
-	 *
-	 * @param agentUri
-	 */
 	public void setAgentURI(URI agentUri);
-	
-	/**
-	 * <p>Returns all parameter types of this Agent.</p>
-	 *
-	 * @return {@link Iterator}&lt;AgentParameterType&gt;
-	 */
-	public Iterator<AgentParameterType> getAgentParameterTypes();
-	
-	/**
-	 * <p>Adds a parameter type.</p>
-	 *
-	 * @param agentParameterType
-	 */
-	public void addAgentParameterType(AgentParameterType agentParameterType);
-	
-	/**
-	 * <p>Removes a parameter type.</p>
-	 *
-	 * @param agentParameterType
-	 */
-	public void removeAgentParameterType(AgentParameterType agentParameterType);
-	
-	/**
-	 * <p>Returns true if the parameter type exists in this Agent.</p>
-	 *
-	 * @param agentParameterType
-	 * @return boolean
-	 */
-	public boolean containsAgentParameterType(AgentParameterType agentParameterType);
-	
-	/**
-	 * <p>Returns true if this agent has parameter types.</p>
-	 *
-	 * @return boolean
-	 */
-	public boolean hasAgentParameterTypes();
-	
-	/**
-	 * <p>Removes all agent parameter types.</p>
-	 */
-	public void clearAgentParameterTypes();
-	
-	/**
-	 * <p>Returns a full copy of this object.</p>
-	 *
-	 * @return {@link AgentFeature}
-	 */
-	public AgentFeature clone();
 }

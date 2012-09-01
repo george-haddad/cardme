@@ -177,8 +177,9 @@ public class AudioMediaType {
 	private final String extension;
 	
 	/**
-	 * Use of this constructor is discouraged. Please use one of the predefined
-	 * static objects.
+	 * <p>Use of this constructor is discouraged. Please use one of the predefined
+	 * static objects.</p>
+	 * 
 	 * @param _typeName the type name (e.g. "MPEG")
 	 * @param _ianaRegisteredName the IANA registered name (e.g. "audio/mpeg")
 	 * @param _extension the file extension used for this type (e.g. "mpeg")
@@ -211,7 +212,8 @@ public class AudioMediaType {
 	}
 	
 	/**
-	 * Retrieves one of the static objects in this class by name.
+	 * <p>Retrieves one of the static objects in this class by name.</p>
+	 * 
 	 * @param typeName the type name (e.g. "MPEG")
 	 * @return the object associated with the given type name or null if none was found
 	 */

@@ -2,73 +2,65 @@ package net.sourceforge.cardme.io;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
-import java.util.Iterator;
-
+import java.util.List;
 import net.sourceforge.cardme.util.Base64Wrapper;
 import net.sourceforge.cardme.util.ISOFormat;
 import net.sourceforge.cardme.util.ISOUtils;
 import net.sourceforge.cardme.util.VCardUtils;
-import net.sourceforge.cardme.vcard.EncodingType;
 import net.sourceforge.cardme.vcard.VCard;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.VCardVersion;
+import net.sourceforge.cardme.vcard.arch.EncodingType;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
+import net.sourceforge.cardme.vcard.arch.VCardVersion;
 import net.sourceforge.cardme.vcard.errors.ErrorSeverity;
-import net.sourceforge.cardme.vcard.errors.VCardBuildException;
 import net.sourceforge.cardme.vcard.errors.VCardError;
-import net.sourceforge.cardme.vcard.errors.VCardErrorHandling;
-import net.sourceforge.cardme.vcard.errors.VCardException;
-import net.sourceforge.cardme.vcard.features.AddressFeature;
-import net.sourceforge.cardme.vcard.features.AgentFeature;
-import net.sourceforge.cardme.vcard.features.BeginFeature;
-import net.sourceforge.cardme.vcard.features.BirthdayFeature;
-import net.sourceforge.cardme.vcard.features.CategoriesFeature;
-import net.sourceforge.cardme.vcard.features.ClassFeature;
-import net.sourceforge.cardme.vcard.features.DisplayableNameFeature;
-import net.sourceforge.cardme.vcard.features.EmailFeature;
-import net.sourceforge.cardme.vcard.features.EndFeature;
-import net.sourceforge.cardme.vcard.features.ExtendedFeature;
-import net.sourceforge.cardme.vcard.features.FormattedNameFeature;
-import net.sourceforge.cardme.vcard.features.GeographicPositionFeature;
-import net.sourceforge.cardme.vcard.features.IMPPFeature;
-import net.sourceforge.cardme.vcard.features.KeyFeature;
-import net.sourceforge.cardme.vcard.features.LabelFeature;
-import net.sourceforge.cardme.vcard.features.LogoFeature;
-import net.sourceforge.cardme.vcard.features.MailerFeature;
+import net.sourceforge.cardme.vcard.errors.VCardErrorHandler;
+import net.sourceforge.cardme.vcard.exceptions.VCardBuildException;
+import net.sourceforge.cardme.vcard.exceptions.VCardException;
 import net.sourceforge.cardme.vcard.features.NameFeature;
-import net.sourceforge.cardme.vcard.features.NicknameFeature;
-import net.sourceforge.cardme.vcard.features.NoteFeature;
-import net.sourceforge.cardme.vcard.features.OrganizationFeature;
-import net.sourceforge.cardme.vcard.features.PhotoFeature;
-import net.sourceforge.cardme.vcard.features.ProductIdFeature;
-import net.sourceforge.cardme.vcard.features.ProfileFeature;
-import net.sourceforge.cardme.vcard.features.RevisionFeature;
-import net.sourceforge.cardme.vcard.features.RoleFeature;
-import net.sourceforge.cardme.vcard.features.SortStringFeature;
-import net.sourceforge.cardme.vcard.features.SoundFeature;
-import net.sourceforge.cardme.vcard.features.SourceFeature;
-import net.sourceforge.cardme.vcard.features.TelephoneFeature;
-import net.sourceforge.cardme.vcard.features.TimeZoneFeature;
-import net.sourceforge.cardme.vcard.features.TitleFeature;
-import net.sourceforge.cardme.vcard.features.TypeTools;
-import net.sourceforge.cardme.vcard.features.UIDFeature;
-import net.sourceforge.cardme.vcard.features.URLFeature;
-import net.sourceforge.cardme.vcard.features.VersionFeature;
-import net.sourceforge.cardme.vcard.types.parameters.AddressParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.BirthdayParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.EmailParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.ExtendedParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.IMPPParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.LabelParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.TelephoneParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.TimeZoneParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.URLParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.XAddressParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.XEmailParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.XIMPPParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.XLabelParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.XTelephoneParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.XURLParameterType;
-
+import net.sourceforge.cardme.vcard.types.AbstractVCardType;
+import net.sourceforge.cardme.vcard.types.AdrType;
+import net.sourceforge.cardme.vcard.types.AgentType;
+import net.sourceforge.cardme.vcard.types.BDayType;
+import net.sourceforge.cardme.vcard.types.BeginType;
+import net.sourceforge.cardme.vcard.types.CategoriesType;
+import net.sourceforge.cardme.vcard.types.ClassType;
+import net.sourceforge.cardme.vcard.types.EmailType;
+import net.sourceforge.cardme.vcard.types.EndType;
+import net.sourceforge.cardme.vcard.types.ExtendedType;
+import net.sourceforge.cardme.vcard.types.FNType;
+import net.sourceforge.cardme.vcard.types.GeoType;
+import net.sourceforge.cardme.vcard.types.ImppType;
+import net.sourceforge.cardme.vcard.types.KeyType;
+import net.sourceforge.cardme.vcard.types.LabelType;
+import net.sourceforge.cardme.vcard.types.LogoType;
+import net.sourceforge.cardme.vcard.types.MailerType;
+import net.sourceforge.cardme.vcard.types.NType;
+import net.sourceforge.cardme.vcard.types.NameType;
+import net.sourceforge.cardme.vcard.types.NicknameType;
+import net.sourceforge.cardme.vcard.types.NoteType;
+import net.sourceforge.cardme.vcard.types.OrgType;
+import net.sourceforge.cardme.vcard.types.PhotoType;
+import net.sourceforge.cardme.vcard.types.ProdIdType;
+import net.sourceforge.cardme.vcard.types.ProfileType;
+import net.sourceforge.cardme.vcard.types.RevType;
+import net.sourceforge.cardme.vcard.types.RoleType;
+import net.sourceforge.cardme.vcard.types.SortStringType;
+import net.sourceforge.cardme.vcard.types.SoundType;
+import net.sourceforge.cardme.vcard.types.SourceType;
+import net.sourceforge.cardme.vcard.types.TelType;
+import net.sourceforge.cardme.vcard.types.TitleType;
+import net.sourceforge.cardme.vcard.types.TzType;
+import net.sourceforge.cardme.vcard.types.UidType;
+import net.sourceforge.cardme.vcard.types.UrlType;
+import net.sourceforge.cardme.vcard.types.VersionType;
+import net.sourceforge.cardme.vcard.types.params.AdrParamType;
+import net.sourceforge.cardme.vcard.types.params.BDayParamType;
+import net.sourceforge.cardme.vcard.types.params.EmailParamType;
+import net.sourceforge.cardme.vcard.types.params.ExtendedParamType;
+import net.sourceforge.cardme.vcard.types.params.ImppParamType;
+import net.sourceforge.cardme.vcard.types.params.LabelParamType;
+import net.sourceforge.cardme.vcard.types.params.TelParamType;
+import net.sourceforge.cardme.vcard.types.params.UrlParamType;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.net.QuotedPrintableCodec;
 
@@ -117,7 +109,7 @@ public class VCardWriter {
 	
 	/**
 	 * <p>The VCard we set so that we can output it
-	 * into a textual .VCF formatted string.</p>
+	 * to a textual .VCF formatted string.</p>
 	 */
 	private VCard vcard = null;
 	
@@ -270,8 +262,8 @@ public class VCardWriter {
 		
 		this.vcard = vcard;
 		
-		if(vcard instanceof VCardErrorHandling) {
-			isThrowsExceptions = ((VCardErrorHandling)vcard).isThrowExceptions();
+		if(vcard instanceof VCardErrorHandler) {
+			isThrowsExceptions = ((VCardErrorHandler)vcard).isThrowExceptions();
 		}
 	}
 	
@@ -287,6 +279,7 @@ public class VCardWriter {
 		}
 		else {
 			if(outputVersion == VCardVersion.V2_1 || outputVersion == VCardVersion.V4_0) {
+				//TODO add in support for 2.1
 				throw new VCardException("Version "+outputVersion+" not supported.");
 			}
 			
@@ -368,12 +361,13 @@ public class VCardWriter {
 	 * if the given VCard is set to throw exceptions. If not then exceptions
 	 * are silently collected.</p>
 	 *
+	 * @throws VCardBuildException
 	 * @return {@link String}
 	 */
-	public String buildVCardString()
+	public String buildVCardString() throws VCardBuildException
 	{
 		if(vcard == null) {
-			throw new VCardException("Cannot build a null VCard.");
+			throw new VCardBuildException("Cannot build a null VCard.");
 		}
 		
 		StringBuilder sb = new StringBuilder();
@@ -383,11 +377,11 @@ public class VCardWriter {
 		 * Must be present.
 		 */
 		try {
-			buildBeginFeature(sb, vcard.getBegin());
+			buildBeginType(sb, vcard.getBegin());
 		}
 		catch(VCardBuildException vbe) {
 			if(isThrowsExceptions) {
-				throw new VCardException(vbe.getMessage(), vbe);
+				throw new VCardBuildException(vbe.getMessage(), vbe);
 			}
 			else {
 				handleError(vbe.getMessage(), vbe, ErrorSeverity.FATAL);
@@ -399,11 +393,11 @@ public class VCardWriter {
 		 * Must be present.
 		 */
 		try {
-			buildVersionFeature(sb, vcard.getVersion());
+			buildVersionType(sb, vcard.getVersion());
 		}
 		catch(VCardBuildException vbe) {
 			if(isThrowsExceptions) {
-				throw new VCardException(vbe.getMessage(), vbe);
+				throw new VCardBuildException(vbe.getMessage(), vbe);
 			}
 			else {
 				handleError(vbe.getMessage(), vbe, ErrorSeverity.FATAL);
@@ -411,15 +405,15 @@ public class VCardWriter {
 		}
 		
 		/*
-		 * Name
+		 * N
 		 * Must be present.
 		 */
 		try {
-			buildNameFeature(sb, vcard.getName());
+			buildNType(sb, vcard.getN());
 		}
 		catch(VCardBuildException vbe) {
 			if(isThrowsExceptions) {
-				throw new VCardException(vbe.getMessage(), vbe);
+				throw new VCardBuildException(vbe.getMessage(), vbe);
 			}
 			else {
 				handleError(vbe.getMessage(), vbe, ErrorSeverity.FATAL);
@@ -431,11 +425,11 @@ public class VCardWriter {
 		 * Must be present.
 		 */
 		try {
-			buildFormattedNameFeature(sb, vcard.getFormattedName());
+			buildFNType(sb, vcard.getFN());
 		}
 		catch(VCardBuildException vbe) {
 			if(isThrowsExceptions) {
-				throw new VCardException(vbe.getMessage(), vbe);
+				throw new VCardBuildException(vbe.getMessage(), vbe);
 			}
 			else {
 				handleError(vbe.getMessage(), vbe, ErrorSeverity.FATAL);
@@ -443,15 +437,15 @@ public class VCardWriter {
 		}
 		
 		/*
-		 * Displayable Name
+		 * Name
 		 */
-		if(vcard.hasDisplayableNameFeature()) {
+		if(vcard.hasName()) {
 			try {
-				buildDisplayableNameFeature(sb, vcard.getDisplayableNameFeature());
+				buildNameType(sb, vcard.getName());
 			}
 			catch(VCardBuildException vbe) {
 				if(isThrowsExceptions) {
-					throw new VCardException(vbe.getMessage(), vbe);
+					throw new VCardBuildException(vbe.getMessage(), vbe);
 				}
 				else {
 					handleError(vbe.getMessage(), vbe, ErrorSeverity.FATAL);
@@ -464,11 +458,11 @@ public class VCardWriter {
 		 */
 		if(vcard.hasProfile()) {
 			try {
-				buildProfileFeature(sb, vcard.getProfile());
+				buildProfileType(sb, vcard.getProfile());
 			}
 			catch(VCardBuildException vbe) {
 				if(isThrowsExceptions) {
-					throw new VCardException(vbe.getMessage(), vbe);
+					throw new VCardBuildException(vbe.getMessage(), vbe);
 				}
 				else {
 					handleError(vbe.getMessage(), vbe, ErrorSeverity.FATAL);
@@ -481,11 +475,11 @@ public class VCardWriter {
 		 */
 		if(vcard.hasSource()) {
 			try {
-				buildSourceFeature(sb, vcard.getSource());
+				buildSourceType(sb, vcard.getSource());
 			}
 			catch(VCardBuildException vbe) {
 				if(isThrowsExceptions) {
-					throw new VCardException(vbe.getMessage(), vbe);
+					throw new VCardBuildException(vbe.getMessage(), vbe);
 				}
 				else {
 					handleError(vbe.getMessage(), vbe, ErrorSeverity.FATAL);
@@ -499,11 +493,11 @@ public class VCardWriter {
 		 */
 		if(vcard.hasNicknames()) {
 			try {
-				buildNicknames(sb, vcard.getNicknames());
+				buildNicknameType(sb, vcard.getNicknames());
 			}
 			catch(VCardBuildException vbe) {
 				if(isThrowsExceptions) {
-					throw new VCardException(vbe.getMessage(), vbe);
+					throw new VCardBuildException(vbe.getMessage(), vbe);
 				}
 				else {
 					handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
@@ -516,11 +510,11 @@ public class VCardWriter {
 		 */
 		if(vcard.hasTitle()) {
 			try {
-				buildTitleFeature(sb, vcard.getTitle());
+				buildTitleType(sb, vcard.getTitle());
 			}
 			catch(VCardBuildException vbe) {
 				if(isThrowsExceptions) {
-					throw new VCardException(vbe.getMessage(), vbe);
+					throw new VCardBuildException(vbe.getMessage(), vbe);
 				}
 				else {
 					handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
@@ -533,11 +527,11 @@ public class VCardWriter {
 		 */
 		if(vcard.hasRole()) {
 			try {
-				buildRoleFeature(sb, vcard.getRole());
+				buildRoleType(sb, vcard.getRole());
 			}
 			catch(VCardBuildException vbe) {
 				if(isThrowsExceptions) {
-					throw new VCardException(vbe.getMessage(), vbe);
+					throw new VCardBuildException(vbe.getMessage(), vbe);
 				}
 				else {
 					handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
@@ -548,13 +542,13 @@ public class VCardWriter {
 		/*
 		 * Geographic Position
 		 */
-		if(vcard.hasGeographicPosition()) {
+		if(vcard.hasGeo()) {
 			try {
-				buildGeographicPositionFeature(sb, vcard.getGeographicPosition());
+				buildGeoType(sb, vcard.getGeo());
 			}
 			catch(VCardBuildException vbe) {
 				if(isThrowsExceptions) {
-					throw new VCardException(vbe.getMessage(), vbe);
+					throw new VCardBuildException(vbe.getMessage(), vbe);
 				}
 				else {
 					handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
@@ -565,13 +559,13 @@ public class VCardWriter {
 		/*
 		 * Organizations
 		 */
-		if(vcard.hasOrganizations()) {
+		if(vcard.hasOrg()) {
 			try {
-				buildOrganization(sb, vcard.getOrganizations());
+				buildOrgType(sb, vcard.getOrg());
 			}
 			catch(VCardBuildException vbe) {
 				if(isThrowsExceptions) {
-					throw new VCardException(vbe.getMessage(), vbe);
+					throw new VCardBuildException(vbe.getMessage(), vbe);
 				}
 				else {
 					handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
@@ -584,11 +578,11 @@ public class VCardWriter {
 		 */
 		if(vcard.hasMailer()) {
 			try {
-				buildMailerFeature(sb, vcard.getMailer());
+				buildMailerType(sb, vcard.getMailer());
 			}
 			catch(VCardBuildException vbe) {
 				if(isThrowsExceptions) {
-					throw new VCardException(vbe.getMessage(), vbe);
+					throw new VCardBuildException(vbe.getMessage(), vbe);
 				}
 				else {
 					handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
@@ -599,13 +593,13 @@ public class VCardWriter {
 		/*
 		 * Time Zone
 		 */
-		if(vcard.hasTimeZone()) {
+		if(vcard.hasTz()) {
 			try {
-				buildTimeZoneFeature(sb, vcard.getTimeZone());
+				buildTzType(sb, vcard.getTz());
 			}
 			catch(VCardBuildException vbe) {
 				if(isThrowsExceptions) {
-					throw new VCardException(vbe.getMessage(), vbe);
+					throw new VCardBuildException(vbe.getMessage(), vbe);
 				}
 				else {
 					handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
@@ -616,17 +610,15 @@ public class VCardWriter {
 		/*
 		 * URL
 		 */
-		if(vcard.hasURLs()) {
-			Iterator<URLFeature> urls = vcard.getURLs();
-			while(urls.hasNext()) {
-				URLFeature urlFeature = urls.next();
-				
+		if(vcard.hasUrls()) {
+			List<UrlType> urls = vcard.getUrls();
+			for(UrlType urlType : urls) {
 				try {
-					buildUrlFeature(sb, urlFeature);
+					buildUrlType(sb, urlType);
 				}
 				catch(VCardBuildException vbe) {
 					if(isThrowsExceptions) {
-						throw new VCardException(vbe.getMessage(), vbe);
+						throw new VCardBuildException(vbe.getMessage(), vbe);
 					}
 					else {
 						handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
@@ -638,13 +630,13 @@ public class VCardWriter {
 		/*
 		 * Revision
 		 */
-		if(vcard.hasRevision()) {
+		if(vcard.hasRev()) {
 			try {
-				buildRevisionFeature(sb, vcard.getRevision());
+				buildRevType(sb, vcard.getRev());
 			}
 			catch(VCardBuildException vbe) {
 				if(isThrowsExceptions) {
-					throw new VCardException(vbe.getMessage(), vbe);
+					throw new VCardBuildException(vbe.getMessage(), vbe);
 				}
 				else {
 					handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
@@ -655,13 +647,13 @@ public class VCardWriter {
 		/*
 		 * UID
 		 */
-		if(vcard.hasUID()) {
+		if(vcard.hasUid()) {
 			try {
-				buildUidFeature(sb, vcard.getUID());
+				buildUidType(sb, vcard.getUid());
 			}
 			catch(VCardBuildException vbe) {
 				if(isThrowsExceptions) {
-					throw new VCardException(vbe.getMessage(), vbe);
+					throw new VCardBuildException(vbe.getMessage(), vbe);
 				}
 				else {
 					handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
@@ -672,13 +664,13 @@ public class VCardWriter {
 		/*
 		 * Birthday
 		 */
-		if(vcard.hasBirthday()) {
+		if(vcard.hasBDay()) {
 			try {
-				buildBirthdayFeature(sb, vcard.getBirthDay());
+				buildBDayType(sb, vcard.getBDay());
 			}
 			catch(VCardBuildException vbe) {
 				if(isThrowsExceptions) {
-					throw new VCardException(vbe.getMessage(), vbe);
+					throw new VCardBuildException(vbe.getMessage(), vbe);
 				}
 				else {
 					handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
@@ -689,30 +681,30 @@ public class VCardWriter {
 		/*
 		 * Addresses & Labels
 		 */
-		if(vcard.hasAddresses()) {
-			Iterator<AddressFeature> addresses = vcard.getAddresses();
-			while(addresses.hasNext()) {
-				AddressFeature address = addresses.next();
+		if(vcard.hasAdrs()) {
+			List<AdrType> addresses = vcard.getAdrs();
+			for(AdrType adrType : addresses) {
 				try {
-					buildAddressFeature(sb, address);
+					buildAdrType(sb, adrType);
 				}
 				catch(VCardBuildException vbe) {
 					if(isThrowsExceptions) {
-						throw new VCardException(vbe.getMessage(), vbe);
+						throw new VCardBuildException(vbe.getMessage(), vbe);
 					}
 					else {
 						handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
 					}
 				}
 				
-				if(vcard.hasLabel(address)) {
-					LabelFeature label = vcard.getLabelFor(address);
+				if(adrType.hasLabel()) {
+					LabelType label = adrType.getLabel();
+					
 					try {
-						buildLabelFeature(sb, label);
+						buildLabelType(sb, label);
 					}
 					catch(VCardBuildException vbe) {
 						if(isThrowsExceptions) {
-							throw new VCardException(vbe.getMessage(), vbe);
+							throw new VCardBuildException(vbe.getMessage(), vbe);
 						}
 						else {
 							handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
@@ -725,16 +717,15 @@ public class VCardWriter {
 		/*
 		 * Telephone Numbers
 		 */
-		if(vcard.hasTelephoneNumbers()) {
-			Iterator<TelephoneFeature> telephones = vcard.getTelephoneNumbers();
-			while(telephones.hasNext()) {
-				TelephoneFeature telephone = telephones.next();
+		if(vcard.hasTels()) {
+			List<TelType> telephones = vcard.getTels();
+			for(TelType telType : telephones) {
 				try {
-					buildTelephoneFeature(sb, telephone);
+					buildTelType(sb, telType);
 				}
 				catch(VCardBuildException vbe) {
 					if(isThrowsExceptions) {
-						throw new VCardException(vbe.getMessage(), vbe);
+						throw new VCardBuildException(vbe.getMessage(), vbe);
 					}
 					else {
 						handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
@@ -747,15 +738,14 @@ public class VCardWriter {
 		 * Email
 		 */
 		if(vcard.hasEmails()) {
-			Iterator<EmailFeature> emails = vcard.getEmails();
-			while(emails.hasNext()) {
-				EmailFeature email = emails.next();
+			List<EmailType> emails = vcard.getEmails();
+			for(EmailType emailType : emails) {
 				try {
-					buildEmailFeature(sb, email);
+					buildEmailType(sb, emailType);
 				}
 				catch(VCardBuildException vbe) {
 					if(isThrowsExceptions) {
-						throw new VCardException(vbe.getMessage(), vbe);
+						throw new VCardBuildException(vbe.getMessage(), vbe);
 					}
 					else {
 						handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
@@ -768,15 +758,14 @@ public class VCardWriter {
 		 * Notes
 		 */
 		if(vcard.hasNotes()) {
-			Iterator<NoteFeature> notes = vcard.getNotes();
-			while(notes.hasNext()) {
-				NoteFeature note = notes.next();
+			List<NoteType> notes = vcard.getNotes();
+			for(NoteType noteType : notes) {
 				try {
-					buildNoteFeature(sb, note);
+					buildNoteType(sb, noteType);
 				}
 				catch(VCardBuildException vbe) {
 					if(isThrowsExceptions) {
-						throw new VCardException(vbe.getMessage(), vbe);
+						throw new VCardBuildException(vbe.getMessage(), vbe);
 					}
 					else {
 						handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
@@ -790,11 +779,11 @@ public class VCardWriter {
 		 */
 		if(vcard.hasCategories()) {
 			try {
-				buildCategoriesFeature(sb, vcard.getCategories());
+				buildCategoriesType(sb, vcard.getCategories());
 			}
 			catch(VCardBuildException vbe) {
 				if(isThrowsExceptions) {
-					throw new VCardException(vbe.getMessage(), vbe);
+					throw new VCardBuildException(vbe.getMessage(), vbe);
 				}
 				else {
 					handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
@@ -807,11 +796,11 @@ public class VCardWriter {
 		 */
 		if(vcard.hasSecurityClass()) {
 			try {
-				buildClassFeature(sb, vcard.getSecurityClass());
+				buildClassType(sb, vcard.getSecurityClass());
 			}
 			catch(VCardBuildException vbe) {
 				if(isThrowsExceptions) {
-					throw new VCardException(vbe.getMessage(), vbe);
+					throw new VCardBuildException(vbe.getMessage(), vbe);
 				}
 				else {
 					handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
@@ -822,13 +811,13 @@ public class VCardWriter {
 		/*
 		 * Product ID
 		 */
-		if(vcard.hasProductId()) {
+		if(vcard.hasProdId()) {
 			try {
-				buildProductIdFeature(sb, vcard.getProductId());
+				buildProdIdType(sb, vcard.getProdId());
 			}
 			catch(VCardBuildException vbe) {
 				if(isThrowsExceptions) {
-					throw new VCardException(vbe.getMessage(), vbe);
+					throw new VCardBuildException(vbe.getMessage(), vbe);
 				}
 				else {
 					handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
@@ -841,11 +830,11 @@ public class VCardWriter {
 		 */
 		if(vcard.hasSortString()) {
 			try {
-				buildSortStringFeature(sb, vcard.getSortString());
+				buildSortStringType(sb, vcard.getSortString());
 			}
 			catch(VCardBuildException vbe) {
 				if(isThrowsExceptions) {
-					throw new VCardException(vbe.getMessage(), vbe);
+					throw new VCardBuildException(vbe.getMessage(), vbe);
 				}
 				else {
 					handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
@@ -857,15 +846,14 @@ public class VCardWriter {
 		 * Keys
 		 */
 		if(vcard.hasKeys()) {
-			Iterator<KeyFeature> keys = vcard.getKeys();
-			while(keys.hasNext()) {
-				KeyFeature key = keys.next();
+			List<KeyType> keys = vcard.getKeys();
+			for(KeyType keyType : keys) {
 				try {
-					buildKeyFeature(sb, key);
+					buildKeyType(sb, keyType);
 				}
 				catch(VCardBuildException vbe) {
 					if(isThrowsExceptions) {
-						throw new VCardException(vbe.getMessage(), vbe);
+						throw new VCardBuildException(vbe.getMessage(), vbe);
 					}
 					else {
 						handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
@@ -878,15 +866,14 @@ public class VCardWriter {
 		 * Photos
 		 */
 		if(vcard.hasPhotos()) {
-			Iterator<PhotoFeature> photos = vcard.getPhotos();
-			while(photos.hasNext()) {
-				PhotoFeature photo = photos.next();
+			List<PhotoType> photos = vcard.getPhotos();
+			for(PhotoType photoType : photos) {
 				try {
-					buildPhotoFeature(sb, photo);
+					buildPhotoType(sb, photoType);
 				}
 				catch(VCardBuildException vbe) {
 					if(isThrowsExceptions) {
-						throw new VCardException(vbe.getMessage(), vbe);
+						throw new VCardBuildException(vbe.getMessage(), vbe);
 					}
 					else {
 						handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
@@ -899,15 +886,14 @@ public class VCardWriter {
 		 * Logos
 		 */
 		if(vcard.hasLogos()) {
-			Iterator<LogoFeature> logos = vcard.getLogos();
-			while(logos.hasNext()) {
-				LogoFeature logo = logos.next();
+			List<LogoType> logos = vcard.getLogos();
+			for(LogoType logoType : logos) {
 				try {
-					buildLogoFeature(sb, logo);
+					buildLogoType(sb, logoType);
 				}
 				catch(VCardBuildException vbe) {
 					if(isThrowsExceptions) {
-						throw new VCardException(vbe.getMessage(), vbe);
+						throw new VCardBuildException(vbe.getMessage(), vbe);
 					}
 					else {
 						handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
@@ -920,15 +906,14 @@ public class VCardWriter {
 		 * Sounds
 		 */
 		if(vcard.hasSounds()) {
-			Iterator<SoundFeature> sounds = vcard.getSounds();
-			while(sounds.hasNext()) {
-				SoundFeature sound = sounds.next();
+			List<SoundType> sounds = vcard.getSounds();
+			for(SoundType soundType : sounds) {
 				try {
-					buildSoundFeature(sb, sound);
+					buildSoundType(sb, soundType);
 				}
 				catch(VCardBuildException vbe) {
 					if(isThrowsExceptions) {
-						throw new VCardException(vbe.getMessage(), vbe);
+						throw new VCardBuildException(vbe.getMessage(), vbe);
 					}
 					else {
 						handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
@@ -941,15 +926,14 @@ public class VCardWriter {
 		 * Agents
 		 */
 		if(vcard.hasAgents()) {
-			Iterator<AgentFeature> agents = vcard.getAgents();
-			while(agents.hasNext()) {
-				AgentFeature agent = agents.next();
+			List<AgentType> agents = vcard.getAgents();
+			for(AgentType agentType : agents) {
 				try {
-					buildAgentFeature(sb, agent);
+					buildAgentType(sb, agentType);
 				}
 				catch(VCardBuildException vbe) {
 					if(isThrowsExceptions) {
-						throw new VCardException(vbe.getMessage(), vbe);
+						throw new VCardBuildException(vbe.getMessage(), vbe);
 					}
 					else {
 						handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
@@ -961,17 +945,15 @@ public class VCardWriter {
 		/*
 		 * IMPP. RFC 4770 extension
 		 */
-		if(vcard.hasIMPPs()) {
-			Iterator<IMPPFeature> impps = vcard.getIMPPs();
-			while(impps.hasNext()) {
-				IMPPFeature imppFeature = impps.next();
-				
+		if(vcard.hasImpps()) {
+			List<ImppType> impps = vcard.getIMPPs();
+			for(ImppType imppType : impps) {
 				try {
-					buildImppFeature(sb, imppFeature);
+					buildImppType(sb, imppType);
 				}
 				catch(VCardBuildException vbe) {
 					if(isThrowsExceptions) {
-						throw new VCardException(vbe.getMessage(), vbe);
+						throw new VCardBuildException(vbe.getMessage(), vbe);
 					}
 					else {
 						handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
@@ -984,15 +966,14 @@ public class VCardWriter {
 		 * Extensions
 		 */
 		if(vcard.hasExtendedTypes()) {
-			Iterator<ExtendedFeature> extensions = vcard.getExtendedTypes();
-			while(extensions.hasNext()) {
-				ExtendedFeature extension = extensions.next();
+			List<ExtendedType> extensions = vcard.getExtendedTypes();
+			for(ExtendedType extendedType : extensions) {
 				try {
-					buildExtendedFeature(sb, extension);
+					buildExtendedType(sb, extendedType);
 				}
 				catch(VCardBuildException vbe) {
 					if(isThrowsExceptions) {
-						throw new VCardException(vbe.getMessage(), vbe);
+						throw new VCardBuildException(vbe.getMessage(), vbe);
 					}
 					else {
 						handleError(vbe.getMessage(), vbe, ErrorSeverity.WARNING);
@@ -1007,11 +988,11 @@ public class VCardWriter {
 		 * Must be present.
 		 */
 		try {
-			buildEndFeature(sb, vcard.getEnd());
+			buildEndType(sb, vcard.getEnd());
 		}
 		catch(VCardBuildException vbe) {
 			if(isThrowsExceptions) {
-				throw new VCardException(vbe.getMessage(), vbe);
+				throw new VCardBuildException(vbe.getMessage(), vbe);
 			}
 			else {
 				handleError(vbe.getMessage(), vbe, ErrorSeverity.FATAL);
@@ -1026,29 +1007,29 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- StringBuilder to append to
-	 * @param beginFeature
+	 * @param beginType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when begin feature is null
 	 */
-	private void buildBeginFeature(StringBuilder sb, BeginFeature beginFeature) throws VCardBuildException {
+	private void buildBeginType(StringBuilder sb, BeginType beginType) throws VCardBuildException {
 		try {
-			if(beginFeature != null) {
-				if(beginFeature.hasGroup()) {
-					sb.append(beginFeature.getGroup());
+			if(beginType != null) {
+				if(beginType.hasGroup()) {
+					sb.append(beginType.getGroup());
 					sb.append(".");
 				}
 				
-				sb.append(beginFeature.getTypeString());
+				sb.append(beginType.getVCardTypeName().getType());
 				sb.append(":VCARD");
 				sb.append(eol);
 			}
 			else {
-				throw new VCardBuildException("Cannot continue because BeginFeature ("+VCardType.BEGIN.getType()+") is null.");
+				throw new VCardBuildException("Cannot continue because BeginType ("+VCardTypeName.BEGIN.getType()+") is null.");
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("BeginFeature ("+VCardType.BEGIN.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("BeginType ("+VCardTypeName.BEGIN.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -1062,24 +1043,24 @@ public class VCardWriter {
 	 * @throws VCardBuildException
 	 * 	Thrown when end feature is null
 	 */
-	private void buildEndFeature(StringBuilder sb, EndFeature endFeature) throws VCardBuildException {
+	private void buildEndType(StringBuilder sb, EndType endType) throws VCardBuildException {
 		try {
-			if(endFeature != null) {
-				if(endFeature.hasGroup()) {
-					sb.append(endFeature.getGroup());
+			if(endType != null) {
+				if(endType.hasGroup()) {
+					sb.append(endType.getGroup());
 					sb.append(".");
 				}
 				
-				sb.append(endFeature.getTypeString());
+				sb.append(endType.getVCardTypeName().getType());
 				sb.append(":VCARD");
 				sb.append(eol);
 			}
 			else {
-				throw new VCardBuildException("Cannot continue because EndFeature ("+VCardType.END.getType()+") is null.");
+				throw new VCardBuildException("Cannot continue because EndType ("+VCardTypeName.END.getType()+") is null.");
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("EndFeature ("+VCardType.END.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("EndType ("+VCardTypeName.END.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -1088,41 +1069,36 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- StringBuilder to append to
-	 * @param versionFeature
+	 * @param versionType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when version feature is null
 	 */
-	private void buildVersionFeature(StringBuilder sb, VersionFeature versionFeature) throws VCardBuildException {
+	private void buildVersionType(StringBuilder sb, VersionType versionType) throws VCardBuildException {
 		try {
-			if(versionFeature != null) {
-				if(versionFeature.hasGroup()) {
-					sb.append(versionFeature.getGroup());
+			if(versionType != null) {
+				if(versionType.hasGroup()) {
+					sb.append(versionType.getGroup());
 					sb.append(".");
 				}
 				
-				if(versionFeature.getVersion() == VCardVersion.V2_1) {
+				if(versionType.getVersion() == VCardVersion.V2_1) {
 					//We do not support writing in v2.1, so if it has
 					//been set before, force it to v3.0
-					versionFeature.setVersion(VCardVersion.V3_0);
+					versionType.setVersion(VCardVersion.V3_0);
 				}
 				
-				sb.append(versionFeature.getTypeString());
-				
-				if(versionFeature.hasExtendedParameters()) {
-					buildExtendParameters(versionFeature, sb);
-				}
-				
+				sb.append(versionType.getVCardTypeName().getType());
 				sb.append(":");
-				sb.append(versionFeature.getVersion().getVersion());
+				sb.append(versionType.getVersion().getVersion());
 				sb.append(eol);
 			}
 			else {
-				throw new VCardBuildException("Cannot continue because VersionFeature ("+VCardType.VERSION.getType()+") is null.");
+				throw new VCardBuildException("Cannot continue because VersionType ("+VCardTypeName.VERSION.getType()+") is null.");
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("VersionFeature ("+VCardType.VERSION.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("VersionType ("+VCardTypeName.VERSION.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -1133,61 +1109,60 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- StringBuilder to append to
-	 * @param nameFeature
+	 * @param nType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the name feature is null
 	 */
-	private void buildNameFeature(StringBuilder sb, NameFeature nameFeature) throws VCardBuildException {
+	private void buildNType(StringBuilder sb, NType nType) throws VCardBuildException {
 		try {
-			if(nameFeature != null) {
-				boolean isQuotedPrintable = nameFeature.isQuotedPrintable();
+			if(nType != null) {
+				boolean isQuotedPrintable = nType.isQuotedPrintable();
 				StringBuilder tmpSb = new StringBuilder();
 				
-				if(nameFeature.hasGroup()) {
-					tmpSb.append(nameFeature.getGroup());
+				if(nType.hasGroup()) {
+					tmpSb.append(nType.getGroup());
 					tmpSb.append(".");
 				}
 				
-				tmpSb.append(nameFeature.getTypeString());
+				tmpSb.append(nType.getVCardTypeName().getType());
 				
-				if(nameFeature.hasCharset()) {
+				if(nType.hasCharset()) {
 					tmpSb.append(";CHARSET=");
-					tmpSb.append(nameFeature.getCharset().name());
+					tmpSb.append(nType.getCharset().name());
 				}
 				
-				if(nameFeature.hasLanguage()) {
+				if(nType.hasLanguage()) {
 					tmpSb.append(";LANGUAGE=");
-					tmpSb.append(nameFeature.getLanguage().getLanguageCode());
+					tmpSb.append(nType.getLanguage().getLanguageCode());
 				}
 				
 				if(isQuotedPrintable) {
 					tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 				}
 				
-				if(nameFeature.hasExtendedParameters()) {
-					buildExtendParameters(nameFeature, tmpSb);
+				if(nType.hasExtendedParams()) {
+					buildExtendParameters(nType, tmpSb);
 				}
 				
 				tmpSb.append(":");
 				
-				if(nameFeature.hasFamilyName()) {
-					tmpSb.append(escapeOrEncode(nameFeature.getFamilyName(), isQuotedPrintable, nameFeature.getCharset()));
+				if(nType.hasFamilyName()) {
+					tmpSb.append(escapeOrEncode(nType.getFamilyName(), isQuotedPrintable, nType.getCharset()));
 				}
 
 				tmpSb.append(";");
 
-				if(nameFeature.hasGivenName()) {
-					tmpSb.append(escapeOrEncode(nameFeature.getGivenName(), isQuotedPrintable, nameFeature.getCharset()));
+				if(nType.hasGivenName()) {
+					tmpSb.append(escapeOrEncode(nType.getGivenName(), isQuotedPrintable, nType.getCharset()));
 				}
 
 				tmpSb.append(";");
 
-				if(nameFeature.hasAdditionalNames()) {
-					Iterator<String> additionalNames = nameFeature.getAdditionalNames();
-					while(additionalNames.hasNext()) {
-						String addName = additionalNames.next();
-						tmpSb.append(escapeOrEncode(addName, isQuotedPrintable, nameFeature.getCharset()));
+				if(nType.hasAdditionalNames()) {
+					List<String> additionalNames = nType.getAdditionalNames();
+					for(String addName : additionalNames) {
+						tmpSb.append(escapeOrEncode(addName, isQuotedPrintable, nType.getCharset()));
 						tmpSb.append(",");
 					}
 
@@ -1196,11 +1171,10 @@ public class VCardWriter {
 
 				tmpSb.append(";");
 
-				if(nameFeature.hasHonorificPrefixes()) {
-					Iterator<String> prefixes = nameFeature.getHonorificPrefixes();
-					while(prefixes.hasNext()) {
-						String prefix = prefixes.next();
-						tmpSb.append(escapeOrEncode(prefix, isQuotedPrintable, nameFeature.getCharset()));
+				if(nType.hasHonorificPrefixes()) {
+					List<String> prefixes = nType.getHonorificPrefixes();
+					for(String prefix : prefixes) {
+						tmpSb.append(escapeOrEncode(prefix, isQuotedPrintable, nType.getCharset()));
 						tmpSb.append(",");
 					}
 
@@ -1209,11 +1183,10 @@ public class VCardWriter {
 
 				tmpSb.append(";");
 
-				if(nameFeature.hasHonorificSuffixes()) {
-					Iterator<String> suffixes = nameFeature.getHonorificSuffixes();
-					while(suffixes.hasNext()) {
-						String suffix = suffixes.next();
-						tmpSb.append(escapeOrEncode(suffix, isQuotedPrintable, nameFeature.getCharset()));
+				if(nType.hasHonorificSuffixes()) {
+					List<String> suffixes = nType.getHonorificSuffixes();
+					for(String suffix : suffixes) {
+						tmpSb.append(escapeOrEncode(suffix, isQuotedPrintable, nType.getCharset()));
 						tmpSb.append(",");
 					}
 
@@ -1226,11 +1199,11 @@ public class VCardWriter {
 				sb.append(eol);
 			}
 			else {
-				throw new VCardBuildException("NameFeature ("+VCardType.N.getType()+") cannot be left null.");
+				throw new VCardBuildException("NType ("+VCardTypeName.N.getType()+") cannot be left null.");
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("NameFeature ("+VCardType.N.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("NType ("+VCardTypeName.N.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -1239,45 +1212,45 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param formattedNameFeature
+	 * @param fnType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the formatted name feature is null
 	 */
-	private void buildFormattedNameFeature(StringBuilder sb, FormattedNameFeature formattedNameFeature) throws VCardBuildException {
+	private void buildFNType(StringBuilder sb, FNType fnType) throws VCardBuildException {
 		try {
-			if(formattedNameFeature != null) {
-				boolean isQuotedPrintable = formattedNameFeature.isQuotedPrintable();
-				String formattedName = formattedNameFeature.getFormattedName();
+			if(fnType != null) {
+				boolean isQuotedPrintable = fnType.isQuotedPrintable();
+				String formattedName = fnType.getFormattedName();
 				StringBuilder tmpSb = new StringBuilder();
 				
-				if(formattedNameFeature.hasGroup()) {
-					tmpSb.append(formattedNameFeature.getGroup());
+				if(fnType.hasGroup()) {
+					tmpSb.append(fnType.getGroup());
 					tmpSb.append(".");
 				}
 				
-				tmpSb.append(formattedNameFeature.getTypeString());
+				tmpSb.append(fnType.getVCardTypeName().getType());
 				
-				if(formattedNameFeature.hasCharset()) {
+				if(fnType.hasCharset()) {
 					tmpSb.append(";CHARSET=");
-					tmpSb.append(formattedNameFeature.getCharset().name());
+					tmpSb.append(fnType.getCharset().name());
 				}
 				
-				if(formattedNameFeature.hasLanguage()) {
+				if(fnType.hasLanguage()) {
 					tmpSb.append(";LANGUAGE=");
-					tmpSb.append(formattedNameFeature.getLanguage().getLanguageCode());
+					tmpSb.append(fnType.getLanguage().getLanguageCode());
 				}
 				
 				if(isQuotedPrintable) {
 					tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 				}
 				
-				if(formattedNameFeature.hasExtendedParameters()) {
-					buildExtendParameters(formattedNameFeature, tmpSb);
+				if(fnType.hasExtendedParams()) {
+					buildExtendParameters(fnType, tmpSb);
 				}
 				
 				tmpSb.append(":");
-				tmpSb.append(escapeOrEncode(formattedName, isQuotedPrintable, formattedNameFeature.getCharset()));
+				tmpSb.append(escapeOrEncode(formattedName, isQuotedPrintable, fnType.getCharset()));
 				
 				String tmpFormattedNameLine = tmpSb.toString();
 				String foldedFormattedNameLine = VCardUtils.foldLine(tmpFormattedNameLine, eol, foldingScheme);
@@ -1285,58 +1258,58 @@ public class VCardWriter {
 				sb.append(eol);
 			}
 			else {
-				throw new VCardBuildException("FormattedNameFeature ("+VCardType.FN.getType()+") cannot be left null.");
+				throw new VCardBuildException("FNType ("+VCardTypeName.FN.getType()+") cannot be left null.");
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("FormattedNameFeature ("+VCardType.FN.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("FNType ("+VCardTypeName.FN.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
 	/**
-	 * <p>Builds the displayable name as a String</p>
+	 * <p>Builds the name as a String</p>
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param displayableNameFeature
+	 * @param nameType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
-	 * 	Thrown when the displayable name feature is null
+	 * 	Thrown when the name feature is null
 	 */
-	private void buildDisplayableNameFeature(StringBuilder sb, DisplayableNameFeature displayableNameFeature) throws VCardBuildException {
+	private void buildNameType(StringBuilder sb, NameType nameType) throws VCardBuildException {
 		try {
-			if(displayableNameFeature != null) {
-				boolean isQuotedPrintable = displayableNameFeature.isQuotedPrintable();
-				String displayableName = displayableNameFeature.getName();
+			if(nameType != null) {
+				boolean isQuotedPrintable = nameType.isQuotedPrintable();
+				String displayableName = nameType.getName();
 				StringBuilder tmpSb = new StringBuilder();
 				
-				if(displayableNameFeature.hasGroup()) {
-					tmpSb.append(displayableNameFeature.getGroup());
+				if(nameType.hasGroup()) {
+					tmpSb.append(nameType.getGroup());
 					tmpSb.append(".");
 				}
 				
-				tmpSb.append(displayableNameFeature.getTypeString());
+				tmpSb.append(nameType.getVCardTypeName().getType());
 				
-				if(displayableNameFeature.hasCharset()) {
+				if(nameType.hasCharset()) {
 					tmpSb.append(";CHARSET=");
-					tmpSb.append(displayableNameFeature.getCharset().name());
+					tmpSb.append(nameType.getCharset().name());
 				}
 				
-				if(displayableNameFeature.hasLanguage()) {
+				if(nameType.hasLanguage()) {
 					tmpSb.append(";LANGUAGE=");
-					tmpSb.append(displayableNameFeature.getLanguage().getLanguageCode());
+					tmpSb.append(nameType.getLanguage().getLanguageCode());
 				}
 				
 				if(isQuotedPrintable) {
 					tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 				}
 				
-				if(displayableNameFeature.hasExtendedParameters()) {
-					buildExtendParameters(displayableNameFeature, tmpSb);
+				if(nameType.hasExtendedParams()) {
+					buildExtendParameters(nameType, tmpSb);
 				}
 				
 				tmpSb.append(":");
-				tmpSb.append(escapeOrEncode(displayableName, isQuotedPrintable, displayableNameFeature.getCharset()));
+				tmpSb.append(escapeOrEncode(displayableName, isQuotedPrintable, nameType.getCharset()));
 				
 				String tmpDisplayableNameLine = tmpSb.toString();
 				String foldedDisplayableNameLine = VCardUtils.foldLine(tmpDisplayableNameLine, eol, foldingScheme);
@@ -1344,11 +1317,11 @@ public class VCardWriter {
 				sb.append(eol);
 			}
 			else {
-				throw new VCardBuildException("DisplayableNameFeature ("+VCardType.NAME.getType()+") cannot be left null.");
+				throw new VCardBuildException("NameType ("+VCardTypeName.NAME.getType()+") cannot be left null.");
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("DisplayableNameFeature ("+VCardType.NAME.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("NameType ("+VCardTypeName.NAME.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -1357,45 +1330,45 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param profileFeature
+	 * @param profileType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the profile feature is null
 	 */
-	private void buildProfileFeature(StringBuilder sb, ProfileFeature profileFeature) throws VCardBuildException {
+	private void buildProfileType(StringBuilder sb, ProfileType profileType) throws VCardBuildException {
 		try {
-			if(profileFeature != null) {
-				boolean isQuotedPrintable = profileFeature.isQuotedPrintable();
-				String profile = profileFeature.getProfile();
+			if(profileType != null) {
+				boolean isQuotedPrintable = profileType.isQuotedPrintable();
+				String profile = profileType.getProfile();
 				StringBuilder tmpSb = new StringBuilder();
 				
-				if(profileFeature.hasGroup()) {
-					tmpSb.append(profileFeature.getGroup());
+				if(profileType.hasGroup()) {
+					tmpSb.append(profileType.getGroup());
 					tmpSb.append(".");
 				}
 				
-				tmpSb.append(profileFeature.getTypeString());
+				tmpSb.append(profileType.getVCardTypeName().getType());
 				
-				if(profileFeature.hasCharset()) {
+				if(profileType.hasCharset()) {
 					tmpSb.append(";CHARSET=");
-					tmpSb.append(profileFeature.getCharset().name());
+					tmpSb.append(profileType.getCharset().name());
 				}
 				
-				if(profileFeature.hasLanguage()) {
+				if(profileType.hasLanguage()) {
 					tmpSb.append(";LANGUAGE=");
-					tmpSb.append(profileFeature.getLanguage().getLanguageCode());
+					tmpSb.append(profileType.getLanguage().getLanguageCode());
 				}
 				
 				if(isQuotedPrintable) {
 					tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 				}
 				
-				if(profileFeature.hasExtendedParameters()) {
-					buildExtendParameters(profileFeature, tmpSb);
+				if(profileType.hasExtendedParams()) {
+					buildExtendParameters(profileType, tmpSb);
 				}
 				
 				tmpSb.append(":");
-				tmpSb.append(escapeOrEncode(profile, isQuotedPrintable, profileFeature.getCharset()));
+				tmpSb.append(escapeOrEncode(profile, isQuotedPrintable, profileType.getCharset()));
 				
 				String tmpProfileLine = tmpSb.toString();
 				String foldedProfileLine = VCardUtils.foldLine(tmpProfileLine, eol, foldingScheme);
@@ -1403,11 +1376,11 @@ public class VCardWriter {
 				sb.append(eol);
 			}
 			else {
-				throw new VCardBuildException("ProfileFeature ("+VCardType.PROFILE.getType()+") cannot be left null.");
+				throw new VCardBuildException("ProfileType ("+VCardTypeName.PROFILE.getType()+") cannot be left null.");
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("ProfileFeature ("+VCardType.PROFILE.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("ProfileType ("+VCardTypeName.PROFILE.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -1416,45 +1389,45 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param sourceFeature
+	 * @param sourceType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the source feature is null
 	 */
-	private void buildSourceFeature(StringBuilder sb, SourceFeature sourceFeature) throws VCardBuildException {
+	private void buildSourceType(StringBuilder sb, SourceType sourceType) throws VCardBuildException {
 		try {
-			if(sourceFeature != null) {
-				boolean isQuotedPrintable = sourceFeature.isQuotedPrintable();
-				String source = sourceFeature.getSource();
+			if(sourceType != null) {
+				boolean isQuotedPrintable = sourceType.isQuotedPrintable();
+				String source = sourceType.getSource();
 				StringBuilder tmpSb = new StringBuilder();
 				
-				if(sourceFeature.hasGroup()) {
-					tmpSb.append(sourceFeature.getGroup());
+				if(sourceType.hasGroup()) {
+					tmpSb.append(sourceType.getGroup());
 					tmpSb.append(".");
 				}
 				
-				tmpSb.append(sourceFeature.getTypeString());
+				tmpSb.append(sourceType.getVCardTypeName().getType());
 				
-				if(sourceFeature.hasCharset()) {
+				if(sourceType.hasCharset()) {
 					tmpSb.append(";CHARSET=");
-					tmpSb.append(sourceFeature.getCharset().name());
+					tmpSb.append(sourceType.getCharset().name());
 				}
 				
-				if(sourceFeature.hasLanguage()) {
+				if(sourceType.hasLanguage()) {
 					tmpSb.append(";LANGUAGE=");
-					tmpSb.append(sourceFeature.getLanguage().getLanguageCode());
+					tmpSb.append(sourceType.getLanguage().getLanguageCode());
 				}
 				
 				if(isQuotedPrintable) {
 					tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 				}
 				
-				if(sourceFeature.hasExtendedParameters()) {
-					buildExtendParameters(sourceFeature, tmpSb);
+				if(sourceType.hasExtendedParams()) {
+					buildExtendParameters(sourceType, tmpSb);
 				}
 				
 				tmpSb.append(":");
-				tmpSb.append(escapeOrEncode(source, isQuotedPrintable, sourceFeature.getCharset()));
+				tmpSb.append(escapeOrEncode(source, isQuotedPrintable, sourceType.getCharset()));
 				
 				String tmpSourceLine = tmpSb.toString();
 				String foldedSourceLine = VCardUtils.foldLine(tmpSourceLine, eol, foldingScheme);
@@ -1462,11 +1435,11 @@ public class VCardWriter {
 				sb.append(eol);
 			}
 			else {
-				throw new VCardBuildException("SourceFeature ("+VCardType.SOURCE.getType()+") cannot be left null.");
+				throw new VCardBuildException("SourceType ("+VCardTypeName.SOURCE.getType()+") cannot be left null.");
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("SourceFeature ("+VCardType.SOURCE.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("SourceType ("+VCardTypeName.SOURCE.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -1475,46 +1448,46 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param titleFeature
+	 * @param titleType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the title feature is null
 	 */
-	private void buildTitleFeature(StringBuilder sb, TitleFeature titleFeature) throws VCardBuildException {
+	private void buildTitleType(StringBuilder sb, TitleType titleType) throws VCardBuildException {
 		try {
-			if(titleFeature != null) {
-				if(titleFeature.hasTitle()) {
-					boolean isQuotedPrintable = titleFeature.isQuotedPrintable();
-					String title = titleFeature.getTitle();
+			if(titleType != null) {
+				if(titleType.hasTitle()) {
+					boolean isQuotedPrintable = titleType.isQuotedPrintable();
+					String title = titleType.getTitle();
 					StringBuilder tmpSb = new StringBuilder();
 					
-					if(titleFeature.hasGroup()) {
-						tmpSb.append(titleFeature.getGroup());
+					if(titleType.hasGroup()) {
+						tmpSb.append(titleType.getGroup());
 						tmpSb.append(".");
 					}
 					
-					tmpSb.append(titleFeature.getTypeString());
+					tmpSb.append(titleType.getVCardTypeName().getType());
 					
-					if(titleFeature.hasCharset()) {
+					if(titleType.hasCharset()) {
 						tmpSb.append(";CHARSET=");
-						tmpSb.append(titleFeature.getCharset().name());
+						tmpSb.append(titleType.getCharset().name());
 					}
 					
-					if(titleFeature.hasLanguage()) {
+					if(titleType.hasLanguage()) {
 						tmpSb.append(";LANGUAGE=");
-						tmpSb.append(titleFeature.getLanguage().getLanguageCode());
+						tmpSb.append(titleType.getLanguage().getLanguageCode());
 					}
 					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
 					
-					if(titleFeature.hasExtendedParameters()) {
-						buildExtendParameters(titleFeature, tmpSb);
+					if(titleType.hasExtendedParams()) {
+						buildExtendParameters(titleType, tmpSb);
 					}
 					
 					tmpSb.append(":");
-					tmpSb.append(escapeOrEncode(title, isQuotedPrintable, titleFeature.getCharset()));
+					tmpSb.append(escapeOrEncode(title, isQuotedPrintable, titleType.getCharset()));
 					
 					String tmpTitleLine = tmpSb.toString();
 					String foldedTitleLine = VCardUtils.foldLine(tmpTitleLine, eol, foldingScheme);
@@ -1522,12 +1495,12 @@ public class VCardWriter {
 					sb.append(eol);
 				}
 				else {
-					throw new VCardBuildException("TitleFeature ("+VCardType.TITLE.getType()+") exists but is emtpy.");
+					throw new VCardBuildException("TitleType ("+VCardTypeName.TITLE.getType()+") exists but is emtpy.");
 				}
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("TitleFeature ("+VCardType.TITLE.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("TitleType ("+VCardTypeName.TITLE.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -1536,46 +1509,46 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param roleFeature
+	 * @param roleType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the role feature is null
 	 */
-	private void buildRoleFeature(StringBuilder sb, RoleFeature roleFeature) throws VCardBuildException {
+	private void buildRoleType(StringBuilder sb, RoleType roleType) throws VCardBuildException {
 		try {
-			if(roleFeature != null) {
-				if(roleFeature.hasRole()) {
-					boolean isQuotedPrintable = roleFeature.isQuotedPrintable();
-					String role = roleFeature.getRole();
+			if(roleType != null) {
+				if(roleType.hasRole()) {
+					boolean isQuotedPrintable = roleType.isQuotedPrintable();
+					String role = roleType.getRole();
 					StringBuilder tmpSb = new StringBuilder();
 					
-					if(roleFeature.hasGroup()) {
-						tmpSb.append(roleFeature.getGroup());
+					if(roleType.hasGroup()) {
+						tmpSb.append(roleType.getGroup());
 						tmpSb.append(".");
 					}
 					
-					tmpSb.append(roleFeature.getTypeString());
+					tmpSb.append(roleType.getVCardTypeName().getType());
 					
-					if(roleFeature.hasCharset()) {
+					if(roleType.hasCharset()) {
 						tmpSb.append(";CHARSET=");
-						tmpSb.append(roleFeature.getCharset().name());
+						tmpSb.append(roleType.getCharset().name());
 					}
 					
-					if(roleFeature.hasLanguage()) {
+					if(roleType.hasLanguage()) {
 						tmpSb.append(";LANGUAGE=");
-						tmpSb.append(roleFeature.getLanguage().getLanguageCode());
+						tmpSb.append(roleType.getLanguage().getLanguageCode());
 					}
 					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
 					
-					if(roleFeature.hasExtendedParameters()) {
-						buildExtendParameters(roleFeature, tmpSb);
+					if(roleType.hasExtendedParams()) {
+						buildExtendParameters(roleType, tmpSb);
 					}
 					
 					tmpSb.append(":");
-					tmpSb.append(escapeOrEncode(role, isQuotedPrintable, roleFeature.getCharset()));
+					tmpSb.append(escapeOrEncode(role, isQuotedPrintable, roleType.getCharset()));
 					
 					String tmpRoleLine = tmpSb.toString();
 					String foldedRoleLine = VCardUtils.foldLine(tmpRoleLine, eol, foldingScheme);
@@ -1583,12 +1556,12 @@ public class VCardWriter {
 					sb.append(eol);
 				}
 				else {
-					throw new VCardBuildException("RoleFeature ("+VCardType.ROLE.getType()+") exists but is empty.");
+					throw new VCardBuildException("RoleType ("+VCardTypeName.ROLE.getType()+") exists but is empty.");
 				}
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("RoleFeature ("+VCardType.ROLE.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("RoleType ("+VCardTypeName.ROLE.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -1597,36 +1570,36 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param geographicPositionFeature
+	 * @param geoType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the geographic position feature is null
 	 */
-	private void buildGeographicPositionFeature(StringBuilder sb, GeographicPositionFeature geographicPositionFeature) throws VCardBuildException {
+	private void buildGeoType(StringBuilder sb, GeoType geoType) throws VCardBuildException {
 		try {
-			if(geographicPositionFeature != null) {
+			if(geoType != null) {
 				StringBuilder tmpSb = new StringBuilder();
 				
-				if(geographicPositionFeature.hasGroup()) {
-					tmpSb.append(geographicPositionFeature.getGroup());
+				if(geoType.hasGroup()) {
+					tmpSb.append(geoType.getGroup());
 					tmpSb.append(".");
 				}
 				
-				tmpSb.append(geographicPositionFeature.getTypeString());
+				tmpSb.append(geoType.getVCardTypeName().getType());
 				
-				if(geographicPositionFeature.hasCharset()) {
+				if(geoType.hasCharset()) {
 					tmpSb.append(";CHARSET=");
-					tmpSb.append(geographicPositionFeature.getCharset().name());
+					tmpSb.append(geoType.getCharset().name());
 				}
 				
-				if(geographicPositionFeature.hasExtendedParameters()) {
-					buildExtendParameters(geographicPositionFeature, tmpSb);
+				if(geoType.hasExtendedParams()) {
+					buildExtendParameters(geoType, tmpSb);
 				}
 				
 				tmpSb.append(":");
-				tmpSb.append(VCardUtils.getGeographicPositionFormatter().format(geographicPositionFeature.getLatitude()));
+				tmpSb.append(VCardUtils.getGeographicPositionFormatter().format(geoType.getLatitude()));
 				tmpSb.append(";");
-				tmpSb.append(VCardUtils.getGeographicPositionFormatter().format(geographicPositionFeature.getLongitude()));
+				tmpSb.append(VCardUtils.getGeographicPositionFormatter().format(geoType.getLongitude()));
 				
 				String tmpGeoLine = tmpSb.toString();
 				String foldedGeoLine = VCardUtils.foldLine(tmpGeoLine, eol, foldingScheme);
@@ -1635,7 +1608,7 @@ public class VCardWriter {
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("GeographicPositionFeature ("+VCardType.GEO.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("GeoType ("+VCardTypeName.GEO.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -1644,65 +1617,69 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param organizationFeature
+	 * @param orgType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the organization feature is null
 	 */
-	private void buildOrganization(StringBuilder sb, OrganizationFeature organizationFeature) throws VCardBuildException {
+	private void buildOrgType(StringBuilder sb, OrgType orgType) throws VCardBuildException {
 		try {
-			if(organizationFeature != null) {
-				if(organizationFeature.hasOrganizations()) {
-					boolean isQuotedPrintable = organizationFeature.isQuotedPrintable();
+			if(orgType != null) {
+				if(orgType.hasOrgName()) {
+					boolean isQuotedPrintable = orgType.isQuotedPrintable();
 					StringBuilder tmpSb = new StringBuilder();
 					
-					if(organizationFeature.hasGroup()) {
-						tmpSb.append(organizationFeature.getGroup());
+					if(orgType.hasGroup()) {
+						tmpSb.append(orgType.getGroup());
 						tmpSb.append(".");
 					}
 					
-					tmpSb.append(organizationFeature.getTypeString());
+					tmpSb.append(orgType.getVCardTypeName().getType());
 					
-					if(organizationFeature.hasCharset()) {
+					if(orgType.hasCharset()) {
 						tmpSb.append(";CHARSET=");
-						tmpSb.append(organizationFeature.getCharset().name());
+						tmpSb.append(orgType.getCharset().name());
 					}
 					
-					if(organizationFeature.hasLanguage()) {
+					if(orgType.hasLanguage()) {
 						tmpSb.append(";LANGUAGE=");
-						tmpSb.append(organizationFeature.getLanguage().getLanguageCode());
+						tmpSb.append(orgType.getLanguage().getLanguageCode());
 					}
 					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
 					
-					if(organizationFeature.hasExtendedParameters()) {
-						buildExtendParameters(organizationFeature, tmpSb);
+					if(orgType.hasExtendedParams()) {
+						buildExtendParameters(orgType, tmpSb);
 					}
 					
 					tmpSb.append(":");
+					tmpSb.append(escapeOrEncode(orgType.getOrgName(), isQuotedPrintable, orgType.getCharset()));
 					
-					Iterator<String> orgs = organizationFeature.getOrganizations();
-					while(orgs.hasNext()) {
-						String org = orgs.next();
-						tmpSb.append(escapeOrEncode(org, isQuotedPrintable, organizationFeature.getCharset()));
+					if(orgType.hasOrgUnits()) {
 						tmpSb.append(";");
+						List<String> orgs = orgType.getOrgUnits();
+						for(String orgUnit : orgs) {
+							tmpSb.append(escapeOrEncode(orgUnit, isQuotedPrintable, orgType.getCharset()));
+							tmpSb.append(";");
+						}
+						
+						tmpSb.deleteCharAt(tmpSb.length()-1);
 					}
 					
-					tmpSb.deleteCharAt(tmpSb.length()-1);
 					String tmpOrgLine = tmpSb.toString();
 					String foldedOrgLine = VCardUtils.foldLine(tmpOrgLine, eol, foldingScheme);
 					sb.append(foldedOrgLine);
 					sb.append(eol);
 				}
 				else {
-					throw new VCardBuildException("OrganizationFeature ("+VCardType.ORG.getType()+") exists but is empty.");
+					throw new VCardBuildException("OrgType ("+VCardTypeName.ORG.getType()+") exists but is empty.");
 				}
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("OrganizationFeature ("+VCardType.ORG.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("OrgType ("+VCardTypeName.ORG.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -1711,46 +1688,46 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param mailerFeature
+	 * @param mailerType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the mailer feature is null
 	 */
-	private void buildMailerFeature(StringBuilder sb, MailerFeature mailerFeature) throws VCardBuildException {
+	private void buildMailerType(StringBuilder sb, MailerType mailerType) throws VCardBuildException {
 		try {
-			if(mailerFeature != null) {
-				if(mailerFeature.hasMailer()) {
-					boolean isQuotedPrintable = mailerFeature.isQuotedPrintable();
-					String mailer = mailerFeature.getMailer();
+			if(mailerType != null) {
+				if(mailerType.hasMailer()) {
+					boolean isQuotedPrintable = mailerType.isQuotedPrintable();
+					String mailer = mailerType.getMailer();
 					StringBuilder tmpSb = new StringBuilder();
 					
-					if(mailerFeature.hasGroup()) {
-						tmpSb.append(mailerFeature.getGroup());
+					if(mailerType.hasGroup()) {
+						tmpSb.append(mailerType.getGroup());
 						tmpSb.append(".");
 					}
 					
-					tmpSb.append(mailerFeature.getTypeString());
+					tmpSb.append(mailerType.getVCardTypeName());
 					
-					if(mailerFeature.hasCharset()) {
+					if(mailerType.hasCharset()) {
 						tmpSb.append(";CHARSET=");
-						tmpSb.append(mailerFeature.getCharset().name());
+						tmpSb.append(mailerType.getCharset().name());
 					}
 					
-					if(mailerFeature.hasLanguage()) {
+					if(mailerType.hasLanguage()) {
 						tmpSb.append(";LANGUAGE=");
-						tmpSb.append(mailerFeature.getLanguage().getLanguageCode());
+						tmpSb.append(mailerType.getLanguage().getLanguageCode());
 					}
 					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
 					
-					if(mailerFeature.hasExtendedParameters()) {
-						buildExtendParameters(mailerFeature, tmpSb);
+					if(mailerType.hasExtendedParams()) {
+						buildExtendParameters(mailerType, tmpSb);
 					}
 					
 					tmpSb.append(":");
-					tmpSb.append(escapeOrEncode(mailer, isQuotedPrintable, mailerFeature.getCharset()));
+					tmpSb.append(escapeOrEncode(mailer, isQuotedPrintable, mailerType.getCharset()));
 					
 					String tmpMailerLine = tmpSb.toString();
 					String foldedMailerLine = VCardUtils.foldLine(tmpMailerLine, eol, foldingScheme);
@@ -1758,12 +1735,12 @@ public class VCardWriter {
 					sb.append(eol);
 				}
 				else {
-					throw new VCardBuildException("MailerFeature ("+VCardType.MAILER.getType()+") exists but is empty.");
+					throw new VCardBuildException("MailerType ("+VCardTypeName.MAILER.getType()+") exists but is empty.");
 				}
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("MailerFeature ("+VCardType.MAILER.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("MailerType ("+VCardTypeName.MAILER.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -1772,43 +1749,42 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param timeZoneFeature
+	 * @param tzType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the time zone feature is null
 	 */
-	private void buildTimeZoneFeature(StringBuilder sb, TimeZoneFeature timeZoneFeature) throws VCardBuildException {
+	private void buildTzType(StringBuilder sb, TzType tzType) throws VCardBuildException {
 		try {
-			if(timeZoneFeature != null) {
+			if(tzType != null) {
 				StringBuilder tmpSb = new StringBuilder();
 				
-				if(timeZoneFeature.hasGroup()) {
-					tmpSb.append(timeZoneFeature.getGroup());
+				if(tzType.hasGroup()) {
+					tmpSb.append(tzType.getGroup());
 					tmpSb.append(".");
 				}
 				
-				tmpSb.append(timeZoneFeature.getTypeString());
+				tmpSb.append(tzType.getVCardTypeName().getType());
 
-				if(timeZoneFeature.getShortText() != null || timeZoneFeature.getLongText() != null) {
+				if(tzType.getShortText() != null || tzType.getLongText() != null) {
 					tmpSb.append(";");
-					tmpSb.append(TimeZoneParameterType.VALUE.getType());
-					tmpSb.append("=TEXT:");
-					tmpSb.append(timeZoneFeature.getIso8601Offset());
+					tmpSb.append("VALUE=TEXT:");
+					tmpSb.append(tzType.getIso8601Offset());
 					tmpSb.append(';');
 					
-					if (timeZoneFeature.getShortText() != null){
-						tmpSb.append(timeZoneFeature.getShortText());
+					if (tzType.getShortText() != null){
+						tmpSb.append(tzType.getShortText());
 					}
 					
 					tmpSb.append(';');
 					
-					if (timeZoneFeature.getLongText() != null){
-						tmpSb.append(timeZoneFeature.getLongText());
+					if (tzType.getLongText() != null){
+						tmpSb.append(tzType.getLongText());
 					}
 				}
 				else {
 					tmpSb.append(":");
-					tmpSb.append(timeZoneFeature.getIso8601Offset());
+					tmpSb.append(tzType.getIso8601Offset());
 				}
 
 				String tmpTimeZoneLine = tmpSb.toString();
@@ -1818,7 +1794,7 @@ public class VCardWriter {
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("TimeZoneFeature ("+VCardType.TZ.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("TzType ("+VCardTypeName.TZ.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -1827,25 +1803,25 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param urlFeature
+	 * @param urlType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the URL feature is null
 	 */
-	private void buildUrlFeature(StringBuilder sb, URLFeature urlFeature) throws VCardBuildException {
+	private void buildUrlType(StringBuilder sb, UrlType urlType) throws VCardBuildException {
 		try {
-			if(urlFeature != null) {
-				if(urlFeature.hasRawURL()) {
-					boolean isQuotedPrintable = urlFeature.isQuotedPrintable();
-					String url = urlFeature.getRawURL();
+			if(urlType != null) {
+				if(urlType.hasRawUrl()) {
+					boolean isQuotedPrintable = urlType.isQuotedPrintable();
+					String url = urlType.getRawUrl();
 					StringBuilder tmpSb = new StringBuilder();
 					
-					if(urlFeature.hasGroup()) {
-						tmpSb.append(urlFeature.getGroup());
+					if(urlType.hasGroup()) {
+						tmpSb.append(urlType.getGroup());
 						tmpSb.append(".");
 					}
 					
-					tmpSb.append(urlFeature.getTypeString());
+					tmpSb.append(urlType.getVCardTypeName().getType());
 					
 					switch(compatMode)
 					{
@@ -1854,17 +1830,16 @@ public class VCardWriter {
 						case GMAIL:
 						case MAC_ADDRESS_BOOK:
 						{
-							if(urlFeature.hasURLParameterTypes()) {
+							if(urlType.hasParams()) {
 								tmpSb.append(";");
-								Iterator<URLParameterType> paramTypes = urlFeature.getURLParameterTypes();
-								switch(urlFeature.getParameterTypeStyle())
+								switch(urlType.getParameterTypeStyle())
 								{
 									case PARAMETER_LIST:
 									{
-										while(paramTypes.hasNext()) {
-											URLParameterType urlType = paramTypes.next();
+										List<UrlParamType> paramTypes = urlType.getParams();
+										for(UrlParamType urlParamType : paramTypes) {
 											tmpSb.append("TYPE=");
-											tmpSb.append(urlType.getType());
+											tmpSb.append(urlParamType.getType());
 											tmpSb.append(";");
 										}
 
@@ -1874,91 +1849,91 @@ public class VCardWriter {
 									case PARAMETER_VALUE_LIST:
 									{
 										tmpSb.append("TYPE=");
-										while(paramTypes.hasNext()) {
-											URLParameterType urlType = paramTypes.next();
-											tmpSb.append(urlType.getType());
+										List<UrlParamType> paramTypes = urlType.getParams();
+										for(UrlParamType urlParamType : paramTypes) {
+											tmpSb.append(urlParamType.getType());
 											tmpSb.append(",");
 										}
 
 										break;
 									}
 								}
-
+								
+								//TODO check if this is needed for both cases.
 								tmpSb.deleteCharAt(tmpSb.length()-1);
 							}
 							
-							if(urlFeature.hasExtendedURLParameterTypes()) {
-								Iterator<XURLParameterType> xParamTypes = urlFeature.getExtendedURLParameterTypes();
-								switch(urlFeature.getParameterTypeStyle())
-								{
-									case PARAMETER_LIST:
-									{
-										tmpSb.append(";");
-										
-										while(xParamTypes.hasNext()) {
-											XURLParameterType xUrlType = xParamTypes.next();
-											tmpSb.append("TYPE=");
-											tmpSb.append(xUrlType.getXtendedTypeName());
-											if(xUrlType.hasXtendedTypeValue()) {
-												tmpSb.append("=");
-												tmpSb.append(xUrlType.getXtendedTypeValue());
-											}
-											
-											tmpSb.append(";");
-										}
-
-										break;
-									}
-
-									case PARAMETER_VALUE_LIST:
-									{
-										if(urlFeature.hasURLParameterTypes()) {
-											//Continue from the list
-											tmpSb.append(",");
-										}
-										else {
-											//Start a new
-											tmpSb.append(";TYPE=");
-										}
-										
-										while(xParamTypes.hasNext()) {
-											XURLParameterType xUrlType = xParamTypes.next();
-											tmpSb.append(xUrlType.getXtendedTypeName());
-											if(xUrlType.hasXtendedTypeValue()) {
-												tmpSb.append("=");
-												tmpSb.append(xUrlType.getXtendedTypeValue());
-											}
-											
-											tmpSb.append(",");
-										}
-
-										break;
-									}
-								}
-
-								tmpSb.deleteCharAt(tmpSb.length()-1);
-							}
+//							if(urlType.hasExtendedParams()) {
+//								switch(urlType.getParameterTypeStyle())
+//								{
+//									case PARAMETER_LIST:
+//									{
+//										tmpSb.append(";");
+//										List<ExtendedParamType> xParamTypes = urlType.getExtendedParams();
+//										for(ExtendedParamType xParamType : xParamTypes) {
+//											tmpSb.append("TYPE=");
+//											tmpSb.append(xParamType.getTypeName());
+//											
+//											if(xParamType.hasTypeValue()) {
+//												tmpSb.append("=");
+//												tmpSb.append(xParamType.getTypeValue());
+//											}
+//											
+//											tmpSb.append(";");
+//										}
+//
+//										break;
+//									}
+//
+//									case PARAMETER_VALUE_LIST:
+//									{
+//										if(urlType.hasParams()) {
+//											//Continue from the list
+//											tmpSb.append(",");
+//										}
+//										else {
+//											//Start a new
+//											tmpSb.append(";TYPE=");
+//										}
+//										
+//										List<ExtendedParamType> xParamTypes = urlType.getExtendedParams();
+//										for(ExtendedParamType xParamType : xParamTypes) {
+//											tmpSb.append(xParamType.getTypeName());
+//											if(xParamType.hasTypeValue()) {
+//												tmpSb.append("=");
+//												tmpSb.append(xParamType.getTypeValue());
+//											}
+//											
+//											tmpSb.append(",");
+//										}
+//
+//										break;
+//									}
+//								}
+//
+//								tmpSb.deleteCharAt(tmpSb.length()-1);
+//							}
 							
 							break;
 						}
 					}
 					
-					if(urlFeature.hasCharset()) {
+					if(urlType.hasCharset()) {
 						tmpSb.append(";CHARSET=");
-						tmpSb.append(urlFeature.getCharset().name());
+						tmpSb.append(urlType.getCharset().name());
 					}
 					
-					if(urlFeature.hasLanguage()) {
+					if(urlType.hasLanguage()) {
 						tmpSb.append(";LANGUAGE=");
-						tmpSb.append(urlFeature.getLanguage().getLanguageCode());
+						tmpSb.append(urlType.getLanguage().getLanguageCode());
 					}
 					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
 					
-					if(urlFeature.hasExtendedParameters()) {
-						buildExtendParameters(urlFeature, tmpSb);
+					if(urlType.hasExtendedParams()) {
+						buildExtendParameters(urlType, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -1986,12 +1961,12 @@ public class VCardWriter {
 					sb.append(eol);
 				}
 				else {
-					throw new VCardBuildException("URLFeature ("+VCardType.URL.getType()+") exists but is empty.");
+					throw new VCardBuildException("UrlType ("+VCardTypeName.URL.getType()+") exists but is empty.");
 				}
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("URLFeature ("+VCardType.URL.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("UrlType ("+VCardTypeName.URL.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -2000,35 +1975,35 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param revisionFeature
+	 * @param revType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the revision feature is null
 	 */
-	private void buildRevisionFeature(StringBuilder sb, RevisionFeature revisionFeature) throws VCardBuildException {
+	private void buildRevType(StringBuilder sb, RevType revType) throws VCardBuildException {
 		try {
-			if(revisionFeature != null) {
-				if(revisionFeature.hasRevision()) {
+			if(revType != null) {
+				if(revType.hasRevision()) {
 					StringBuilder tmpSb = new StringBuilder();
 					
-					if(revisionFeature.hasGroup()) {
-						tmpSb.append(revisionFeature.getGroup());
+					if(revType.hasGroup()) {
+						tmpSb.append(revType.getGroup());
 						tmpSb.append(".");
 					}
 					
-					tmpSb.append(revisionFeature.getTypeString());
+					tmpSb.append(revType.getVCardTypeName().getType());
 					
-					if(revisionFeature.hasCharset()) {
+					if(revType.hasCharset()) {
 						tmpSb.append(";CHARSET=");
-						tmpSb.append(revisionFeature.getCharset().name());
+						tmpSb.append(revType.getCharset().name());
 					}
 					
-					if(revisionFeature.hasExtendedParameters()) {
-						buildExtendParameters(revisionFeature, tmpSb);
+					if(revType.hasExtendedParams()) {
+						buildExtendParameters(revType, tmpSb);
 					}
 					
 					tmpSb.append(":");
-					tmpSb.append(ISOUtils.formatISO8601Date(revisionFeature.getRevision(), ISOFormat.ISO8601_UTC_TIME_EXTENDED));
+					tmpSb.append(ISOUtils.formatISO8601Date(revType.getRevision(), ISOFormat.ISO8601_UTC_TIME_EXTENDED));
 					
 					String tmpRevisionLine = tmpSb.toString();
 					String foldedRevisionLine = VCardUtils.foldLine(tmpRevisionLine, eol, foldingScheme);
@@ -2036,12 +2011,12 @@ public class VCardWriter {
 					sb.append(eol);
 				}
 				else {
-					throw new VCardBuildException("RevisionFeature ("+VCardType.REV.getType()+") exists but is empty.");
+					throw new VCardBuildException("RevType ("+VCardTypeName.REV.getType()+") exists but is empty.");
 				}
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("RevisionFeature ("+VCardType.REV.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("RevType ("+VCardTypeName.REV.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -2050,46 +2025,46 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param uidFeature
+	 * @param uidType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the uid feature is null
 	 */
-	private void buildUidFeature(StringBuilder sb, UIDFeature uidFeature) throws VCardBuildException {
+	private void buildUidType(StringBuilder sb, UidType uidType) throws VCardBuildException {
 		try {
-			if(uidFeature != null) {
-				if(uidFeature.hasUID()) {
-					boolean isQuotedPrintable = uidFeature.isQuotedPrintable();
-					String uid = uidFeature.getUID();
+			if(uidType != null) {
+				if(uidType.hasUid()) {
+					boolean isQuotedPrintable = uidType.isQuotedPrintable();
+					String uid = uidType.getUid();
 					StringBuilder tmpSb = new StringBuilder();
 					
-					if(uidFeature.hasGroup()) {
-						tmpSb.append(uidFeature.getGroup());
+					if(uidType.hasGroup()) {
+						tmpSb.append(uidType.getGroup());
 						tmpSb.append(".");
 					}
 					
-					tmpSb.append(uidFeature.getTypeString());
+					tmpSb.append(uidType.getVCardTypeName().getType());
 					
-					if(uidFeature.hasCharset()) {
+					if(uidType.hasCharset()) {
 						tmpSb.append(";CHARSET=");
-						tmpSb.append(uidFeature.getCharset().name());
+						tmpSb.append(uidType.getCharset().name());
 					}
 					
-					if(uidFeature.hasLanguage()) {
+					if(uidType.hasLanguage()) {
 						tmpSb.append(";LANGUAGE=");
-						tmpSb.append(uidFeature.getLanguage().getLanguageCode());
+						tmpSb.append(uidType.getLanguage().getLanguageCode());
 					}
 					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
 					
-					if(uidFeature.hasExtendedParameters()) {
-						buildExtendParameters(uidFeature, tmpSb);
+					if(uidType.hasExtendedParams()) {
+						buildExtendParameters(uidType, tmpSb);
 					}
 					
 					tmpSb.append(":");
-					tmpSb.append(escapeOrEncode(uid, isQuotedPrintable, uidFeature.getCharset()));
+					tmpSb.append(escapeOrEncode(uid, isQuotedPrintable, uidType.getCharset()));
 					
 					String tmpUidLine = tmpSb.toString();
 					String foldedUidLine = VCardUtils.foldLine(tmpUidLine, eol, foldingScheme);
@@ -2097,12 +2072,12 @@ public class VCardWriter {
 					sb.append(eol);
 				}
 				else {
-					throw new VCardBuildException("UIDFeature ("+VCardType.UID.getType()+") exists but is empty.");
+					throw new VCardBuildException("UidType ("+VCardTypeName.UID.getType()+") exists but is empty.");
 				}
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("UIDFeature ("+VCardType.UID.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("UidType ("+VCardTypeName.UID.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -2111,41 +2086,41 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param birthdayFeature
+	 * @param bdayType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the birthday feature is null
 	 */
-	private void buildBirthdayFeature(StringBuilder sb, BirthdayFeature birthdayFeature) throws VCardBuildException {
+	private void buildBDayType(StringBuilder sb, BDayType bdayType) throws VCardBuildException {
 		try {
-			if(birthdayFeature != null) {
+			if(bdayType != null) {
 				StringBuilder tmpSb = new StringBuilder();
 				
-				if(birthdayFeature.hasGroup()) {
-					tmpSb.append(birthdayFeature.getGroup());
+				if(bdayType.hasGroup()) {
+					tmpSb.append(bdayType.getGroup());
 					tmpSb.append(".");
 				}
 				
-				tmpSb.append(birthdayFeature.getTypeString());
+				tmpSb.append(bdayType.getVCardTypeName().getType());
 				
-				if(birthdayFeature.hasCharset()) {
+				if(bdayType.hasCharset()) {
 					tmpSb.append(";CHARSET=");
-					tmpSb.append(birthdayFeature.getCharset().name());
+					tmpSb.append(bdayType.getCharset().name());
 				}
 				
-				if(birthdayFeature.hasBirthdayParameterType()) {
-					BirthdayParameterType ptype = birthdayFeature.getBirthdayParameterType();
+				if(bdayType.hasParam()) {
+					BDayParamType ptype = bdayType.getParam();
 					tmpSb.append(";VALUE=");
 					tmpSb.append(ptype.getTypeName());
 				}
 				
-				if(birthdayFeature.hasExtendedParameters()) {
-					buildExtendParameters(birthdayFeature, tmpSb);
+				if(bdayType.hasExtendedParams()) {
+					buildExtendParameters(bdayType, tmpSb);
 				}
 				
-				ISOFormat isoFormat = birthdayFeature.getISO8601Format();
+				ISOFormat isoFormat = bdayType.getISO8601Format();
 				tmpSb.append(":");
-				tmpSb.append(ISOUtils.formatISO8601Date(birthdayFeature.getBirthday(), isoFormat));
+				tmpSb.append(ISOUtils.formatISO8601Date(bdayType.getBirthday(), isoFormat));
 				
 				String tmpBdayLine = tmpSb.toString();
 				String foldedBdayLine = VCardUtils.foldLine(tmpBdayLine, eol, foldingScheme);
@@ -2154,7 +2129,7 @@ public class VCardWriter {
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("BirthdayFeature ("+VCardType.BDAY.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("BDayType ("+VCardTypeName.BDAY.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 
@@ -2165,49 +2140,48 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param addressFeature
+	 * @param adrType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the address feature is null
 	 */
-	private void buildAddressFeature(StringBuilder sb, AddressFeature addressFeature) throws VCardBuildException {
+	private void buildAdrType(StringBuilder sb, AdrType adrType) throws VCardBuildException {
 		try {
-			if(addressFeature != null) {
-				boolean isQuotedPrintable = addressFeature.isQuotedPrintable();
+			if(adrType != null) {
+				boolean isQuotedPrintable = adrType.isQuotedPrintable();
 				StringBuilder tmpSb = new StringBuilder();
 				
-				if(addressFeature.hasGroup()) {
-					tmpSb.append(addressFeature.getGroup());
+				if(adrType.hasGroup()) {
+					tmpSb.append(adrType.getGroup());
 					tmpSb.append(".");
 				}
 				
-				tmpSb.append(addressFeature.getTypeString());
+				tmpSb.append(adrType.getVCardTypeName().getType());
 				
-				if(addressFeature.hasCharset()) {
+				if(adrType.hasCharset()) {
 					tmpSb.append(";CHARSET=");
-					tmpSb.append(addressFeature.getCharset().name());
+					tmpSb.append(adrType.getCharset().name());
 				}
 				
-				if(addressFeature.hasLanguage()) {
+				if(adrType.hasLanguage()) {
 					tmpSb.append(";LANGUAGE=");
-					tmpSb.append(addressFeature.getLanguage().getLanguageCode());
+					tmpSb.append(adrType.getLanguage().getLanguageCode());
 				}
 				
 				if(isQuotedPrintable) {
 					tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 				}
 				
-				if(addressFeature.hasAddressParameterTypes()) {
+				if(adrType.hasParams()) {
 					tmpSb.append(";");
-					Iterator<AddressParameterType> paramTypes = addressFeature.getAddressParameterTypes();
-					switch(addressFeature.getParameterTypeStyle())
+					switch(adrType.getParameterTypeStyle())
 					{
 						case PARAMETER_LIST:
 						{
-							while(paramTypes.hasNext()) {
-								AddressParameterType addrType = paramTypes.next();
+							List<AdrParamType> paramTypes = adrType.getParams();
+							for(AdrParamType adrParamType : paramTypes) {
 								tmpSb.append("TYPE=");
-								tmpSb.append(addrType.getType());
+								tmpSb.append(adrParamType.getType());
 								tmpSb.append(";");
 							}
 
@@ -2217,9 +2191,9 @@ public class VCardWriter {
 						case PARAMETER_VALUE_LIST:
 						{
 							tmpSb.append("TYPE=");
-							while(paramTypes.hasNext()) {
-								AddressParameterType addrType = paramTypes.next();
-								tmpSb.append(addrType.getType());
+							List<AdrParamType> paramTypes = adrType.getParams();
+							for(AdrParamType adrParamType : paramTypes) {
+								tmpSb.append(adrParamType.getType());
 								tmpSb.append(",");
 							}
 
@@ -2230,102 +2204,101 @@ public class VCardWriter {
 					tmpSb.deleteCharAt(tmpSb.length()-1);
 				}
 				
-				if(addressFeature.hasExtendedAddressParameterTypes()) {
-					Iterator<XAddressParameterType> xParamTypes = addressFeature.getExtendedAddressParameterTypes();
-					switch(addressFeature.getParameterTypeStyle())
-					{
-						case PARAMETER_LIST:
-						{
-							tmpSb.append(";");
-							
-							while(xParamTypes.hasNext()) {
-								XAddressParameterType xAddrType = xParamTypes.next();
-								tmpSb.append("TYPE=");
-								tmpSb.append(xAddrType.getXtendedTypeName());
-								if(xAddrType.hasXtendedTypeValue()) {
-									tmpSb.append("=");
-									tmpSb.append(xAddrType.getXtendedTypeValue());
-								}
-								
-								tmpSb.append(";");
-							}
-
-							break;
-						}
-
-						case PARAMETER_VALUE_LIST:
-						{
-							if(addressFeature.hasAddressParameterTypes()) {
-								//Continue from the list
-								tmpSb.append(",");
-							}
-							else {
-								//Start a new
-								tmpSb.append(";TYPE=");
-							}
-							
-							while(xParamTypes.hasNext()) {
-								XAddressParameterType xAddrType = xParamTypes.next();
-								tmpSb.append(xAddrType.getXtendedTypeName());
-								if(xAddrType.hasXtendedTypeValue()) {
-									tmpSb.append("=");
-									tmpSb.append(xAddrType.getXtendedTypeValue());
-								}
-								
-								tmpSb.append(",");
-							}
-
-							break;
-						}
-					}
-
-					tmpSb.deleteCharAt(tmpSb.length()-1);
-				}
+//				if(adrType.hasExtendedParams()) {
+//					switch(adrType.getParameterTypeStyle())
+//					{
+//						case PARAMETER_LIST:
+//						{
+//							tmpSb.append(";");
+//							
+//							List<ExtendedParamType> xParamTypes = adrType.getExtendedParams();
+//							for(ExtendedParamType xParamType : xParamTypes) {
+//								tmpSb.append("TYPE=");
+//								tmpSb.append(xParamType.getTypeName());
+//								if(xParamType.hasTypeValue()) {
+//									tmpSb.append("=");
+//									tmpSb.append(xParamType.getTypeValue());
+//								}
+//								
+//								tmpSb.append(";");
+//							}
+//
+//							break;
+//						}
+//
+//						case PARAMETER_VALUE_LIST:
+//						{
+//							if(adrType.hasParams()) {
+//								//Continue from the list
+//								tmpSb.append(",");
+//							}
+//							else {
+//								//Start a new
+//								tmpSb.append(";TYPE=");
+//							}
+//							
+//							List<ExtendedParamType> xParamTypes = adrType.getExtendedParams();
+//							for(ExtendedParamType xParamType : xParamTypes) {
+//								tmpSb.append(xParamType.getTypeName());
+//								if(xParamType.hasTypeValue()) {
+//									tmpSb.append("=");
+//									tmpSb.append(xParamType.getTypeValue());
+//								}
+//								
+//								tmpSb.append(",");
+//							}
+//
+//							break;
+//						}
+//					}
+//
+//					tmpSb.deleteCharAt(tmpSb.length()-1);
+//				}
 				
-				if(addressFeature.hasExtendedParameters()) {
-					buildExtendParameters(addressFeature, tmpSb);
+				if(adrType.hasExtendedParams()) {
+					buildExtendParameters(adrType, tmpSb);
 				}
 				
 				tmpSb.append(":");
 				
-				if(addressFeature.hasPostOfficebox()) {
-					tmpSb.append(escapeOrEncode(addressFeature.getPostOfficeBox(), isQuotedPrintable, addressFeature.getCharset()));
+				if(adrType.hasPostOfficebox()) {
+					tmpSb.append(escapeOrEncode(adrType.getPostOfficeBox(), isQuotedPrintable, adrType.getCharset()));
 				}
 
 				tmpSb.append(";");
 
-				if(addressFeature.hasExtendedAddress()) {
-					tmpSb.append(escapeOrEncode(addressFeature.getExtendedAddress(), isQuotedPrintable, addressFeature.getCharset()));
+				if(adrType.hasExtendedAddress()) {
+					tmpSb.append(escapeOrEncode(adrType.getExtendedAddress(), isQuotedPrintable, adrType.getCharset()));
 				}
 
 				tmpSb.append(";");
 				
-				if(addressFeature.hasStreetAddress()) {
-					tmpSb.append(escapeOrEncode(addressFeature.getStreetAddress(), isQuotedPrintable, addressFeature.getCharset()));
+				if(adrType.hasStreetAddress()) {
+					tmpSb.append(escapeOrEncode(adrType.getStreetAddress(), isQuotedPrintable, adrType.getCharset()));
 				}
 
 				tmpSb.append(";");
 
-				if(addressFeature.hasLocality()) {
-					tmpSb.append(escapeOrEncode(addressFeature.getLocality(), isQuotedPrintable, addressFeature.getCharset()));
+				if(adrType.hasLocality()) {
+					tmpSb.append(escapeOrEncode(adrType.getLocality(), isQuotedPrintable, adrType.getCharset()));
 				}
 
 				tmpSb.append(";");
 
-				if(addressFeature.hasRegion()) {
-					tmpSb.append(escapeOrEncode(addressFeature.getRegion(), isQuotedPrintable, addressFeature.getCharset()));
+				if(adrType.hasRegion()) {
+					tmpSb.append(escapeOrEncode(adrType.getRegion(), isQuotedPrintable, adrType.getCharset()));
 				}
 
 				tmpSb.append(";");
 
-				if(addressFeature.hasPostalCode()) {
-					tmpSb.append(escapeOrEncode(addressFeature.getPostalCode(), isQuotedPrintable, addressFeature.getCharset()));
+				if(adrType.hasPostalCode()) {
+					tmpSb.append(escapeOrEncode(adrType.getPostalCode(), isQuotedPrintable, adrType.getCharset()));
 				}
 
 				tmpSb.append(";");
 
-				if(addressFeature.hasCountryName()) {
-					tmpSb.append(escapeOrEncode(addressFeature.getCountryName(), isQuotedPrintable, addressFeature.getCharset()));
+				if(adrType.hasCountryName()) {
+					tmpSb.append(escapeOrEncode(adrType.getCountryName(), isQuotedPrintable, adrType.getCharset()));
 				}
 
 				String tmpAddressLine = tmpSb.toString();
@@ -2335,7 +2308,7 @@ public class VCardWriter {
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("AddressFeature ("+VCardType.ADR.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("AdrType ("+VCardTypeName.ADR.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -2344,50 +2317,50 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param labelFeature
+	 * @param labelType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the label feature is null
 	 */
-	private void buildLabelFeature(StringBuilder sb, LabelFeature labelFeature) throws VCardBuildException {
+	private void buildLabelType(StringBuilder sb, LabelType labelType) throws VCardBuildException {
 		try {
-			if(labelFeature != null) {
-				if(labelFeature.hasLabel()) {
-					boolean isQuotedPrintable = labelFeature.isQuotedPrintable();
+			if(labelType != null) {
+				if(labelType.hasLabel()) {
+					boolean isQuotedPrintable = labelType.isQuotedPrintable();
 					StringBuilder tmpSb = new StringBuilder();
 					
-					if(labelFeature.hasGroup()) {
-						tmpSb.append(labelFeature.getGroup());
+					if(labelType.hasGroup()) {
+						tmpSb.append(labelType.getGroup());
 						tmpSb.append(".");
 					}
 					
-					tmpSb.append(labelFeature.getTypeString());
+					tmpSb.append(labelType.getVCardTypeName().getType());
 					
-					if(labelFeature.hasCharset()) {
+					if(labelType.hasCharset()) {
 						tmpSb.append(";CHARSET=");
-						tmpSb.append(labelFeature.getCharset().name());
+						tmpSb.append(labelType.getCharset().name());
 					}
 					
-					if(labelFeature.hasLanguage()) {
+					if(labelType.hasLanguage()) {
 						tmpSb.append(";LANGUAGE=");
-						tmpSb.append(labelFeature.getLanguage().getLanguageCode());
+						tmpSb.append(labelType.getLanguage().getLanguageCode());
 					}
 					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
 					
-					if(labelFeature.hasLabelParameterTypes()) {
+					if(labelType.hasParams()) {
 						tmpSb.append(";");
-						Iterator<LabelParameterType> paramTypes = labelFeature.getLabelParameterTypes();
-						switch(labelFeature.getParameterTypeStyle())
+						
+						switch(labelType.getParameterTypeStyle())
 						{
 							case PARAMETER_LIST:
 							{
-								while(paramTypes.hasNext()) {
-									LabelParameterType labelType = paramTypes.next();
+								List<LabelParamType> paramTypes = labelType.getParams();
+								for(LabelParamType labelParamType : paramTypes) {
 									tmpSb.append("TYPE=");
-									tmpSb.append(labelType.getType());
+									tmpSb.append(labelParamType.getType());
 									tmpSb.append(";");
 								}
 
@@ -2397,9 +2370,10 @@ public class VCardWriter {
 							case PARAMETER_VALUE_LIST:
 							{
 								tmpSb.append("TYPE=");
-								while(paramTypes.hasNext()) {
-									LabelParameterType labelType = paramTypes.next();
-									tmpSb.append(labelType.getType());
+								
+								List<LabelParamType> paramTypes = labelType.getParams();
+								for(LabelParamType labelParamType : paramTypes) {
+									tmpSb.append(labelParamType.getType());
 									tmpSb.append(",");
 								}
 
@@ -2410,64 +2384,62 @@ public class VCardWriter {
 						tmpSb.deleteCharAt(tmpSb.length()-1);
 					}
 					
-					if(labelFeature.hasExtendedLabelParameterTypes()) {
-						Iterator<XLabelParameterType> xParamTypes = labelFeature.getExtendedLabelParameterTypes();
-						switch(labelFeature.getParameterTypeStyle())
-						{
-							case PARAMETER_LIST:
-							{
-								tmpSb.append(";");
-								
-								while(xParamTypes.hasNext()) {
-									XLabelParameterType xLabelType = xParamTypes.next();
-									tmpSb.append("TYPE=");
-									tmpSb.append(xLabelType.getXtendedTypeName());
-									if(xLabelType.hasXtendedTypeValue()) {
-										tmpSb.append("=");
-										tmpSb.append(xLabelType.getXtendedTypeValue());
-									}
-									
-									tmpSb.append(";");
-								}
-
-								break;
-							}
-
-							case PARAMETER_VALUE_LIST:
-							{
-								if(labelFeature.hasLabelParameterTypes()) {
-									//Continue from the list
-									tmpSb.append(",");
-								}
-								else {
-									//Start a new
-									tmpSb.append(";TYPE=");
-								}
-								
-								while(xParamTypes.hasNext()) {
-									XLabelParameterType xLabelType = xParamTypes.next();
-									tmpSb.append(xLabelType.getXtendedTypeName());
-									if(xLabelType.hasXtendedTypeValue()) {
-										tmpSb.append("=");
-										tmpSb.append(xLabelType.getXtendedTypeValue());
-									}
-									
-									tmpSb.append(",");
-								}
-
-								break;
-							}
-						}
-
-						tmpSb.deleteCharAt(tmpSb.length()-1);
-					}
+//					if(labelType.hasExtendedParams()) {
+//						switch(labelType.getParameterTypeStyle())
+//						{
+//							case PARAMETER_LIST:
+//							{
+//								tmpSb.append(";");
+//								List<ExtendedParamType> xParamTypes = labelType.getExtendedParams();
+//								for(ExtendedParamType xParamType : xParamTypes) {
+//									tmpSb.append("TYPE=");
+//									tmpSb.append(xParamType.getTypeName());
+//									if(xParamType.hasTypeValue()) {
+//										tmpSb.append("=");
+//										tmpSb.append(xParamType.getTypeValue());
+//									}
+//									
+//									tmpSb.append(";");
+//								}
+//
+//								break;
+//							}
+//
+//							case PARAMETER_VALUE_LIST:
+//							{
+//								if(labelType.hasParams()) {
+//									//Continue from the list
+//									tmpSb.append(",");
+//								}
+//								else {
+//									//Start a new
+//									tmpSb.append(";TYPE=");
+//								}
+//								
+//								List<ExtendedParamType> xParamTypes = labelType.getExtendedParams();
+//								for(ExtendedParamType xParamType : xParamTypes) {
+//									tmpSb.append(xParamType.getTypeName());
+//									if(xParamType.hasTypeValue()) {
+//										tmpSb.append("=");
+//										tmpSb.append(xParamType.getTypeValue());
+//									}
+//									
+//									tmpSb.append(",");
+//								}
+//
+//								break;
+//							}
+//						}
+//
+//						tmpSb.deleteCharAt(tmpSb.length()-1);
+//					}
 					
-					if(labelFeature.hasExtendedParameters()) {
-						buildExtendParameters(labelFeature, tmpSb);
+					if(labelType.hasExtendedParams()) {
+						buildExtendParameters(labelType, tmpSb);
 					}
 					
 					tmpSb.append(":");
-					tmpSb.append(escapeOrEncode(labelFeature.getLabel(), isQuotedPrintable, labelFeature.getCharset()));
+					tmpSb.append(escapeOrEncode(labelType.getLabel(), isQuotedPrintable, labelType.getCharset()));
 					String tmpLabelLine = tmpSb.toString();
 					
 					String foldedLabelLine = null;
@@ -2483,12 +2455,12 @@ public class VCardWriter {
 					sb.append(eol);
 				}
 				else {
-					throw new VCardBuildException("LabelFeature ("+VCardType.LABEL.getType()+") exists but is empty.");
+					throw new VCardBuildException("LabelType ("+VCardTypeName.LABEL.getType()+") exists but is empty.");
 				}
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("LablelFeature ("+VCardType.LABEL.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("LabelType ("+VCardTypeName.LABEL.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -2497,50 +2469,49 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param telephoneFeature
+	 * @param telType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the telephone feature is null
 	 */
-	private void buildTelephoneFeature(StringBuilder sb, TelephoneFeature telephoneFeature) throws VCardBuildException {
+	private void buildTelType(StringBuilder sb, TelType telType) throws VCardBuildException {
 		try {
-			if(telephoneFeature != null) {
-				if(telephoneFeature.hasTelephone()) {
-					boolean isQuotedPrintable = telephoneFeature.isQuotedPrintable();
+			if(telType != null) {
+				if(telType.hasTelephone()) {
+					boolean isQuotedPrintable = telType.isQuotedPrintable();
 					StringBuilder tmpSb = new StringBuilder();
 					
-					if(telephoneFeature.hasGroup()) {
-						tmpSb.append(telephoneFeature.getGroup());
+					if(telType.hasGroup()) {
+						tmpSb.append(telType.getGroup());
 						tmpSb.append(".");
 					}
 					
-					tmpSb.append(telephoneFeature.getTypeString());
+					tmpSb.append(telType.getVCardTypeName().getType());
 					
-					if(telephoneFeature.hasCharset()) {
+					if(telType.hasCharset()) {
 						tmpSb.append(";CHARSET=");
-						tmpSb.append(telephoneFeature.getCharset().name());
+						tmpSb.append(telType.getCharset().name());
 					}
 					
-					if(telephoneFeature.hasLanguage()) {
+					if(telType.hasLanguage()) {
 						tmpSb.append(";LANGUAGE=");
-						tmpSb.append(telephoneFeature.getLanguage().getLanguageCode());
+						tmpSb.append(telType.getLanguage().getLanguageCode());
 					}
 					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
 					
-					if(telephoneFeature.hasTelephoneParameterTypes()) {
+					if(telType.hasParams()) {
 						tmpSb.append(";");
-						Iterator<TelephoneParameterType> paramTypes = telephoneFeature.getTelephoneParameterTypes();
-						switch(telephoneFeature.getParameterTypeStyle())
+						switch(telType.getParameterTypeStyle())
 						{
 							case PARAMETER_LIST:
 							{
-								while(paramTypes.hasNext()) {
-									TelephoneParameterType teleType = paramTypes.next();
+								List<TelParamType> paramTypes = telType.getParams();
+								for(TelParamType telParamType : paramTypes) {
 									tmpSb.append("TYPE=");
-									tmpSb.append(teleType.getType());
+									tmpSb.append(telParamType.getType());
 									tmpSb.append(";");
 								}
 
@@ -2550,9 +2521,9 @@ public class VCardWriter {
 							case PARAMETER_VALUE_LIST:
 							{
 								tmpSb.append("TYPE=");
-								while(paramTypes.hasNext()) {
-									TelephoneParameterType teleType = paramTypes.next();
-									tmpSb.append(teleType.getType());
+								List<TelParamType> paramTypes = telType.getParams();
+								for(TelParamType telParamType : paramTypes) {
+									tmpSb.append(telParamType.getType());
 									tmpSb.append(",");
 								}
 
@@ -2563,64 +2534,62 @@ public class VCardWriter {
 						tmpSb.deleteCharAt(tmpSb.length()-1);
 					}
 					
-					if(telephoneFeature.hasExtendedTelephoneParameterTypes()) {
-						Iterator<XTelephoneParameterType> xParamTypes = telephoneFeature.getExtendedTelephoneParameterTypes();
-						switch(telephoneFeature.getParameterTypeStyle())
-						{
-							case PARAMETER_LIST:
-							{
-								tmpSb.append(";");
-								
-								while(xParamTypes.hasNext()) {
-									XTelephoneParameterType xTelType = xParamTypes.next();
-									tmpSb.append("TYPE=");
-									tmpSb.append(xTelType.getXtendedTypeName());
-									if(xTelType.hasXtendedTypeValue()) {
-										tmpSb.append("=");
-										tmpSb.append(xTelType.getXtendedTypeValue());
-									}
-									
-									tmpSb.append(";");
-								}
-
-								break;
-							}
-
-							case PARAMETER_VALUE_LIST:
-							{
-								if(telephoneFeature.hasTelephoneParameterTypes()) {
-									//Continue from the list
-									tmpSb.append(",");
-								}
-								else {
-									//Start a new
-									tmpSb.append(";TYPE=");
-								}
-								
-								while(xParamTypes.hasNext()) {
-									XTelephoneParameterType xTelType = xParamTypes.next();
-									tmpSb.append(xTelType.getXtendedTypeName());
-									if(xTelType.hasXtendedTypeValue()) {
-										tmpSb.append("=");
-										tmpSb.append(xTelType.getXtendedTypeValue());
-									}
-									
-									tmpSb.append(",");
-								}
-
-								break;
-							}
-						}
-
-						tmpSb.deleteCharAt(tmpSb.length()-1);
-					}
+//					if(telType.hasExtendedParams()) {
+//						switch(telType.getParameterTypeStyle())
+//						{
+//							case PARAMETER_LIST:
+//							{
+//								tmpSb.append(";");
+//								List<ExtendedParamType> xParamTypes = telType.getExtendedParams();
+//								for(ExtendedParamType xParamType : xParamTypes) {
+//									tmpSb.append("TYPE=");
+//									tmpSb.append(xParamType.getTypeName());
+//									if(xParamType.hasTypeValue()) {
+//										tmpSb.append("=");
+//										tmpSb.append(xParamType.getTypeValue());
+//									}
+//									
+//									tmpSb.append(";");
+//								}
+//
+//								break;
+//							}
+//
+//							case PARAMETER_VALUE_LIST:
+//							{
+//								if(telType.hasParams()) {
+//									//Continue from the list
+//									tmpSb.append(",");
+//								}
+//								else {
+//									//Start a new
+//									tmpSb.append(";TYPE=");
+//								}
+//								
+//								List<ExtendedParamType> xParamTypes = telType.getExtendedParams();
+//								for(ExtendedParamType xParamType : xParamTypes) {
+//									tmpSb.append(xParamType.getTypeName());
+//									if(xParamType.hasTypeValue()) {
+//										tmpSb.append("=");
+//										tmpSb.append(xParamType.getTypeValue());
+//									}
+//									
+//									tmpSb.append(",");
+//								}
+//								
+//								break;
+//							}
+//						}
+//
+//						tmpSb.deleteCharAt(tmpSb.length()-1);
+//					}
 					
-					if(telephoneFeature.hasExtendedParameters()) {
-						buildExtendParameters(telephoneFeature, tmpSb);
+					if(telType.hasExtendedParams()) {
+						buildExtendParameters(telType, tmpSb);
 					}
 					
 					tmpSb.append(":");
-					tmpSb.append(escapeOrEncode(telephoneFeature.getTelephone(), isQuotedPrintable, telephoneFeature.getCharset()));
+					tmpSb.append(escapeOrEncode(telType.getTelephone(), isQuotedPrintable, telType.getCharset()));
 					
 					String tmpTelephoneLine = tmpSb.toString();
 					String foldedTelephoneLine = VCardUtils.foldLine(tmpTelephoneLine, eol, foldingScheme);
@@ -2628,12 +2597,12 @@ public class VCardWriter {
 					sb.append(eol);
 				}
 				else {
-					throw new VCardBuildException("TelephoneFeature ("+VCardType.TEL.getType()+") exists but is empty.");
+					throw new VCardBuildException("TelType ("+VCardTypeName.TEL.getType()+") exists but is empty.");
 				}
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("TelephoneFeature ("+VCardType.TEL.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("TelType ("+VCardTypeName.TEL.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -2643,45 +2612,44 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param emailFeature
+	 * @param emailType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the email feature is null
 	 */
-	private void buildEmailFeature(StringBuilder sb, EmailFeature emailFeature) throws VCardBuildException {
+	private void buildEmailType(StringBuilder sb, EmailType emailType) throws VCardBuildException {
 		try {
-			if(emailFeature != null) {
-				if(emailFeature.hasEmail()) {
-					boolean isQuotedPrintable = emailFeature.isQuotedPrintable();
+			if(emailType != null) {
+				if(emailType.hasEmail()) {
+					boolean isQuotedPrintable = emailType.isQuotedPrintable();
 					StringBuilder tmpSb = new StringBuilder();
 					
-					if(emailFeature.hasGroup()) {
-						tmpSb.append(emailFeature.getGroup());
+					if(emailType.hasGroup()) {
+						tmpSb.append(emailType.getGroup());
 						tmpSb.append(".");
 					}
 					
-					tmpSb.append(emailFeature.getTypeString());
+					tmpSb.append(emailType.getVCardTypeName().getType());
 					
-					if(emailFeature.hasCharset()) {
+					if(emailType.hasCharset()) {
 						tmpSb.append(";CHARSET=");
-						tmpSb.append(emailFeature.getCharset().name());
+						tmpSb.append(emailType.getCharset().name());
 					}
 					
-					if(emailFeature.hasLanguage()) {
+					if(emailType.hasLanguage()) {
 						tmpSb.append(";LANGUAGE=");
-						tmpSb.append(emailFeature.getLanguage().getLanguageCode());
+						tmpSb.append(emailType.getLanguage().getLanguageCode());
 					}
 					
-					if(emailFeature.hasEmailParameterTypes()) {
+					if(emailType.hasParams()) {
 						tmpSb.append(";");
-						Iterator<EmailParameterType> paramTypes = emailFeature.getEmailParameterTypes();
 						
-						switch(emailFeature.getParameterTypeStyle())
+						switch(emailType.getParameterTypeStyle())
 						{
 							case PARAMETER_LIST:
 							{
-								while(paramTypes.hasNext()) {
-									EmailParameterType emailParamType = paramTypes.next();
+								List<EmailParamType> paramTypes = emailType.getParams();
+								for(EmailParamType emailParamType : paramTypes) {
 									tmpSb.append("TYPE=");
 									tmpSb.append(emailParamType.getType());
 									tmpSb.append(";");
@@ -2693,9 +2661,9 @@ public class VCardWriter {
 							case PARAMETER_VALUE_LIST:
 							{
 								tmpSb.append("TYPE=");
-								while(paramTypes.hasNext()) {
-									EmailParameterType teleType = paramTypes.next();
-									tmpSb.append(teleType.getType());
+								List<EmailParamType> paramTypes = emailType.getParams();
+								for(EmailParamType emailParamType : paramTypes) {
+									tmpSb.append(emailParamType.getType());
 									tmpSb.append(",");
 								}
 
@@ -2706,59 +2674,61 @@ public class VCardWriter {
 						tmpSb.deleteCharAt(tmpSb.length()-1);
 					}
 					
-					if(emailFeature.hasExtendedEmailParameterTypes()) {
-						Iterator<XEmailParameterType> xParamTypes = emailFeature.getExtendedEmailParameterTypes();
-						switch(emailFeature.getParameterTypeStyle())
-						{
-							case PARAMETER_LIST:
-							{
-								tmpSb.append(";");
-								
-								while(xParamTypes.hasNext()) {
-									XEmailParameterType xEmailType = xParamTypes.next();
-									tmpSb.append("TYPE=");
-									tmpSb.append(xEmailType.getXtendedTypeName());
-									if(xEmailType.hasXtendedTypeValue()) {
-										tmpSb.append("=");
-										tmpSb.append(xEmailType.getXtendedTypeValue());
-									}
-									
-									tmpSb.append(";");
-								}
-
-								break;
-							}
-
-							case PARAMETER_VALUE_LIST:
-							{
-								if(emailFeature.hasEmailParameterTypes()) {
-									//Continue from the list
-									tmpSb.append(",");
-								}
-								else {
-									//Start a new
-									tmpSb.append(";TYPE=");
-								}
-								
-								while(xParamTypes.hasNext()) {
-									XEmailParameterType xEmailType = xParamTypes.next();
-									tmpSb.append(xEmailType.getXtendedTypeName());
-									if(xEmailType.hasXtendedTypeValue()) {
-										tmpSb.append("=");
-										tmpSb.append(xEmailType.getXtendedTypeValue());
-									}
-									
-									tmpSb.append(",");
-								}
-
-								break;
-							}
-						}
-
-						tmpSb.deleteCharAt(tmpSb.length()-1);
+					if(emailType.hasExtendedParams()) {
+						buildExtendParameters(emailType, tmpSb);
 					}
 					
-					EncodingType encType = emailFeature.getEncodingType();
+//					if(emailType.hasExtendedParams()) {
+//						switch(emailType.getParameterTypeStyle())
+//						{
+//							case PARAMETER_LIST:
+//							{
+//								tmpSb.append(";");
+//								List<ExtendedParamType> xParamTypes = emailType.getExtendedParams();
+//								for(ExtendedParamType xParamType : xParamTypes) {
+//									tmpSb.append("TYPE=");
+//									tmpSb.append(xParamType.getTypeName());
+//									if(xParamType.hasTypeValue()) {
+//										tmpSb.append("=");
+//										tmpSb.append(xParamType.getTypeValue());
+//									}
+//									
+//									tmpSb.append(";");
+//								}
+//
+//								break;
+//							}
+//
+//							case PARAMETER_VALUE_LIST:
+//							{
+//								if(emailType.hasParams()) {
+//									//Continue from the list
+//									tmpSb.append(",");
+//								}
+//								else {
+//									//Start a new
+//									tmpSb.append(";TYPE=");
+//								}
+//								
+//								List<ExtendedParamType> xParamTypes = emailType.getExtendedParams();
+//								for(ExtendedParamType xParamType : xParamTypes) {
+//									tmpSb.append(xParamType.getTypeName());
+//									if(xParamType.hasTypeValue()) {
+//										tmpSb.append("=");
+//										tmpSb.append(xParamType.getTypeValue());
+//									}
+//									
+//									tmpSb.append(",");
+//								}
+//
+//								break;
+//							}
+//						}
+//
+//						tmpSb.deleteCharAt(tmpSb.length()-1);
+//					}
+					
+					EncodingType encType = emailType.getEncodingType();
 					switch(encType)
 					{
 						case BASE64:
@@ -2769,19 +2739,14 @@ public class VCardWriter {
 							tmpSb.append(":");
 							
 							byte[] emailBytes = null;
-							if(emailFeature.hasCharset()) {
-								emailBytes = emailFeature.getEmail().getBytes(emailFeature.getCharset().name());
+							if(emailType.hasCharset()) {
+								emailBytes = emailType.getEmail().getBytes(emailType.getCharset().name());
 							}
 							else {
-								emailBytes = emailFeature.getEmail().getBytes(Charset.defaultCharset());
+								emailBytes = emailType.getEmail().getBytes(Charset.defaultCharset());
 							}
 							
-							if(emailFeature.isSetCompression()) {
-								tmpSb.append(Base64Wrapper.encode(emailBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION));
-							}
-							else {
-								tmpSb.append(Base64Wrapper.encode(emailBytes));
-							}
+							tmpSb.append(Base64Wrapper.encode(emailBytes));
 							
 							break;
 						}
@@ -2794,7 +2759,7 @@ public class VCardWriter {
 						default:
 						{
 							tmpSb.append(":");
-							tmpSb.append(escapeOrEncode(emailFeature.getEmail(), isQuotedPrintable, emailFeature.getCharset()));
+							tmpSb.append(escapeOrEncode(emailType.getEmail(), isQuotedPrintable, emailType.getCharset()));
 							break;
 						}
 					}
@@ -2805,12 +2770,12 @@ public class VCardWriter {
 					sb.append(eol);
 				}
 				else {
-					throw new VCardBuildException("EmailFeature ("+VCardType.EMAIL.getType()+") exists but is empty.");
+					throw new VCardBuildException("EmailType ("+VCardTypeName.EMAIL.getType()+") exists but is empty.");
 				}
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("EmailFeature ("+VCardType.EMAIL.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("EmailType ("+VCardTypeName.EMAIL.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -2819,45 +2784,45 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param noteFeature
+	 * @param noteType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the note feature is null
 	 */
-	private void buildNoteFeature(StringBuilder sb, NoteFeature noteFeature) throws VCardBuildException {
+	private void buildNoteType(StringBuilder sb, NoteType noteType) throws VCardBuildException {
 		try {
-			if(noteFeature != null) {
-				if(noteFeature.hasNote()) {
-					boolean isQuotedPrintable = noteFeature.isQuotedPrintable();
+			if(noteType != null) {
+				if(noteType.hasNote()) {
+					boolean isQuotedPrintable = noteType.isQuotedPrintable();
 					StringBuilder tmpSb = new StringBuilder();
 					
-					if(noteFeature.hasGroup()) {
-						tmpSb.append(noteFeature.getGroup());
+					if(noteType.hasGroup()) {
+						tmpSb.append(noteType.getGroup());
 						tmpSb.append(".");
 					}
 					
-					tmpSb.append(noteFeature.getTypeString());
+					tmpSb.append(noteType.getVCardTypeName().getType());
 					
-					if(noteFeature.hasCharset()) {
+					if(noteType.hasCharset()) {
 						tmpSb.append(";CHARSET=");
-						tmpSb.append(noteFeature.getCharset().name());
+						tmpSb.append(noteType.getCharset().name());
 					}
 					
-					if(noteFeature.hasLanguage()) {
+					if(noteType.hasLanguage()) {
 						tmpSb.append(";LANGUAGE=");
-						tmpSb.append(noteFeature.getLanguage().getLanguageCode());
+						tmpSb.append(noteType.getLanguage().getLanguageCode());
 					}
 					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
 					
-					if(noteFeature.hasExtendedParameters()) {
-						buildExtendParameters(noteFeature, tmpSb);
+					if(noteType.hasExtendedParams()) {
+						buildExtendParameters(noteType, tmpSb);
 					}
 					
 					tmpSb.append(":");
-					tmpSb.append(escapeOrEncode(noteFeature.getNote(), isQuotedPrintable, noteFeature.getCharset()));
+					tmpSb.append(escapeOrEncode(noteType.getNote(), isQuotedPrintable, noteType.getCharset()));
 					
 					String tmpNoteLine = tmpSb.toString();
 					String foldedNoteLine = VCardUtils.foldLine(tmpNoteLine, eol, foldingScheme);
@@ -2865,12 +2830,12 @@ public class VCardWriter {
 					sb.append(eol);
 				}
 				else {
-					throw new VCardBuildException("NoteFeature ("+VCardType.NOTE.getType()+") exists but is empty.");
+					throw new VCardBuildException("NoteType ("+VCardTypeName.NOTE.getType()+") exists but is empty.");
 				}
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("NoteFeature ("+VCardType.NOTE.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("NoteType ("+VCardTypeName.NOTE.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -2879,49 +2844,48 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param nicknameFeature
+	 * @param nicknameType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the nickname feature is null
 	 */
-	private void buildNicknames(StringBuilder sb, NicknameFeature nicknameFeature) throws VCardBuildException {
+	private void buildNicknameType(StringBuilder sb, NicknameType nicknameType) throws VCardBuildException {
 		try {
-			if(nicknameFeature != null) {
-				if(nicknameFeature.hasNicknames()) {
-					boolean isQuotedPrintable = nicknameFeature.isQuotedPrintable();
+			if(nicknameType != null) {
+				if(nicknameType.hasNicknames()) {
+					boolean isQuotedPrintable = nicknameType.isQuotedPrintable();
 					StringBuilder tmpSb = new StringBuilder();
 					
-					if(nicknameFeature.hasGroup()) {
-						tmpSb.append(nicknameFeature.getGroup());
+					if(nicknameType.hasGroup()) {
+						tmpSb.append(nicknameType.getGroup());
 						tmpSb.append(".");
 					}
 					
-					tmpSb.append(nicknameFeature.getTypeString());
+					tmpSb.append(nicknameType.getVCardTypeName().getType());
 					
-					if(nicknameFeature.hasCharset()) {
+					if(nicknameType.hasCharset()) {
 						tmpSb.append(";CHARSET=");
-						tmpSb.append(nicknameFeature.getCharset().name());
+						tmpSb.append(nicknameType.getCharset().name());
 					}
 					
-					if(nicknameFeature.hasLanguage()) {
+					if(nicknameType.hasLanguage()) {
 						tmpSb.append(";LANGUAGE=");
-						tmpSb.append(nicknameFeature.getLanguage().getLanguageCode());
+						tmpSb.append(nicknameType.getLanguage().getLanguageCode());
 					}
 					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
 					
-					if(nicknameFeature.hasExtendedParameters()) {
-						buildExtendParameters(nicknameFeature, tmpSb);
+					if(nicknameType.hasExtendedParams()) {
+						buildExtendParameters(nicknameType, tmpSb);
 					}
 					
 					tmpSb.append(":");
 					
-					Iterator<String> nicknames = nicknameFeature.getNicknames();
-					while(nicknames.hasNext()) {
-						String nickname = nicknames.next();
-						tmpSb.append(escapeOrEncode(nickname, isQuotedPrintable, nicknameFeature.getCharset()));
+					List<String> nicknames = nicknameType.getNicknames();
+					for(String nickname : nicknames) {
+						tmpSb.append(escapeOrEncode(nickname, isQuotedPrintable, nicknameType.getCharset()));
 						tmpSb.append(",");
 					}
 					
@@ -2932,12 +2896,12 @@ public class VCardWriter {
 					sb.append(eol);
 				}
 				else {
-					throw new VCardBuildException("NicknameFeature ("+VCardType.NICKNAME.getType()+") exists but is empty.");
+					throw new VCardBuildException("NicknameType ("+VCardTypeName.NICKNAME.getType()+") exists but is empty.");
 				}
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("NicknameFeature ("+VCardType.NICKNAME.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("NicknameType ("+VCardTypeName.NICKNAME.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -2946,49 +2910,48 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param categoriesFeature
+	 * @param categoriesType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the categories feature is null
 	 */
-	private void buildCategoriesFeature(StringBuilder sb, CategoriesFeature categoriesFeature) throws VCardBuildException {
+	private void buildCategoriesType(StringBuilder sb, CategoriesType categoriesType) throws VCardBuildException {
 		try {
-			if(categoriesFeature != null) {
-				if(categoriesFeature.hasCategories()) {
-					boolean isQuotedPrintable = categoriesFeature.isQuotedPrintable();
+			if(categoriesType != null) {
+				if(categoriesType.hasCategories()) {
+					boolean isQuotedPrintable = categoriesType.isQuotedPrintable();
 					StringBuilder tmpSb = new StringBuilder();
 					
-					if(categoriesFeature.hasGroup()) {
-						tmpSb.append(categoriesFeature.getGroup());
+					if(categoriesType.hasGroup()) {
+						tmpSb.append(categoriesType.getGroup());
 						tmpSb.append(".");
 					}
 					
-					tmpSb.append(categoriesFeature.getTypeString());
+					tmpSb.append(categoriesType.getVCardTypeName().getType());
 					
-					if(categoriesFeature.hasCharset()) {
+					if(categoriesType.hasCharset()) {
 						tmpSb.append(";CHARSET=");
-						tmpSb.append(categoriesFeature.getCharset().name());
+						tmpSb.append(categoriesType.getCharset().name());
 					}
 					
-					if(categoriesFeature.hasLanguage()) {
+					if(categoriesType.hasLanguage()) {
 						tmpSb.append(";LANGUAGE=");
-						tmpSb.append(categoriesFeature.getLanguage().getLanguageCode());
+						tmpSb.append(categoriesType.getLanguage().getLanguageCode());
 					}
 					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
 					
-					if(categoriesFeature.hasExtendedParameters()) {
-						buildExtendParameters(categoriesFeature, tmpSb);
+					if(categoriesType.hasExtendedParams()) {
+						buildExtendParameters(categoriesType, tmpSb);
 					}
 					
 					tmpSb.append(":");
 					
-					Iterator<String> categories = categoriesFeature.getCategories();
-					while(categories.hasNext()) {
-						String category = categories.next();
-						tmpSb.append(escapeOrEncode(category, isQuotedPrintable, categoriesFeature.getCharset()));
+					List<String> categories = categoriesType.getCategories();
+					for(String category : categories) {
+						tmpSb.append(escapeOrEncode(category, isQuotedPrintable, categoriesType.getCharset()));
 						
 						switch(compatMode)
 						{
@@ -3004,6 +2967,7 @@ public class VCardWriter {
 								break;
 							}
 						}
+						
 					}
 					
 					tmpSb.deleteCharAt(tmpSb.length()-1);
@@ -3013,12 +2977,12 @@ public class VCardWriter {
 					sb.append(eol);
 				}
 				else {
-					throw new VCardBuildException("CategoriesFeature ("+VCardType.CATEGORIES.getType()+") exists but is empty.");
+					throw new VCardBuildException("CategoriesType ("+VCardTypeName.CATEGORIES.getType()+") exists but is empty.");
 				}
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("CategoriesFeature ("+VCardType.CATEGORIES.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("CategoriesType ("+VCardTypeName.CATEGORIES.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -3032,40 +2996,40 @@ public class VCardWriter {
 	 * @throws VCardBuildException
 	 * 	Thrown when the categories feature is null
 	 */
-	private void buildClassFeature(StringBuilder sb, ClassFeature classFeature) throws VCardBuildException {
+	private void buildClassType(StringBuilder sb, ClassType classType) throws VCardBuildException {
 		try {
-			if(classFeature != null) {
-				if(classFeature.hasSecurityClass()) {
-					boolean isQuotedPrintable = classFeature.isQuotedPrintable();
+			if(classType != null) {
+				if(classType.hasSecurityClass()) {
+					boolean isQuotedPrintable = classType.isQuotedPrintable();
 					StringBuilder tmpSb = new StringBuilder();
 					
-					if(classFeature.hasGroup()) {
-						tmpSb.append(classFeature.getGroup());
+					if(classType.hasGroup()) {
+						tmpSb.append(classType.getGroup());
 						tmpSb.append(".");
 					}
 					
-					tmpSb.append(classFeature.getTypeString());
+					tmpSb.append(classType.getVCardTypeName().getType());
 					
-					if(classFeature.hasCharset()) {
+					if(classType.hasCharset()) {
 						tmpSb.append(";CHARSET=");
-						tmpSb.append(classFeature.getCharset().name());
+						tmpSb.append(classType.getCharset().name());
 					}
 					
-					if(classFeature.hasLanguage()) {
+					if(classType.hasLanguage()) {
 						tmpSb.append(";LANGUAGE=");
-						tmpSb.append(classFeature.getLanguage().getLanguageCode());
+						tmpSb.append(classType.getLanguage().getLanguageCode());
 					}
 					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
 					
-					if(classFeature.hasExtendedParameters()) {
-						buildExtendParameters(classFeature, tmpSb);
+					if(classType.hasExtendedParams()) {
+						buildExtendParameters(classType, tmpSb);
 					}
 					
 					tmpSb.append(":");
-					tmpSb.append(escapeOrEncode(classFeature.getSecurityClass(), isQuotedPrintable, classFeature.getCharset()));
+					tmpSb.append(escapeOrEncode(classType.getSecurityClass(), isQuotedPrintable, classType.getCharset()));
 					
 					String tmpClassLine = tmpSb.toString();
 					String foldedClassLine = VCardUtils.foldLine(tmpClassLine, eol, foldingScheme);
@@ -3073,12 +3037,12 @@ public class VCardWriter {
 					sb.append(eol);
 				}
 				else {
-					throw new VCardBuildException("ClassFeature ("+VCardType.CLASS.getType()+") exists but is empty.");
+					throw new VCardBuildException("ClassType ("+VCardTypeName.CLASS.getType()+") exists but is empty.");
 				}
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("ClassFeature ("+VCardType.CLASS.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("ClassType ("+VCardTypeName.CLASS.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -3087,45 +3051,45 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param productIdFeature
+	 * @param prodIdType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the product id feature is null
 	 */
-	private void buildProductIdFeature(StringBuilder sb, ProductIdFeature productIdFeature) throws VCardBuildException {
+	private void buildProdIdType(StringBuilder sb, ProdIdType prodIdType) throws VCardBuildException {
 		try {
-			if(productIdFeature != null) {
-				if(productIdFeature.hasProductId()) {
-					boolean isQuotedPrintable = productIdFeature.isQuotedPrintable();
+			if(prodIdType != null) {
+				if(prodIdType.hasProdId()) {
+					boolean isQuotedPrintable = prodIdType.isQuotedPrintable();
 					StringBuilder tmpSb = new StringBuilder();
 					
-					if(productIdFeature.hasGroup()) {
-						tmpSb.append(productIdFeature.getGroup());
+					if(prodIdType.hasGroup()) {
+						tmpSb.append(prodIdType.getGroup());
 						tmpSb.append(".");
 					}
 					
-					tmpSb.append(productIdFeature.getTypeString());
+					tmpSb.append(prodIdType.getVCardTypeName().getType());
 					
-					if(productIdFeature.hasCharset()) {
+					if(prodIdType.hasCharset()) {
 						tmpSb.append(";CHARSET=");
-						tmpSb.append(productIdFeature.getCharset().name());
+						tmpSb.append(prodIdType.getCharset().name());
 					}
 					
-					if(productIdFeature.hasLanguage()) {
+					if(prodIdType.hasLanguage()) {
 						tmpSb.append(";LANGUAGE=");
-						tmpSb.append(productIdFeature.getLanguage().getLanguageCode());
+						tmpSb.append(prodIdType.getLanguage().getLanguageCode());
 					}
 					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
 					
-					if(productIdFeature.hasExtendedParameters()) {
-						buildExtendParameters(productIdFeature, tmpSb);
+					if(prodIdType.hasExtendedParams()) {
+						buildExtendParameters(prodIdType, tmpSb);
 					}
 					
 					tmpSb.append(":");
-					tmpSb.append(escapeOrEncode(productIdFeature.getProductId(), isQuotedPrintable, productIdFeature.getCharset()));
+					tmpSb.append(escapeOrEncode(prodIdType.getProdId(), isQuotedPrintable, prodIdType.getCharset()));
 					
 					String tmpProductIdLine = tmpSb.toString();
 					String foldedProductIdLine = VCardUtils.foldLine(tmpProductIdLine, eol, foldingScheme);
@@ -3133,12 +3097,12 @@ public class VCardWriter {
 					sb.append(eol);
 				}
 				else {
-					throw new VCardBuildException("ProductIdFeature ("+VCardType.PRODID.getType()+") exists but is empty.");
+					throw new VCardBuildException("ProdIdType ("+VCardTypeName.PRODID.getType()+") exists but is empty.");
 				}
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("ProductIdFeature ("+VCardType.PRODID.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("ProdIdType ("+VCardTypeName.PRODID.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -3147,45 +3111,45 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param sortStringFeature
+	 * @param sortStringType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the sort string feature is null
 	 */
-	private void buildSortStringFeature(StringBuilder sb, SortStringFeature sortStringFeature) throws VCardBuildException {
+	private void buildSortStringType(StringBuilder sb, SortStringType sortStringType) throws VCardBuildException {
 		try {
-			if(sortStringFeature != null) {
-				if(sortStringFeature.hasSortString()) {
-					boolean isQuotedPrintable = sortStringFeature.isQuotedPrintable();
+			if(sortStringType != null) {
+				if(sortStringType.hasSortString()) {
+					boolean isQuotedPrintable = sortStringType.isQuotedPrintable();
 					StringBuilder tmpSb = new StringBuilder();
 					
-					if(sortStringFeature.hasGroup()) {
-						tmpSb.append(sortStringFeature.getGroup());
+					if(sortStringType.hasGroup()) {
+						tmpSb.append(sortStringType.getGroup());
 						tmpSb.append(".");
 					}
 					
-					tmpSb.append(sortStringFeature.getTypeString());
+					tmpSb.append(sortStringType.getVCardTypeName().getType());
 					
-					if(sortStringFeature.hasCharset()) {
+					if(sortStringType.hasCharset()) {
 						tmpSb.append(";CHARSET=");
-						tmpSb.append(sortStringFeature.getCharset().name());
+						tmpSb.append(sortStringType.getCharset().name());
 					}
 					
-					if(sortStringFeature.hasLanguage()) {
+					if(sortStringType.hasLanguage()) {
 						tmpSb.append(";LANGUAGE=");
-						tmpSb.append(sortStringFeature.getLanguage().getLanguageCode());
+						tmpSb.append(sortStringType.getLanguage().getLanguageCode());
 					}
 					
 					if(isQuotedPrintable) {
 						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
 					}
 					
-					if(sortStringFeature.hasExtendedParameters()) {
-						buildExtendParameters(sortStringFeature, tmpSb);
+					if(sortStringType.hasExtendedParams()) {
+						buildExtendParameters(sortStringType, tmpSb);
 					}
 					
 					tmpSb.append(":");
-					tmpSb.append(escapeOrEncode(sortStringFeature.getSortString(), isQuotedPrintable, sortStringFeature.getCharset()));
+					tmpSb.append(escapeOrEncode(sortStringType.getSortString(), isQuotedPrintable, sortStringType.getCharset()));
 					
 					String tmpSortStringLine = tmpSb.toString();
 					String foldedSortStringLine = VCardUtils.foldLine(tmpSortStringLine, eol, foldingScheme);
@@ -3193,12 +3157,12 @@ public class VCardWriter {
 					sb.append(eol);
 				}
 				else {
-					throw new VCardBuildException("SortStringFeature ("+VCardType.SORT_STRING.getType()+") exists but is empty.");
+					throw new VCardBuildException("SortStringType ("+VCardTypeName.SORT_STRING.getType()+") exists but is empty.");
 				}
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("SortStringFeature ("+VCardType.SORT_STRING.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("SortStringType ("+VCardTypeName.SORT_STRING.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -3207,32 +3171,32 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param keyFeature
+	 * @param keyType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the key feature is null
 	 */
-	private void buildKeyFeature(StringBuilder sb, KeyFeature keyFeature) throws VCardBuildException {
+	private void buildKeyType(StringBuilder sb, KeyType keyType) throws VCardBuildException {
 		try {
-			if(keyFeature != null) {
-				if(keyFeature.hasKey()) {
+			if(keyType != null) {
+				if(keyType.hasKey()) {
 					StringBuilder tmpSb = new StringBuilder();
 					
-					if(keyFeature.hasGroup()) {
-						tmpSb.append(keyFeature.getGroup());
+					if(keyType.hasGroup()) {
+						tmpSb.append(keyType.getGroup());
 						tmpSb.append(".");
 					}
 					
-					tmpSb.append(keyFeature.getTypeString());
+					tmpSb.append(keyType.getVCardTypeName().getType());
 
-					if(keyFeature.hasCharset()) {
+					if(keyType.hasCharset()) {
 						tmpSb.append(";");
 						tmpSb.append("CHARSET=");
-						tmpSb.append(keyFeature.getCharset().name());
+						tmpSb.append(keyType.getCharset().name());
 					}
 					
 					// determine if the key contains binary data or text data
-					boolean binary = keyFeature.getEncodingType() == EncodingType.BINARY || keyFeature.getEncodingType() == EncodingType.BASE64;
+					boolean binary = keyType.getEncodingType() == EncodingType.BINARY || keyType.getEncodingType() == EncodingType.BASE64;
 
 					// output the ENCODING parameter
 					// only do so if the key contains binary data
@@ -3259,20 +3223,20 @@ public class VCardWriter {
 							case I_PHONE:
 							{
 								tmpSb.append("ENCODING=");
-								tmpSb.append(keyFeature.getEncodingType().getType());
+								tmpSb.append(keyType.getEncodingType().getType());
 								break;
 							}
 						}
 					}
 					
-					if(keyFeature.hasKeyTextType()) {
+					if(keyType.hasKeyTextType()) {
 						tmpSb.append(";");
 						tmpSb.append("TYPE=");
-						tmpSb.append(keyFeature.getKeyTextType().getTypeName());
+						tmpSb.append(keyType.getKeyTextType().getTypeName());
 					}
 					
-					if(keyFeature.hasExtendedParameters()) {
-						buildExtendParameters(keyFeature, tmpSb);
+					if(keyType.hasExtendedParams()) {
+						buildExtendParameters(keyType, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -3285,10 +3249,10 @@ public class VCardWriter {
 						case MS_OUTLOOK:
 						{
 							String b64str = null;
-							byte[] keyBytes = keyFeature.getKey();
+							byte[] keyBytes = keyType.getKey();
 							if(binary) {
 								try {
-									if(keyFeature.isSetCompression()) {
+									if(keyType.isCompressed()) {
 										b64str = Base64Wrapper.encode(keyBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION);
 									}
 									else {
@@ -3307,8 +3271,8 @@ public class VCardWriter {
 							String foldedKeyLine2 = VCardUtils.foldLine(tmpKeyLine, eol, binaryFoldingScheme);
 							
 							foldedKeyLine = VCardUtils.foldLine(b64str, eol, binaryFoldingScheme);
-							sb.append(foldedKeyLine2);					//Type declaration with param types
-							sb.append(eol);								//Distinctive line break
+							sb.append(foldedKeyLine2);			//Type declaration with param types
+							sb.append(eol);					//Distinctive line break
 							sb.append(binaryFoldingScheme.getIndent());	//Indent first line
 							break;
 						}
@@ -3318,10 +3282,10 @@ public class VCardWriter {
 						case RFC2426:
 						case I_PHONE:
 						{
-							byte[] keyBytes = keyFeature.getKey();
+							byte[] keyBytes = keyType.getKey();
 							if(binary) {
 								try {
-									if(keyFeature.isSetCompression()) {
+									if(keyType.isCompressed()) {
 										tmpSb.append(Base64Wrapper.encode(keyBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION));
 									}
 									else {
@@ -3365,12 +3329,12 @@ public class VCardWriter {
 					}
 				}
 				else {
-					throw new VCardBuildException("KeyFeature ("+VCardType.KEY.getType()+") exists but is empty.");
+					throw new VCardBuildException("KeyType ("+VCardTypeName.KEY.getType()+") exists but is empty.");
 				}
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("KeyFeature ("+VCardType.KEY.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("KeyType ("+VCardTypeName.KEY.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -3379,41 +3343,41 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param photoFeature
+	 * @param photoType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the photo feature is null
 	 */
-	private void buildPhotoFeature(StringBuilder sb, PhotoFeature photoFeature) throws VCardBuildException {
+	private void buildPhotoType(StringBuilder sb, PhotoType photoType) throws VCardBuildException {
 		try {
-			if(photoFeature != null) {
-				if(photoFeature.hasPhoto()) {
+			if(photoType != null) {
+				if(photoType.hasPhoto()) {
 					StringBuilder tmpSb = new StringBuilder();
 					
-					if(photoFeature.hasGroup()) {
-						tmpSb.append(photoFeature.getGroup());
+					if(photoType.hasGroup()) {
+						tmpSb.append(photoType.getGroup());
 						tmpSb.append(".");
 					}
 					
-					tmpSb.append(photoFeature.getTypeString());
+					tmpSb.append(photoType.getVCardTypeName().getType());
 					tmpSb.append(";");
 					
 					String foldedPhotoLine = null;
 					
-					if(photoFeature.hasCharset()) {
+					if(photoType.hasCharset()) {
 						tmpSb.append("CHARSET=");
-						tmpSb.append(photoFeature.getCharset().name());
+						tmpSb.append(photoType.getCharset().name());
 						tmpSb.append(";");
 					}
 					
-					if(photoFeature.isURI()) {
+					if(photoType.isURI()) {
 						tmpSb.append("VALUE=URI:");
-						tmpSb.append(photoFeature.getPhotoURI().toString());
+						tmpSb.append(photoType.getPhotoURI().toString());
 						
 						String tmpPhotoLine = tmpSb.toString();
 						foldedPhotoLine = VCardUtils.foldLine(tmpPhotoLine, eol, foldingScheme);
 					}
-					else if(photoFeature.isInline()) {
+					else if(photoType.isBinary()) {
 						switch(compatMode)
 						{
 							case MS_OUTLOOK:
@@ -3435,19 +3399,19 @@ public class VCardWriter {
 							case I_PHONE:
 							{
 								tmpSb.append("ENCODING=");
-								tmpSb.append(photoFeature.getEncodingType().getType());
+								tmpSb.append(photoType.getEncodingType().getType());
 								break;
 							}
 						}
 						
-						if(photoFeature.hasImageMediaType()) {
+						if(photoType.hasImageMediaType()) {
 							tmpSb.append(";");
 							tmpSb.append("TYPE=");
-							tmpSb.append(photoFeature.getImageMediaType().getTypeName());
+							tmpSb.append(photoType.getImageMediaType().getTypeName());
 						}
 						
-						if(photoFeature.hasExtendedParameters()) {
-							buildExtendParameters(photoFeature, tmpSb);
+						if(photoType.hasExtendedParams()) {
+							buildExtendParameters(photoType, tmpSb);
 						}
 						
 						tmpSb.append(":");
@@ -3459,8 +3423,8 @@ public class VCardWriter {
 							{
 								String b64str = null;
 								try {
-									byte[] photoBytes = photoFeature.getPhoto();
-									if(photoFeature.isSetCompression()) {
+									byte[] photoBytes = photoType.getPhoto();
+									if(photoType.isCompressed()) {
 										b64str = Base64Wrapper.encode(photoBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION);
 									}
 									else {
@@ -3487,8 +3451,8 @@ public class VCardWriter {
 							case I_PHONE:
 							{
 								try {
-									byte[] photoBytes = photoFeature.getPhoto();
-									if(photoFeature.isSetCompression()) {
+									byte[] photoBytes = photoType.getPhoto();
+									if(photoType.isCompressed()) {
 										tmpSb.append(Base64Wrapper.encode(photoBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION));
 									}
 									else {
@@ -3506,7 +3470,7 @@ public class VCardWriter {
 						}
 					}
 					else {
-						throw new VCardBuildException("PhotoFeature ("+VCardType.PHOTO.getType()+") is not URI and not Inline, cannot proceed, must be one or the other.");
+						throw new VCardBuildException("PhotoType ("+VCardTypeName.PHOTO.getType()+") is not URI and not Inline, cannot proceed, must be one or the other.");
 					}
 					
 					sb.append(foldedPhotoLine);
@@ -3532,12 +3496,12 @@ public class VCardWriter {
 					}
 				}
 				else {
-					throw new VCardBuildException("PhotoFeature ("+VCardType.PHOTO.getType()+") exists but is empty.");
+					throw new VCardBuildException("PhotoType ("+VCardTypeName.PHOTO.getType()+") exists but is empty.");
 				}
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("PhotoFeature ("+VCardType.PHOTO.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("PhotoType ("+VCardTypeName.PHOTO.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -3546,41 +3510,41 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param logoFeature
+	 * @param logoType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the logo feature is null
 	 */
-	private void buildLogoFeature(StringBuilder sb, LogoFeature logoFeature) throws VCardBuildException {
+	private void buildLogoType(StringBuilder sb, LogoType logoType) throws VCardBuildException {
 		try {
-			if(logoFeature != null) {
-				if(logoFeature.hasLogo()) {
+			if(logoType != null) {
+				if(logoType.hasLogo()) {
 					StringBuilder tmpSb = new StringBuilder();
 					
-					if(logoFeature.hasGroup()) {
-						tmpSb.append(logoFeature.getGroup());
+					if(logoType.hasGroup()) {
+						tmpSb.append(logoType.getGroup());
 						tmpSb.append(".");
 					}
 					
-					tmpSb.append(logoFeature.getTypeString());
+					tmpSb.append(logoType.getVCardTypeName().getType());
 					tmpSb.append(";");
 					
 					String foldedLogoLine = null;
 					
-					if(logoFeature.hasCharset()) {
+					if(logoType.hasCharset()) {
 						tmpSb.append("CHARSET=");
-						tmpSb.append(logoFeature.getCharset().name());
+						tmpSb.append(logoType.getCharset().name());
 						tmpSb.append(";");
 					}
 					
-					if(logoFeature.isURI()) {
+					if(logoType.isURI()) {
 						tmpSb.append("VALUE=URI:");
-						tmpSb.append(logoFeature.getLogoURI().toString());
+						tmpSb.append(logoType.getLogoURI().toString());
 						
 						String tmpLogoLine = tmpSb.toString();
 						foldedLogoLine = VCardUtils.foldLine(tmpLogoLine, eol, foldingScheme);
 					}
-					else if(logoFeature.isInline()) {
+					else if(logoType.isBinary()) {
 						switch(compatMode)
 						{
 							case MS_OUTLOOK:
@@ -3602,19 +3566,19 @@ public class VCardWriter {
 							case I_PHONE:
 							{
 								tmpSb.append("ENCODING=");
-								tmpSb.append(logoFeature.getEncodingType().getType());
+								tmpSb.append(logoType.getEncodingType().getType());
 								break;
 							}
 						}
 						
-						if(logoFeature.hasImageMediaType()) {
+						if(logoType.hasImageMediaType()) {
 							tmpSb.append(";");
 							tmpSb.append("TYPE=");
-							tmpSb.append(logoFeature.getImageMediaType().getTypeName());
+							tmpSb.append(logoType.getImageMediaType().getTypeName());
 						}
 						
-						if(logoFeature.hasExtendedParameters()) {
-							buildExtendParameters(logoFeature, tmpSb);
+						if(logoType.hasExtendedParams()) {
+							buildExtendParameters(logoType, tmpSb);
 						}
 
 						tmpSb.append(":");
@@ -3626,8 +3590,8 @@ public class VCardWriter {
 							{
 								String b64str = null;
 								try {
-									byte[] logoBytes = logoFeature.getLogo();
-									if(logoFeature.isSetCompression()) {
+									byte[] logoBytes = logoType.getLogo();
+									if(logoType.isCompressed()) {
 										b64str = Base64Wrapper.encode(logoBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION);
 									}
 									else {
@@ -3654,8 +3618,8 @@ public class VCardWriter {
 							case I_PHONE:
 							{
 								try {
-									byte[] logoBytes = logoFeature.getLogo();
-									if(logoFeature.isSetCompression()) {
+									byte[] logoBytes = logoType.getLogo();
+									if(logoType.isCompressed()) {
 										tmpSb.append(Base64Wrapper.encode(logoBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION));
 									}
 									else {
@@ -3673,7 +3637,7 @@ public class VCardWriter {
 						}
 					}
 					else {
-						throw new VCardBuildException("LogoFeature ("+VCardType.LOGO.getType()+") is not URI and not Inline, cannot proceed, must be one or the other.");
+						throw new VCardBuildException("LogoType ("+VCardTypeName.LOGO.getType()+") is not URI and not Inline, cannot proceed, must be one or the other.");
 					}
 					
 					sb.append(foldedLogoLine);
@@ -3699,12 +3663,12 @@ public class VCardWriter {
 					}
 				}
 				else {
-					throw new VCardBuildException("LogoFeature ("+VCardType.LOGO.getType()+") exists but is empty.");
+					throw new VCardBuildException("LogoType ("+VCardTypeName.LOGO.getType()+") exists but is empty.");
 				}
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("LogoFeature ("+VCardType.LOGO.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("LogoType ("+VCardTypeName.LOGO.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -3713,41 +3677,41 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param soundFeature
+	 * @param soundType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the sound feature is null
 	 */
-	private void buildSoundFeature(StringBuilder sb, SoundFeature soundFeature) throws VCardBuildException {
+	private void buildSoundType(StringBuilder sb, SoundType soundType) throws VCardBuildException {
 		try {
-			if(soundFeature != null) {
-				if(soundFeature.hasSound()) {
+			if(soundType != null) {
+				if(soundType.hasSound()) {
 					StringBuilder tmpSb = new StringBuilder();
 					
-					if(soundFeature.hasGroup()) {
-						tmpSb.append(soundFeature.getGroup());
+					if(soundType.hasGroup()) {
+						tmpSb.append(soundType.getGroup());
 						tmpSb.append(".");
 					}
 					
-					tmpSb.append(soundFeature.getTypeString());
+					tmpSb.append(soundType.getVCardTypeName().getType());
 					tmpSb.append(";");
 					
 					String foldedSoundLine = null;
 					
-					if(soundFeature.hasCharset()) {
+					if(soundType.hasCharset()) {
 						tmpSb.append("CHARSET=");
-						tmpSb.append(soundFeature.getCharset().name());
+						tmpSb.append(soundType.getCharset().name());
 						tmpSb.append(";");
 					}
 					
-					if(soundFeature.isURI()) {
+					if(soundType.isURI()) {
 						tmpSb.append("VALUE=URI:");
-						tmpSb.append(soundFeature.getSoundURI().getPath());
+						tmpSb.append(soundType.getSoundURI().getPath());
 						
 						String tmpSoundLine = tmpSb.toString();
 						foldedSoundLine = VCardUtils.foldLine(tmpSoundLine, eol, foldingScheme);
 					}
-					else if(soundFeature.isInline()) {
+					else if(soundType.isBinary()) {
 						switch(compatMode)
 						{
 							case MS_OUTLOOK:
@@ -3769,19 +3733,19 @@ public class VCardWriter {
 							case I_PHONE:
 							{
 								tmpSb.append("ENCODING=");
-								tmpSb.append(soundFeature.getEncodingType().getType());
+								tmpSb.append(soundType.getEncodingType().getType());
 								break;
 							}
 						}
 						
-						if(soundFeature.hasAudioMediaType()) {
+						if(soundType.hasAudioMediaType()) {
 							tmpSb.append(";");
 							tmpSb.append("TYPE=");
-							tmpSb.append(soundFeature.getAudioMediaType().getTypeName());
+							tmpSb.append(soundType.getAudioMediaType().getTypeName());
 						}
 						
-						if(soundFeature.hasExtendedParameters()) {
-							buildExtendParameters(soundFeature, tmpSb);
+						if(soundType.hasExtendedParams()) {
+							buildExtendParameters(soundType, tmpSb);
 						}
 						
 						tmpSb.append(":");
@@ -3793,8 +3757,8 @@ public class VCardWriter {
 							{
 								String b64str = null;
 								try {
-									byte[] soundBytes = soundFeature.getSound();
-									if(soundFeature.isSetCompression()) {
+									byte[] soundBytes = soundType.getSound();
+									if(soundType.isCompressed()) {
 										b64str = Base64Wrapper.encode(soundBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION);
 									}
 									else {
@@ -3821,8 +3785,8 @@ public class VCardWriter {
 							case I_PHONE:
 							{
 								try {
-									byte[] soundBytes = soundFeature.getSound();
-									if(soundFeature.isSetCompression()) {
+									byte[] soundBytes = soundType.getSound();
+									if(soundType.isCompressed()) {
 										tmpSb.append(Base64Wrapper.encode(soundBytes, Base64Wrapper.OPTIONS.GZIP_COMPRESSION));
 									}
 									else {
@@ -3840,7 +3804,7 @@ public class VCardWriter {
 						}
 					}
 					else {
-						throw new VCardBuildException("SoundFeature ("+VCardType.SOUND.getType()+") is not URI and not Inline, cannot proceed, must be one or the other.");
+						throw new VCardBuildException("SoundType ("+VCardTypeName.SOUND.getType()+") is not URI and not Inline, cannot proceed, must be one or the other.");
 					}
 
 					sb.append(foldedSoundLine);
@@ -3866,12 +3830,12 @@ public class VCardWriter {
 					}
 				}
 				else {
-					throw new VCardBuildException("SoundFeature ("+VCardType.SOUND.getType()+") exists but is empty.");
+					throw new VCardBuildException("SoundType ("+VCardTypeName.SOUND.getType()+") exists but is empty.");
 				}
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("SoundFeature ("+VCardType.SOUND.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("SoundType ("+VCardTypeName.SOUND.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -3880,40 +3844,40 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param agentFeature
+	 * @param agentType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the agent feature is null
 	 */
-	private void buildAgentFeature(StringBuilder sb, AgentFeature agentFeature) throws VCardBuildException {
+	private void buildAgentType(StringBuilder sb, AgentType agentType) throws VCardBuildException {
 		try {
-			if(agentFeature != null) {
-				if(agentFeature.hasAgent()) {
+			if(agentType != null) {
+				if(agentType.hasAgent()) {
 					StringBuilder tmpSb = new StringBuilder();
 					
-					if(agentFeature.hasGroup()) {
-						tmpSb.append(agentFeature.getGroup());
+					if(agentType.hasGroup()) {
+						tmpSb.append(agentType.getGroup());
 						tmpSb.append(".");
 					}
 					
-					tmpSb.append(agentFeature.getTypeString());
+					tmpSb.append(agentType.getVCardTypeName().getType());
 					
-					if(agentFeature.hasCharset()) {
+					if(agentType.hasCharset()) {
 						tmpSb.append(";CHARSET=");
-						tmpSb.append(agentFeature.getCharset().name());
+						tmpSb.append(agentType.getCharset().name());
 					}
 					
-					if(agentFeature.isURI()) {
+					if(agentType.isURI()) {
 						tmpSb.append(";");
 						tmpSb.append("VALUE=URI:");
-						tmpSb.append(agentFeature.getAgentURI().getPath());
+						tmpSb.append(agentType.getAgentURI().getPath());
 					}
-					else if(agentFeature.isInline()) {
+					else if(EncodingType.BINARY.equals(agentType.getEncodingType())) {
 						tmpSb.append(":");
-						VCard agentVCard = agentFeature.getAgent();
-						if(agentVCard instanceof VCardErrorHandling) {
+						VCard agentVCard = agentType.getAgent();
+						if(agentVCard instanceof VCardErrorHandler) {
 							//Turn on error handling if available
-							((VCardErrorHandling)agentVCard).setThrowExceptions(true);
+							((VCardErrorHandler)agentVCard).setThrowExceptions(true);
 						}
 						
 						try {
@@ -3939,16 +3903,16 @@ public class VCardWriter {
 						sb.append(eol);
 					}
 					else {
-						throw new VCardBuildException("AgentFeature ("+VCardType.AGENT.getType()+") is not URI and not Inline, cannot proceed, must be one or the other.");
+						throw new VCardBuildException("AgentType ("+VCardTypeName.AGENT.getType()+") is not URI and not Inline, cannot proceed, must be one or the other.");
 					}
 				}
 				else {
-					throw new VCardBuildException("AgentFeature ("+VCardType.AGENT.getType()+") exists but is empty.");
+					throw new VCardBuildException("AgentType ("+VCardTypeName.AGENT.getType()+") exists but is empty.");
 				}
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("AgentFeature ("+VCardType.AGENT.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("AgentType ("+VCardTypeName.AGENT.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -3957,36 +3921,35 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param imppFeature
+	 * @param imppType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the IMPP feature is null
 	 */
-	private void buildImppFeature(StringBuilder sb, IMPPFeature imppFeature) throws VCardBuildException {
+	private void buildImppType(StringBuilder sb, ImppType imppType) throws VCardBuildException {
 		try {
-			if(imppFeature != null) {
-				if(imppFeature.hasURI()) {
-					String uri = imppFeature.getURI().toString();
+			if(imppType != null) {
+				if(imppType.hasUri()) {
+					String uri = imppType.getUri().toString();
 					StringBuilder tmpSb = new StringBuilder();
 					
-					if(imppFeature.hasGroup()) {
-						tmpSb.append(imppFeature.getGroup());
+					if(imppType.hasGroup()) {
+						tmpSb.append(imppType.getGroup());
 						tmpSb.append(".");
 					}
 					
-					tmpSb.append(imppFeature.getTypeString());
+					tmpSb.append(imppType.getVCardTypeName().getType());
 					
-					if(imppFeature.hasIMPPParameterTypes()) {
+					if(imppType.hasParams()) {
 						tmpSb.append(";");
-						Iterator<IMPPParameterType> paramTypes = imppFeature.getIMPPParameterTypes();
-						switch(imppFeature.getParameterTypeStyle())
+						switch(imppType.getParameterTypeStyle())
 						{
 							case PARAMETER_LIST:
 							{
-								while(paramTypes.hasNext()) {
-									IMPPParameterType imppType = paramTypes.next();
+								List<ImppParamType> paramTypes = imppType.getParams();
+								for(ImppParamType imppParamType : paramTypes) {
 									tmpSb.append("TYPE=");
-									tmpSb.append(imppType.getType());
+									tmpSb.append(imppParamType.getType());
 									tmpSb.append(";");
 								}
 
@@ -3996,9 +3959,9 @@ public class VCardWriter {
 							case PARAMETER_VALUE_LIST:
 							{
 								tmpSb.append("TYPE=");
-								while(paramTypes.hasNext()) {
-									IMPPParameterType imppType = paramTypes.next();
-									tmpSb.append(imppType.getType());
+								List<ImppParamType> paramTypes = imppType.getParams();
+								for(ImppParamType imppParamType : paramTypes) {
+									tmpSb.append(imppParamType.getType());
 									tmpSb.append(",");
 								}
 
@@ -4009,85 +3972,64 @@ public class VCardWriter {
 						tmpSb.deleteCharAt(tmpSb.length()-1);
 					}
 					
-					if(imppFeature.hasExtendedIMPPParameterTypes()) {
-						Iterator<XIMPPParameterType> xParamTypes = imppFeature.getExtendedIMPPParameterTypes();
-						switch(imppFeature.getParameterTypeStyle())
-						{
-							case PARAMETER_LIST:
-							{
-								tmpSb.append(";");
-								
-								while(xParamTypes.hasNext()) {
-									XIMPPParameterType xImppType = xParamTypes.next();
-									tmpSb.append("TYPE=");
-									tmpSb.append(xImppType.getXtendedTypeName());
-									
-									if(xImppType.hasXtendedTypeValue()) {
-										tmpSb.append("=");
-										tmpSb.append(xImppType.getXtendedTypeValue());
-									}
-									
-									tmpSb.append(";");
-								}
-
-								break;
-							}
-
-							case PARAMETER_VALUE_LIST:
-							{
-								if(imppFeature.hasIMPPParameterTypes()) {
-									//Continue from the list
-									tmpSb.append(",");
-								}
-								else {
-									//Start a new
-									tmpSb.append(";TYPE=");
-								}
-								
-								while(xParamTypes.hasNext()) {
-									XIMPPParameterType xImppType = xParamTypes.next();
-									tmpSb.append(xImppType.getXtendedTypeName());
-									
-									if(xImppType.hasXtendedTypeValue()) {
-										tmpSb.append("=");
-										tmpSb.append(xImppType.getXtendedTypeValue());
-									}
-									
-									tmpSb.append(",");
-								}
-
-								break;
-							}
-						}
-
-						tmpSb.deleteCharAt(tmpSb.length()-1);
-					}
+//					if(imppType.hasExtendedParams()) {
+//						switch(imppType.getParameterTypeStyle())
+//						{
+//							case PARAMETER_LIST:
+//							{
+//								tmpSb.append(";");
+//								List<ExtendedParamType> xParamTypes = imppType.getExtendedParams();
+//								for(ExtendedParamType xParamType : xParamTypes) {
+//									tmpSb.append("TYPE=");
+//									tmpSb.append(xParamType.getTypeName());
+//									
+//									if(xParamType.hasTypeValue()) {
+//										tmpSb.append("=");
+//										tmpSb.append(xParamType.getTypeValue());
+//									}
+//									
+//									tmpSb.append(";");
+//								}
+//
+//								break;
+//							}
+//
+//							case PARAMETER_VALUE_LIST:
+//							{
+//								if(imppType.hasParams()) {
+//									//Continue from the list
+//									tmpSb.append(",");
+//								}
+//								else {
+//									//Start a new
+//									tmpSb.append(";TYPE=");
+//								}
+//								
+//								List<ExtendedParamType> xParamTypes = imppType.getExtendedParams();
+//								for(ExtendedParamType xParamType : xParamTypes) {
+//									tmpSb.append(xParamType.getTypeName());
+//									
+//									if(xParamType.hasTypeValue()) {
+//										tmpSb.append("=");
+//										tmpSb.append(xParamType.getTypeValue());
+//									}
+//									
+//									tmpSb.append(",");
+//								}
+//
+//								break;
+//							}
+//						}
+//
+//						tmpSb.deleteCharAt(tmpSb.length()-1);
+//					}
 					
-					if(imppFeature.hasExtendedParameters()) {
-						buildExtendParameters(imppFeature, tmpSb);
+					if(imppType.hasExtendedParams()) {
+						buildExtendParameters(imppType, tmpSb);
 					}
 					
 					tmpSb.append(":");
 					tmpSb.append(uri);
-					
-					//Gmail, iPhone and iOS Exporter expect an escaped URL,
-					//so maybe they might expect the URI to be escaped too ?
-//					switch(compatMode)
-//					{
-//						case GMAIL:
-//						case I_PHONE:
-//						case IOS_EXPORTER:
-//						{
-//							tmpSb.append(VCardUtils.escapeString(uri));
-//							break;
-//						}
-//						
-//						default:
-//						{
-//							tmpSb.append(uri);
-//							break;
-//						}
-//					}
 					
 					String tmpUrlLine = tmpSb.toString();
 					String foldedUrlLine = VCardUtils.foldLine(tmpUrlLine, eol, foldingScheme);
@@ -4095,12 +4037,12 @@ public class VCardWriter {
 					sb.append(eol);
 				}
 				else {
-					throw new VCardBuildException("IMPPFeature ("+VCardType.IMPP.getType()+") exists but is empty.");
+					throw new VCardBuildException("ImppType ("+VCardTypeName.IMPP.getType()+") exists but is empty.");
 				}
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("IMPPFeature ("+VCardType.IMPP.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("ImppType ("+VCardTypeName.IMPP.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -4109,58 +4051,56 @@ public class VCardWriter {
 	 *
 	 * @param sb
 	 * 	- The StringBuilder to append to
-	 * @param extendedFeature
+	 * @param extendedType
 	 * 	- The feature to output as a String
 	 * @throws VCardBuildException
 	 * 	Thrown when the extended feature is null
 	 */
-	private void buildExtendedFeature(StringBuilder sb, ExtendedFeature extendedFeature) throws VCardBuildException {
+	private void buildExtendedType(StringBuilder sb, ExtendedType extendedType) throws VCardBuildException {
 		try {
-			if(extendedFeature != null) {
-				if(extendedFeature.hasExtension()) {
-					boolean isQuotedPrintable = extendedFeature.isQuotedPrintable();
-					StringBuilder tmpSb = new StringBuilder();
-					
-					if(extendedFeature.hasGroup()) {
-						tmpSb.append(extendedFeature.getGroup());
-						tmpSb.append(".");
-					}
-					
-					tmpSb.append(extendedFeature.getExtensionName());
-					
-					if(extendedFeature.hasCharset()) {
-						tmpSb.append(";CHARSET=");
-						tmpSb.append(extendedFeature.getCharset().name());
-					}
-					
-					if(extendedFeature.hasLanguage()) {
-						tmpSb.append(";LANGUAGE=");
-						tmpSb.append(extendedFeature.getLanguage().getLanguageCode());
-					}
-					
-					if(isQuotedPrintable) {
-						tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
-					}
-					
-					if(extendedFeature.hasExtendedParameters()) {
-						buildExtendParameters(extendedFeature, tmpSb);
-					}
-					
-					tmpSb.append(":");
-					tmpSb.append(escapeOrEncode(extendedFeature.getExtensionData(), isQuotedPrintable, extendedFeature.getCharset()));
-					
-					String tmpExtendedLine = tmpSb.toString();
-					String foldedExtendedLine = VCardUtils.foldLine(tmpExtendedLine, eol, foldingScheme);
-					sb.append(foldedExtendedLine);
-					sb.append(eol);
+			if(extendedType != null) {
+				boolean isQuotedPrintable = extendedType.isQuotedPrintable();
+				StringBuilder tmpSb = new StringBuilder();
+
+				if(extendedType.hasGroup()) {
+					tmpSb.append(extendedType.getGroup());
+					tmpSb.append(".");
 				}
-				else {
-					throw new VCardBuildException("ExtendedFeature ("+extendedFeature.getExtensionName()+") exists but is empty.");
+
+				tmpSb.append(extendedType.getExtendedName());
+
+				if(extendedType.hasCharset()) {
+					tmpSb.append(";CHARSET=");
+					tmpSb.append(extendedType.getCharset().name());
 				}
+
+				if(extendedType.hasLanguage()) {
+					tmpSb.append(";LANGUAGE=");
+					tmpSb.append(extendedType.getLanguage().getLanguageCode());
+				}
+
+				if(isQuotedPrintable) {
+					tmpSb.append(";ENCODING=QUOTED-PRINTABLE");
+				}
+
+				if(extendedType.hasExtendedParams()) {
+					buildExtendParameters(extendedType, tmpSb);
+				}
+
+				tmpSb.append(":");
+				tmpSb.append(escapeOrEncode(extendedType.getExtendedValue(), isQuotedPrintable, extendedType.getCharset()));
+
+				String tmpExtendedLine = tmpSb.toString();
+				String foldedExtendedLine = VCardUtils.foldLine(tmpExtendedLine, eol, foldingScheme);
+				sb.append(foldedExtendedLine);
+				sb.append(eol);
+			}
+			else {
+				throw new VCardBuildException("ExtendedType is null.");
 			}
 		}
 		catch(Exception ex) {
-			throw new VCardBuildException("ExtendedFeature ("+VCardType.XTENDED.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
+			throw new VCardBuildException("ExtendedType ("+VCardTypeName.XTENDED.getType()+") ["+ex.getClass().getName()+"] "+ex.getMessage(), ex);
 		}
 	}
 	
@@ -4168,25 +4108,22 @@ public class VCardWriter {
 	 * <p>Builds the extended parameter types given a string builder and the
 	 * specified feature that is guaranteed to have extended parameters.</p>
 	 *
-	 * @param feature
+	 * @param vcardType
 	 * @param sb
 	 */
-	private void buildExtendParameters(TypeTools feature, StringBuilder sb)
+	private void buildExtendParameters(AbstractVCardType vcardType, StringBuilder sb)
 	{
-		Iterator<ExtendedParameterType> xParamTypes = feature.getExtendedParameters();
-		
-		switch(feature.getParameterTypeStyle())
+		switch(vcardType.getParameterTypeStyle())
 		{
 			case PARAMETER_LIST:
 			{
 				sb.append(";");
-	
-				while(xParamTypes.hasNext()) {
-					ExtendedParameterType xParam = xParamTypes.next();
-					sb.append(xParam.getXtendedTypeName());
-					if(xParam.hasXtendedTypeValue()) {
+				List<ExtendedParamType> xParamTypes = vcardType.getExtendedParams();
+				for(ExtendedParamType xParam : xParamTypes) {
+					sb.append(xParam.getTypeName());
+					if(xParam.hasTypeValue()) {
 						sb.append("=");
-						sb.append(xParam.getXtendedTypeValue());
+						sb.append(xParam.getTypeValue());
 					}
 	
 					sb.append(";");
@@ -4197,7 +4134,7 @@ public class VCardWriter {
 
 			case PARAMETER_VALUE_LIST:
 			{
-				if(feature.hasExtendedParameters()) {
+				if(vcardType.hasParams()) {
 					//Continue from the list
 					sb.append(",");
 				}
@@ -4205,13 +4142,13 @@ public class VCardWriter {
 					//Start a new
 					sb.append(";");
 				}
-	
-				while(xParamTypes.hasNext()) {
-					ExtendedParameterType xParam = xParamTypes.next();
-					sb.append(xParam.getXtendedTypeName());
-					if(xParam.hasXtendedTypeValue()) {
+				
+				List<ExtendedParamType> xParamTypes = vcardType.getExtendedParams();
+				for(ExtendedParamType xParam : xParamTypes) {
+					sb.append(xParam.getTypeName());
+					if(xParam.hasTypeValue()) {
 						sb.append("=");
-						sb.append(xParam.getXtendedTypeValue());
+						sb.append(xParam.getTypeValue());
 					}
 	
 					sb.append(",");
@@ -4264,8 +4201,8 @@ public class VCardWriter {
 	 */
 	public boolean hasErrors()
 	{
-		if(vcard instanceof VCardErrorHandling) {
-			return ((VCardErrorHandling)vcard).hasErrors();
+		if(vcard instanceof VCardErrorHandler) {
+			return ((VCardErrorHandler)vcard).hasErrors();
 		}
 		else {
 			return false;
@@ -4306,7 +4243,7 @@ public class VCardWriter {
 			vError.setError(exception);
 		}
 		
-		((VCardErrorHandling)vcard).addError(vError);
+		((VCardErrorHandler)vcard).addError(vError);
 	}
 	
 	/**

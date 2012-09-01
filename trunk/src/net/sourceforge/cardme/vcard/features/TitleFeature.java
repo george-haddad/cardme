@@ -1,7 +1,7 @@
 package net.sourceforge.cardme.vcard.features;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -32,7 +32,7 @@ package net.sourceforge.cardme.vcard.features;
  * 
  * @author George El-Haddad
  * <br/>
- * Feb 4, 2010
+ * Aug 8, 2012
  * 
  * <p><b>RFC 2426</b><br/>
  * <b>3.5.1 TITLE Type Definition</b>
@@ -45,38 +45,13 @@ package net.sourceforge.cardme.vcard.features;
  * </ul>
  * </p>
  */
-public interface TitleFeature extends TypeTools {
+public interface TitleFeature {
 	
-	/**
-	 * <p>Returns the title.</p>
-	 *
-	 * @return {@link String}
-	 */
 	public String getTitle();
 	
-	/**
-	 * <p>Sets the title.</p>
-	 *
-	 * @param title
-	 */
 	public void setTitle(String title);
 	
-	/**
-	 * <p>Clears the title.</p>
-	 */
 	public void clearTitle();
 	
-	/**
-	 * <p>Returns true if the title exists.</p>
-	 *
-	 * @return boolean
-	 */
 	public boolean hasTitle();
-	
-	/**
-	 * <p>Returns a full copy of this object.</p>
-	 *
-	 * @return {@link TitleFeature}
-	 */
-	public TitleFeature clone();
 }

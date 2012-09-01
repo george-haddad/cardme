@@ -3,19 +3,18 @@ package net.sourceforge.cardme.vcard.types;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.EncodingType;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.PhotoFeature;
-import net.sourceforge.cardme.vcard.types.media.ImageMediaType;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import net.sourceforge.cardme.vcard.arch.EncodingType;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
+import net.sourceforge.cardme.vcard.types.media.ImageMediaType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -46,7 +45,7 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 3, 2011
+ * Aug 27, 2012
  *
  */
 public class PhotoTypeTest {
@@ -83,9 +82,9 @@ public class PhotoTypeTest {
 	}
 	
 	@Test
-	public void testIsCompression() {
-		assertFalse(photoTypeBin.isSetCompression());
-		assertFalse(photoTypeUri.isSetCompression());
+	public void testIsCompressed() {
+		assertFalse(photoTypeBin.isCompressed());
+		assertFalse(photoTypeUri.isCompressed());
 	}
 	
 	@Test
@@ -95,14 +94,14 @@ public class PhotoTypeTest {
 	}
 	
 	@Test
-	public void testIsInline() {
-		assertTrue(photoTypeBin.isInline());
-		assertFalse(photoTypeUri.isInline());
+	public void testIsBinary() {
+		assertTrue(photoTypeBin.isBinary());
+		assertFalse(photoTypeUri.isBinary());
 	}
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(photoTypeBin.getTypeString(), VCardType.PHOTO.getType());
+		assertEquals(VCardTypeName.PHOTO.getType(), photoTypeBin.getVCardTypeName().getType());
 	}
 	
 	@Test
@@ -143,14 +142,33 @@ public class PhotoTypeTest {
 	}
 	
 	@Test
-	public void testClone() {
-		PhotoFeature cloned1 = photoTypeBin.clone(); 
-		PhotoFeature cloned2 = photoTypeUri.clone(); 
+	public void testCompareTo() throws URISyntaxException {
+		PhotoType PhotoTypeBin2 = new PhotoType();
+		PhotoTypeBin2.setPhoto(new byte[] {0x01, 0x02, 0x03, 0x04, 0x05});
+		PhotoTypeBin2.setEncodingType(EncodingType.BINARY);
+		PhotoTypeBin2.setCompression(false);
+		PhotoTypeBin2.setImageMediaType(ImageMediaType.JPEG);
 		
-		assertEquals(cloned1, photoTypeBin);
+		PhotoType PhotoTypeUri2 = new PhotoType();
+		PhotoTypeUri2.setPhotoURI(new URI("file://C:/my_photos/john.jpg"));
+		PhotoTypeUri2.setEncodingType(EncodingType.EIGHT_BIT);
+		
+		assertTrue(photoTypeBin.compareTo(PhotoTypeBin2) == 0);
+		assertTrue(photoTypeUri.compareTo(PhotoTypeUri2) == 0);
+	}
+	
+	@Test
+	public void testClone() {
+		PhotoType cloned1 = photoTypeBin.clone(); 
+		PhotoType cloned2 = photoTypeUri.clone(); 
+		
+		assertEquals(photoTypeBin, cloned1);
 		assertTrue(photoTypeBin.equals(cloned1));
 		
-		assertEquals(cloned2, photoTypeUri);
+		assertEquals(photoTypeUri, cloned2);
 		assertTrue(photoTypeUri.equals(cloned2));
+		
+		assertTrue(photoTypeBin.compareTo(cloned1) == 0);
+		assertTrue(photoTypeUri.compareTo(cloned2) == 0);
 	}
 }

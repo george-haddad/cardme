@@ -1,15 +1,15 @@
 package net.sourceforge.cardme.vcard.types;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.FormattedNameFeature;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -40,53 +40,90 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 1, 2011
+ * Aug 24, 2012
  *
  */
 public class FormattedNameTypeTest {
 
-	private FormattedNameType formattedNameType = null;
+	private FNType fnType = null;
 	
 	@Before
 	public void setUp() throws Exception {
-		formattedNameType = new FormattedNameType();
-		formattedNameType.setFormattedName("John Doe");
+		fnType = new FNType();
+		fnType.setFormattedName("John Doe");
 	}
 	
 	@After
 	public void tearDown() throws Exception {
-		formattedNameType = null;
+		fnType = null;
 	}
 	
 	@Test
 	public void testGetFormattedName() {
-		assertEquals("John Doe", formattedNameType.getFormattedName());
+		assertEquals("John Doe", fnType.getFormattedName());
+	}
+	
+	@Test
+	public void testSetFormattedName() {
+		fnType.setFormattedName("Test");
+		assertEquals("Test", fnType.getFormattedName());
+	}
+	
+	@Test
+	public void testSetFormattedNameNull() {
+		fnType.setFormattedName(null);
+		assertEquals(null, fnType.getFormattedName());
+	}
+	
+	@Test
+	public void testSetFormattedNameSecure() {
+		/*
+		 * this test makes sure that when we set a value
+		 * and retrieve it, it is not the same object and
+		 * that we are getting a copy of it.
+		 */
+		
+		String john = "John";
+		fnType.setFormattedName(john);
+		
+		String johnCopy = fnType.getFormattedName();
+		
+		assertFalse(john == johnCopy);
+		assertTrue(john.compareTo(johnCopy) == 0);
+		assertTrue(john.equals(johnCopy));
 	}
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(formattedNameType.getTypeString(), VCardType.FN.getType());
+		assertEquals(VCardTypeName.FN.getType(), fnType.getVCardTypeName().getType());
 	}
 	
 	@Test
 	public void testEquals() {
-		FormattedNameType formattedNameType2 = new FormattedNameType("John Doe");
-		assertTrue(formattedNameType.equals(formattedNameType2));
+		FNType fnType2 = new FNType("John Doe");
+		assertTrue(fnType.equals(fnType2));
+	}
+	
+	@Test
+	public void testCompareTo() {
+		FNType fnType2 = new FNType("John Doe");
+		assertTrue(fnType.compareTo(fnType2) == 0);
 	}
 	
 	@Test
 	public void testHashcode() {
-		FormattedNameType formattedNameType2 = new FormattedNameType("John Doe");
+		FNType fnType2 = new FNType("John Doe");
 		
-		int hcode1 = formattedNameType.hashCode();
-		int hcode2 = formattedNameType2.hashCode();
+		int hcode1 = fnType.hashCode();
+		int hcode2 = fnType2.hashCode();
 		assertEquals(hcode1, hcode2);
 	}
 	
 	@Test
 	public void testClone() {
-		FormattedNameFeature cloned = formattedNameType.clone();
-		assertEquals(cloned, formattedNameType);
-		assertTrue(formattedNameType.equals(cloned));
+		FNType cloned = fnType.clone();
+		assertEquals(cloned, fnType);
+		assertTrue(fnType.equals(cloned));
+		assertTrue(fnType.compareTo(cloned) == 0);
 	}
 }

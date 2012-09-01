@@ -1,15 +1,16 @@
 package net.sourceforge.cardme.vcard.types;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.VCardType;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import net.sourceforge.cardme.vcard.features.NoteFeature;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -40,7 +41,7 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 3, 2011
+ * Aug 27, 2012
  *
  */
 public class NoteTypeTest {
@@ -64,13 +65,25 @@ public class NoteTypeTest {
 	}
 	
 	@Test
+	public void testSetNoteSecure() {
+		String note = "Test";
+		noteType.setNote(note);
+		
+		String noteCopy = noteType.getNote();
+		
+		assertFalse(note == noteCopy);
+		assertTrue(note.compareTo(noteCopy) == 0);
+		assertTrue(note.equals(noteCopy));
+	}
+	
+	@Test
 	public void testHasNote() {
 		assertTrue(noteType.hasNote());
 	}
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(noteType.getTypeString(), VCardType.NOTE.getType());
+		assertEquals(VCardTypeName.NOTE.getType(), noteType.getVCardTypeName().getType());
 	}
 	
 	@Test
@@ -86,6 +99,12 @@ public class NoteTypeTest {
 		int hcode1 = noteType.hashCode();
 		int hcode2 = noteType2.hashCode();
 		assertEquals(hcode1, hcode2);
+	}
+	
+	@Test
+	public void testCompareTo() {
+		NoteType noteType2 = new NoteType("Redistribution and use in source and binary forms, with or without modification, are");
+		assertTrue(noteType.compareTo(noteType2) == 0);
 	}
 	
 	@Test

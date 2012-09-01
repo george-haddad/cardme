@@ -1,7 +1,7 @@
 package net.sourceforge.cardme.vcard.features;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -32,7 +32,7 @@ package net.sourceforge.cardme.vcard.features;
  * 
  * @author George El-Haddad
  * <br/>
- * Feb 4, 2010
+ * Aug 11, 2012
  * 
  * <p><b>RFC 2426</b><br/>
  * <b>3.8 Extended Types</b>
@@ -45,52 +45,17 @@ package net.sourceforge.cardme.vcard.features;
  * </ul>
  * </p>
  */
-public interface ExtendedFeature extends TypeTools {
+public interface ExtendedFeature {
+
+	public String getExtendedName();
 	
-	/**
-	 * <p>Sets an extension name.</p>
-	 *
-	 * @param extension
-	 */
-	public void setExtensionName(String extension);
+	public void setExtendedName(String name) throws IllegalArgumentException;
 	
-	/**
-	 * <p>Returns the extension name.</p>
-	 *
-	 * @return {@link String}
-	 */
-	public String getExtensionName();
+	public String getExtendedValue();
 	
-	/**
-	 * <p>Sets the extension data.</p>
-	 *
-	 * @param extensionData
-	 */
-	public void setExtensionData(String extensionData);
+	public void setExtendedValue(String value);
 	
-	/**
-	 * <p>Returns the extension data.</p>
-	 *
-	 * @return {@link String}
-	 */
-	public String getExtensionData();
+	public boolean hasExtendedValue();
 	
-	/**
-	 * <p>Clears the extension.</p>
-	 */
 	public void clearExtension();
-	
-	/**
-	 * <p>Returns true if the extension exists.</p>
-	 *
-	 * @return boolean
-	 */
-	public boolean hasExtension();
-	
-	/**
-	 * <p>Returns a full copy of this object.</p>
-	 *
-	 * @return {@link ExtendedFeature}
-	 */
-	public ExtendedFeature clone();
 }

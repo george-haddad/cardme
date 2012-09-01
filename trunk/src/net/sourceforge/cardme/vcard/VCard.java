@@ -1,45 +1,43 @@
 package net.sourceforge.cardme.vcard;
 
-import net.sourceforge.cardme.db.Persistable;
-import net.sourceforge.cardme.util.Util;
-import net.sourceforge.cardme.vcard.errors.VCardException;
-import net.sourceforge.cardme.vcard.features.AddressFeature;
-import net.sourceforge.cardme.vcard.features.AgentFeature;
-import net.sourceforge.cardme.vcard.features.BeginFeature;
-import net.sourceforge.cardme.vcard.features.BirthdayFeature;
-import net.sourceforge.cardme.vcard.features.CategoriesFeature;
-import net.sourceforge.cardme.vcard.features.ClassFeature;
-import net.sourceforge.cardme.vcard.features.DisplayableNameFeature;
-import net.sourceforge.cardme.vcard.features.EmailFeature;
-import net.sourceforge.cardme.vcard.features.EndFeature;
-import net.sourceforge.cardme.vcard.features.ExtendedFeature;
-import net.sourceforge.cardme.vcard.features.FormattedNameFeature;
-import net.sourceforge.cardme.vcard.features.GeographicPositionFeature;
-import net.sourceforge.cardme.vcard.features.IMPPFeature;
-import net.sourceforge.cardme.vcard.features.KeyFeature;
-import net.sourceforge.cardme.vcard.features.LabelFeature;
-import net.sourceforge.cardme.vcard.features.LogoFeature;
-import net.sourceforge.cardme.vcard.features.MailerFeature;
-import net.sourceforge.cardme.vcard.features.NameFeature;
-import net.sourceforge.cardme.vcard.features.NicknameFeature;
-import net.sourceforge.cardme.vcard.features.NoteFeature;
-import net.sourceforge.cardme.vcard.features.OrganizationFeature;
-import net.sourceforge.cardme.vcard.features.PhotoFeature;
-import net.sourceforge.cardme.vcard.features.ProductIdFeature;
-import net.sourceforge.cardme.vcard.features.ProfileFeature;
-import net.sourceforge.cardme.vcard.features.RevisionFeature;
-import net.sourceforge.cardme.vcard.features.RoleFeature;
-import net.sourceforge.cardme.vcard.features.SortStringFeature;
-import net.sourceforge.cardme.vcard.features.SoundFeature;
-import net.sourceforge.cardme.vcard.features.SourceFeature;
-import net.sourceforge.cardme.vcard.features.TelephoneFeature;
-import net.sourceforge.cardme.vcard.features.TimeZoneFeature;
-import net.sourceforge.cardme.vcard.features.TitleFeature;
-import net.sourceforge.cardme.vcard.features.UIDFeature;
-import net.sourceforge.cardme.vcard.features.URLFeature;
-import net.sourceforge.cardme.vcard.features.VersionFeature;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.List;
+import net.sourceforge.cardme.vcard.types.AdrType;
+import net.sourceforge.cardme.vcard.types.AgentType;
+import net.sourceforge.cardme.vcard.types.BDayType;
+import net.sourceforge.cardme.vcard.types.BeginType;
+import net.sourceforge.cardme.vcard.types.CategoriesType;
+import net.sourceforge.cardme.vcard.types.ClassType;
+import net.sourceforge.cardme.vcard.types.EmailType;
+import net.sourceforge.cardme.vcard.types.EndType;
+import net.sourceforge.cardme.vcard.types.ExtendedType;
+import net.sourceforge.cardme.vcard.types.FNType;
+import net.sourceforge.cardme.vcard.types.GeoType;
+import net.sourceforge.cardme.vcard.types.ImppType;
+import net.sourceforge.cardme.vcard.types.KeyType;
+import net.sourceforge.cardme.vcard.types.LabelType;
+import net.sourceforge.cardme.vcard.types.LogoType;
+import net.sourceforge.cardme.vcard.types.MailerType;
+import net.sourceforge.cardme.vcard.types.NType;
+import net.sourceforge.cardme.vcard.types.NameType;
+import net.sourceforge.cardme.vcard.types.NicknameType;
+import net.sourceforge.cardme.vcard.types.NoteType;
+import net.sourceforge.cardme.vcard.types.OrgType;
+import net.sourceforge.cardme.vcard.types.PhotoType;
+import net.sourceforge.cardme.vcard.types.ProdIdType;
+import net.sourceforge.cardme.vcard.types.ProfileType;
+import net.sourceforge.cardme.vcard.types.RevType;
+import net.sourceforge.cardme.vcard.types.RoleType;
+import net.sourceforge.cardme.vcard.types.SortStringType;
+import net.sourceforge.cardme.vcard.types.SoundType;
+import net.sourceforge.cardme.vcard.types.SourceType;
+import net.sourceforge.cardme.vcard.types.TelType;
+import net.sourceforge.cardme.vcard.types.TitleType;
+import net.sourceforge.cardme.vcard.types.TzType;
+import net.sourceforge.cardme.vcard.types.UidType;
+import net.sourceforge.cardme.vcard.types.UrlType;
+import net.sourceforge.cardme.vcard.types.VersionType;
+
 
 /*
  * Copyright 2011 George El-Haddad. All rights reserved.
@@ -77,8 +75,8 @@ import java.util.Iterator;
  * Feb 4, 2010
  * 
  * <p>
- * This is a VCard interface compliant with RFC-2426 and implements the following
- * sections and sub-sections of the RFC:
+ * This is a VCard interface compliant with RFC-2426 and RFC-4770 and
+ * implements the following sections and sub-sections of the RFC:
  * <pre>
  *    2.1 PREDEFINED TYPE USAGE ......................................5
  *     2.1.1 BEGIN and END Type ......................................5
@@ -123,1133 +121,211 @@ import java.util.Iterator;
  *    3.8 EXTENDED TYPES ............................................27
  * </pre>
  * </p>
+ * 
  */
-public interface VCard extends Cloneable, Persistable {
+public interface VCard {
 
-	/**
-	 * <p>Returns the beginning type declaration of the VCard.</p>
-	 *
-	 * @return {@link BeginFeature}
-	 */
-	public BeginFeature getBegin();
+	public BeginType getBegin();
+	public void setBegin(BeginType begin) throws NullPointerException;
 	
-	/**
-	 * <p>Sets the beginning type declaration of the VCard.</p>
-	 *
-	 * @param begin
-	 */
-	public void setBegin(BeginFeature begin);
+	public EndType getEnd();
+	public void setEnd(EndType end) throws NullPointerException;
 	
-	/**
-	 * <p>Returns true if this VCard has a beginning type declaration.</p>
-	 *
-	 * @return boolean
-	 */
-	public boolean hasBegin();
+	public NameType getName();
+	public void setName(NameType name);
+	public boolean hasName();
+	public void clearName();
 	
-	/**
-	 * <p>Returns the end type declaration of the VCard.</p>
-	 *
-	 * @return {@link EndFeature}
-	 */
-	public EndFeature getEnd();
-	
-	/**
-	 * <p>Sets the end type declaration of the VCard.</p>
-	 *
-	 * @param end
-	 */
-	public void setEnd(EndFeature end);
-	
-	/**
-	 * <p>Returns true if this VCard has an end type declaration.</p>
-	 *
-	 * @return boolean
-	 */
-	public boolean hasEnd();
-	
-	/**
-	 * <p>Returns the displayable name of this vcard.</p>
-	 *
-	 * @return {@link DisplayableNameFeature}
-	 */
-	public DisplayableNameFeature getDisplayableNameFeature();
-	
-	/**
-	 * <p>Sets the displayable name of this vcard.</p>
-	 *
-	 * @param name
-	 */
-	public void setDisplayableNameFeature(DisplayableNameFeature name);
-	
-	/**
-	 * <p>Returns true if this vcard has a displayable name.</p>
-	 *
-	 * @return boolean
-	 */
-	public boolean hasDisplayableNameFeature();
-	
-	/**
-	 * <p>Returns the profile of this vcard.</p>
-	 *
-	 * @return {@link ProfileFeature}
-	 */
-	public ProfileFeature getProfile();
-	
-	/**
-	 * <p>Sets the profile of this vcard.</p>
-	 *
-	 * @param profile
-	 */
-	public void setProfile(ProfileFeature profile);
-	
-	/**
-	 * <p>Returns true if this vcard has a profile.</p>
-	 *
-	 * @return boolean
-	 */
+	public ProfileType getProfile();
+	public void setProfile(ProfileType profile);
 	public boolean hasProfile();
+	public void clearProfile();
 	
-	/**
-	 * <p>Returns the source of this vcard.</p>
-	 *
-	 * @return {@link SourceFeature}
-	 */
-	public SourceFeature getSource();
-	
-	/**
-	 * <p>Sets the source for this vcard.</p>
-	 *
-	 * @param source
-	 */
-	public void setSource(SourceFeature source);
-	
-	/**
-	 * <p>Returns true if this vcard has a source./p>
-	 *
-	 * @return boolean
-	 */
+	public SourceType getSource();
+	public void setSource(SourceType source);
 	public boolean hasSource();
+	public void clearSource();
 	
-	/**
-	 * <p>Returns the formatted name of this vcard.</p>
-	 * 
-	 * @return {@link FormattedNameFeature}
-	 */
-	public FormattedNameFeature getFormattedName();
+	public FNType getFN();
+	public void setFN(FNType formattedName) throws NullPointerException;
+	public boolean hasFN();
 	
-	/**
-	 * <p>Sets the formatted name for this vcard. This feature cannot be left
-	 * null. If not set then it will use the full name from the name feature
-	 * as the formatted name.</p>
-	 *
-	 * @param formattedName
-	 * @throws NullPointerException
-	 */
-	public void setFormattedName(FormattedNameFeature formattedName) throws NullPointerException;
+	public NType getN();
+	public void setN(NType name) throws NullPointerException;
+	public boolean hasN();
 	
-	/**
-	 * <p>Returns the name.</p>
-	 *
-	 * @return {@link NameFeature}
-	 */
-	public NameFeature getName();
-	
-	/**
-	 * <p>Sets the name for this vcard. This feature cannot be null as all
-	 * vcards must have at least a name.</p>
-	 *
-	 * @param name
-	 * @throws NullPointerException
-	 */
-	public void setName(NameFeature name) throws NullPointerException;
-	
-	/**
-	 * <p>Sets a list of nicknames for this vcard.</p>
-	 *
-	 * @param nicknames
-	 */
-	public void setNicknames(NicknameFeature nicknames);
-	
-	/**
-	 * <p>Returns a list of nicknames that this vcard holds.</p>
-	 *
-	 * @return NicknameFeature
-	 */
-	public NicknameFeature getNicknames();
-	
-	/**
-	 * <p>Returns true if this vcard has nicknames.</p>
-	 *
-	 * @return boolean
-	 */
+	public void setNickname(NicknameType nicknames);
+	public NicknameType getNicknames();
 	public boolean hasNicknames();
+	public void clearNickname();
 	
-	/**
-	 * <p>Returns a list of photos contained in this vcard.</p>
-	 *
-	 * @return {@link Iterator}&lt;PhotoFeature&gt;
-	 */
-	public Iterator<PhotoFeature> getPhotos();
-	
-	/**
-	 * <p>Adds a photo to this vcard.</p>
-	 * 
-	 * @param photo
-	 */
-	public void addPhoto(PhotoFeature photo);
-	
-	/**
-	 * <p>Removes the specified photo.</p>
-	 * 
-	 * @param photo
-	 */
-	public void removePhoto(PhotoFeature photo);
-	
-	/**
-	 * <p>Returns true if the specified photo exists in this vcard.</p>
-	 * 
-	 * @param photo
-	 * @return boolean
-	 */
-	public boolean containsPhoto(PhotoFeature photo);
-	
-	/**
-	 * <p>Adds a collection of photos to this vcard.</p>
-	 * 
-	 * @param photos
-	 */
-	public void addAllPhotos(Collection<PhotoFeature> photos);
-	
-	/**
-	 * <p>Clears all photos from this vcard.</p>
-	 */
+	public List<PhotoType> getPhotos();
+	public void addPhoto(PhotoType photo) throws NullPointerException;
+	public void addAllPhotos(Collection<PhotoType> photos) throws NullPointerException;
+	public boolean removePhoto(PhotoType photo) throws NullPointerException;
+	public boolean containsPhoto(PhotoType photo);
+	public boolean hasPhotos();
 	public void clearPhotos();
 	
-	/**
-	 * <p>Returns true if this vcard has photos.</p>
-	 * 
-	 * @return boolean
-	 */
-	public boolean hasPhotos();
+	public BDayType getBDay();
+	public void setBDay(BDayType bday);
+	public boolean hasBDay();
+	public void clearBDay();
 	
-	/**
-	 * <p>Returns the birthday date.</p>
-	 *
-	 * @return {@link BirthdayFeature}
-	 */
-	public BirthdayFeature getBirthDay();
+	public List<AdrType> getAdrs();
+	public void addAdr(AdrType adr) throws NullPointerException;
+	public void addAllAdrs(Collection<AdrType> adrs) throws NullPointerException;
+	public boolean removeAdr(AdrType adr) throws NullPointerException;
+	public boolean containsAdr(AdrType address);
+	public boolean hasAdrs();
+	public void clearAdrs();
 	
-	/**
-	 * <p>Sets the birth date for this vcard.</p>
-	 *
-	 * @param birthday
-	 */
-	public void setBirthday(BirthdayFeature birthday);
-	
-	/**
-	 * <p>Returns true if this vcard has been set a birth date.</p>
-	 *
-	 * @return boolean
-	 */
-	public boolean hasBirthday();
-	
-	/**
-	 * <p>Returns a list of addresses contained by this vcard.</p>
-	 * 
-	 * @return {@link Iterator}&lt;AddressFeature&gt;
-	 */
-	public Iterator<AddressFeature> getAddresses();
-	
-	/**
-	 * <p>Adds an address to this vcard.</p>
-	 * 
-	 * @param address
-	 */
-	public void addAddress(AddressFeature address);
-	
-	/**
-	 * <p>Removes the specified address from this vcard.</p>
-	 * 
-	 * @param address
-	 */
-	public void removeAddress(AddressFeature address);
-	
-	/**
-	 * <p>Returns true if the specified address exists.</p>
-	 * 
-	 * @param address
-	 * @return boolean
-	 */
-	public boolean containsAddress(AddressFeature address);
-	
-	/**
-	 * <p>Adds a collection of addresses to this vcard.</p>
-	 * 
-	 * @param addresses
-	 */
-	public void addAllAddresses(Collection<AddressFeature> addresses);
-	
-	/**
-	 * <p>Clear all addresses from this vcard.</p>
-	 */
-	public void clearAddresses();
-	
-	/**
-	 * <p>Returns true if this vcard has addresses.</p>
-	 * 
-	 * @return boolean
-	 */
-	public boolean hasAddresses();
-	
-	/**
-	 * <p>Returns all labels contained in this vcard.</p>
-	 *
-	 * @return {@link Iterator}&lt;LabelFeature&gt;
-	 */
-	public Iterator<LabelFeature> getLables();
-	
-	/**
-	 * <p>Returns the label for a given address. This method will
-	 * return null if the address does not exist or if a null address
-	 * was passed in.</p>
-	 * 
-	 * @param address
-	 * @return {@link LabelFeature}
-	 */
-	public LabelFeature getLabelFor(AddressFeature address);
-	
-	/**
-	 * <p>Sets a label for a specified address. A VCardException is thrown
-	 * if a label is trying to be set on an address that does not exist in
-	 * this vcard.</p>
-	 *
-	 * @param label
-	 * @param forAddress
-	 * @throws VCardException
-	 */
-	public void setLabel(LabelFeature label, AddressFeature forAddress) throws VCardException;
-	
-	/**
-	 * <p>Removes a label for a specified address. A VCardException is thrown
-	 * if a label is trying to be removed from an address that does not exist
-	 * in this vcard.</p>
-	 *
-	 * @param label
-	 * @param forAddress
-	 * @throws VCardException
-	 */
-	public void removeLabel(LabelFeature label, AddressFeature forAddress) throws VCardException;
-	
-	/**
-	 * <p>Returns true if the specified address has a label.</p>
-	 *
-	 * @param address
-	 * @return boolean
-	 */
-	public boolean hasLabel(AddressFeature address);
-	
-	/**
-	 * <p>Removes all labels associated to all present addresses.</p>
-	 */
+	public List<LabelType> getLables();
+	public boolean containsLabel(LabelType label);
 	public void clearLabels();
 	
-	/**
-	 * <p>Returns true if the specified label exists within this vcard.</p>
-	 *
-	 * @param label
-	 * @return boolean
-	 */
-	public boolean containsLabel(LabelFeature label);
+	public List<TelType> getTels();
+	public void addTel(TelType tel) throws NullPointerException;
+	public void addAllTels(Collection<TelType> tels) throws NullPointerException;
+	public boolean removeTel(TelType tel) throws NullPointerException;
+	public boolean containsTel(TelType tel);
+	public void clearTel();
+	public boolean hasTels();
 	
-	/**
-	 * <p>Returns all telephone numbers contained in this vcard.</p>
-	 * 
-	 * @return {@link Iterator}&lt;TelephoneFeature&gt;
-	 */
-	public Iterator<TelephoneFeature> getTelephoneNumbers();
-	
-	/**
-	 * <p>Adds a phone number to this vcard.</p>
-	 * 
-	 * @param phoneNumber
-	 */
-	public void addTelephoneNumber(TelephoneFeature phoneNumber);
-	
-	/**
-	 * <p>Removes the specified phone number from this vcard.</p>
-	 * 
-	 * @param phoneNumber
-	 */
-	public void removeTelephoneNumber(TelephoneFeature phoneNumber);
-	
-	/**
-	 * <p>Returns true if the the specified phone number exists in this vcard.</p>
-	 * 
-	 * @param phoneNumber
-	 * @return boolean
-	 */
-	public boolean containsTelephoneNumber(TelephoneFeature phoneNumber);
-	
-	/**
-	 * <p>Adds a collection of phone numbers to this vcard.</p>
-	 * 
-	 * @param phoneNumbers
-	 */
-	public void addAllTelephoneNumber(Collection<TelephoneFeature> phoneNumbers);
-	
-	/**
-	 * <p>Clears all phone numbers from this vcard.</p>
-	 */
-	public void clearTelephoneNumbers();
-	
-	/**
-	 * <p>Returns true if this vcard has phone numbers.</p>
-	 * 
-	 * @return boolean
-	 */
-	public boolean hasTelephoneNumbers();
-	
-	/**
-	 * <p>Returns a list of emails contained in this vcard.</p>
-	 *
-	 * @return {@link Iterator}&lt;EmailFeature&gt;
-	 */
-	public Iterator<EmailFeature> getEmails();
-	
-	/**
-	 * <p>Adds an email address to this vcard.</p>
-	 * 
-	 * @param email
-	 */
-	public void addEmail(EmailFeature email);
-	
-	/**
-	 * <p>Removes an email address from this vcard.</p>
-	 * 
-	 * @param email
-	 */
-	public void removeEmail(EmailFeature email);
-	
-	/**
-	 * <p>Returns true if the specified email address exists in this vcard.</p>
-	 * 
-	 * @param email
-	 * @return boolean
-	 */
-	public boolean containsEmail(EmailFeature email);
-	
-	/**
-	 * <p>Adds a collection of email addresses to this vcard.</p>
-	 * 
-	 * @param emailAddresses
-	 */
-	public void addAllEmails(Collection<EmailFeature> emailAddresses);
-	
-	/**
-	 * <p>Clears all email addresses from this vcard.</p>
-	 */
+	public List<EmailType> getEmails();
+	public void addEmail(EmailType email) throws NullPointerException;
+	public void addAllEmails(Collection<EmailType> emailAddresses) throws NullPointerException;
+	public boolean removeEmail(EmailType email) throws NullPointerException;
+	public boolean containsEmail(EmailType email);
+	public boolean hasEmails();
 	public void clearEmails();
 	
-	/**
-	 * <p>Returns true if this vcard has email addresses.</p>
-	 * 
-	 * @return boolean
-	 */
-	public boolean hasEmails();
-	
-	/**
-	 * <p>Returns the mailer.</p>
-	 *
-	 * @return {@link MailerFeature}
-	 */
-	public MailerFeature getMailer();
-	
-	/**
-	 * <p>Sets the mailer used to create this vcard.</p>
-	 *
-	 * @param mailer
-	 */
-	public void setMailer(MailerFeature mailer);
-	
-	/**
-	 * <p>Returns true if this vcard has a mailer.</p>
-	 *
-	 * @return boolean
-	 */
+	public MailerType getMailer();
+	public void setMailer(MailerType mailer);
 	public boolean hasMailer();
+	public void clearMailer();
 	
-	/**
-	 * <p>Returns the time zone of this vcard.</p>
-	 * 
-	 * @return {@link TimeZoneFeature}
-	 */
-	public TimeZoneFeature getTimeZone();
+	public TzType getTz();
+	public void setTz(TzType timeZone);
+	public boolean hasTz();
+	public void clearTz();
 	
-	/**
-	 * <p>Sets the time zone for this vcard.</p>
-	 *
-	 * @param timeZone
-	 */
-	public void setTimeZone(TimeZoneFeature timeZone);
+	public GeoType getGeo();
+	public void setGeo(GeoType geo);
+	public boolean hasGeo();
+	public void clearGeo();
 	
-	/**
-	 * <p>Returns true if this vcard has a time zone.</p>
-	 *
-	 * @return boolean
-	 */
-	public boolean hasTimeZone();
-	
-	/**
-	 * <p>Returns the geographic position of this vcard.</p>
-	 *
-	 * @return {@link GeographicPositionFeature}
-	 */
-	public GeographicPositionFeature getGeographicPosition();
-	
-	/**
-	 * <p>Sets the geographical position of this vcard.</p>
-	 *
-	 * @param geographicPosition
-	 */
-	public void setGeographicPosition(GeographicPositionFeature geographicPosition);
-	
-	/**
-	 * <p>Returns true if this vcard has geographical positioning data.</p>
-	 *
-	 * @return boolean
-	 */
-	public boolean hasGeographicPosition();
-	
-	/**
-	 * <p>Returns the title.</p>
-	 * 
-	 * @return {@link TitleFeature}
-	 */
-	public TitleFeature getTitle();
-	
-	/**
-	 * <p>Sets the title for this vcard.</p>
-	 *
-	 * @param title
-	 */
-	public void setTitle(TitleFeature title);
-	
-	/**
-	 * <p>Returns true if this vcard has a title.</p>
-	 *
-	 * @return boolean
-	 */
+	public TitleType getTitle();
+	public void setTitle(TitleType title);
 	public boolean hasTitle();
+	public void clearTitle();
 	
-	/**
-	 * <p>Returns the role.</p>
-	 *
-	 * @return {@link RoleFeature}
-	 */
-	public RoleFeature getRole();
-	
-	/**
-	 * <p>Sets a role for this vcard.</p>
-	 *
-	 * @param role
-	 */
-	public void setRole(RoleFeature role);
-	
-	/**
-	 * <p>Returns true if this vcard has a role.</p>
-	 *
-	 * @return boolean
-	 */
+	public RoleType getRole();
+	public void setRole(RoleType role);
 	public boolean hasRole();
+	public void clearRole();
 	
-	/**
-	 * <p>Returns a list of logos contained in this vcard.</p>
-	 *
-	 * @return {@link Iterator}&lt;LogoFeature&gt;
-	 */
-	public Iterator<LogoFeature> getLogos();
-	
-	/**
-	 * <p>Adds a logo to this vcard.</p>
-	 * 
-	 * @param logo
-	 */
-	public void addLogo(LogoFeature logo);
-	
-	/**
-	 * <p>Removes a logo from this vcard.</p>
-	 * 
-	 * @param logo
-	 */
-	public void removeLogo(LogoFeature logo);
-	
-	/**
-	 * <p>Returns true if the specified logo exists.</p>
-	 * 
-	 * @param logo
-	 * @return boolean
-	 */
-	public boolean containsLogo(LogoFeature logo);
-	
-	/**
-	 * <p>Adds a collection of logos to this vcard.</p>
-	 * 
-	 * @param logos
-	 */
-	public void addAllLogos(Collection<LogoFeature> logos);
-	
-	/**
-	 * <p>Clears all logos from this vcard.</p>
-	 */
+	public List<LogoType> getLogos();
+	public void addLogo(LogoType logo) throws NullPointerException;
+	public void addAllLogos(Collection<LogoType> logos) throws NullPointerException;
+	public boolean removeLogo(LogoType logo) throws NullPointerException;
+	public boolean containsLogo(LogoType logo);
+	public boolean hasLogos();
 	public void clearLogos();
 	
-	/**
-	 * <p>Returns true if this vcard has logos.</p>
-	 * 
-	 * @return boolean
-	 */
-	public boolean hasLogos();
-	
-	/**
-	 * <p>Returns a list of agents contained in this vcard.</p>
-	 *
-	 * @return {@link Iterator}&lt;AgentFeature&gt;
-	 */
-	public Iterator<AgentFeature> getAgents();
-	
-	/**
-	 * <p>Adds an agent to this vcard.</p>
-	 * 
-	 * @param agent
-	 */
-	public void addAgent(AgentFeature agent);
-	
-	/**
-	 * <p>Removes an agent from this vcard.</p>
-	 * 
-	 * @param agent
-	 */
-	public void removeAgent(AgentFeature agent);
-	
-	/**
-	 * <p>Returns true if the specified agent exists in this vcard.</p>
-	 * 
-	 * @param agent
-	 * @return boolean
-	 */
-	public boolean containsAgent(AgentFeature agent);
-	
-	/**
-	 * <p>Adds a collection of agents to this vcard.</p>
-	 * 
-	 * @param agents
-	 */
-	public void addAllAgents(Collection<AgentFeature> agents);
-	
-	/**
-	 * <p>Clears all agents from this vcard.</p>
-	 */
+	public List<AgentType> getAgents();
+	public void addAgent(AgentType agent) throws NullPointerException;
+	public void addAllAgents(Collection<AgentType> agents) throws NullPointerException;
+	public boolean removeAgent(AgentType agent) throws NullPointerException;
+	public boolean containsAgent(AgentType agent);
+	public boolean hasAgents();
 	public void clearAgents();
 	
-	/**
-	 * <p>Returns true if this vcard has agents.</p>
-	 * 
-	 * @return boolean
-	 */
-	public boolean hasAgents();
+	public OrgType getOrg();
+	public void setOrg(OrgType organization);
+	public boolean hasOrg();
+	public void clearOrg();
 	
-	/**
-	 * <p>Returns a list of organizations from this vcard.</p>
-	 *
-	 * @return {@link OrganizationFeature}
-	 */
-	public OrganizationFeature getOrganizations();
-	
-	/**
-	 * <p>Sets a list of organizations for this vcard.</p>
-	 *
-	 * @param organizations
-	 */
-	public void setOrganizations(OrganizationFeature organizations);
-	
-	/**
-	 * <p>Returns true if this vcard has organizations.</p>
-	 *
-	 * @return boolean
-	 */
-	public boolean hasOrganizations();
-	
-	/**
-	 * <p>Returns the categories of this vcard.</p>
-	 * 
-	 * @return {@link CategoriesFeature}
-	 */
-	public CategoriesFeature getCategories();
-	
-	/**
-	 * <p>Sets categories for this vcard.</p>
-	 *
-	 * @param categories
-	 */
-	public void setCategories(CategoriesFeature categories);
-	
-	/**
-	 * <p>Returns true if this vcard has categories.</p>
-	 *
-	 * @return boolean
-	 */
+	public CategoriesType getCategories();
+	public void setCategories(CategoriesType categories);
 	public boolean hasCategories();
+	public void clearCategories();
 	
-	/**
-	 * <p>Returns a list of notes contained in this vcard.</p>
-	 *
-	 * @return {@link Iterator}&lt;NoteFeature&gt;
-	 */
-	public Iterator<NoteFeature> getNotes();
-	
-	/**
-	 * <p>Adds a note to this vcard.</p>
-	 * 
-	 * @param note
-	 */
-	public void addNote(NoteFeature note);
-	
-	/**
-	 * <p>Removes the specified note from this vcard.</p>
-	 * 
-	 * @param note
-	 */
-	public void removeNote(NoteFeature note);
-	
-	/**
-	 * <p>Returns true if the specified note exists in this vcard.</p>
-	 * 
-	 * @param note
-	 * @return boolean
-	 */
-	public boolean containsNote(NoteFeature note);
-	
-	/**
-	 * <p>Adds a collection of notes to this vcard.</p>
-	 * 
-	 * @param notes
-	 */
-	public void addAllNotes(Collection<NoteFeature> notes);
-	
-	/**
-	 * <p>Clears all notes from this vcard.</p>
-	 */
+	public List<NoteType> getNotes();
+	public void addNote(NoteType note) throws NullPointerException;
+	public void addAllNotes(Collection<NoteType> notes) throws NullPointerException;
+	public boolean removeNote(NoteType note) throws NullPointerException;
+	public boolean containsNote(NoteType note);
+	public boolean hasNotes();
 	public void clearNotes();
 	
-	/**
-	 * <p>Returns true if this vcard has notes.</p>
-	 * 
-	 * @return boolean
-	 */
-	public boolean hasNotes();
+	public ProdIdType getProdId();
+	public void setProdId(ProdIdType productId);
+	public boolean hasProdId();
+	public void clearProdId();
 	
-	/**
-	 * <p>Returns the product id.</p>
-	 *
-	 * @return {@link ProductIdFeature}
-	 */
-	public ProductIdFeature getProductId();
+	public RevType getRev();
+	public void setRev(RevType revision);
+	public boolean hasRev();
+	public void clearRev();
 	
-	/**
-	 * <p>Sets the product id for this vcard.</p>
-	 *
-	 * @param productId
-	 */
-	public void setProductId(ProductIdFeature productId);
-	
-	/**
-	 * <p>Returns true if this vcard has a product id.</p>
-	 *
-	 * @return boolean
-	 */
-	public boolean hasProductId();
-	
-	/**
-	 * <p>Returns the revision date of this vcard.</p>
-	 *
-	 * @return {@link RevisionFeature}
-	 */
-	public RevisionFeature getRevision();
-	
-	/**
-	 * <p>Sets the revision date of this vcard.</p>
-	 *
-	 * @param revision
-	 */
-	public void setRevision(RevisionFeature revision);
-	
-	/**
-	 * <p>Returns true if this vcard has a revision date.</p>
-	 *
-	 * @return boolean
-	 */
-	public boolean hasRevision();
-	
-	/**
-	 * <p>Returns the sort string of this vcard.</p>
-	 *
-	 * @return {@link SortStringFeature}
-	 */
-	public SortStringFeature getSortString();
-	
-	/**
-	 * <p>Sets the sort string for this vcard.</p>
-	 *
-	 * @param sortString
-	 */
-	public void setSortString(SortStringFeature sortString);
-	
-	/**
-	 * <p>Returns true if this vcard has a sort string.</p>
-	 *
-	 * @return boolean
-	 */
+	public SortStringType getSortString();
+	public void setSortString(SortStringType sortString);
 	public boolean hasSortString();
+	public void clearSortString();
 	
-	/**
-	 * <p>Returns a list of sounds contained in this vcard.</p>
-	 *
-	 * @return {@link Iterator}&lt;SoundFeature&gt;
-	 */
-	public Iterator<SoundFeature> getSounds();
-	
-	/**
-	 * <p>Adds a sound to this vcard.</p>
-	 * 
-	 * @param sound
-	 */
-	public void addSound(SoundFeature sound);
-	
-	/**
-	 * <p>Removes a sound from this vcard.</p>
-	 * 
-	 * @param sound
-	 */
-	public void removeSound(SoundFeature sound);
-	
-	/**
-	 * <p>Returns true if the specified sound exists.</p>
-	 * 
-	 * @param sound
-	 * @return boolean
-	 */
-	public boolean containsSound(SoundFeature sound);
-	
-	/**
-	 * <p>Adds a collection of sounds to this vcard.</p>
-	 * 
-	 * @param sounds
-	 */
-	public void addAllSounds(Collection<SoundFeature> sounds);
-	
-	/**
-	 * <p>Clears all sounds from this vcard.</p>
-	 */
+	public List<SoundType> getSounds();
+	public void addSound(SoundType sound) throws NullPointerException;
+	public void addAllSounds(Collection<SoundType> sounds) throws NullPointerException;
+	public boolean removeSound(SoundType sound) throws NullPointerException;
+	public boolean containsSound(SoundType sound);
+	public boolean hasSounds();
 	public void clearSounds();
 	
-	/**
-	 * <p>Returns true if this vcard has sounds.</p>
-	 * 
-	 * @return boolean
-	 */
-	public boolean hasSounds();
+	public UidType getUid();
+	public void setUid(UidType uid);
+	public boolean hasUid();
+	public void clearUid();
 	
-	/**
-	 * <p>Returns the UID of this vcard.</p>
-	 *
-	 * @return {@link UIDFeature}
-	 */
-	public UIDFeature getUID();
+	public List<UrlType> getUrls();
+	public void addUrl(UrlType url) throws NullPointerException;
+	public void addAllUrls(Collection<UrlType> urls) throws NullPointerException;
+	public boolean removeUrl(UrlType url) throws NullPointerException;
+	public boolean containsUrl(UrlType url);
+	public boolean hasUrls();
+	public void clearUrls();
 	
-	/**
-	 * <p>Sets a UID for this vcard.</p>
-	 *
-	 * @param uid
-	 */
-	public void setUID(UIDFeature uid);
+	public List<ImppType> getIMPPs();
+	public void addImpp(ImppType impp) throws NullPointerException;
+	public void addAllImpp(Collection<ImppType> impps);
+	public boolean removeImpp(ImppType impp) throws NullPointerException;
+	public boolean containsImpp(ImppType impp) throws NullPointerException;
+	public boolean hasImpps();
+	public void clearImpp();
 	
-	/**
-	 * <p>Returns true if this vcard has a UID.</p>
-	 *
-	 * @return boolean
-	 */
-	public boolean hasUID();
+	public VersionType getVersion();
+	public void setVersion(VersionType version) throws NullPointerException;
 	
-	/**
-	 * <p>Returns a list of URL contained in this vcard.</p>
-	 *
-	 * @return {@link Iterator}&lt;URLFeature&gt;
-	 */
-	public Iterator<URLFeature> getURLs();
-	
-	/**
-	 * <p>Adds a URL to this vcard.</p>
-	 *
-	 * @param url
-	 */
-	public void addURL(URLFeature url);
-	
-	/**
-	 * <p>Removes a URL from this vcard.</p>
-	 *
-	 * @param url
-	 */
-	public void removeURL(URLFeature url);
-	
-	/**
-	 * <p>Returns true if the specified URL exists in this vcard.</p>
-	 *
-	 * @param url
-	 * @return boolean
-	 */
-	public boolean containsURL(URLFeature url);
-	
-	/**
-	 * <p>Adds a collection of URLs to this vcard.</p>
-	 *
-	 * @param urls
-	 */
-	public void addAllURLs(Collection<URLFeature> urls);
-	
-	/**
-	 * <p>Clears all URLs from this vcard.</p>
-	 */
-	public void clearURLs();
-	
-	/**
-	 * <p>Returns true if this card has URLs.</p>
-	 *
-	 * @return boolean
-	 */
-	public boolean hasURLs();
-	
-	/**
-	 * <p>Returns a list of IMPP URIs contained in this vcard.</p>
-	 *
-	 * @return {@link Iterator}&lt;IMPPFeature&gt;
-	 */
-	public Iterator<IMPPFeature> getIMPPs();
-	
-	/**
-	 * <p>Adds an IMPP URI to this vcard.</p>
-	 *
-	 * @param impp
-	 */
-	public void addIMPP(IMPPFeature impp);
-	
-	/**
-	 * <p>Removes an IMPP URI from this vcard.</p>
-	 *
-	 * @param impp
-	 */
-	public void removeIMPP(IMPPFeature impp);
-	
-	/**
-	 * <p>Returns true if the specified IMPP URI exists in this vcard.</p>
-	 *
-	 * @param impp
-	 * @return boolean
-	 */
-	public boolean containsIMPP(IMPPFeature impp);
-	
-	/**
-	 * <p>Adds a collection of IMPP URIs of this vcard.</p>
-	 *
-	 * @param urls
-	 */
-	public void addAllIMPPs(Collection<IMPPFeature> impps);
-	
-	/**
-	 * <p>Clears all IMPP URIs from this vcard.</p>
-	 */
-	public void clearIMPPs();
-	
-	/**
-	 * <p>Returns true if this card has IMPP URIs.</p>
-	 *
-	 * @return boolean
-	 */
-	public boolean hasIMPPs();
-	
-	/**
-	 * <p>Returns the version of this vcard.</p>
-	 *
-	 * @return {@link VersionFeature}
-	 */
-	public VersionFeature getVersion();
-	
-	/**
-	 * <p>Sets the version for this vcard. This feature cannot
-	 * be left null, and if not set it will use a default.</p>
-	 *
-	 * @param version
-	 */
-	public void setVersion(VersionFeature version) throws NullPointerException;
-	
-	/**
-	 * <p>Returns the security class of this vcard.</p>
-	 * 
-	 * @return {@link ClassFeature}
-	 */
-	public ClassFeature getSecurityClass();
-	
-	/**
-	 * <p>Sets a security class for this vcard.</p>
-	 *
-	 * @param securityClass
-	 */
-	public void setSecurityClass(ClassFeature securityClass);
-	
-	/**
-	 * <p>Returns true if this vcard has been assigned a security class.</p>
-	 *
-	 * @return boolean
-	 */
+	public ClassType getSecurityClass();
+	public void setSecurityClass(ClassType securityClass);
 	public boolean hasSecurityClass();
+	public void clearSecurityClass();
 	
-	/**
-	 * <p>Returns a list of keys contained in this vcard.</p>
-	 * 
-	 * @return {@link Iterator}<KeyFeature>
-	 */
-	public Iterator<KeyFeature> getKeys();
-	
-	/**
-	 * <p>Adds a key to this vcard.</p>
-	 * 
-	 * @param key
-	 */
-	public void addKey(KeyFeature key);
-	
-	/**
-	 * <p>Removes the specified key from this vcard.</p>
-	 * 
-	 * @param key
-	 */
-	public void removeKey(KeyFeature key);
-	
-	/**
-	 * <p>Returns true if the specified key exists.</p>
-	 * 
-	 * @param key
-	 * @return boolean
-	 */
-	public boolean containsKey(KeyFeature key);
-	
-	/**
-	 * <p>Adds a collection of keys to this vcard.</p>
-	 * 
-	 * @param keys
-	 */
-	public void addAllKeys(Collection<KeyFeature> keys);
-	
-	/**
-	 * <p>Clears all keys from this vcard.</p>
-	 */
+	public List<KeyType> getKeys();
+	public void addKey(KeyType key) throws NullPointerException;
+	public void addAllKeys(Collection<KeyType> keys) throws NullPointerException;
+	public boolean removeKey(KeyType key) throws NullPointerException;
+	public boolean containsKey(KeyType key);
+	public boolean hasKeys();
 	public void clearKeys();
 	
-	/**
-	 * <p>Returns true if this vcard has keys.</p>
-	 * 
-	 * @return boolean
-	 */
-	public boolean hasKeys();
-	
-	/**
-	 * <p>Returns a list of extended types contained in this vcard.</p>
-	 * 
-	 * @return {@link Iterator}&lt;ExtendedFeature&gt;
-	 */
-	public Iterator<ExtendedFeature> getExtendedTypes();
-	
-	/**
-	 * <p>Adds an extended type to this vcard.</p>
-	 *
-	 * @param extension
-	 */
-	public void addExtendedType(ExtendedFeature extension);
-	
-	/**
-	 * <p>Removes the specified extended type from this vcard.</p>
-	 *
-	 * @param extension
-	 */
-	public void removeExtendedType(ExtendedFeature extension);
-	
-	/**
-	 * <p>Returns true if the specified extended type exists in this vcard.</p>
-	 *
-	 * @param extension
-	 * @return boolean
-	 */
-	public boolean containsExtendedType(ExtendedFeature extension);
-	
-	/**
-	 * <p>Adds a collection of extended types to this vcard.</p>
-	 *
-	 * @param extensions
-	 */
-	public void addAllExtendedTypes(Collection<ExtendedFeature> extensions);
-	
-	/**
-	 * <p>Clears all extended types from this vcard.</p>
-	 */
+	public List<ExtendedType> getExtendedTypes();
+	public void addExtendedType(ExtendedType extension) throws NullPointerException;
+	public void addAllExtendedTypes(Collection<ExtendedType> extensions) throws NullPointerException;
+	public boolean removeExtendedType(ExtendedType extension) throws NullPointerException;
+	public boolean containsExtendedType(ExtendedType extension);
+	public boolean hasExtendedTypes();
 	public void clearExtendedTypes();
 	
-	/**
-	 * <p>Returns true if this vcard has extended types.</p>
-	 *
-	 * @return boolean
-	 */
-	public boolean hasExtendedTypes();
-	
-	/**
-	 * <p>Clears all features in this vcard and resets the
-	 * mandatory features of FormattedName, Name and Version
-	 * to default values. Note that Name feature will be reset
-	 * with empty strings.</p>
-	 */
 	public void clear();
-	
-	/**
-	 * <p>Performs a java style equality with one extra bit of checking.
-	 * In the end we check if the hash codes of both objects are equal.
-	 * The hash code is determined by the overridden hash code function.</p>
-	 * 
-	 * @param obj
-	 * @return boolean
-	 */
-	@Override
-	public abstract boolean equals(Object obj);
-	
-	/**
-	 * <p>Generates a unique hash code based on all the data
-	 * contained within in the object.</p>
-	 * 
-	 * @see Util#generateHashCode(String...)
-	 * @return int
-	 */
-	@Override
-	public abstract int hashCode();
-	
-	/**
-	 * <p>Concatenates all data types in the object and returns it.</p>
-	 * 
-	 * @return {@link String}
-	 */
-	@Override
-	public abstract String toString();
-	
-	/**
-	 * <p>Returns a new clone of the vcard.</p>
-	 *
-	 * @return {@link VCard}
-	 */
-	public abstract VCard clone();
 }
