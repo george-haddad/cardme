@@ -1,12 +1,10 @@
 package net.sourceforge.cardme.vcard.features;
 
-import net.sourceforge.cardme.vcard.types.parameters.LabelParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.XLabelParameterType;
-import java.util.Iterator;
 import java.util.List;
+import net.sourceforge.cardme.vcard.types.params.LabelParamType;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -37,172 +35,22 @@ import java.util.List;
  * 
  * @author George El-Haddad
  * <br/>
- * Feb 4, 2010
- * 
- * <p><b>RFC 2426</b><br/>
- * <b>3.2.2 LABEL Type Definition</b>
- * <ul>
- * 	<li><b>Type name:</b> LABEL</li>
- * 	<li><b>Type purpose:</b> To specify the formatted text corresponding to delivery address of the object the vCard represents.</li>
- * 	<li><b>Type encoding:</b> 8bit</li>
- * 	<li><b>Type value:</b> A single structured text value, separated by the SEMI-COLON character (ASCII decimal 59).</li>
- * 	<li><b>Type special note:</b> The type value is formatted text that can be used to present a delivery address label for the vCard object. The type can include the type parameter "TYPE" to specify delivery label type. The TYPE parameter values can include "dom" to indicate a domestic delivery label; "intl" to indicate an international delivery label; "postal" to indicate a postal delivery label; "parcel" to indicate a parcel delivery label; "home" to indicate a delivery label for a residence; "work" to indicate delivery label for a place of work; and "pref" to indicate the preferred delivery label when more than one label is specified. These type parameter values can be specified as a parameter list (i.e., "TYPE=dom;TYPE=postal") or as a value list (i.e., "TYPE=dom,postal"). This type is based on semantics of the X.520 geographical and postal addressing attributes. The default is "TYPE=intl,postal,parcel,work". The default can be overridden to some other set of values by specifying one or more alternate values. For example, the default can be reset to "TYPE=intl,post,parcel,home" to specify an international delivery label for both postal and parcel delivery to a residential location.</li>
- * </ul>
- * </p>
+ * Aug 7, 2012
+ *
  */
-public interface LabelFeature extends TypeTools {
+public interface LabelFeature {
 	
-	/**
-	 * <p>Returns the label.</p>
-	 *
-	 * @return {@link String}
-	 */
 	public String getLabel();
-	
-	/**
-	 * <p>Sets the label.</p>
-	 *
-	 * @param label
-	 */
 	public void setLabel(String label);
-	
-	/**
-	 * <p>Returns an iterator of all parameter types for this label.</p>
-	 *
-	 * @return {@link Iterator}&lt;LabelParameterType&gt;
-	 */
-	public Iterator<LabelParameterType> getLabelParameterTypes();
-	
-	/**
-	 * <p>Returns an unmodifiable list of parameter types.</p>
-	 *
-	 * @return {@link List}&lt;LabelParameterType&gt;
-	 */
-	public List<LabelParameterType> getLabelParameterTypesList();
-	
-	/**
-	 * <p>Returns the number of parameter types.</p>
-	 *
-	 * @return int
-	 */
-	public int getLabelParameterSize();
-	
-	/**
-	 * <p>Adds a parameter type.</p>
-	 *
-	 * @param labelParameterType
-	 */
-	public void addLabelParameterType(LabelParameterType labelParameterType);
-	
-	/**
-	 * <p>Removes a parameter type.</p>
-	 *
-	 * @param labelParameterType
-	 */
-	public void removeLabelParameterType(LabelParameterType labelParameterType);
-	
-	/**
-	 * <p>Returns true if the parameter types exists.</p>
-	 *
-	 * @param labelParameterType
-	 * @return boolean
-	 */
-	public boolean containsLabelParameterType(LabelParameterType labelParameterType);
-	
-	/**
-	 * <p>Returns true if all parameter types exist.</p>
-	 *
-	 * @param labelParameterType
-	 * @return boolean
-	 */
-	public boolean conatinsAllLabelParameterTypes(List<LabelParameterType> labelParameterType);
-	
-	/**
-	 * <p>Returns true if this label has parameter types.</p>
-	 *
-	 * @return boolean
-	 */
-	public boolean hasLabelParameterTypes();
-	
-	/**
-	 * <p>Removes all label parameter types.</p>
-	 */
-	public void clearLabelParameterTypes();
-	
-	/**
-	 * <p>Returns an iterator of extended label parameter types.</p>
-	 * 
-	 * @return {@link Iterator}&lt;XLabelParameterType&gt;
-	 */
-	public Iterator<XLabelParameterType> getExtendedLabelParameterTypes();
-	
-	/**
-	 * <p>Returns an unmodifiable list of extended parameter types.</p>
-	 *
-	 * @return {@link List}&lt;XLabelParameterType&gt;
-	 */
-	public List<XLabelParameterType> getExtendedLabelParameterTypesList();
-	
-	/**
-	 * <p>Returns the number of extended parameter types.</p>
-	 *
-	 * @return int
-	 */
-	public int getExtendedLabelParameterSize();
-	
-	/**
-	 * <p>Adds an extended label parameter type.</p>
-	 * 
-	 * @param xtendedLabelParameterType
-	 */
-	public void addExtendedLabelParameterType(XLabelParameterType xtendedLabelParameterType);
-	
-	/**
-	 * <p>Removes the specified extended label parameter type.</p>
-	 * 
-	 * @param xtendedLabelParameterType
-	 */
-	public void removeExtendedLabelParameterType(XLabelParameterType xtendedLabelParameterType);
-	
-	/**
-	 * <p>Returns true if the specified extended label parameter type exists.</p>
-	 * 
-	 * @param xtendedLabelParameterType
-	 * @return boolean
-	 */
-	public boolean containsExtendedLabelParameterType(XLabelParameterType xtendedLabelParameterType);
-	
-	/**
-	 * <p>Returns true if all extended parameter types exist.</p>
-	 *
-	 * @param xtendedParameterTypes
-	 * @return boolean
-	 */
-	public boolean containsAllExtendedLabelParameterTypes(List<XLabelParameterType> xtendedParameterTypes);
-	
-	/**
-	 * <p>Returns true if this label number has extended parameter types.</p>
-	 * 
-	 * @return boolean
-	 */
-	public boolean hasExtendedLabelParameterTypes();
-	
-	/**
-	 * <p>Removes all extended label parameter types.</p>
-	 */
-	public void clearExtendedLabelParameterTypes();
-	
-	/**
-	 * <p>Returns true if a label exists.</p>
-	 *
-	 * @return boolean
-	 */
 	public boolean hasLabel();
 	
-	/**
-	 * <p>Returns a full copy of this object.</p>
-	 *
-	 * @return {@link LabelFeature}
-	 */
-	public LabelFeature clone();
+	public List<LabelParamType> getParams();
+	public int getParamSize();
+	public LabelFeature addParam(LabelParamType labelParamType) throws NullPointerException;
+	public LabelFeature addAllParams(List<LabelParamType> labelParamTypes) throws NullPointerException;
+	public LabelFeature removeParam(LabelParamType labelParamType) throws NullPointerException;
+	public boolean containsParam(LabelParamType labelParamType);
+	public boolean containsAllParams(List<LabelParamType> labelParamType);
+	public boolean hasParams();
+	public void clearParams();
 }

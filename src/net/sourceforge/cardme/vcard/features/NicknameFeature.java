@@ -1,10 +1,9 @@
 package net.sourceforge.cardme.vcard.features;
 
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.List;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -35,7 +34,7 @@ import java.util.Iterator;
  * 
  * @author George El-Haddad
  * <br/>
- * Feb 4, 2010
+ * Aug 7, 2012
  * 
  * <p><b>RFC 2426</b><br/>
  * <b>3.1.3 NICKNAME Type Definition</b>
@@ -48,60 +47,21 @@ import java.util.Iterator;
  * </ul>
  * </p>
  */
-public interface NicknameFeature extends TypeTools {
+public interface NicknameFeature {
+
+	public List<String> getNicknames();
 	
-	/**
-	 * <p>Returns the nickname.</p>
-	 *
-	 * @return {@link Iterator}&lt;String&gt;
-	 */
-	public Iterator<String> getNicknames();
+	public NicknameFeature addNickname(String nickname) throws NullPointerException;
 	
-	/**
-	 * <p>Adds the specified nickname.</p>
-	 *
-	 * @param nickname
-	 */
-	public void addNickname(String nickname);
+	public NicknameFeature addAllNicknames(List<String> nicknames) throws NullPointerException;
 	
-	/**
-	 * <p>Removes the specified nickname.</p>
-	 *
-	 * @param nickname
-	 */
-	public void removeNickname(String nickname);
+	public NicknameFeature removeNickname(String nickname) throws NullPointerException;
 	
-	/**
-	 * <p>Returns true if the specified nickname exists in this vcard.</p>
-	 *
-	 * @param nickname
-	 * @return boolean
-	 */
 	public boolean containsNickname(String nickname);
 	
-	/**
-	 * <p>Adds a collection of nicknames to this vcard.</p>
-	 *
-	 * @param nicknames
-	 */
-	public void addAllNicknames(Collection<String> nicknames);
+	public boolean containsAllNicknames(List<String> nicknames);
 	
-	/**
-	 * <p>Clears all nicknames in this vcard.</p>
-	 */
-	public void clearNicknames();
-	
-	/**
-	 * <p>Returns true if nickname exists.</p>
-	 *
-	 * @return boolean
-	 */
 	public boolean hasNicknames();
 	
-	/**
-	 * <p>Returns a full copy of this object.</p>
-	 *
-	 * @return {@link NicknameFeature}
-	 */
-	public NicknameFeature clone();
+	public void clearNicknames();
 }

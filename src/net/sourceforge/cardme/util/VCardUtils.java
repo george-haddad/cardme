@@ -332,8 +332,8 @@ public final class VCardUtils {
 		
 		String unfold1 = "=\n(\\p{Blank}*(=))";
 		String unfold2 = "=\n([^\\p{Blank}]([^:\n]*))\n";
-		String unfold3 = "\\p{Blank}+=";
-		String unfold4 = "\n\\p{Blank}+";
+		String unfold3 = "\n\\p{Blank}";
+		String unfold4 = "\\p{Blank}+=";
 		
 		StringBuffer sb = new StringBuffer();
 		Matcher m = unfoldOutlookCraziness.matcher(vcardString);
@@ -353,10 +353,18 @@ public final class VCardUtils {
 		
 		String s1 = s0.replaceAll(unfold1, "$1");
 		String s2 = s1.replaceAll(unfold2, "$1");
-		String s3 = s2.replaceAll(unfold4, "");
-		String s4 = s3.replaceAll(unfold3, "=");
+		String s3 = s2.replaceAll(unfold3, "");
+		String s4 = s3.replaceAll(unfold4, "=");
 		
 		return s4;
+		
+		
+		/*
+		 * 
+		 * United\n
+  		     States of America
+  
+		 */
 	}
 	
 	/**

@@ -3,15 +3,14 @@ package net.sourceforge.cardme.vcard.types;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.NameFeature;
-import java.util.Iterator;
+import java.util.List;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -42,185 +41,224 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 3, 2011
+ * Aug 27, 2012
  *
  */
 public class NameTypeTest {
 
-	private NameType nameType = null;
+	private NType nType = null;
 	
 	@Before
 	public void setUp() throws Exception {
-		nameType = new NameType();
-		nameType.setGivenName("John");
-		nameType.setFamilyName("Doe");
-		nameType.addHonorificPrefix("Mr");
-		nameType.addHonorificPrefix("Dr");
-		nameType.addHonorificSuffix("I");
-		nameType.addHonorificSuffix("II");
-		nameType.addAdditionalName("Johnny");
+		nType = new NType();
+		nType.setGivenName("John");
+		nType.setFamilyName("Doe");
+		nType.addHonorificPrefix("Mr");
+		nType.addHonorificPrefix("Dr");
+		nType.addHonorificSuffix("I");
+		nType.addHonorificSuffix("II");
+		nType.addAdditionalName("Johnny");
 	}
 	
 	@After
 	public void tearDown() throws Exception {
-		nameType = null;
+		nType = null;
 	}
 	
 	@Test
 	public void testGetGivenName() {
-		assertEquals("John", nameType.getGivenName());
+		assertEquals("John", nType.getGivenName());
 	}
 	
 	@Test
 	public void testGetFamilyName() {
-		assertEquals("Doe", nameType.getFamilyName());
+		assertEquals("Doe", nType.getFamilyName());
+	}
+	
+	@Test
+	public void testSetGivenNameSecure() {
+		String givenName = "Robert";
+		nType.setGivenName(givenName);
+		
+		String giveNameCopy = nType.getGivenName();
+		
+		assertFalse(givenName == giveNameCopy);
+		assertTrue(givenName.compareTo(giveNameCopy) == 0);
+		assertTrue(givenName.equals(giveNameCopy));
+	}
+	
+	@Test
+	public void testSetFamilyNameSecure() {
+		String familyName = "Sanders";
+		nType.setFamilyName(familyName);
+		
+		String familyNameCopy = nType.getFamilyName();
+		
+		assertFalse(familyName == familyNameCopy);
+		assertTrue(familyName.compareTo(familyNameCopy) == 0);
+		assertTrue(familyName.equals(familyNameCopy));
 	}
 	
 	@Test
 	public void testGetHonorificPrefixes() {
-		Iterator<String> iter = nameType.getHonorificPrefixes();
-		assertEquals("Mr", iter.next());
-		assertEquals("Dr", iter.next());
+		List<String> list = nType.getHonorificPrefixes();
+		assertEquals("Mr", list.get(0));
+		assertEquals("Dr", list.get(1));
 	}
 	
 	@Test
 	public void testGetHonorificSuffixes() {
-		Iterator<String> iter = nameType.getHonorificSuffixes();
-		assertEquals("I", iter.next());
-		assertEquals("II", iter.next());
+		List<String> list = nType.getHonorificSuffixes();
+		assertEquals("I", list.get(0));
+		assertEquals("II", list.get(1));
 	}
 	
 	@Test
 	public void testGetAdditionalNames() {
-		Iterator<String> iter = nameType.getAdditionalNames();
-		assertEquals("Johnny", iter.next());
+		List<String> list = nType.getAdditionalNames();
+		assertEquals("Johnny", list.get(0));
 	}
 	
 	@Test
 	public void testAddHonorificPrefix() {
-		nameType.addHonorificPrefix("Miss");
-		assertTrue(nameType.containsHonorificPrefix("Miss"));
+		nType.addHonorificPrefix("Miss");
+		assertTrue(nType.containsHonorificPrefix("Miss"));
 	}
 	
 	@Test
 	public void testRemoveHonorifcPrefix() {
-		nameType.removeHonorificPrefix("Mr");
-		assertFalse(nameType.containsHonorificPrefix("Mr"));
+		nType.removeHonorificPrefix("Mr");
+		assertFalse(nType.containsHonorificPrefix("Mr"));
 	}
 	
 	@Test
 	public void testContainsHonorificPrefix() {
-		assertTrue(nameType.containsHonorificPrefix("Mr"));
-		assertTrue(nameType.containsHonorificPrefix("Dr"));
+		assertTrue(nType.containsHonorificPrefix("Mr"));
+		assertTrue(nType.containsHonorificPrefix("Dr"));
 	}
 	
 	@Test
 	public void testHasHonorificPrefix() {
-		assertTrue(nameType.hasHonorificPrefixes());
+		assertTrue(nType.hasHonorificPrefixes());
 	}
 	
 	@Test
 	public void testClearHonorificPrefixes() {
-		nameType.clearHonorificPrefixes();
-		assertFalse(nameType.hasHonorificPrefixes());
+		nType.clearHonorificPrefixes();
+		assertFalse(nType.hasHonorificPrefixes());
 	}
 	
 	@Test
 	public void testAddHonorificSuffix() {
-		nameType.addHonorificSuffix("Esq");
-		assertTrue(nameType.containsHonorificSuffix("Esq"));
+		nType.addHonorificSuffix("Esq");
+		assertTrue(nType.containsHonorificSuffix("Esq"));
 	}
 	
 	@Test
 	public void testRemoveHonorificSuffix() {
-		nameType.removeHonorificSuffix("I");
-		assertFalse(nameType.containsHonorificSuffix("I"));
+		nType.removeHonorificSuffix("I");
+		assertFalse(nType.containsHonorificSuffix("I"));
 	}
 	
 	@Test
 	public void testContainsHonorificSuffix() {
-		assertTrue(nameType.containsHonorificSuffix("I"));
-		assertTrue(nameType.containsHonorificSuffix("II"));
+		assertTrue(nType.containsHonorificSuffix("I"));
+		assertTrue(nType.containsHonorificSuffix("II"));
 	}
 	
 	@Test
 	public void testHasHonorificSuffix() {
-		assertTrue(nameType.hasHonorificSuffixes());
+		assertTrue(nType.hasHonorificSuffixes());
 	}
 	
 	@Test
 	public void testClearHonorificSuffixes() {
-		nameType.clearHonorificSuffixes();
-		assertFalse(nameType.hasHonorificSuffixes());
+		nType.clearHonorificSuffixes();
+		assertFalse(nType.hasHonorificSuffixes());
 	}
 	
 	@Test
 	public void testAddAdditionalName() {
-		nameType.addAdditionalName("Joe");
-		assertTrue(nameType.containsAdditionalName("Joe"));
+		nType.addAdditionalName("Joe");
+		assertTrue(nType.containsAdditionalName("Joe"));
 	}
 	
 	@Test
 	public void testRemoveAdditionalName() {
-		nameType.removeAdditionalName("Johnny");
-		assertFalse(nameType.containsAdditionalName("Johnny"));
+		nType.removeAdditionalName("Johnny");
+		assertFalse(nType.containsAdditionalName("Johnny"));
 	}
 	
 	@Test
 	public void testContainsAdditionalName() {
-		assertTrue(nameType.containsAdditionalName("Johnny"));
+		assertTrue(nType.containsAdditionalName("Johnny"));
 	}
 	
 	@Test
 	public void testHasAdditionalName() {
-		assertTrue(nameType.hasAdditionalNames());
+		assertTrue(nType.hasAdditionalNames());
 	}
 	
 	@Test
 	public void testClearAdditionalNames() {
-		nameType.clearAdditionalNames();
-		assertFalse(nameType.hasAdditionalNames());
+		nType.clearAdditionalNames();
+		assertFalse(nType.hasAdditionalNames());
 	}
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(nameType.getTypeString(), VCardType.N.getType());
+		assertEquals(VCardTypeName.N.getType(), nType.getVCardTypeName().getType());
 	}
 	
 	@Test
 	public void testEquals() {
-		NameType nameType2 = new NameType();
-		nameType2.setGivenName("John");
-		nameType2.setFamilyName("Doe");
-		nameType2.addHonorificPrefix("Mr");
-		nameType2.addHonorificPrefix("Dr");
-		nameType2.addHonorificSuffix("I");
-		nameType2.addHonorificSuffix("II");
-		nameType2.addAdditionalName("Johnny");
+		NType nType2 = new NType();
+		nType2.setGivenName("John");
+		nType2.setFamilyName("Doe");
+		nType2.addHonorificPrefix("Mr");
+		nType2.addHonorificPrefix("Dr");
+		nType2.addHonorificSuffix("I");
+		nType2.addHonorificSuffix("II");
+		nType2.addAdditionalName("Johnny");
 		
-		assertTrue(nameType.equals(nameType2));
+		assertTrue(nType.equals(nType2));
 	}
 	
 	@Test
 	public void testHashcode() {
-		NameType nameType2 = new NameType();
-		nameType2.setGivenName("John");
-		nameType2.setFamilyName("Doe");
-		nameType2.addHonorificPrefix("Mr");
-		nameType2.addHonorificPrefix("Dr");
-		nameType2.addHonorificSuffix("I");
-		nameType2.addHonorificSuffix("II");
-		nameType2.addAdditionalName("Johnny");
+		NType nType2 = new NType();
+		nType2.setGivenName("John");
+		nType2.setFamilyName("Doe");
+		nType2.addHonorificPrefix("Mr");
+		nType2.addHonorificPrefix("Dr");
+		nType2.addHonorificSuffix("I");
+		nType2.addHonorificSuffix("II");
+		nType2.addAdditionalName("Johnny");
 		
-		int hcode1 = nameType.hashCode();
-		int hcode2 = nameType2.hashCode();
+		int hcode1 = nType.hashCode();
+		int hcode2 = nType2.hashCode();
 		assertEquals(hcode1, hcode2);
 	}
 	
 	@Test
+	public void testCompareTo() {
+		NType nType2 = new NType();
+		nType2.setGivenName("John");
+		nType2.setFamilyName("Doe");
+		nType2.addHonorificPrefix("Mr");
+		nType2.addHonorificPrefix("Dr");
+		nType2.addHonorificSuffix("I");
+		nType2.addHonorificSuffix("II");
+		nType2.addAdditionalName("Johnny");
+		
+		assertTrue(nType.compareTo(nType2) == 0);
+	}
+	
+	@Test
 	public void testClone() {
-		NameFeature cloned = nameType.clone();
-		assertEquals(cloned, nameType);
-		assertTrue(nameType.equals(cloned));
+		NType cloned = nType.clone();
+		assertEquals(cloned, nType);
+		assertTrue(nType.equals(cloned));
+		assertTrue(nType.compareTo(cloned) == 0);
 	}
 }

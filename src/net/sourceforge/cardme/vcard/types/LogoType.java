@@ -1,21 +1,21 @@
 package net.sourceforge.cardme.vcard.types;
 
-import net.sourceforge.cardme.util.StringUtil;
-import net.sourceforge.cardme.util.Util;
-import net.sourceforge.cardme.vcard.EncodingType;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.LogoFeature;
-import net.sourceforge.cardme.vcard.types.media.ImageMediaType;
-import net.sourceforge.cardme.vcard.types.parameters.LogoParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.List;
+import net.sourceforge.cardme.util.StringUtil;
+import net.sourceforge.cardme.vcard.arch.EncodingType;
+import net.sourceforge.cardme.vcard.arch.VCardBinaryType;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
+import net.sourceforge.cardme.vcard.features.LogoFeature;
+import net.sourceforge.cardme.vcard.types.media.ImageMediaType;
+import net.sourceforge.cardme.vcard.types.params.ExtendedParamType;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -46,188 +46,248 @@ import java.util.Arrays;
  * 
  * @author George El-Haddad
  * <br/>
- * Feb 4, 2010
+ * Aug 7, 2012
  *
  */
-public class LogoType extends Type implements LogoFeature {
-
-	private static final long serialVersionUID = -6903814012469842353L;
+public class LogoType extends AbstractVCardType implements VCardBinaryType, Comparable<LogoType>, Cloneable, LogoFeature {
+	
+	private static final long serialVersionUID = -8670562134417464424L;
 	
 	private byte[] logoBytes = null;
 	private URI logoUri = null;
-	private LogoParameterType logoParameterType = null;
 	private ImageMediaType imageMediaType = null;
-	private boolean isSetCompression = false;
+	private boolean compressed = false;
 	
 	public LogoType() {
-		super(EncodingType.BINARY, ParameterTypeStyle.PARAMETER_VALUE_LIST);
+		this((byte[])null);
 	}
 	
-	public LogoType(URI logoUri, EncodingType encodingType, LogoParameterType logoParameterType) {
-		super(encodingType, ParameterTypeStyle.PARAMETER_VALUE_LIST);
-		setLogoURI(logoUri);
-		setLogoParameterType(logoParameterType);
-	}
-	
-	public LogoType(byte[] logoBytes, EncodingType encodingType, LogoParameterType logoParameterType) {
-		super(encodingType, ParameterTypeStyle.PARAMETER_VALUE_LIST);
+	public LogoType(byte[] logoBytes) {
+		super(VCardTypeName.LOGO);
 		setLogo(logoBytes);
-		setLogoParameterType(logoParameterType);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public byte[] getLogo()
-	{
-		return logoBytes;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public URI getLogoURI()
-	{
-		return logoUri;
+	public LogoType(URI photoUri) {
+		super(VCardTypeName.LOGO);
+		setLogoURI(photoUri);
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public URL getLogoURL() throws MalformedURLException
+
+	public byte[] getLogo()
 	{
-		return logoUri.toURL();
+		return getBinaryData();
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
+	public void setLogo(byte[] logo) {
+		setBinaryData(logo);
+	}
+
 	public boolean hasLogo()
 	{
 		return logoBytes != null || logoUri != null;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+	public void clearLogo() {
+		logoBytes = null;
+		logoUri = null;
+	}
+	
+	public URI getLogoURI()
+	{
+		return logoUri;
+	}
+
+	public void setLogoURI(URI logoUri) {
+		if(logoUri != null) {
+			this.logoUri = logoUri;
+		}
+		else {
+			this.logoUri = null;
+		}
+	}
+
 	public boolean isURI()
 	{
 		return logoUri != null;
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isInline()
-	{
-		return logoBytes != null;
+
+	public void setLogoURL(URL logoUrl) throws URISyntaxException {
+		if(logoUrl != null) {
+			this.logoUri = logoUrl.toURI();
+		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public LogoParameterType getLogoParameterType()
+	public URL getLogoURL() throws MalformedURLException
 	{
-		return logoParameterType;
+		if(logoUri != null) {
+			return logoUri.toURL();
+		}
+		else {
+			return null;
+		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public ImageMediaType getImageMediaType()
 	{
 		return imageMediaType;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setLogoParameterType(LogoParameterType logoParameterType) {
-		this.logoParameterType = logoParameterType;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public void setImageMediaType(ImageMediaType imageMediaType) {
 		this.imageMediaType = imageMediaType;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setLogo(byte[] logoBytes) {
-		this.logoBytes = logoBytes;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setLogoURI(URI logoUri) {
-		this.logoUri = logoUri;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setLogoURL(URL logoUrl) throws URISyntaxException {
-		this.logoUri = logoUrl.toURI();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasLogoParameterType()
-	{
-		return logoParameterType != null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public boolean hasImageMediaType()
 	{
 		return imageMediaType != null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setCompression(boolean compression) {
-		isSetCompression = compression;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isSetCompression()
+	public boolean isCompressed()
 	{
-		return isSetCompression;
+		return compressed;
+	}
+
+	public void setCompression(boolean compressed)
+	{
+		this.compressed = compressed;
+		
+	}
+
+	public byte[] getBinaryData()
+	{
+		if(logoBytes != null) {
+			return logoBytes;
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void setBinaryData(byte[] binaryData) {
+		if(binaryData != null) {
+			this.logoBytes = Arrays.copyOf(binaryData, binaryData.length);
+		}
+		else {
+			this.logoBytes = null;
+		}
+	}
+
+	public boolean isBinary()
+	{
+		return EncodingType.BINARY.equals(getEncodingType());
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+	public boolean hasParams()
+	{
+		return false;
+	}
+	
 	@Override
-	public String getTypeString()
+	public LogoType clone()
 	{
-		return VCardType.LOGO.getType();
+		LogoType cloned = new LogoType();
+		cloned.setEncodingType(getEncodingType());
+		cloned.setVCardTypeName(getVCardTypeName());
+
+		if(hasCharset()) {
+			cloned.setCharset(getCharset());
+		}
+		
+		cloned.setGroup(getGroup());
+		cloned.setLanguage(getLanguage());
+		cloned.setParameterTypeStyle(getParameterTypeStyle());
+		cloned.addAllExtendedParams(getExtendedParams());
+		
+		if(logoBytes != null) {
+			byte[] clonedBytes = Arrays.copyOf(logoBytes, logoBytes.length);
+			cloned.setLogo(clonedBytes);
+		}
+		
+		if(logoUri != null) {
+			cloned.setLogoURI(logoUri);
+		}
+		
+		if(imageMediaType != null) {
+			cloned.setImageMediaType(imageMediaType);
+		}
+		
+		cloned.setCompression(compressed);
+		return cloned;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+	public int compareTo(LogoType obj)
+	{
+		if(obj != null) {
+			String[] contents = obj.getContents();
+			String[] myContents = getContents();
+			if(Arrays.equals(myContents, contents)) {
+				return 0;
+			}
+			else {
+				return 1;
+			}
+		}
+		else {
+			return -1;
+		}
+	}
+
+	@Override
+	protected String[] getContents()
+	{
+		String[] contents = new String[11];
+		contents[0] = getVCardTypeName().getType();
+		contents[1] = getEncodingType().getType();
+		contents[2] = StringUtil.getString(getGroup());
+		contents[3] = (getCharset() != null ? getCharset().name() : "");
+		contents[4] = (getLanguage() != null ? getLanguage().getLanguageCode() : "");
+		contents[5] = getParameterTypeStyle().toString();
+		
+		if(hasExtendedParams()) {
+			List<ExtendedParamType> xParams = getExtendedParams();
+			StringBuilder sb = new StringBuilder();
+			for(ExtendedParamType xParamType : xParams) {
+				sb.append(xParamType.toString());
+				sb.append(",");
+			}
+			
+			sb.deleteCharAt(sb.length()-1);
+			contents[6] = sb.toString();
+		}
+		else {
+			contents[6] = "";
+		}
+		
+		if(logoBytes != null) {
+			contents[7] = StringUtil.toHexString(logoBytes);
+		}
+		else {
+			contents[7] = "";
+		}
+		
+		if(logoUri != null) {
+			contents[8] = logoUri.toString();
+		}
+		else {
+			contents[8] = "";
+		}
+		
+		if(imageMediaType != null) {
+			contents[9] = imageMediaType.toString();
+		}
+		else {
+			contents[9] = "";
+		}
+		
+		contents[10] = String.valueOf(compressed);
+		
+		return contents;
+	}
+
 	@Override
 	public boolean equals(Object obj)
 	{
 		if(obj != null) {
 			if(obj instanceof LogoType) {
-				if(this == obj || ((LogoType)obj).hashCode() == this.hashCode()) {
-					return true;
-				}
-				else {
-					return false;
-				}
+				return this.compareTo((LogoType)obj) == 0;
 			}
 			else {
 				return false;
@@ -236,95 +296,5 @@ public class LogoType extends Type implements LogoFeature {
 		else {
 			return false;
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int hashCode()
-	{
-		return Util.generateHashCode(toString());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append(this.getClass().getName());
-		sb.append("[ ");
-		if(encodingType != null) {
-			sb.append(encodingType.getType());
-			sb.append(",");
-		}
-		
-		if(logoBytes != null) {
-			sb.append(StringUtil.toHexString(logoBytes));
-			sb.append(",");
-		}
-		
-		if(logoUri != null) {
-			sb.append(logoUri.toString());
-			sb.append(",");
-		}
-		
-		if(logoParameterType != null) {
-			sb.append(logoParameterType.getTypeName());
-			sb.append(",");
-		}
-		
-		if(imageMediaType != null) {
-			sb.append(imageMediaType.getTypeName());
-			sb.append(",");
-		}
-
-		if(super.id != null) {
-			sb.append(super.id);
-			sb.append(",");
-		}
-		
-		sb.deleteCharAt(sb.length()-1);	//Remove last comma.
-		sb.append(" ]");
-		return sb.toString();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public LogoFeature clone()
-	{
-		LogoType cloned = new LogoType();
-		
-		if(logoBytes != null) {
-			byte[] clonedBytes = Arrays.copyOf(logoBytes, logoBytes.length);
-			cloned.setLogo(clonedBytes);
-		}
-		
-		if(logoUri != null) {
-			try {
-				cloned.setLogoURI(new URI(logoUri.toString()));
-			}
-			catch(URISyntaxException e) {
-				cloned.setLogoURI(null);
-			}
-		}
-		
-		if(logoParameterType != null) {
-			cloned.setLogoParameterType(logoParameterType);
-		}
-		
-		if(imageMediaType != null) {
-			cloned.setImageMediaType(imageMediaType);
-		}
-		
-		cloned.setCompression(isSetCompression);
-		cloned.setParameterTypeStyle(getParameterTypeStyle());
-		cloned.setEncodingType(getEncodingType());
-		cloned.setID(getID());
-		return cloned;
 	}
 }

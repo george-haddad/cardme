@@ -4,14 +4,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.ClassFeature;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -42,7 +41,7 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 1, 2011
+ * Aug 24, 2012
  *
  */
 public class ClassTypeTest {
@@ -66,6 +65,32 @@ public class ClassTypeTest {
 	}
 	
 	@Test
+	public void testSetSecurityClass() {
+		classType.setSecurityClass("Test");
+		assertEquals("Test", classType.getSecurityClass());
+		assertTrue(classType.hasSecurityClass());
+	}
+	
+	@Test
+	public void testSetSecurityClassNull() {
+		classType.setSecurityClass(null);
+		assertEquals(null, classType.getSecurityClass());
+		assertFalse(classType.hasSecurityClass());
+	}
+	
+	@Test
+	public void testSetSecurityClassSecure() {
+		String secClass = "TOP SECRET";
+		classType.setSecurityClass(secClass);
+		
+		String secClassCopy = classType.getSecurityClass();
+		
+		assertFalse(secClass == secClassCopy);
+		assertTrue(secClass.compareTo(secClassCopy) == 0);
+		assertTrue(secClass.equals(secClassCopy));
+	}
+	
+	@Test
 	public void testClearSecurityClass() {
 		classType.clearSecurityClass();
 		assertNull(classType.getSecurityClass());
@@ -74,13 +99,19 @@ public class ClassTypeTest {
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(classType.getTypeString(), VCardType.CLASS.getType());
+		assertEquals(VCardTypeName.CLASS.getType(), classType.getVCardTypeName().getType());
 	}
 	
 	@Test
 	public void testEquals() {
 		ClassType classType2 = new ClassType("TOP SECRET");
 		assertTrue(classType.equals(classType2));
+	}
+	
+	@Test
+	public void testCompareTo() {
+		ClassType classType2 = new ClassType("TOP SECRET");
+		assertTrue(classType.compareTo(classType2) == 0);
 	}
 	
 	@Test
@@ -94,8 +125,9 @@ public class ClassTypeTest {
 	
 	@Test
 	public void testClone() {
-		ClassFeature cloned = classType.clone();
+		ClassType cloned = classType.clone();
 		assertEquals(cloned, classType);
 		assertTrue(classType.equals(cloned));
+		assertTrue(classType.compareTo(cloned) == 0);
 	}
 }

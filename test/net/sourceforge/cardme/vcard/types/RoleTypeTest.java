@@ -3,14 +3,13 @@ package net.sourceforge.cardme.vcard.types;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.RoleFeature;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -41,7 +40,7 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 3, 2011
+ * Aug 27, 2012
  *
  */
 public class RoleTypeTest {
@@ -65,6 +64,18 @@ public class RoleTypeTest {
 	}
 	
 	@Test
+	public void testSetRole() {
+		String role = "Developer";
+		roleType.setRole(role);
+		
+		String roleCopy = roleType.getRole();
+		
+		assertFalse(role == roleCopy);
+		assertTrue(role.compareTo(roleCopy) == 0);
+		assertTrue(role.equals(roleCopy));
+	}
+	
+	@Test
 	public void testHasRole() {
 		assertTrue(roleType.hasRole());
 	}
@@ -77,7 +88,7 @@ public class RoleTypeTest {
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(roleType.getTypeString(), VCardType.ROLE.getType());
+		assertEquals(VCardTypeName.ROLE.getType(), roleType.getVCardTypeName().getType());
 	}
 	
 	@Test
@@ -96,9 +107,16 @@ public class RoleTypeTest {
 	}
 	
 	@Test
+	public void testCompareTo() {
+		RoleType roleType2 = new RoleType("Developer");
+		assertTrue(roleType.compareTo(roleType2) == 0);
+	}
+	
+	@Test
 	public void testClone() {
-		RoleFeature cloned = roleType.clone();
+		RoleType cloned = roleType.clone();
 		assertEquals(cloned, roleType);
 		assertTrue(roleType.equals(cloned));
+		assertTrue(roleType.compareTo(cloned) == 0);
 	}
 }

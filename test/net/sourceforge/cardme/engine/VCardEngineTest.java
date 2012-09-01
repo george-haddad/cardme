@@ -2,13 +2,13 @@ package net.sourceforge.cardme.engine;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import java.util.Iterator;
+import java.util.List;
 import net.sourceforge.cardme.io.CompatibilityMode;
-import net.sourceforge.cardme.vcard.EncodingType;
+import net.sourceforge.cardme.util.Base64Wrapper;
 import net.sourceforge.cardme.vcard.VCardImpl;
-import net.sourceforge.cardme.vcard.features.KeyFeature;
+import net.sourceforge.cardme.vcard.arch.EncodingType;
+import net.sourceforge.cardme.vcard.types.KeyType;
 import net.sourceforge.cardme.vcard.types.media.KeyTextType;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -77,29 +77,27 @@ public class VCardEngineTest {
 		sb.append("KEY;PGP:plain text key\r\n");
 		sb.append("KEY;GPG;ENCODING=QUOTED-PRINTABLE:quoted printable=0D=0A=\r\n");
 		sb.append(" key\r\n");
-		sb.append("KEY;ENCODING=BASE64;X509:YmluYXJ5IGRhdGE=");
+		sb.append("KEY;ENCODING=BASE64;X509:YmluYXJ5IGRhdGE=\r\n");
 		sb.append("END:VCARD\r\n");
 
 		VCardImpl vcard = (VCardImpl)vCardEngine.parse(sb.toString());
 
-		Iterator<KeyFeature> it = vcard.getKeys();
+		List<KeyType> list = vcard.getKeys();
 
-		KeyFeature f = it.next();
+		KeyType f = list.get(0);
 		assertEquals(KeyTextType.PGP, f.getKeyTextType());
 		assertArrayEquals("plain text key".getBytes(), f.getKey());
 		assertEquals(EncodingType.EIGHT_BIT, f.getEncodingType());
 
-		f = it.next();
+		f = list.get(1);
 		assertEquals(KeyTextType.GPG, f.getKeyTextType());
 		assertArrayEquals("quoted printable\r\nkey".getBytes(), f.getKey());
 		assertEquals(EncodingType.EIGHT_BIT, f.getEncodingType());
 
-		f = it.next();
+		f = list.get(2);
 		assertEquals(KeyTextType.X509, f.getKeyTextType());
-		assertArrayEquals("binary data".getBytes(), f.getKey());
+		assertArrayEquals(Base64Wrapper.decode("YmluYXJ5IGRhdGE="), f.getKey());
 		assertEquals(EncodingType.BINARY, f.getEncodingType());
-
-		assertFalse(it.hasNext());
 	}
 	
 	@Test
@@ -107,15 +105,15 @@ public class VCardEngineTest {
 		VCardImpl vcard = (VCardImpl)vCardEngine.parse(getInvalidVCard());
 		assertTrue(vcard.hasErrors());
 		
-		assertTrue(vcard.hasBegin());
+		assertTrue(vcard.getBegin() != null);
 		assertTrue(vcard.getVersion() != null);
-		assertTrue(vcard.getName() != null);
-		assertTrue(vcard.getFormattedName() != null);
-		assertTrue(vcard.hasEnd());
+		assertTrue(vcard.getN() != null);
+		assertTrue(vcard.getFN() != null);
+		assertTrue(vcard.getEnd() != null);
 		
-		assertEquals("John", vcard.getName().getGivenName());
-		assertEquals("Doe", vcard.getName().getFamilyName());
-		assertEquals("John Doe", vcard.getFormattedName().getFormattedName());
+		assertEquals("John", vcard.getN().getGivenName());
+		assertEquals("Doe", vcard.getN().getFamilyName());
+		assertEquals("John Doe", vcard.getFN().getFormattedName());
 	}
 	
 	private static String getInvalidVCard()

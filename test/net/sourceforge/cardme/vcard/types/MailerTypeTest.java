@@ -3,14 +3,14 @@ package net.sourceforge.cardme.vcard.types;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.VCardType;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import net.sourceforge.cardme.vcard.features.MailerFeature;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -41,7 +41,7 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 3, 2011
+ * Aug 27, 2012
  *
  */
 public class MailerTypeTest {
@@ -65,6 +65,24 @@ public class MailerTypeTest {
 	}
 	
 	@Test
+	public void testSetMailer() {
+		mailerType.setMailer("Eudora");
+		assertEquals("Eudora", mailerType.getMailer());
+	}
+	
+	@Test
+	public void testSetMailerSecure() {
+		String mailer = "Eudora";
+		mailerType.setMailer(mailer);
+		
+		String mailerCopy = mailerType.getMailer();
+		
+		assertFalse(mailer == mailerCopy);
+		assertTrue(mailer.compareTo(mailerCopy) == 0);
+		assertTrue(mailer.equals(mailerCopy));
+	}
+	
+	@Test
 	public void testHasMailer() {
 		assertTrue(mailerType.hasMailer());
 	}
@@ -77,7 +95,7 @@ public class MailerTypeTest {
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(mailerType.getTypeString(), VCardType.MAILER.getType());
+		assertEquals(VCardTypeName.MAILER.getType(), mailerType.getVCardTypeName().getType());
 	}
 	
 	@Test
@@ -93,6 +111,12 @@ public class MailerTypeTest {
 		int hcode1 = mailerType.hashCode();
 		int hcode2 = mailerType2.hashCode();
 		assertEquals(hcode1, hcode2);
+	}
+	
+	@Test
+	public void testCompareTo() {
+		MailerType mailerType2 = new MailerType("X-MAILER-THUNDER-BIRD");
+		assertTrue(mailerType.compareTo(mailerType2) == 0);
 	}
 	
 	@Test

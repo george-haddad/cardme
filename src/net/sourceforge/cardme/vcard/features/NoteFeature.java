@@ -1,7 +1,7 @@
 package net.sourceforge.cardme.vcard.features;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -30,9 +30,9 @@ package net.sourceforge.cardme.vcard.features;
 
 /**
  * 
- * @author Georges El-Haddad
+ * @author George El-Haddad
  * <br/>
- * Aug 9, 2006
+ * Aug 9, 2012
  * 
  * <p><b>RFC 2426</b><br/>
  * <b>3.6.2 NOTE Type Definition</b>
@@ -45,33 +45,13 @@ package net.sourceforge.cardme.vcard.features;
  * </ul>
  * </p>
  */
-public interface NoteFeature extends TypeTools {
-
-	/**
-	 * <p>Returns the note.</p>
-	 *
-	 * @return {@link String}
-	 */
+public interface NoteFeature {
+	
 	public String getNote();
 	
-	/**
-	 * <p>Sets the note.</p>
-	 *
-	 * @param note
-	 */
 	public void setNote(String note);
 	
-	/**
-	 * <p>Returns true if a note exists.</p>
-	 *
-	 * @return boolean
-	 */
 	public boolean hasNote();
 	
-	/**
-	 * <p>Returns a full copy of this object.</p>
-	 *
-	 * @return {@link NoteFeature}
-	 */
-	public NoteFeature clone();
+	public void clearNote();
 }

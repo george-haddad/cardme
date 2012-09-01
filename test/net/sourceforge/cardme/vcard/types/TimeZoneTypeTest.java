@@ -2,18 +2,14 @@ package net.sourceforge.cardme.vcard.types;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
 import java.util.TimeZone;
-
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.TimeZoneFeature;
-
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -44,7 +40,7 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 4, 2011
+ * Aug 27, 2012
  * <p>
  * @author Michael Angstadt
  * <br/>
@@ -53,11 +49,11 @@ import org.junit.Test;
  */
 public class TimeZoneTypeTest {
 
-	private TimeZoneType timeZoneType = null;
+	private TzType timeZoneType = null;
 	
 	@Before
 	public void setUp() throws Exception {
-		timeZoneType = new TimeZoneType();
+		timeZoneType = new TzType();
 		timeZoneType.setTimeZone(TimeZone.getTimeZone("UTC"));
 	}
 
@@ -276,12 +272,12 @@ public class TimeZoneTypeTest {
 
 	@Test
 	public void testGetTypeString() {
-		assertEquals(timeZoneType.getTypeString(), VCardType.TZ.getType());
+		assertEquals(VCardTypeName.TZ.getType(), timeZoneType.getVCardTypeName().getType());
 	}
 	
 	@Test
 	public void testEquals() {
-		TimeZoneType timeZoneType2 = new TimeZoneType();
+		TzType timeZoneType2 = new TzType();
 		timeZoneType2.setTimeZone(TimeZone.getTimeZone("UTC"));
 		
 		assertTrue(timeZoneType.equals(timeZoneType2));
@@ -289,7 +285,7 @@ public class TimeZoneTypeTest {
 	
 	@Test
 	public void testHashcode() {
-		TimeZoneType timeZoneType2 = new TimeZoneType();
+		TzType timeZoneType2 = new TzType();
 		timeZoneType2.setTimeZone(TimeZone.getTimeZone("UTC"));
 		
 		int hcode1 = timeZoneType2.hashCode();
@@ -298,9 +294,18 @@ public class TimeZoneTypeTest {
 	}
 	
 	@Test
+	public void testCompareTo() {
+		TzType timeZoneType2 = new TzType();
+		timeZoneType2.setTimeZone(TimeZone.getTimeZone("UTC"));
+		
+		assertTrue(timeZoneType.compareTo(timeZoneType2) == 0);
+	}
+	
+	@Test
 	public void testClone() {
-		TimeZoneFeature cloned = timeZoneType.clone();
+		TzType cloned = timeZoneType.clone();
 		assertEquals(cloned, timeZoneType);
 		assertTrue(timeZoneType.equals(cloned));
+		assertTrue(timeZoneType.compareTo(cloned) == 0);
 	}
 }

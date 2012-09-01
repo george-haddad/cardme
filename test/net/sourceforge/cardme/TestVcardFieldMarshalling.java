@@ -9,21 +9,22 @@ import java.net.URISyntaxException;
 import net.sourceforge.cardme.io.CompatibilityMode;
 import net.sourceforge.cardme.io.VCardWriter;
 import net.sourceforge.cardme.util.Util;
-import net.sourceforge.cardme.vcard.EncodingType;
 import net.sourceforge.cardme.vcard.VCardImpl;
-import net.sourceforge.cardme.vcard.types.AddressType;
+import net.sourceforge.cardme.vcard.arch.EncodingType;
+import net.sourceforge.cardme.vcard.exceptions.VCardBuildException;
+import net.sourceforge.cardme.vcard.types.AdrType;
 import net.sourceforge.cardme.vcard.types.CategoriesType;
 import net.sourceforge.cardme.vcard.types.EmailType;
-import net.sourceforge.cardme.vcard.types.FormattedNameType;
+import net.sourceforge.cardme.vcard.types.FNType;
 import net.sourceforge.cardme.vcard.types.KeyType;
-import net.sourceforge.cardme.vcard.types.NameType;
-import net.sourceforge.cardme.vcard.types.OrganizationType;
+import net.sourceforge.cardme.vcard.types.NType;
+import net.sourceforge.cardme.vcard.types.OrgType;
 import net.sourceforge.cardme.vcard.types.PhotoType;
-import net.sourceforge.cardme.vcard.types.TelephoneType;
-import net.sourceforge.cardme.vcard.types.URLType;
+import net.sourceforge.cardme.vcard.types.TelType;
+import net.sourceforge.cardme.vcard.types.UrlType;
 import net.sourceforge.cardme.vcard.types.media.ImageMediaType;
 import net.sourceforge.cardme.vcard.types.media.KeyTextType;
-import net.sourceforge.cardme.vcard.types.parameters.TelephoneParameterType;
+import net.sourceforge.cardme.vcard.types.params.TelParamType;
 import org.junit.Test;
 
 /*
@@ -63,11 +64,9 @@ import org.junit.Test;
  */
 public class TestVcardFieldMarshalling {
 
-	
 	@Test
-	public void testVCardName() {
+	public void testVCardName() throws VCardBuildException {
 		VCardImpl vcard = new VCardImpl();
-		vcard.setID("test");
 		appyBasicName(vcard);
 		String result = getSerializedString(vcard);
 		assertNotNull(result);
@@ -79,7 +78,7 @@ public class TestVcardFieldMarshalling {
 	}
 	
 	@Test
-	public void testCategory() {
+	public void testCategory() throws VCardBuildException {
 		VCardImpl vcard = new VCardImpl();
 		appyBasicName(vcard);
 		vcard.setCategories(new CategoriesType("work"));
@@ -88,32 +87,32 @@ public class TestVcardFieldMarshalling {
 	}
 	
 	@Test
-	public void testOrganization() {
+	public void testOrganization() throws VCardBuildException {
 		VCardImpl vcard = new VCardImpl();
 		appyBasicName(vcard);
-		vcard.setOrganizations(new OrganizationType("Acme, Inc."));
+		vcard.setOrg(new OrgType("Acme, Inc."));
 		String result = getSerializedString(vcard);
 		assertTrue(result.contains("ORG:Acme\\, Inc."));		
 	}
 	
 	@Test
-	public void testAddress() {
+	public void testAddress() throws VCardBuildException {
 		VCardImpl vcard = new VCardImpl();
 		appyBasicName(vcard);
-		AddressType address = new AddressType();
+		AdrType address = new AdrType();
 		address.setGroup("work");
 		address.setCountryName("US");
 		address.setPostalCode("55555-0123");
 		address.setLocality("Anytown");
 		address.setStreetAddress("555 Some Street Address");
 		
-		vcard.addAddress(address);
+		vcard.addAdr(address);
 		String result = getSerializedString(vcard);
 		assertTrue(result.contains("work.ADR:;;555 Some Street Address;Anytown;;55555-0123;US"));		
 	}
 	
 	@Test
-	public void testEmailAddress() {
+	public void testEmailAddress() throws VCardBuildException {
 		VCardImpl vcard = new VCardImpl();
 		appyBasicName(vcard);
 		vcard.addEmail(new EmailType("joe@example.org"));
@@ -122,31 +121,31 @@ public class TestVcardFieldMarshalling {
 	}
 	
 	@Test
-	public void testURL() {
+	public void testURL() throws VCardBuildException {
 		VCardImpl vcard = new VCardImpl();
 		appyBasicName(vcard);
-		vcard.addURL(new URLType("http://www.example.org/"));
+		vcard.addUrl(new UrlType("http://www.example.org/"));
 		String result = getSerializedString(vcard);
 		assertTrue(result.contains("URL:http://www.example.org/"));
 		
-		vcard.addURL(new URLType("ftp://ftp.example.org/"));
+		vcard.addUrl(new UrlType("ftp://ftp.example.org/"));
 		result = getSerializedString(vcard);
 		assertTrue(result.contains("URL:ftp://ftp.example.org/"));
 		
-		vcard.addURL(new URLType("this is free form text"));
+		vcard.addUrl(new UrlType("this is free form text"));
 		result = getSerializedString(vcard);
 		assertTrue(result.contains("URL:this is free form text"));
 	}
 	
 	@Test
-	public void testPhoneNumber() {
+	public void testPhoneNumber() throws VCardBuildException {
 		VCardImpl vcard = new VCardImpl();
 		appyBasicName(vcard);
 		
-		vcard.addTelephoneNumber(new TelephoneType("+1 (555) 555-1232", TelephoneParameterType.WORK));
-		vcard.addTelephoneNumber(new TelephoneType("+1 (555) 555-1233", TelephoneParameterType.FAX));
-		vcard.addTelephoneNumber(new TelephoneType("+1 (555) 555-1234", TelephoneParameterType.CELL));
-		vcard.addTelephoneNumber(new TelephoneType("+1 (555) 555-1234", TelephoneParameterType.HOME));
+		vcard.addTel(new TelType("+1 (555) 555-1232").addParam(TelParamType.WORK));
+		vcard.addTel(new TelType("+1 (555) 555-1233").addParam(TelParamType.FAX));
+		vcard.addTel(new TelType("+1 (555) 555-1234").addParam(TelParamType.CELL));
+		vcard.addTel(new TelType("+1 (555) 555-1234").addParam(TelParamType.HOME));
 		
 		String result = getSerializedString(vcard);
 		assertTrue(result.contains("TEL;TYPE=WORK:+1 (555) 555-1232"));	
@@ -156,7 +155,7 @@ public class TestVcardFieldMarshalling {
 	}
 	
 	@Test
-	public void testLinkedProfileImage() throws URISyntaxException {
+	public void testLinkedProfileImage() throws URISyntaxException, VCardBuildException {
 		VCardImpl vcard = new VCardImpl();
 		appyBasicName(vcard);
 		
@@ -171,7 +170,7 @@ public class TestVcardFieldMarshalling {
 	}
 	
 	@Test
-	public void testProfileImage() throws IOException {
+	public void testProfileImage() throws IOException, VCardBuildException {
 		VCardImpl vcard = new VCardImpl();
 		appyBasicName(vcard);
 		
@@ -189,7 +188,7 @@ public class TestVcardFieldMarshalling {
 	}
 	
 	@Test
-	public void testKey() {
+	public void testKey() throws VCardBuildException {
 		VCardImpl vcard = new VCardImpl();
 		appyBasicName(vcard);
 		
@@ -204,7 +203,7 @@ public class TestVcardFieldMarshalling {
 	}
 	
 
-	protected String getSerializedString(VCardImpl vcard) {
+	protected String getSerializedString(VCardImpl vcard) throws VCardBuildException {
 		VCardWriter writer = new VCardWriter();
 		writer.setCompatibilityMode(CompatibilityMode.RFC2426);
 		writer.setVCard(vcard);
@@ -213,7 +212,7 @@ public class TestVcardFieldMarshalling {
 	}
 
 	protected void appyBasicName(VCardImpl vcard) {
-		vcard.setName(new NameType("User", "Example"));
-		vcard.setFormattedName(new FormattedNameType("User, Example"));
+		vcard.setN(new NType("User", "Example"));
+		vcard.setFN(new FNType("User, Example"));
 	}
 }

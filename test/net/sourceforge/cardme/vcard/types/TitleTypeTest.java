@@ -3,14 +3,13 @@ package net.sourceforge.cardme.vcard.types;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.TitleFeature;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -41,7 +40,7 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 4, 2011
+ * Aug 27, 2012
  *
  */
 public class TitleTypeTest {
@@ -65,6 +64,18 @@ public class TitleTypeTest {
 	}
 	
 	@Test
+	public void testSetTitleSecure() {
+		String title = "Master of the known universe";
+		titleType.setTitle(title);
+		
+		String titleCopy = titleType.getTitle();
+		
+		assertFalse(title == titleCopy);
+		assertTrue(title.compareTo(titleCopy) == 0);
+		assertTrue(title.equals(titleCopy));
+	}
+	
+	@Test
 	public void testHasTitle() {
 		assertTrue(titleType.hasTitle());
 	}
@@ -77,7 +88,7 @@ public class TitleTypeTest {
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(titleType.getTypeString(), VCardType.TITLE.getType());
+		assertEquals(VCardTypeName.TITLE.getType(), titleType.getVCardTypeName().getType());
 	}
 	
 	@Test
@@ -96,9 +107,16 @@ public class TitleTypeTest {
 	}
 	
 	@Test
+	public void testCompareTo() {
+		TitleType titleType2 = new TitleType("Master of the known universe");
+		assertTrue(titleType.compareTo(titleType2) == 0);
+	}
+	
+	@Test
 	public void testClone() {
-		TitleFeature cloned = titleType.clone();
+		TitleType cloned = titleType.clone();
 		assertEquals(cloned, titleType);
 		assertTrue(titleType.equals(cloned));
+		assertTrue(titleType.compareTo(cloned) == 0);
 	}
 }

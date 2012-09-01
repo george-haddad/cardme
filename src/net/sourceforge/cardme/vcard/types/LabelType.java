@@ -1,19 +1,17 @@
 package net.sourceforge.cardme.vcard.types;
 
-import net.sourceforge.cardme.util.Util;
-import net.sourceforge.cardme.vcard.EncodingType;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.LabelFeature;
-import net.sourceforge.cardme.vcard.types.parameters.LabelParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
-import net.sourceforge.cardme.vcard.types.parameters.XLabelParameterType;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
+import net.sourceforge.cardme.util.StringUtil;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
+import net.sourceforge.cardme.vcard.features.LabelFeature;
+import net.sourceforge.cardme.vcard.types.params.ExtendedParamType;
+import net.sourceforge.cardme.vcard.types.params.LabelParamType;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -44,207 +42,204 @@ import java.util.List;
  * 
  * @author George El-Haddad
  * <br/>
- * Feb 4, 2010
+ * Aug 7, 2012
  *
  */
-public class LabelType extends Type implements LabelFeature {
+public class LabelType extends AbstractVCardType implements Comparable<LabelType>, Cloneable, LabelFeature {
 
-	private static final long serialVersionUID = 8281074789466782452L;
+	private static final long serialVersionUID = 8576427090236222231L;
 	
 	private String label = null;
-	private List<LabelParameterType> labelParameterTypes = null;
-	private List<XLabelParameterType> xtendedLabelParameterTypes = null;
+	private List<LabelParamType> labelParamTypes = null;
 	
 	public LabelType() {
-		super(EncodingType.EIGHT_BIT, ParameterTypeStyle.PARAMETER_VALUE_LIST);
-		labelParameterTypes = new ArrayList<LabelParameterType>();
-		xtendedLabelParameterTypes = new ArrayList<XLabelParameterType>();
+		this(null);
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+	public LabelType(String label) {
+		super(VCardTypeName.LABEL);
+		labelParamTypes = new ArrayList<LabelParamType>();
+		setLabel(label);
+	}
+
 	public String getLabel()
 	{
-		return label;
+		if(label != null) {
+			return new String(label);
+		}
+		else {
+			return null;
+		}
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	public void setLabel(String label) {
-		this.label = label;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Iterator<LabelParameterType> getLabelParameterTypes()
-	{
-		return labelParameterTypes.listIterator();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public List<LabelParameterType> getLabelParameterTypesList()
-	{
-		return Collections.unmodifiableList(labelParameterTypes);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getLabelParameterSize()
-	{
-		return labelParameterTypes.size();
+		if(label != null) {
+			this.label = new String(label);
+		}
+		else {
+			this.label = null;
+		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addLabelParameterType(LabelParameterType labelParameterType) {
-		labelParameterTypes.add(labelParameterType);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void removeLabelParameterType(LabelParameterType labelParameterType) {
-		labelParameterTypes.remove(labelParameterType);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean containsLabelParameterType(LabelParameterType labelParameterType)
-	{
-		return labelParameterTypes.contains(labelParameterType);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean conatinsAllLabelParameterTypes(List<LabelParameterType> parameterTypes)
-	{
-		return labelParameterTypes.containsAll(parameterTypes);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasLabelParameterTypes()
-	{
-		return !labelParameterTypes.isEmpty();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void clearLabelParameterTypes() {
-		labelParameterTypes.clear();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Iterator<XLabelParameterType> getExtendedLabelParameterTypes()
-	{
-		return xtendedLabelParameterTypes.listIterator();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public List<XLabelParameterType> getExtendedLabelParameterTypesList()
-	{
-		return Collections.unmodifiableList(xtendedLabelParameterTypes);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getExtendedLabelParameterSize()
-	{
-		return xtendedLabelParameterTypes.size();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addExtendedLabelParameterType(XLabelParameterType xtendedLabelParameterType) {
-		xtendedLabelParameterTypes.add(xtendedLabelParameterType);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void removeExtendedLabelParameterType(XLabelParameterType xtendedLabelParameterType) {
-		xtendedLabelParameterTypes.remove(xtendedLabelParameterType);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean containsExtendedLabelParameterType(XLabelParameterType xtendedLabelParameterType)
-	{
-		return xtendedLabelParameterTypes.contains(xtendedLabelParameterType);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean containsAllExtendedLabelParameterTypes(List<XLabelParameterType> parameterTypes)
-	{
-		return xtendedLabelParameterTypes.containsAll(parameterTypes);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasExtendedLabelParameterTypes()
-	{
-		return !xtendedLabelParameterTypes.isEmpty();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void clearExtendedLabelParameterTypes() {
-		xtendedLabelParameterTypes.clear();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	public boolean hasLabel()
 	{
 		return label != null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getTypeString()
+	public List<LabelParamType> getParams()
 	{
-		return VCardType.LABEL.getType();
+		return Collections.unmodifiableList(labelParamTypes);
+	}
+
+	public int getParamSize()
+	{
+		return labelParamTypes.size();
+	}
+
+	public LabelType addParam(LabelParamType labelParamType) throws NullPointerException {
+		if(labelParamType == null) {
+			throw new NullPointerException("Cannot add a null labelParamType.");
+		}
+		
+		labelParamTypes.add(labelParamType);
+		return this;
+	}
+
+	public LabelType addAllParams(List<LabelParamType> labelParamTypes) throws NullPointerException {
+		if(labelParamTypes == null) {
+			throw new NullPointerException("Cannot add a null labelParamTypes list.");
+		}
+		
+		this.labelParamTypes.addAll(labelParamTypes);
+		return this;
+	}
+
+	public LabelType removeParam(LabelParamType labelParamType) throws NullPointerException {
+		if(labelParamType == null) {
+			throw new NullPointerException("Cannot remove a null labelParamType.");
+		}
+		
+		labelParamTypes.remove(labelParamType);
+		return this;
+	}
+
+	public boolean containsParam(LabelParamType labelParamType)
+	{
+		if(labelParamType != null) {
+			return labelParamTypes.contains(labelParamType);
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean containsAllParams(List<LabelParamType> labelParamTypes)
+	{
+		if(labelParamTypes != null) {
+			return this.labelParamTypes.containsAll(labelParamTypes);
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean hasParams()
+	{
+		return !labelParamTypes.isEmpty();
+	}
+
+	public void clearParams() {
+		labelParamTypes.clear();
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
+	public LabelType clone()
+	{
+		LabelType cloned = new LabelType();
+		cloned.setEncodingType(getEncodingType());
+		cloned.setVCardTypeName(getVCardTypeName());
+
+		if(hasCharset()) {
+			cloned.setCharset(getCharset());
+		}
+		
+		cloned.setGroup(getGroup());
+		cloned.setLanguage(getLanguage());
+		cloned.setParameterTypeStyle(getParameterTypeStyle());
+		cloned.addAllExtendedParams(getExtendedParams());
+		cloned.setLabel(label);
+		cloned.addAllParams(labelParamTypes);
+		return cloned;
+	}
+	
+	public int compareTo(LabelType obj)
+	{
+		if(obj != null) {
+			String[] contents = obj.getContents();
+			String[] myContents = getContents();
+			if(Arrays.equals(myContents, contents)) {
+				return 0;
+			}
+			else {
+				return 1;
+			}
+		}
+		else {
+			return -1;
+		}
+	}
+
+	@Override
+	protected String[] getContents()
+	{
+		String[] contents = new String[9];
+		contents[0] = getVCardTypeName().getType();
+		contents[1] = getEncodingType().getType();
+		contents[2] = StringUtil.getString(getGroup());
+		contents[3] = (getCharset() != null ? getCharset().name() : "");
+		contents[4] = (getLanguage() != null ? getLanguage().getLanguageCode() : "");
+		contents[5] = getParameterTypeStyle().toString();
+		
+		if(hasExtendedParams()) {
+			List<ExtendedParamType> xParams = getExtendedParams();
+			StringBuilder sb = new StringBuilder();
+			for(ExtendedParamType xParamType : xParams) {
+				sb.append(xParamType.toString());
+				sb.append(",");
+			}
+			
+			sb.deleteCharAt(sb.length()-1);
+			contents[6] = sb.toString();
+		}
+		else {
+			contents[6] = "";
+		}
+		
+		if(!labelParamTypes.isEmpty()) {
+			StringBuilder sb = new StringBuilder();
+			for(LabelParamType labelParamType: labelParamTypes) {
+				sb.append(labelParamType.getType());
+				sb.append(",");
+			}
+			
+			sb.deleteCharAt(sb.length()-1);
+			contents[7] = sb.toString();
+		}
+		else {
+			contents[7] = "";
+		}
+		
+		contents[8] = StringUtil.getString(label);
+		
+		return contents;
+	}
+
 	@Override
 	public boolean equals(Object obj)
 	{
 		if(obj != null) {
 			if(obj instanceof LabelType) {
-				if(this == obj || ((LabelType)obj).hashCode() == this.hashCode()) {
-					return true;
-				}
-				else {
-					return false;
-				}
+				return this.compareTo((LabelType)obj) == 0;
 			}
 			else {
 				return false;
@@ -253,87 +248,5 @@ public class LabelType extends Type implements LabelFeature {
 		else {
 			return false;
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int hashCode()
-	{
-		return Util.generateHashCode(toString());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append(this.getClass().getName());
-		sb.append("[ ");
-		if(encodingType != null) {
-			sb.append(encodingType.getType());
-			sb.append(",");
-		}
-		
-		if(label != null) {
-			sb.append(label);
-			sb.append(",");
-		}
-		
-		if(!labelParameterTypes.isEmpty()) {
-			for(int i=0; i < labelParameterTypes.size(); i++) {
-				sb.append(labelParameterTypes.get(i).getType());
-				sb.append(",");
-			}
-		}
-		
-		if(!xtendedLabelParameterTypes.isEmpty()) {
-			for(int i = 0; i < xtendedLabelParameterTypes.size(); i++) {
-				sb.append(xtendedLabelParameterTypes.get(i).getType());
-				sb.append(",");
-			}
-		}
-
-		if(super.id != null) {
-			sb.append(super.id);
-			sb.append(",");
-		}
-		
-		sb.deleteCharAt(sb.length()-1);	//Remove last comma.
-		sb.append(" ]");
-		return sb.toString();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public LabelFeature clone()
-	{
-		LabelType cloned = new LabelType();
-		
-		if(label != null) {
-			cloned.setLabel(new String(label));
-		}
-		
-		if(!labelParameterTypes.isEmpty()) {
-			for(int i = 0; i < labelParameterTypes.size(); i++) {
-				cloned.addLabelParameterType(labelParameterTypes.get(i));
-			}
-		}
-		
-		if(!xtendedLabelParameterTypes.isEmpty()) {
-			for(int i = 0; i < xtendedLabelParameterTypes.size(); i++) {
-				cloned.addExtendedLabelParameterType(xtendedLabelParameterTypes.get(i));
-			}
-		}
-		
-		cloned.setParameterTypeStyle(getParameterTypeStyle());
-		cloned.setEncodingType(getEncodingType());
-		cloned.setID(getID());
-		return cloned;
 	}
 }

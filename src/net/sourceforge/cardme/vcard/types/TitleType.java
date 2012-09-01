@@ -1,13 +1,14 @@
 package net.sourceforge.cardme.vcard.types;
 
-import net.sourceforge.cardme.util.Util;
-import net.sourceforge.cardme.vcard.EncodingType;
-import net.sourceforge.cardme.vcard.VCardType;
+import java.util.Arrays;
+import java.util.List;
+import net.sourceforge.cardme.util.StringUtil;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import net.sourceforge.cardme.vcard.features.TitleFeature;
-import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
+import net.sourceforge.cardme.vcard.types.params.ExtendedParamType;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -38,12 +39,12 @@ import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
  * 
  * @author George El-Haddad
  * <br/>
- * Feb 4, 2010
+ * Aug 8, 2012
  *
  */
-public class TitleType extends Type implements TitleFeature {
+public class TitleType extends AbstractVCardType implements Comparable<TitleType>, Cloneable, TitleFeature {
 
-	private static final long serialVersionUID = 2935273649277335950L;
+	private static final long serialVersionUID = 3566747318834294408L;
 	
 	private String title = null;
 	
@@ -52,63 +53,116 @@ public class TitleType extends Type implements TitleFeature {
 	}
 	
 	public TitleType(String title) {
-		super(EncodingType.EIGHT_BIT, ParameterTypeStyle.PARAMETER_VALUE_LIST);
+		super(VCardTypeName.TITLE);
 		setTitle(title);
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	public String getTitle()
 	{
-		return title;
+		if(title != null) {
+			return new String(title);
+		}
+		else {
+			return null;
+		}
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	public void setTitle(String title) {
-		this.title = title;
+		if(title != null) {
+			this.title = new String(title);
+		}
+		else {
+			this.title = null;
+		}
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	public void clearTitle() {
 		title = null;
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	public boolean hasTitle()
 	{
 		return title != null;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getTypeString()
+	public boolean hasParams()
 	{
-		return VCardType.TITLE.getType();
+		return false;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
+	public TitleType clone()
+	{
+		TitleType cloned = new TitleType();
+		cloned.setEncodingType(getEncodingType());
+		cloned.setVCardTypeName(getVCardTypeName());
+
+		if(hasCharset()) {
+			cloned.setCharset(getCharset());
+		}
+		
+		cloned.setGroup(getGroup());
+		cloned.setLanguage(getLanguage());
+		cloned.setParameterTypeStyle(getParameterTypeStyle());
+		cloned.addAllExtendedParams(getExtendedParams());
+		cloned.setTitle(title);
+		return cloned;
+	}
+
+	public int compareTo(TitleType obj)
+	{
+		if(obj != null) {
+			String[] contents = obj.getContents();
+			String[] myContents = getContents();
+			if(Arrays.equals(myContents, contents)) {
+				return 0;
+			}
+			else {
+				return 1;
+			}
+		}
+		else {
+			return -1;
+		}
+	}
+
+	@Override
+	protected String[] getContents()
+	{
+		String[] contents = new String[8];
+		contents[0] = getVCardTypeName().getType();
+		contents[1] = getEncodingType().getType();
+		contents[2] = StringUtil.getString(getGroup());
+		contents[3] = (getCharset() != null ? getCharset().name() : "");
+		contents[4] = (getLanguage() != null ? getLanguage().getLanguageCode() : "");
+		contents[5] = getParameterTypeStyle().toString();
+		
+		if(hasExtendedParams()) {
+			List<ExtendedParamType> xParams = getExtendedParams();
+			StringBuilder sb = new StringBuilder();
+			for(ExtendedParamType xParamType : xParams) {
+				sb.append(xParamType.toString());
+				sb.append(",");
+			}
+			
+			sb.deleteCharAt(sb.length()-1);
+			contents[6] = sb.toString();
+		}
+		else {
+			contents[6] = "";
+		}
+		
+		contents[7] = StringUtil.getString(title);
+		
+		return contents;
+	}
+
 	@Override
 	public boolean equals(Object obj)
 	{
 		if(obj != null) {
 			if(obj instanceof TitleType) {
-				if(this == obj || ((TitleType)obj).hashCode() == this.hashCode()) {
-					return true;
-				}
-				else {
-					return false;
-				}
+				return this.compareTo((TitleType)obj) == 0;
 			}
 			else {
 				return false;
@@ -117,61 +171,5 @@ public class TitleType extends Type implements TitleFeature {
 		else {
 			return false;
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int hashCode()
-	{
-		return Util.generateHashCode(toString());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append(this.getClass().getName());
-		sb.append("[ ");
-		if(encodingType != null) {
-			sb.append(encodingType.getType());
-			sb.append(",");
-		}
-		
-		if(title != null) {
-			sb.append(title);
-			sb.append(",");
-		}
-
-		if(super.id != null) {
-			sb.append(super.id);
-			sb.append(",");
-		}
-		
-		sb.deleteCharAt(sb.length()-1);	//Remove last comma.
-		sb.append(" ]");
-		return sb.toString();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public TitleFeature clone()
-	{
-		TitleType cloned = new TitleType();
-		
-		if(title != null) {
-			cloned.setTitle(new String(title));
-		}
-		
-		cloned.setParameterTypeStyle(getParameterTypeStyle());
-		cloned.setEncodingType(getEncodingType());
-		cloned.setID(getID());
-		return cloned;
 	}
 }

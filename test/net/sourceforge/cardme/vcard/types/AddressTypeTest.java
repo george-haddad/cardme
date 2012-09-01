@@ -3,21 +3,17 @@ package net.sourceforge.cardme.vcard.types;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.AddressFeature;
-import net.sourceforge.cardme.vcard.types.parameters.AddressParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.XAddressParameterType;
-
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
+import net.sourceforge.cardme.vcard.types.params.AdrParamType;
+import net.sourceforge.cardme.vcard.types.params.ExtendedParamType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -48,125 +44,232 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 1, 2011
+ * Aug 24, 2012
  *
  */
 public class AddressTypeTest {
 
-	private AddressType addressType = null;
+	private AdrType adrType = null;
 	
 	@Before
 	public void setUp() throws Exception {
-		addressType = new AddressType();
-		addressType.setCountryName("USA");
-		addressType.setRegion("New York");
-		addressType.setLocality("Boorklyn");
-		addressType.setPostalCode("12345");
-		addressType.setPostOfficeBox("ABC567");
-		addressType.setStreetAddress("25 Green Crecent Ave.");
-		addressType.setExtendedAddress("Bla bla");
-		addressType.addAddressParameterType(AddressParameterType.PREF);
-		addressType.addAddressParameterType(AddressParameterType.HOME);
-		addressType.addExtendedAddressParameterType(new XAddressParameterType("X-OFFICE"));
+		adrType = new AdrType();
+		adrType.setCountryName("USA");
+		adrType.setRegion("New York");
+		adrType.setLocality("Brooklyn");
+		adrType.setPostalCode("12345");
+		adrType.setPostOfficeBox("ABC567");
+		adrType.setStreetAddress("25 Green Crecent Ave.");
+		adrType.setExtendedAddress("Bla bla");
+		adrType.addParam(AdrParamType.PREF)
+			.addParam(AdrParamType.HOME)
+			.addExtendedParam(new ExtendedParamType("X-OFFICE", VCardTypeName.ADR));
 	}
 	
 	@After
 	public void tearDown() throws Exception {
-		addressType = null;
+		adrType = null;
+	}
+	
+	@Test
+	public void testGetAddress() {
+		assertEquals("USA", adrType.getCountryName());
+		assertEquals("New York", adrType.getRegion());
+		assertEquals("Brooklyn", adrType.getLocality());
+		assertEquals("12345", adrType.getPostalCode());
+		assertEquals("ABC567", adrType.getPostOfficeBox());
+		assertEquals("25 Green Crecent Ave.", adrType.getStreetAddress());
+		assertEquals("Bla bla", adrType.getExtendedAddress());
+	}
+	
+	@Test
+	public void testSetAddressNull() {
+		adrType.setCountryName(null);
+		adrType.setRegion(null);
+		adrType.setLocality(null);
+		adrType.setPostalCode(null);
+		adrType.setPostOfficeBox(null);
+		adrType.setStreetAddress(null);
+		adrType.setExtendedAddress(null);
+		
+		assertEquals(null, adrType.getCountryName());
+		assertEquals(null, adrType.getRegion());
+		assertEquals(null, adrType.getLocality());
+		assertEquals(null, adrType.getPostalCode());
+		assertEquals(null, adrType.getPostOfficeBox());
+		assertEquals(null, adrType.getStreetAddress());
+		assertEquals(null, adrType.getExtendedAddress());
+	}
+	
+	@Test
+	public void testSetAddressSecure() {
+		adrType.setCountryName("USA");
+		adrType.setRegion("New York");
+		adrType.setLocality("Brooklyn");
+		adrType.setPostalCode("12345");
+		adrType.setPostOfficeBox("ABC567");
+		adrType.setStreetAddress("25 Green Crecent Ave.");
+		adrType.setExtendedAddress("Bla bla");
+		
+		assertFalse("USA" == adrType.getCountryName());
+		assertTrue("USA".equals(adrType.getCountryName()));
+		assertTrue("USA".compareTo(adrType.getCountryName()) == 0);
+		
+		assertFalse("New York" == adrType.getRegion());
+		assertTrue("New York".equals(adrType.getRegion()));
+		assertTrue("New York".compareTo(adrType.getRegion()) == 0);
+		
+		assertFalse("Brooklyn" == adrType.getLocality());
+		assertTrue("Brooklyn".equals(adrType.getLocality()));
+		assertTrue("Brooklyn".compareTo(adrType.getLocality()) == 0);
+		
+		assertFalse("12345" == adrType.getPostalCode());
+		assertTrue("12345".equals(adrType.getPostalCode()));
+		assertTrue("12345".compareTo(adrType.getPostalCode()) == 0);
+		
+		assertFalse("ABC567" == adrType.getPostOfficeBox());
+		assertTrue("ABC567".equals(adrType.getPostOfficeBox()));
+		assertTrue("ABC567".compareTo(adrType.getPostOfficeBox()) == 0);
+		
+		assertFalse("25 Green Crecent Ave." == adrType.getStreetAddress());
+		assertTrue("25 Green Crecent Ave.".equals(adrType.getStreetAddress()));
+		assertTrue("25 Green Crecent Ave.".compareTo(adrType.getStreetAddress()) == 0);
+		
+		assertFalse("Bla bla" == adrType.getExtendedAddress());
+		assertTrue("Bla bla".equals(adrType.getExtendedAddress()));
+		assertTrue("Bla bla".compareTo(adrType.getExtendedAddress()) == 0);
 	}
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(addressType.getTypeString(), VCardType.ADR.getType());
+		assertEquals(VCardTypeName.ADR.getType(), adrType.getVCardTypeName().getType());
 	}
 	
 	@Test
-	public void testContainsAddressParameterType() {
-		assertTrue(addressType.containsAddressParameterType(AddressParameterType.PREF));
-		assertTrue(addressType.containsAddressParameterType(AddressParameterType.HOME));
-		assertFalse(addressType.containsAddressParameterType(AddressParameterType.WORK));
+	public void testContainParam() {
+		assertTrue(adrType.containsParam(AdrParamType.PREF));
+		assertTrue(adrType.containsParam(AdrParamType.HOME));
+		assertFalse(adrType.containsParam(AdrParamType.WORK));
 	}
 	
 	@Test
-	public void testContainsAllAddressParameterTypes() {
-		List<AddressParameterType> types = new ArrayList<AddressParameterType>(3);
-		types.add(AddressParameterType.PREF);
-		types.add(AddressParameterType.HOME);
+	public void testContainsAllParams() {
+		List<AdrParamType> types = new ArrayList<AdrParamType>(2);
+		types.add(AdrParamType.PREF);
+		types.add(AdrParamType.HOME);
 		
-		assertTrue(addressType.containsAllAddressParameterTypes(types));
+		assertTrue(adrType.containsAllParams(types));
 	}
 	
 	@Test
-	public void testContainsExtendedAddressParameterType() {
-		assertTrue(addressType.containsExtendedAddressParameterType(new XAddressParameterType("X-OFFICE")));
-		assertFalse(addressType.containsExtendedAddressParameterType(new XAddressParameterType("X-NO-EXISTS")));
+	public void testGetParamSize() {
+		assertEquals(2, adrType.getParamSize());
 	}
 	
 	@Test
-	public void testContainsAllExtendedAddressParameterTypes() {
-		List<XAddressParameterType> types = new ArrayList<XAddressParameterType>(1);
-		types.add(new XAddressParameterType("X-OFFICE"));
+	public void testHasParams() {
+		assertTrue(adrType.hasParams());
+	}
+	
+	@Test
+	public void testContainsExtendedParam() {
+		assertTrue(adrType.containsExtendedParam(new ExtendedParamType("X-OFFICE", VCardTypeName.ADR)));
+		assertFalse(adrType.containsExtendedParam(new ExtendedParamType("X-NO-EXISTS", VCardTypeName.ADR)));
+		assertFalse(adrType.containsExtendedParam(new ExtendedParamType("X-NO-EXISTS", VCardTypeName.TEL)));
+	}
+	
+	@Test
+	public void testContainsAllExtendedParams() {
+		List<ExtendedParamType> types = new ArrayList<ExtendedParamType>(1);
+		types.add(new ExtendedParamType("X-OFFICE", VCardTypeName.ADR));
 		
-		assertTrue(addressType.containsAllExtendedAddressParameterTypes(types));
+		assertTrue(adrType.containsAllExtendedParams(types));
 	}
 	
 	@Test
-	public void testRemoveAddressParameterType() {
-		addressType.addAddressParameterType(AddressParameterType.POSTAL);
-		assertTrue(addressType.containsAddressParameterType(AddressParameterType.POSTAL));
-		addressType.removeAddressParameterType(AddressParameterType.POSTAL);
-		assertFalse(addressType.containsAddressParameterType(AddressParameterType.POSTAL));
+	public void testRemoveParam() {
+		adrType.addParam(AdrParamType.POSTAL);
+		assertTrue(adrType.containsParam(AdrParamType.POSTAL));
+		adrType.removeParam(AdrParamType.POSTAL);
+		assertFalse(adrType.containsParam(AdrParamType.POSTAL));
 	}
 	
 	@Test
-	public void testRemoveExtendedAddressParameterType() {
-		addressType.addExtendedAddressParameterType(new XAddressParameterType("X-REMOVEME"));
-		assertTrue(addressType.containsExtendedAddressParameterType(new XAddressParameterType("X-REMOVEME")));
-		addressType.removeExtendedAddressParameterType(new XAddressParameterType("X-REMOVEME"));
-		assertFalse(addressType.containsExtendedAddressParameterType(new XAddressParameterType("X-REMOVEME")));
+	public void testRemoveExtendedParam() {
+		adrType.addExtendedParam(new ExtendedParamType("X-REMOVEME", VCardTypeName.ADR));
+		assertTrue(adrType.containsExtendedParam(new ExtendedParamType("X-REMOVEME", VCardTypeName.ADR)));
+		adrType.removeExtendedParam(new ExtendedParamType("X-REMOVEME", VCardTypeName.ADR));
+		assertFalse(adrType.containsExtendedParam(new ExtendedParamType("X-REMOVEME", VCardTypeName.ADR)));
+	}
+	
+	@Test
+	public void testGetExtendedParamSize() {
+		assertEquals(1, adrType.getExtendedParamSize());
+	}
+	
+	@Test
+	public void testHasExtendedParams() {
+		assertTrue(adrType.hasExtendedParams());
 	}
 	
 	@Test
 	public void testEquals() {
-		AddressType addressType2 = new AddressType();
-		addressType2 = new AddressType();
+		AdrType addressType2 = new AdrType();
 		addressType2.setCountryName("USA");
 		addressType2.setRegion("New York");
-		addressType2.setLocality("Boorklyn");
+		addressType2.setLocality("Brooklyn");
 		addressType2.setPostalCode("12345");
 		addressType2.setPostOfficeBox("ABC567");
 		addressType2.setStreetAddress("25 Green Crecent Ave.");
 		addressType2.setExtendedAddress("Bla bla");
-		addressType2.addAddressParameterType(AddressParameterType.PREF);
-		addressType2.addAddressParameterType(AddressParameterType.HOME);
-		addressType2.addExtendedAddressParameterType(new XAddressParameterType("X-OFFICE"));
-		assertTrue(addressType.equals(addressType2));
+		addressType2.addParam(AdrParamType.PREF)
+			     .addParam(AdrParamType.HOME)
+			     .addExtendedParam(new ExtendedParamType("X-OFFICE", VCardTypeName.ADR));
+		
+		assertTrue(adrType.equals(addressType2));
+	}
+	
+	@Test
+	public void testCompareTo() {
+		AdrType addressType2 = new AdrType();
+		addressType2.setCountryName("USA");
+		addressType2.setRegion("New York");
+		addressType2.setLocality("Brooklyn");
+		addressType2.setPostalCode("12345");
+		addressType2.setPostOfficeBox("ABC567");
+		addressType2.setStreetAddress("25 Green Crecent Ave.");
+		addressType2.setExtendedAddress("Bla bla");
+		addressType2.addParam(AdrParamType.PREF)
+			     .addParam(AdrParamType.HOME)
+			     .addExtendedParam(new ExtendedParamType("X-OFFICE", VCardTypeName.ADR));
+		
+		assertTrue(adrType.compareTo(addressType2) == 0);
 	}
 	
 	@Test
 	public void testHashcode() {
-		AddressType addressType2 = new AddressType();
-		addressType2 = new AddressType();
+		AdrType addressType2 = new AdrType();
 		addressType2.setCountryName("USA");
 		addressType2.setRegion("New York");
-		addressType2.setLocality("Boorklyn");
+		addressType2.setLocality("Brooklyn");
 		addressType2.setPostalCode("12345");
 		addressType2.setPostOfficeBox("ABC567");
 		addressType2.setStreetAddress("25 Green Crecent Ave.");
 		addressType2.setExtendedAddress("Bla bla");
-		addressType2.addAddressParameterType(AddressParameterType.PREF);
-		addressType2.addAddressParameterType(AddressParameterType.HOME);
-		addressType2.addExtendedAddressParameterType(new XAddressParameterType("X-OFFICE"));
+		addressType2.addParam(AdrParamType.PREF)
+			     .addParam(AdrParamType.HOME)
+			     .addExtendedParam(new ExtendedParamType("X-OFFICE", VCardTypeName.ADR));
 		
-		int hcode1 = addressType.hashCode();
+		int hcode1 = adrType.hashCode();
 		int hcode2 = addressType2.hashCode();
 		assertEquals(hcode1, hcode2);
 	}
 	
 	@Test
 	public void testClone() {
-		AddressFeature cloned = addressType.clone();
-		assertEquals(cloned, addressType);
-		assertTrue(addressType.equals(cloned));
+		AdrType cloned = adrType.clone();
+		assertEquals(cloned, adrType);
+		assertTrue(adrType.equals(cloned));
+		assertTrue(adrType.compareTo(cloned) == 0);
 	}
 }

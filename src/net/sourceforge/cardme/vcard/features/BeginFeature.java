@@ -45,12 +45,6 @@ package net.sourceforge.cardme.vcard.features;
  * </ul>
  * </p>
  */
-public interface BeginFeature extends TypeTools {
+public interface BeginFeature {
 	
-	/**
-	 * <p>Returns a full copy of this object.</p>
-	 *
-	 * @return {@link BeginFeature}
-	 */
-	public BeginFeature clone();
 }

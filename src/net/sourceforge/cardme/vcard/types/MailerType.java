@@ -1,13 +1,14 @@
 package net.sourceforge.cardme.vcard.types;
 
-import net.sourceforge.cardme.util.Util;
-import net.sourceforge.cardme.vcard.EncodingType;
-import net.sourceforge.cardme.vcard.VCardType;
+import java.util.Arrays;
+import java.util.List;
+import net.sourceforge.cardme.util.StringUtil;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import net.sourceforge.cardme.vcard.features.MailerFeature;
-import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
+import net.sourceforge.cardme.vcard.types.params.ExtendedParamType;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -38,12 +39,12 @@ import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
  * 
  * @author George El-Haddad
  * <br/>
- * Feb 4, 2010
+ * Aug 8, 2012
  *
  */
-public class MailerType extends Type implements MailerFeature {
-
-	private static final long serialVersionUID = 6929011701487135112L;
+public class MailerType extends AbstractVCardType implements Comparable<MailerType>, Cloneable, MailerFeature {
+	
+	private static final long serialVersionUID = 4468313667662633207L;
 	
 	private String mailer = null;
 	
@@ -52,63 +53,116 @@ public class MailerType extends Type implements MailerFeature {
 	}
 	
 	public MailerType(String mailer) {
-		super(EncodingType.EIGHT_BIT, ParameterTypeStyle.PARAMETER_VALUE_LIST);
+		super(VCardTypeName.MAILER);
 		setMailer(mailer);
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	public String getMailer()
 	{
-		return mailer;
+		if(mailer != null) {
+			return new String(mailer);
+		}
+		else {
+			return null;
+		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void setMailer(String mailer) {
-		this.mailer = mailer;
+		if(mailer != null) {
+			this.mailer = new String(mailer);
+		}
+		else {
+			this.mailer = null;
+		}
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void clearMailer() {
-		mailer = null;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	public boolean hasMailer()
 	{
 		return mailer != null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getTypeString()
-	{
-		return VCardType.MAILER.getType();
+	public void clearMailer() {
+		mailer = null;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+	public boolean hasParams()
+	{
+		return false;
+	}
+	
+	@Override
+	public MailerType clone()
+	{
+		MailerType cloned = new MailerType();
+		cloned.setEncodingType(getEncodingType());
+		cloned.setVCardTypeName(getVCardTypeName());
+
+		if(hasCharset()) {
+			cloned.setCharset(getCharset());
+		}
+		
+		cloned.setGroup(getGroup());
+		cloned.setLanguage(getLanguage());
+		cloned.setParameterTypeStyle(getParameterTypeStyle());
+		cloned.addAllExtendedParams(getExtendedParams());
+		cloned.setMailer(mailer);
+		return cloned;
+	}
+	
+	public int compareTo(MailerType obj)
+	{
+		if(obj != null) {
+			String[] contents = obj.getContents();
+			String[] myContents = getContents();
+			if(Arrays.equals(myContents, contents)) {
+				return 0;
+			}
+			else {
+				return 1;
+			}
+		}
+		else {
+			return -1;
+		}
+	}
+
+	@Override
+	protected String[] getContents()
+	{
+		String[] contents = new String[8];
+		contents[0] = getVCardTypeName().getType();
+		contents[1] = getEncodingType().getType();
+		contents[2] = StringUtil.getString(getGroup());
+		contents[3] = (getCharset() != null ? getCharset().name() : "");
+		contents[4] = (getLanguage() != null ? getLanguage().getLanguageCode() : "");
+		contents[5] = getParameterTypeStyle().toString();
+		
+		if(hasExtendedParams()) {
+			List<ExtendedParamType> xParams = getExtendedParams();
+			StringBuilder sb = new StringBuilder();
+			for(ExtendedParamType xParamType : xParams) {
+				sb.append(xParamType.toString());
+				sb.append(",");
+			}
+			
+			sb.deleteCharAt(sb.length()-1);
+			contents[6] = sb.toString();
+		}
+		else {
+			contents[6] = "";
+		}
+		
+		contents[7] = StringUtil.getString(mailer);
+		
+		return contents;
+	}
+
 	@Override
 	public boolean equals(Object obj)
 	{
 		if(obj != null) {
 			if(obj instanceof MailerType) {
-				if(this == obj || ((MailerType)obj).hashCode() == this.hashCode()) {
-					return true;
-				}
-				else {
-					return false;
-				}
+				return this.compareTo((MailerType)obj) == 0;
 			}
 			else {
 				return false;
@@ -117,61 +171,5 @@ public class MailerType extends Type implements MailerFeature {
 		else {
 			return false;
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int hashCode()
-	{
-		return Util.generateHashCode(toString());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append(this.getClass().getName());
-		sb.append("[ ");
-		if(encodingType != null) {
-			sb.append(encodingType.getType());
-			sb.append(",");
-		}
-		
-		if(mailer != null) {
-			sb.append(mailer);
-			sb.append(",");
-		}
-
-		if(super.id != null) {
-			sb.append(super.id);
-			sb.append(",");
-		}
-		
-		sb.deleteCharAt(sb.length()-1);	//Remove last comma.
-		sb.append(" ]");
-		return sb.toString();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public MailerFeature clone()
-	{
-		MailerType cloned = new MailerType();
-		
-		if(mailer != null) {
-			cloned.setMailer(new String(mailer));
-		}
-		
-		cloned.setParameterTypeStyle(getParameterTypeStyle());
-		cloned.setEncodingType(getEncodingType());
-		cloned.setID(getID());
-		return cloned;
 	}
 }

@@ -2,60 +2,57 @@ package net.sourceforge.cardme.vcard;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Collections;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-
-import net.sourceforge.cardme.db.MarkType;
-import net.sourceforge.cardme.db.Persistable;
 import net.sourceforge.cardme.util.Util;
+import net.sourceforge.cardme.vcard.arch.VCardType;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
+import net.sourceforge.cardme.vcard.arch.VCardVersion;
 import net.sourceforge.cardme.vcard.errors.ErrorSeverity;
 import net.sourceforge.cardme.vcard.errors.VCardError;
-import net.sourceforge.cardme.vcard.errors.VCardErrorHandling;
-import net.sourceforge.cardme.vcard.errors.VCardException;
-import net.sourceforge.cardme.vcard.features.AddressFeature;
-import net.sourceforge.cardme.vcard.features.AgentFeature;
-import net.sourceforge.cardme.vcard.features.BeginFeature;
-import net.sourceforge.cardme.vcard.features.BirthdayFeature;
-import net.sourceforge.cardme.vcard.features.CategoriesFeature;
-import net.sourceforge.cardme.vcard.features.ClassFeature;
-import net.sourceforge.cardme.vcard.features.DisplayableNameFeature;
-import net.sourceforge.cardme.vcard.features.EmailFeature;
-import net.sourceforge.cardme.vcard.features.EndFeature;
-import net.sourceforge.cardme.vcard.features.ExtendedFeature;
-import net.sourceforge.cardme.vcard.features.FormattedNameFeature;
-import net.sourceforge.cardme.vcard.features.GeographicPositionFeature;
-import net.sourceforge.cardme.vcard.features.IMPPFeature;
-import net.sourceforge.cardme.vcard.features.KeyFeature;
-import net.sourceforge.cardme.vcard.features.LabelFeature;
-import net.sourceforge.cardme.vcard.features.LogoFeature;
-import net.sourceforge.cardme.vcard.features.MailerFeature;
-import net.sourceforge.cardme.vcard.features.NameFeature;
-import net.sourceforge.cardme.vcard.features.NicknameFeature;
-import net.sourceforge.cardme.vcard.features.NoteFeature;
-import net.sourceforge.cardme.vcard.features.OrganizationFeature;
-import net.sourceforge.cardme.vcard.features.PhotoFeature;
-import net.sourceforge.cardme.vcard.features.ProductIdFeature;
-import net.sourceforge.cardme.vcard.features.ProfileFeature;
-import net.sourceforge.cardme.vcard.features.RevisionFeature;
-import net.sourceforge.cardme.vcard.features.RoleFeature;
-import net.sourceforge.cardme.vcard.features.SortStringFeature;
-import net.sourceforge.cardme.vcard.features.SoundFeature;
-import net.sourceforge.cardme.vcard.features.SourceFeature;
-import net.sourceforge.cardme.vcard.features.TelephoneFeature;
-import net.sourceforge.cardme.vcard.features.TimeZoneFeature;
-import net.sourceforge.cardme.vcard.features.TitleFeature;
-import net.sourceforge.cardme.vcard.features.UIDFeature;
-import net.sourceforge.cardme.vcard.features.URLFeature;
-import net.sourceforge.cardme.vcard.features.VersionFeature;
+import net.sourceforge.cardme.vcard.errors.VCardErrorHandler;
+import net.sourceforge.cardme.vcard.types.AdrType;
+import net.sourceforge.cardme.vcard.types.AgentType;
+import net.sourceforge.cardme.vcard.types.BDayType;
 import net.sourceforge.cardme.vcard.types.BeginType;
+import net.sourceforge.cardme.vcard.types.CategoriesType;
+import net.sourceforge.cardme.vcard.types.ClassType;
+import net.sourceforge.cardme.vcard.types.EmailType;
 import net.sourceforge.cardme.vcard.types.EndType;
+import net.sourceforge.cardme.vcard.types.ExtendedType;
+import net.sourceforge.cardme.vcard.types.FNType;
+import net.sourceforge.cardme.vcard.types.GeoType;
+import net.sourceforge.cardme.vcard.types.ImppType;
+import net.sourceforge.cardme.vcard.types.KeyType;
+import net.sourceforge.cardme.vcard.types.LabelType;
+import net.sourceforge.cardme.vcard.types.LogoType;
+import net.sourceforge.cardme.vcard.types.MailerType;
+import net.sourceforge.cardme.vcard.types.NType;
+import net.sourceforge.cardme.vcard.types.NameType;
+import net.sourceforge.cardme.vcard.types.NicknameType;
+import net.sourceforge.cardme.vcard.types.NoteType;
+import net.sourceforge.cardme.vcard.types.OrgType;
+import net.sourceforge.cardme.vcard.types.PhotoType;
+import net.sourceforge.cardme.vcard.types.ProdIdType;
+import net.sourceforge.cardme.vcard.types.ProfileType;
+import net.sourceforge.cardme.vcard.types.RevType;
+import net.sourceforge.cardme.vcard.types.RoleType;
+import net.sourceforge.cardme.vcard.types.SortStringType;
+import net.sourceforge.cardme.vcard.types.SoundType;
+import net.sourceforge.cardme.vcard.types.SourceType;
+import net.sourceforge.cardme.vcard.types.TelType;
+import net.sourceforge.cardme.vcard.types.TitleType;
+import net.sourceforge.cardme.vcard.types.TzType;
+import net.sourceforge.cardme.vcard.types.UidType;
+import net.sourceforge.cardme.vcard.types.UrlType;
 import net.sourceforge.cardme.vcard.types.VersionType;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -84,1717 +81,303 @@ import net.sourceforge.cardme.vcard.types.VersionType;
 
 /**
  * 
- * @author George El-Haddad
- * <br/>
- * Feb 5, 2010
- * 
- * <p>The CardMe implementation of a VCard using all standard interfaces.</p>
  */
-public class VCardImpl implements VCard, VCardErrorHandling, Persistable, Serializable {
+public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl>, Cloneable, Serializable {
 
-	private static final long serialVersionUID = 5206904105882073869L;
+	private static final long serialVersionUID = 8271692650283111532L;
 	
-	private String id = null;
-	private MarkType markType = MarkType.UNMARKED;
-	private BeginFeature begin = null;
-	private EndFeature end = null;
-	private DisplayableNameFeature displayableName = null;
-	private ProfileFeature profile = null;
-	private SourceFeature source = null;
-	private FormattedNameFeature formattedName = null;
-	private NameFeature name = null;
-	private NicknameFeature nicknames = null;
-	private List<PhotoFeature> photos = null;
-	private BirthdayFeature birthday = null;
-	private List<AddressFeature> addresses = null;
-	private Map<AddressFeature,LabelFeature> addressLabelMap = null;
-	private List<TelephoneFeature> telephoneNumbers = null;
-	private List<EmailFeature> emailAddresses = null;
-	private MailerFeature mailer = null;
-	private TimeZoneFeature timeZone = null;
-	private GeographicPositionFeature geographicPosition = null;
-	private TitleFeature title = null;
-	private RoleFeature role = null;
-	private List<LogoFeature> logos = null;
-	private List<AgentFeature> agents = null;
-	private OrganizationFeature organizations = null;
-	private CategoriesFeature categories = null;
-	private List<NoteFeature> notes = null;
-	private ProductIdFeature productId = null;
-	private RevisionFeature revision = null;
-	private SortStringFeature sortString = null;
-	private List<SoundFeature> sounds = null;
-	private UIDFeature uid = null;
-	private List<URLFeature> urls = null;
-	private VersionFeature version = null;
-	private ClassFeature securityClass = null;
-	private List<KeyFeature> keys = null;
-	private List<ExtendedFeature> extendedTypes = null;
-	private List<IMPPFeature> impps = null;
+	private final Map<VCardTypeName, VCardType> TYPES_TABLE = new Hashtable<VCardTypeName, VCardType>();
+	private final Map<VCardTypeName, List<VCardType>> TYPES_LIST_TABLE = new Hashtable<VCardTypeName, List<VCardType>>();
+	private final List<VCardError> VCARD_ERRORS = new ArrayList<VCardError>();
+	private ErrorSeverity errorSeverity = ErrorSeverity.NONE;
+	private boolean throwsExceptions = false;
 	
-	private boolean isValid = true;
-	private boolean isThrowsExceptions = true;
-	private ProblemSeverity problemSeverity = ProblemSeverity.NONE;
-	private List<VCardError> errors = null;
-	
-	/**
-	 * <p>Initialize the VCard with Version 3.0
-	 * and create all data structures even if they
-	 * are left empty.</p>
-	 */
 	public VCardImpl() {
-		version = new VersionType(VCardVersion.V3_0);
-		photos = new ArrayList<PhotoFeature>();
-		addresses = new ArrayList<AddressFeature>();
-		addressLabelMap = new HashMap<AddressFeature,LabelFeature>();
-		telephoneNumbers = new ArrayList<TelephoneFeature>();
-		emailAddresses = new ArrayList<EmailFeature>();
-		logos = new ArrayList<LogoFeature>();
-		agents = new ArrayList<AgentFeature>();
-		notes = new ArrayList<NoteFeature>();
-		sounds = new ArrayList<SoundFeature>();
-		urls = new ArrayList<URLFeature>();
-		keys = new ArrayList<KeyFeature>();
-		extendedTypes = new ArrayList<ExtendedFeature>();
-		impps = new ArrayList<IMPPFeature>();
-		errors = new ArrayList<VCardError>();
-		begin = new BeginType();
-		end = new EndType();
+		setBegin(new BeginType());
+		setVersion(new VersionType(VCardVersion.V3_0));
+		setEnd(new EndType());
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	public BeginFeature getBegin()
-	{
-		return begin;
+	public VCardImpl(VersionType version) {
+		setBegin(new BeginType());
+		setVersion(version);
+		setEnd(new EndType());
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	public EndFeature getEnd()
-	{
-		return end;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public DisplayableNameFeature getDisplayableNameFeature()
-	{
-		return displayableName;
+	public VCardImpl(NType n, FNType fn) {
+		setBegin(new BeginType());
+		setVersion(new VersionType(VCardVersion.V3_0));
+		setN(n);
+		setFN(fn);
+		setEnd(new EndType());
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public ProfileFeature getProfile()
+	public BeginType getBegin()
 	{
-		return profile;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public SourceFeature getSource()
-	{
-		return source;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasBegin()
-	{
-		return begin != null;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasEnd()
-	{
-		return end != null;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasDisplayableNameFeature()
-	{
-		return displayableName != null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasProfile()
-	{
-		return profile != null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasSource()
-	{
-		return source != null;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setBegin(BeginFeature begin) throws NullPointerException {
-		if(begin == null) {
-			throw new NullPointerException("begin cannot be set to null.");
-		}
-		
-		this.begin = begin;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setEnd(EndFeature end) throws NullPointerException {
-		if(end == null) {
-			throw new NullPointerException("end cannot be set to null.");
-		}
-		
-		this.end = end;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setDisplayableNameFeature(DisplayableNameFeature name) {
-		this.displayableName = name;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setProfile(ProfileFeature profile) {
-		this.profile = profile;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setSource(SourceFeature source) {
-		this.source = source;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public FormattedNameFeature getFormattedName()
-	{
-		return formattedName;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setFormattedName(FormattedNameFeature formattedName) throws NullPointerException {
-		if(formattedName == null) {
-			throw new NullPointerException("formattedName cannot be set to null.");
-		}
-		
-		this.formattedName = formattedName;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public NameFeature getName()
-	{
-		return name;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setName(NameFeature name) throws NullPointerException {
-		if(name == null) {
-			throw new NullPointerException("name cannot be set to null.");
-		}
-		
-		this.name = name;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setNicknames(NicknameFeature nicknames) {
-		this.nicknames = nicknames;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public NicknameFeature getNicknames()
-	{
-		return nicknames;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasNicknames()
-	{
-		return nicknames != null;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Iterator<PhotoFeature> getPhotos()
-	{
-		return photos.iterator();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addPhoto(PhotoFeature photo) throws NullPointerException {
-		if(photo == null) {
-			throw new NullPointerException("Cannot add a null photo.");
-		}
-		
-		photos.add(photo);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void removePhoto(PhotoFeature photo) throws NullPointerException {
-		if(photo == null) {
-			throw new NullPointerException("Cannot remove a null photo.");
-		}
-		
-		photos.remove(photo);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean containsPhoto(PhotoFeature photo)
-	{
-		if(photo == null) {
-			return false;
+		if(TYPES_TABLE.containsKey(VCardTypeName.BEGIN)) {
+			return (BeginType)TYPES_TABLE.get(VCardTypeName.BEGIN);
 		}
 		else {
-			return photos.contains(photo);
-		}
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addAllPhotos(Collection<PhotoFeature> photos) throws NullPointerException {
-		if(photos == null) {
-			throw new NullPointerException("Cannot add a null collection of photos.");
-		}
-		
-		this.photos.addAll(photos);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void clearPhotos() {
-		photos.clear();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasPhotos()
-	{
-		return !photos.isEmpty();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public BirthdayFeature getBirthDay()
-	{
-		return birthday;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setBirthday(BirthdayFeature birthday) {
-		this.birthday = birthday;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasBirthday()
-	{
-		return birthday != null;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Iterator<AddressFeature> getAddresses()
-	{
-		return addresses.iterator();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addAddress(AddressFeature address) throws NullPointerException {
-		if(address == null) {
-			throw new NullPointerException("Cannot add a null address.");
-		}
-		
-		addresses.add(address);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void removeAddress(AddressFeature address) throws NullPointerException {
-		if(address == null) {
-			throw new NullPointerException("Cannot remove a null address.");
-		}
-		
-		addresses.remove(address);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean containsAddress(AddressFeature address)
-	{
-		if(address == null) {
-			return false;
-		}
-		else {
-			return addresses.contains(address);
-		}
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addAllAddresses(Collection<AddressFeature> addresses) throws NullPointerException {
-		if(addresses == null) {
-			throw new NullPointerException("Cannot add a null collection of addresses.");
-		}
-		
-		this.addresses.addAll(addresses);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void clearAddresses() {
-		addresses.clear();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasAddresses()
-	{
-		return !addresses.isEmpty();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Iterator<LabelFeature> getLables()
-	{
-		return addressLabelMap.values().iterator();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public LabelFeature getLabelFor(AddressFeature address)
-	{
-		if(address == null) {
 			return null;
 		}
+	}
+
+	public void setBegin(BeginType begin) throws NullPointerException {
+		if(begin == null) {
+			throw new NullPointerException("VCard cannot have a null Begin type.");
+		}
+		
+		TYPES_TABLE.put(VCardTypeName.BEGIN, begin);
+		
+	}
+
+	public EndType getEnd()
+	{
+		if(TYPES_TABLE.containsKey(VCardTypeName.END)) {
+			return (EndType)TYPES_TABLE.get(VCardTypeName.END);
+		}
 		else {
-			if(addressLabelMap.containsKey(address)) {
-				return addressLabelMap.get(address);
+			return null;
+		}
+	}
+
+	public void setEnd(EndType end) throws NullPointerException {
+		if(end == null) {
+			throw new NullPointerException("VCard cannot have a null End type.");
+		}
+		
+		TYPES_TABLE.put(VCardTypeName.END, end);
+	}
+
+	public NameType getName()
+	{
+		if(TYPES_TABLE.containsKey(VCardTypeName.NAME)) {
+			return (NameType)TYPES_TABLE.get(VCardTypeName.NAME);
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void setName(NameType name) {
+		if(name != null) {
+			TYPES_TABLE.put(VCardTypeName.NAME, name);
+		}
+		else {
+			if(TYPES_TABLE.containsKey(VCardTypeName.NAME)) {
+				TYPES_TABLE.remove(VCardTypeName.NAME);
 			}
-			else {
-				return null;
+		}
+	}
+
+	public boolean hasName()
+	{
+		return TYPES_TABLE.containsKey(VCardTypeName.NAME);
+	}
+
+	public void clearName() {
+		if(TYPES_TABLE.containsKey(VCardTypeName.NAME)) {
+			TYPES_TABLE.remove(VCardTypeName.NAME);
+		}
+	}
+
+	public ProfileType getProfile()
+	{
+		if(TYPES_TABLE.containsKey(VCardTypeName.PROFILE)) {
+			return (ProfileType)TYPES_TABLE.get(VCardTypeName.PROFILE);
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void setProfile(ProfileType profile) {
+		if(profile != null) {
+			TYPES_TABLE.put(VCardTypeName.PROFILE, profile);
+		}
+		else {
+			if(TYPES_TABLE.containsKey(VCardTypeName.PROFILE)) {
+				TYPES_TABLE.remove(VCardTypeName.PROFILE);
 			}
 		}
 	}
+
+	public boolean hasProfile()
+	{
+		return TYPES_TABLE.containsKey(VCardTypeName.PROFILE);
+	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setLabel(LabelFeature label, AddressFeature forAddress) throws NullPointerException, VCardException {
-		if(label == null) {
-			throw new NullPointerException("Cannot set a null label for an address.");
-		}
-		
-		if(forAddress == null) {
-			throw new NullPointerException("Cannot set a label for a null address.");
-		}
-		
-		if(addresses.contains(forAddress)) {
-			addressLabelMap.put(forAddress, label);
-		}
-		else {
-			throw new VCardException("Trying to set a label for a non-existing address.");
+	public void clearProfile() {
+		if(TYPES_TABLE.containsKey(VCardTypeName.PROFILE)) {
+			TYPES_TABLE.remove(VCardTypeName.PROFILE);
 		}
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void removeLabel(LabelFeature label, AddressFeature forAddress) throws NullPointerException, VCardException {
-		if(label == null) {
-			throw new NullPointerException("Cannot remove a null label from an address.");
-		}
-		
-		if(forAddress == null) {
-			throw new NullPointerException("Cannot remove a label from a null address.");
-		}
-		
-		if(addresses.contains(forAddress)) {
-			addressLabelMap.remove(forAddress);
+	public SourceType getSource()
+	{
+		if(TYPES_TABLE.containsKey(VCardTypeName.SOURCE)) {
+			return (SourceType)TYPES_TABLE.get(VCardTypeName.SOURCE);
 		}
 		else {
-			throw new VCardException("Trying to remove a label for a non-existing address.");
+			return null;
 		}
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasLabel(AddressFeature address)
-	{
-		if(address == null) {
-			return false;
+
+	public void setSource(SourceType source) {
+		if(source != null) {
+			TYPES_TABLE.put(VCardTypeName.SOURCE, source);
 		}
 		else {
-			return addressLabelMap.containsKey(address);
+			if(TYPES_TABLE.containsKey(VCardTypeName.SOURCE)) {
+				TYPES_TABLE.remove(VCardTypeName.SOURCE);
+			}
 		}
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void clearLabels() {
-		addressLabelMap.clear();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean containsLabel(LabelFeature label)
+
+	public boolean hasSource()
 	{
-		if(label == null) {
-			return false;
-		}
-		else {
-			return addressLabelMap.containsValue(label);
-		}
+		return TYPES_TABLE.containsKey(VCardTypeName.SOURCE);
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Iterator<TelephoneFeature> getTelephoneNumbers()
+	public void clearSource() {
+		if(TYPES_TABLE.containsKey(VCardTypeName.SOURCE)) {
+			TYPES_TABLE.remove(VCardTypeName.SOURCE);
+		}
+	}
+
+	public FNType getFN()
 	{
-		return telephoneNumbers.iterator();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addTelephoneNumber(TelephoneFeature phoneNumber) throws NullPointerException {
-		if(phoneNumber == null) {
-			throw new NullPointerException("Cannot add a null phone number.");
-		}
-		
-		telephoneNumbers.add(phoneNumber);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void removeTelephoneNumber(TelephoneFeature phoneNumber) throws NullPointerException {
-		if(phoneNumber == null) {
-			throw new NullPointerException("Cannot remove a null phone number.");
-		}
-		
-		telephoneNumbers.remove(phoneNumber);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean containsTelephoneNumber(TelephoneFeature phoneNumber)
-	{
-		if(phoneNumber == null) {
-			return false;
+		if(TYPES_TABLE.containsKey(VCardTypeName.FN)) {
+			return (FNType)TYPES_TABLE.get(VCardTypeName.FN);
 		}
 		else {
-			return telephoneNumbers.contains(phoneNumber);
+			return null;
 		}
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addAllTelephoneNumber(Collection<TelephoneFeature> phoneNumbers) throws NullPointerException {
-		if(phoneNumbers == null) {
-			throw new NullPointerException("Cannot add a null collection of phone numbers.");
-		}
-		
-		this.telephoneNumbers.addAll(phoneNumbers);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void clearTelephoneNumbers() {
-		telephoneNumbers.clear();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasTelephoneNumbers()
-	{
-		return !telephoneNumbers.isEmpty();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Iterator<EmailFeature> getEmails()
-	{
-		return emailAddresses.iterator();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addEmail(EmailFeature email) throws NullPointerException {
-		if(email == null) {
-			throw new NullPointerException("Cannot add a null email.");
-		}
-		
-		emailAddresses.add(email);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void removeEmail(EmailFeature email) throws NullPointerException {
-		if(email == null) {
-			throw new NullPointerException("Cannot remove a null email.");
-		}
-		
-		emailAddresses.remove(email);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean containsEmail(EmailFeature email)
-	{
-		if(email == null) {
-			return false;
+
+	public void setFN(FNType fn) throws NullPointerException {
+		if(fn != null) {
+			TYPES_TABLE.put(VCardTypeName.FN, fn);
 		}
 		else {
-			return emailAddresses.contains(email);
+			throw new NullPointerException("VCard must have a FN type and cannot be set to null.");
 		}
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addAllEmails(Collection<EmailFeature> emailAddresses) throws NullPointerException {
-		if(emailAddresses == null) {
-			throw new NullPointerException("Cannot add a null collection of emails.");
-		}
-		
-		this.emailAddresses.addAll(emailAddresses);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void clearEmails() {
-		emailAddresses.clear();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasEmails()
+
+	public boolean hasFN()
 	{
-		return !emailAddresses.isEmpty();
+		return TYPES_TABLE.containsKey(VCardTypeName.FN);
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public MailerFeature getMailer()
+
+	public NType getN()
 	{
-		return mailer;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setMailer(MailerFeature mailer) {
-		this.mailer = mailer;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasMailer()
-	{
-		return mailer != null;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public TimeZoneFeature getTimeZone()
-	{
-		return timeZone;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setTimeZone(TimeZoneFeature timeZone) {
-		this.timeZone = timeZone;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasTimeZone()
-	{
-		return timeZone != null;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public GeographicPositionFeature getGeographicPosition()
-	{
-		return geographicPosition;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setGeographicPosition(GeographicPositionFeature geographicPosition) {
-		this.geographicPosition = geographicPosition;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasGeographicPosition()
-	{
-		return geographicPosition != null;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public TitleFeature getTitle()
-	{
-		return title;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setTitle(TitleFeature title) {
-		this.title = title;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasTitle()
-	{
-		return title != null;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public RoleFeature getRole()
-	{
-		return role;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setRole(RoleFeature role) {
-		this.role = role;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasRole()
-	{
-		return role != null;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Iterator<LogoFeature> getLogos()
-	{
-		return logos.iterator();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addLogo(LogoFeature logo) throws NullPointerException {
-		if(logo == null) {
-			throw new NullPointerException("Cannot add a null logo.");
-		}
-		
-		logos.add(logo);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void removeLogo(LogoFeature logo) throws NullPointerException {
-		if(logo == null) {
-			throw new NullPointerException("Cannot remove a null logo.");
-		}
-		
-		logos.remove(logo);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean containsLogo(LogoFeature logo)
-	{
-		if(logo == null) {
-			return false;
+		if(TYPES_TABLE.containsKey(VCardTypeName.N)) {
+			return (NType)TYPES_TABLE.get(VCardTypeName.N);
 		}
 		else {
-			return logos.contains(logo);
+			return null;
 		}
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addAllLogos(Collection<LogoFeature> logos) throws NullPointerException {
-		if(logos == null) {
-			throw new NullPointerException("Cannot add a null collection of logos.");
-		}
-		
-		this.logos.addAll(logos);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void clearLogos() {
-		logos.clear();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasLogos()
-	{
-		return !logos.isEmpty();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Iterator<AgentFeature> getAgents()
-	{
-		return agents.iterator();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addAgent(AgentFeature agent) throws NullPointerException {
-		if(agent == null) {
-			throw new NullPointerException("Cannot add a null agent.");
-		}
-		
-		agents.add(agent);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void removeAgent(AgentFeature agent) throws NullPointerException {
-		if(agent == null) {
-			throw new NullPointerException("Cannot remove a null agent.");
-		}
-		
-		agents.remove(agent);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean containsAgent(AgentFeature agent)
-	{
-		return agents.contains(agent);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addAllAgents(Collection<AgentFeature> agents) throws NullPointerException {
-		if(agents == null) {
-			throw new NullPointerException("Cannot add a null collection of agents.");
-		}
-		
-		this.agents.addAll(agents);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void clearAgents() {
-		agents.clear();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasAgents()
-	{
-		return !agents.isEmpty();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public OrganizationFeature getOrganizations()
-	{
-		return organizations;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setOrganizations(OrganizationFeature organizations) {
-		this.organizations = organizations;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasOrganizations()
-	{
-		return organizations != null;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public CategoriesFeature getCategories()
-	{
-		return categories;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setCategories(CategoriesFeature categories) {
-		this.categories = categories;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasCategories()
-	{
-		return categories != null;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Iterator<NoteFeature> getNotes()
-	{
-		return notes.iterator();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addNote(NoteFeature note) throws NullPointerException {
-		if(note == null) {
-			throw new NullPointerException("Cannot add a null note.");
-		}
-		
-		notes.add(note);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void removeNote(NoteFeature note) throws NullPointerException {
-		if(note == null) {
-			throw new NullPointerException("Cannot remove a null note.");
-		}
-		
-		notes.remove(note);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean containsNote(NoteFeature note)
-	{
-		return notes.contains(note);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addAllNotes(Collection<NoteFeature> notes) {
-		if(notes == null) {
-			throw new NullPointerException("Cannot add a null collection of notes.");
-		}
-		
-		this.notes.addAll(notes);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void clearNotes() {
-		notes.clear();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasNotes()
-	{
-		return !notes.isEmpty();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public ProductIdFeature getProductId()
-	{
-		return productId;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setProductId(ProductIdFeature productId) {
-		this.productId = productId;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasProductId()
-	{
-		return productId != null;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public RevisionFeature getRevision()
-	{
-		return revision;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setRevision(RevisionFeature revision) {
-		this.revision = revision;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasRevision()
-	{
-		return revision != null;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public SortStringFeature getSortString()
-	{
-		return sortString;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setSortString(SortStringFeature sortString) {
-		this.sortString = sortString;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasSortString()
-	{
-		return sortString != null;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Iterator<SoundFeature> getSounds()
-	{
-		return sounds.iterator();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addSound(SoundFeature sound) throws NullPointerException {
-		if(sound == null) {
-			throw new NullPointerException("Cannot add a null sound.");
-		}
-		
-		sounds.add(sound);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void removeSound(SoundFeature sound) throws NullPointerException {
-		if(sound == null) {
-			throw new NullPointerException("Cannot remove a null sound.");
-		}
-		
-		sounds.remove(sound);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean containsSound(SoundFeature sound)
-	{
-		if(sound == null) {
-			return false;
+
+	public void setN(NType n) throws NullPointerException {
+		if(n != null) {
+			TYPES_TABLE.put(VCardTypeName.N, n);
 		}
 		else {
-			return sounds.contains(sound);
+			throw new NullPointerException("VCard must have a N type and cannot be set to null.");
 		}
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addAllSounds(Collection<SoundFeature> sounds) throws NullPointerException {
-		if(sounds == null) {
-			throw new NullPointerException("Cannot add a null collection of sounds.");
-		}
-		
-		this.sounds.addAll(sounds);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void clearSounds() {
-		sounds.clear();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasSounds()
+
+	public boolean hasN()
 	{
-		return !sounds.isEmpty();
+		return TYPES_TABLE.containsKey(VCardTypeName.N);
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public UIDFeature getUID()
+
+	public NicknameType getNicknames()
 	{
-		return uid;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setUID(UIDFeature uid) {
-		this.uid = uid;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasUID()
-	{
-		return uid != null;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Iterator<URLFeature> getURLs()
-	{
-		return urls.iterator();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addURL(URLFeature url) throws NullPointerException {
-		if(url == null) {
-			throw new NullPointerException("Cannot add a null URL.");
-		}
-		
-		urls.add(url);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void removeURL(URLFeature url) throws NullPointerException {
-		if(url == null) {
-			throw new NullPointerException("Cannot remove a null URL.");
-		}
-		
-		urls.remove(url);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean containsURL(URLFeature url)
-	{
-		if(url == null) {
-			return false;
+		if(TYPES_TABLE.containsKey(VCardTypeName.NICKNAME)) {
+			return (NicknameType)TYPES_TABLE.get(VCardTypeName.NICKNAME);
 		}
 		else {
-			return urls.contains(url);
+			return null;
 		}
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addAllURLs(Collection<URLFeature> urls) throws NullPointerException {
-		if(urls == null) {
-			throw new NullPointerException("Cannot add a null collection of urls.");
-		}
-		
-		this.urls.addAll(urls);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void clearURLs() {
-		urls.clear();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasURLs()
-	{
-		return !urls.isEmpty();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Iterator<IMPPFeature> getIMPPs()
-	{
-		return impps.iterator();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addIMPP(IMPPFeature impp) {
-		if(impp == null) {
-			throw new NullPointerException("Cannot add a null IMPP.");
-		}
-		
-		impps.add(impp);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void removeIMPP(IMPPFeature impp) {
-		if(impp == null) {
-			throw new NullPointerException("Cannot remove a null IMPP.");
-		}
-		
-		impps.remove(impp);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean containsIMPP(IMPPFeature impp)
-	{
-		if(impp == null) {
-			return false;
+	public void setNickname(NicknameType nicknames) {
+		if(nicknames != null) {
+			TYPES_TABLE.put(VCardTypeName.NICKNAME, nicknames);
 		}
 		else {
-			return impps.contains(impp);
+			if(TYPES_TABLE.containsKey(VCardTypeName.NICKNAME)) {
+				TYPES_TABLE.remove(VCardTypeName.NICKNAME);
+			}
 		}
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addAllIMPPs(Collection<IMPPFeature> impps) {
-		if(impps == null) {
-			throw new NullPointerException("Cannot add a null collection of impps.");
-		}
-		
-		this.impps.addAll(impps);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void clearIMPPs() {
-		impps.clear();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasIMPPs()
+
+	public boolean hasNicknames()
 	{
-		return !impps.isEmpty();
+		return TYPES_TABLE.containsKey(VCardTypeName.NICKNAME);
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public VersionFeature getVersion()
-	{
-		return version;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setVersion(VersionFeature version) throws NullPointerException {
-		if(version == null) {
-			throw new NullPointerException("version cannot be null.");
-		}
-		
-		this.version = version;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public ClassFeature getSecurityClass()
-	{
-		return securityClass;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setSecurityClass(ClassFeature securityClass) {
-		this.securityClass = securityClass;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasSecurityClass()
-	{
-		return securityClass != null;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Iterator<KeyFeature> getKeys()
-	{
-		return keys.iterator();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addKey(KeyFeature key) throws NullPointerException {
-		if(key == null) {
-			throw new NullPointerException("Cannot add a null key.");
-		}
-		
-		keys.add(key);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void removeKey(KeyFeature key) throws NullPointerException {
-		if(key == null) {
-			throw new NullPointerException("Cannot remove a null key.");
-		}
-		
-		keys.remove(key);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean containsKey(KeyFeature key)
-	{
-		if(key == null) {
-			return false;
-		}
-		else {
-			return keys.contains(key);
+
+	public void clearNickname() {
+		if(TYPES_TABLE.containsKey(VCardTypeName.NICKNAME)) {
+			TYPES_TABLE.remove(VCardTypeName.NICKNAME);
 		}
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addAllKeys(Collection<KeyFeature> keys) throws NullPointerException {
-		if(keys == null) {
-			throw new NullPointerException("Cannot add a null collection of keys.");
-		}
-		
-		this.keys.addAll(keys);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void clearKeys() {
-		keys.clear();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasKeys()
+
+	public List<PhotoType> getPhotos()
 	{
-		return !keys.isEmpty();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Iterator<ExtendedFeature> getExtendedTypes()
-	{
-		return extendedTypes.iterator();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addExtendedType(ExtendedFeature extension) throws NullPointerException {
-		if(extension == null) {
-			throw new NullPointerException("Cannot add a null extension.");
-		}
-		
-		extendedTypes.add(extension);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void removeExtendedType(ExtendedFeature extension) throws NullPointerException {
-		if(extension == null) {
-			throw new NullPointerException("Cannot remove a null extension.");
-		}
-		
-		extendedTypes.remove(extension);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean containsExtendedType(ExtendedFeature extension)
-	{
-		if(extension == null) {
-			return false;
-		}
-		else {
-			return extendedTypes.contains(extension);
-		}
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addAllExtendedTypes(Collection<ExtendedFeature> extensions) throws NullPointerException {
-		if(extensions == null) {
-			throw new NullPointerException("Cannot add a null collection of extensions.");
-		}
-		
-		extendedTypes.addAll(extensions);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void clearExtendedTypes() {
-		extendedTypes.clear();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasExtendedTypes()
-	{
-		return !extendedTypes.isEmpty();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void clear() {
-		name.clearAdditionalNames();
-		name.clearHonorificPrefixes();
-		name.clearHonorificSuffixes();
-		name.setFamilyName("");
-		name.setGivenName("");
-		formattedName.setFormattedName("");
-		nicknames = null;
-		photos.clear();
-		birthday = null;
-		addresses.clear();
-		addressLabelMap.clear();
-		telephoneNumbers.clear();
-		emailAddresses.clear();
-		mailer = null;
-		timeZone = null;
-		geographicPosition = null;
-		title = null;
-		role = null;
-		logos.clear();
-		agents.clear();
-		organizations = null;
-		categories = null;
-		notes.clear();
-		productId = null;
-		revision = null;
-		sortString = null;
-		sounds.clear();
-		uid = null;
-		urls.clear();
-		version.setVersion(VCardVersion.V3_0);
-		securityClass = null;
-		keys.clear();
-		extendedTypes.clear();
-		clearErrors();
-	}
-	
-	// --------- Error Handling Implementation
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public List<VCardError> getErrors()
-	{
-		return errors;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public ProblemSeverity getProblemSeverity()
-	{
-		return problemSeverity;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isValid()
-	{
-		return isValid;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setThrowExceptions(boolean isThrowsExceptions) {
-		this.isThrowsExceptions = isThrowsExceptions;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isThrowExceptions()
-	{
-		return isThrowsExceptions;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addError(VCardError error) {
-		if(error != null) {
-			errors.add(error);
-			if(isValid) {
-				isValid = false;
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.PHOTO)) {
+			List<VCardType> list = TYPES_LIST_TABLE.get(VCardTypeName.PHOTO);
+			List<PhotoType> photoList = new ArrayList<PhotoType>(list.size());
+			
+			for(VCardType vCardType : list) {
+				photoList.add((PhotoType)vCardType);
 			}
 			
-			switch(error.getSeverity())
-			{
-				case FATAL:
-				{
-					switch(problemSeverity)
-					{
-						case NONE:
-						case HINT:
-						case WARNING:
-						{
-							problemSeverity = ProblemSeverity.ERROR;
-							break;
-						}
-					}
-					
-					break;
-				}
-					
-				case WARNING:
-				{
-					switch(problemSeverity)
-					{
-						case NONE:
-						case HINT:
-						{
-							problemSeverity = ProblemSeverity.WARNING;
-							break;
-						}
-					}
-					
-					break;
-				}
-					
-				case NONE:
-				{
-					problemSeverity = ProblemSeverity.NONE;
-					break;
-				}
+			return photoList;
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void addPhoto(PhotoType photo) throws NullPointerException {
+		if(photo != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.PHOTO)) {
+				TYPES_LIST_TABLE.get(VCardTypeName.PHOTO).add(photo);
+			}
+			else {
+				List<VCardType> newPhotoList = new ArrayList<VCardType>();
+				newPhotoList.add(photo);
+				TYPES_LIST_TABLE.put(VCardTypeName.PHOTO, newPhotoList);
 			}
 		}
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addError(String errorMessage, ErrorSeverity severity, Throwable error) {
-		if(error != null && severity != null) {
-			addError(new VCardError(errorMessage, error, severity));
+		else {
+			throw new NullPointerException("Cannot add a null photo type.");
 		}
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void clearErrors() {
-		errors.clear();
-		problemSeverity = ProblemSeverity.NONE;
-		isValid = true;
+
+	public void addAllPhotos(Collection<PhotoType> photos) throws NullPointerException {
+		if(photos != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.PHOTO)) {
+				TYPES_LIST_TABLE.get(VCardTypeName.PHOTO).addAll(photos);
+			}
+			else {
+				List<VCardType> newPhotoList = new ArrayList<VCardType>();
+				newPhotoList.addAll(photos);
+				TYPES_LIST_TABLE.put(VCardTypeName.PHOTO, newPhotoList);
+			}
+		}
+		else {
+			throw new NullPointerException("Cannot add a null list of photo types.");
+		}
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasErrors()
-	{
-		return !errors.isEmpty();
-	}
-	
-	// --------- Persistence Code
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setID(String id) {
-		this.id = id;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getID()
-	{
-		return id;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public MarkType getMarkType()
-	{
-		return markType;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void mark(MarkType markType) {
-		this.markType = markType;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void unmark() {
-		markType = MarkType.UNMARKED;
-	}
-	
-	// --------- Equality checking and hash code
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean equals(Object obj)
-	{
-		if(obj != null) {
-			if(obj instanceof VCardImpl) {
-				if(this == obj || ((VCardImpl)obj).hashCode() == this.hashCode()) {
-					return true;
-				}
-				else {
-					return false;
-				}
+
+	public boolean removePhoto(PhotoType photo) throws NullPointerException {
+		if(photo != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.PHOTO)) {
+				return TYPES_LIST_TABLE.get(VCardTypeName.PHOTO).remove(photo);
 			}
 			else {
 				return false;
@@ -1805,448 +388,1903 @@ public class VCardImpl implements VCard, VCardErrorHandling, Persistable, Serial
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int hashCode()
-	{
-		return Util.generateHashCode(toString());
+	public boolean containsPhoto(PhotoType photo) {
+		if(photo != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.PHOTO)) {
+				return TYPES_LIST_TABLE.get(VCardTypeName.PHOTO).contains(photo);
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString()
+	public boolean hasPhotos()
 	{
-		StringBuilder sb = new StringBuilder();
-		sb.append(this.getClass().getName());
-		sb.append("[ ");
-		
-		if(begin != null) {
-			sb.append(begin.toString());
-			sb.append(",");
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.PHOTO)) {
+			return !TYPES_LIST_TABLE.get(VCardTypeName.PHOTO).isEmpty();
 		}
-		
-		if(end != null) {
-			sb.append(end.toString());
-			sb.append(",");
+		else {
+			return false;
 		}
-		
-		if(displayableName != null) {
-			sb.append(displayableName.toString());
-			sb.append(",");
-		}
-		
-		if(profile != null) {
-			sb.append(profile.toString());
-			sb.append(",");
-		}
-		
-		if(source != null) {
-			sb.append(source.toString());
-			sb.append(",");
-		}
-		
-		if(formattedName != null) {
-			sb.append(formattedName.toString());
-			sb.append(",");
-		}
-		
-		if(name != null) {
-			sb.append(name.toString());
-			sb.append(",");
-		}
-		
-		if(nicknames != null) {
-			sb.append(nicknames.toString());
-			sb.append(",");
-		}
-		
-		if(!photos.isEmpty()) {
-			for (PhotoFeature photo : photos) {
-				sb.append(photo.toString());
-				sb.append(",");
-			}
-		}
-		
-		if(birthday != null) {
-			sb.append(birthday.toString());
-			sb.append(",");
-		}
-		
-		if(!addresses.isEmpty()) {
-			for (AddressFeature address : addresses) {
-				sb.append(address.toString());
-				sb.append(",");
-			}
-		}
-		
-		if(!addressLabelMap.isEmpty()) {
-			Iterator<LabelFeature> iter = addressLabelMap.values().iterator();
-			while(iter.hasNext()) {
-				sb.append(iter.next().toString());
-				sb.append(",");
-			}
-		}
-		
-		if(!telephoneNumbers.isEmpty()) {
-			for (TelephoneFeature telephone : telephoneNumbers) {
-				sb.append(telephone.toString());
-				sb.append(",");
-			}
-		}
-		
-		if(!emailAddresses.isEmpty()) {
-			for (EmailFeature email : emailAddresses) {
-				sb.append(email.toString());
-				sb.append(",");
-			}
-		}
-		
-		if(mailer != null) {
-			sb.append(mailer.toString());
-			sb.append(",");
-		}
-		
-		if(timeZone != null) {
-			sb.append(timeZone.toString());
-			sb.append(",");
-		}
-		
-		if(geographicPosition != null) {
-			sb.append(geographicPosition.toString());
-			sb.append(",");
-		}
-		
-		if(title != null) {
-			sb.append(title.toString());
-			sb.append(",");
-		}
-		
-		if(role != null) {
-			sb.append(role.toString());
-			sb.append(",");
-		}
-		
-		if(!logos.isEmpty()) {
-			for (LogoFeature logo : logos) {
-				sb.append(logo.toString());
-				sb.append(",");
-			}
-		}
-		
-		if(!agents.isEmpty()) {
-			for (AgentFeature agent : agents) {
-				sb.append(agent.toString());
-				sb.append(",");
-			}
-		}
-		
-		if(organizations != null) {
-			sb.append(organizations.toString());
-			sb.append(",");
-		}
-		
-		if(categories != null) {
-			sb.append(categories.toString());
-			sb.append(",");
-		}
-		
-		if(!notes.isEmpty()) {
-			for (NoteFeature note : notes) {
-				sb.append(note.toString());
-				sb.append(",");
-			}
-		}
-		
-		if(productId != null) {
-			sb.append(productId.toString());
-			sb.append(",");
-		}
-		
-		if(revision != null) {
-			sb.append(revision.toString());
-			sb.append(",");
-		}
-		
-		if(sortString != null) {
-			sb.append(sortString.toString());
-			sb.append(",");
-		}
-		
-		if(!sounds.isEmpty()) {
-			for (SoundFeature sound : sounds) {
-				sb.append(sound.toString());
-			}
-		}
-		
-		if(uid != null) {
-			sb.append(uid.toString());
-			sb.append(",");
-		}
-		
-		if(!urls.isEmpty()) {
-			for (URLFeature url : urls) {
-				sb.append(url.toString());
-				sb.append(",");
-			}
-		}
-		
-		if(!impps.isEmpty()) {
-			for (IMPPFeature impp : impps) {
-				sb.append(impp.toString());
-				sb.append(",");
-			}
-		}
-		
-		if(version != null) {
-			sb.append(version.toString());
-			sb.append(",");
-		}
-		
-		if(securityClass != null) {
-			sb.append(securityClass.toString());
-			sb.append(",");
-		}
-		
-		if(!keys.isEmpty()) {
-			for (KeyFeature key : keys) {
-				sb.append(key.toString());
-				sb.append(",");
-			}
-		}
-		
-		if(!extendedTypes.isEmpty()) {
-			for (ExtendedFeature extendedType : extendedTypes) {
-				sb.append(extendedType.toString());
-				sb.append(",");
-			}
-		}
-		
-		sb.append(problemSeverity.toString());
-		sb.append(",");
-		
-		if(!errors.isEmpty()) {
-			for (VCardError vCardError : errors) {
-				sb.append(vCardError.toString());
-				sb.append(",");
-			}
-		}
-		
-		sb.deleteCharAt(sb.length()-1);	//Remove last comma.
-		sb.append(" ]");
-		return sb.toString();
 	}
-	
-	@Override
-	public VCard clone()
+
+	public void clearPhotos() {
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.PHOTO)) {
+			TYPES_LIST_TABLE.remove(VCardTypeName.PHOTO);
+		}
+	}
+
+	public BDayType getBDay()
 	{
-		VCardImpl cloned = new VCardImpl();
-		
-		if(begin != null) {
-			cloned.setBegin(begin.clone());
+		if(TYPES_TABLE.containsKey(VCardTypeName.BDAY)) {
+			return (BDayType)TYPES_TABLE.get(VCardTypeName.BDAY);
 		}
-		
-		if(end != null) {
-			cloned.setEnd(end.clone());
+		else {
+			return null;
 		}
-		
-		if(displayableName != null) {
-			cloned.setDisplayableNameFeature(displayableName.clone());
+	}
+
+	public void setBDay(BDayType bday) {
+		if(bday != null) {
+			TYPES_TABLE.put(VCardTypeName.BDAY, bday);
 		}
-		
-		if(profile != null) {
-			cloned.setProfile(profile.clone());
-		}
-		
-		if(source != null) {
-			cloned.setSource(source.clone());
-		}
-		
-		if(formattedName != null) {
-			cloned.setFormattedName(formattedName.clone());
-		}
-		
-		if(name != null) {
-			cloned.setName(name.clone());
-		}
-		
-		if(hasNicknames()) {
-			cloned.setNicknames(nicknames.clone());
-		}
-		
-		if(hasPhotos()) {
-			Iterator<PhotoFeature> iter = getPhotos();
-			while(iter.hasNext()) {
-				PhotoFeature photo = iter.next();
-				cloned.addPhoto(photo.clone());
+		else {
+			if(TYPES_TABLE.containsKey(VCardTypeName.BDAY)) {
+				TYPES_TABLE.remove(VCardTypeName.BDAY);
 			}
 		}
-		
-		if(hasBirthday()) {
-			cloned.setBirthday(birthday.clone());
+	}
+
+	public boolean hasBDay()
+	{
+		return TYPES_TABLE.containsKey(VCardTypeName.BDAY);
+	}
+
+	public void clearBDay()
+	{
+		if(TYPES_TABLE.containsKey(VCardTypeName.BDAY)) {
+			TYPES_TABLE.remove(VCardTypeName.BDAY);
 		}
-		
-		if(hasAddresses()) {
-			Iterator<AddressFeature> iter = getAddresses();
-			while(iter.hasNext()) {
-				AddressFeature address = iter.next();
-				AddressFeature clonedAddress = address.clone(); 
-				cloned.addAddress(clonedAddress);
-				
-				if(hasLabel(address)) {
-					LabelFeature label = getLabelFor(address);
-					cloned.setLabel(label.clone(), clonedAddress);
+	}
+
+	public List<AdrType> getAdrs()
+	{
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.ADR)) {
+			List<VCardType> list = TYPES_LIST_TABLE.get(VCardTypeName.ADR);
+			List<AdrType> adrList = new ArrayList<AdrType>(list.size());
+			
+			for(VCardType vCardType : list) {
+				adrList.add((AdrType)vCardType);
+			}
+			
+			return adrList;
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void addAdr(AdrType adr) throws NullPointerException {
+		if(adr != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.ADR)) {
+				TYPES_LIST_TABLE.get(VCardTypeName.ADR).add(adr);
+			}
+			else {
+				List<VCardType> newAdrList = new ArrayList<VCardType>();
+				newAdrList.add(adr);
+				TYPES_LIST_TABLE.put(VCardTypeName.ADR, newAdrList);
+			}
+		}
+		else {
+			throw new NullPointerException("Cannot add a null adr type.");
+		}
+	}
+
+	public void addAllAdrs(Collection<AdrType> adrs) throws NullPointerException {
+		if(adrs != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.ADR)) {
+				TYPES_LIST_TABLE.get(VCardTypeName.ADR).addAll(adrs);
+			}
+			else {
+				List<VCardType> newAdrList = new ArrayList<VCardType>();
+				newAdrList.addAll(adrs);
+				TYPES_LIST_TABLE.put(VCardTypeName.ADR, newAdrList);
+			}
+		}
+		else {
+			throw new NullPointerException("Cannot add a null list of adr types.");
+		}
+	}
+
+	public boolean removeAdr(AdrType adr) throws NullPointerException
+	{
+		if(adr != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.ADR)) {
+				return TYPES_LIST_TABLE.get(VCardTypeName.ADR).remove(adr);
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean containsAdr(AdrType adr)
+	{
+		if(adr != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.ADR)) {
+				return TYPES_LIST_TABLE.get(VCardTypeName.ADR).contains(adr);
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean hasAdrs()
+	{
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.ADR)) {
+			return !TYPES_LIST_TABLE.get(VCardTypeName.ADR).isEmpty();
+		}
+		else {
+			return false;
+		}
+	}
+
+	public void clearAdrs()
+	{
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.ADR)) {
+			TYPES_LIST_TABLE.remove(VCardTypeName.ADR);
+		}
+	}
+
+	public List<LabelType> getLables()
+	{
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.ADR)) {
+			List<VCardType> list = TYPES_LIST_TABLE.get(VCardTypeName.ADR);
+			List<LabelType> labelList = new ArrayList<LabelType>(list.size());
+			
+			for(VCardType vCardType : list) {
+				AdrType adr = (AdrType)vCardType;
+				if(adr.hasLabel()) {
+					labelList.add(adr.getLabel());
 				}
 			}
+			
+			return labelList;
+		}
+		else {
+			return null;
+		}
+	}
+
+	public boolean containsLabel(LabelType label)
+	{
+		boolean found = false;
+		
+		if(label != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.ADR)) {
+				List<VCardType> list = TYPES_LIST_TABLE.get(VCardTypeName.ADR);
+				for(VCardType vCardType : list) {
+					AdrType adr = (AdrType)vCardType;
+					if(adr.hasLabel()) {
+						if(label.equals(adr.getLabel())) {
+							found = true;
+							break;
+						}
+					}
+				}
+				
+				return found;
+			}
+			else {
+				return found;
+			}
+		}
+		else {
+			return found;
+		}
+	}
+
+	public void clearLabels()
+	{
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.ADR)) {
+			List<VCardType> list = TYPES_LIST_TABLE.get(VCardTypeName.ADR);
+			for(VCardType vCardType : list) {
+				AdrType adr = (AdrType)vCardType;
+				adr.clearLabel();
+			}
+		}
+	}
+
+	public List<TelType> getTels()
+	{
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.TEL)) {
+			List<VCardType> list = TYPES_LIST_TABLE.get(VCardTypeName.TEL);
+			List<TelType> telList = new ArrayList<TelType>(list.size());
+			
+			for(VCardType vCardType : list) {
+				telList.add((TelType)vCardType);
+			}
+			
+			return telList;
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void addTel(TelType tel) throws NullPointerException {
+		if(tel != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.TEL)) {
+				TYPES_LIST_TABLE.get(VCardTypeName.TEL).add(tel);
+			}
+			else {
+				List<VCardType> newTelList = new ArrayList<VCardType>();
+				newTelList.add(tel);
+				TYPES_LIST_TABLE.put(VCardTypeName.TEL, newTelList);
+			}
+		}
+		else {
+			throw new NullPointerException("Cannot add a null tel type.");
+		}
+	}
+
+	public void addAllTels(Collection<TelType> tels) throws NullPointerException {
+		if(tels != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.TEL)) {
+				TYPES_LIST_TABLE.get(VCardTypeName.TEL).addAll(tels);
+			}
+			else {
+				List<VCardType> newTelList = new ArrayList<VCardType>();
+				newTelList.addAll(tels);
+				TYPES_LIST_TABLE.put(VCardTypeName.TEL, newTelList);
+			}
+		}
+		else {
+			throw new NullPointerException("Cannot add a null list of tel types.");
+		}
+	}
+
+	public boolean removeTel(TelType tel) throws NullPointerException
+	{
+		if(tel != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.TEL)) {
+				return TYPES_LIST_TABLE.get(VCardTypeName.TEL).remove(tel);
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean containsTel(TelType tel)
+	{
+		if(tel != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.TEL)) {
+				return TYPES_LIST_TABLE.get(VCardTypeName.TEL).contains(tel);
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+	public void clearTel() {
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.TEL)) {
+			TYPES_LIST_TABLE.remove(VCardTypeName.TEL);
+		}
+	}
+
+	public boolean hasTels()
+	{
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.TEL)) {
+			return !TYPES_LIST_TABLE.get(VCardTypeName.TEL).isEmpty();
+		}
+		else {
+			return false;
+		}
+	}
+
+	public List<EmailType> getEmails()
+	{
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.EMAIL)) {
+			List<VCardType> list = TYPES_LIST_TABLE.get(VCardTypeName.EMAIL);
+			List<EmailType> emailList = new ArrayList<EmailType>(list.size());
+			
+			for(VCardType vCardType : list) {
+				emailList.add((EmailType)vCardType);
+			}
+			
+			return emailList;
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void addEmail(EmailType email) {
+		if(email != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.EMAIL)) {
+				TYPES_LIST_TABLE.get(VCardTypeName.EMAIL).add(email);
+			}
+			else {
+				List<VCardType> newEmailList = new ArrayList<VCardType>();
+				newEmailList.add(email);
+				TYPES_LIST_TABLE.put(VCardTypeName.EMAIL, newEmailList);
+			}
+		}
+		else {
+			throw new NullPointerException("Cannot add a null email type.");
+		}
+	}
+
+	public void addAllEmails(Collection<EmailType> emails) {
+		if(emails != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.EMAIL)) {
+				TYPES_LIST_TABLE.get(VCardTypeName.EMAIL).addAll(emails);
+			}
+			else {
+				List<VCardType> newEmailList = new ArrayList<VCardType>();
+				newEmailList.addAll(emails);
+				TYPES_LIST_TABLE.put(VCardTypeName.EMAIL, newEmailList);
+			}
+		}
+		else {
+			throw new NullPointerException("Cannot add a null list of email types.");
+		}
+	}
+
+	public boolean removeEmail(EmailType email)
+	{
+		if(email != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.EMAIL)) {
+				return TYPES_LIST_TABLE.get(VCardTypeName.EMAIL).remove(email);
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean containsEmail(EmailType email)
+	{
+		if(email != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.EMAIL)) {
+				return TYPES_LIST_TABLE.get(VCardTypeName.EMAIL).contains(email);
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean hasEmails()
+	{
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.EMAIL)) {
+			return !TYPES_LIST_TABLE.get(VCardTypeName.EMAIL).isEmpty();
+		}
+		else {
+			return false;
+		}
+	}
+
+	public void clearEmails() {
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.EMAIL)) {
+			TYPES_LIST_TABLE.remove(VCardTypeName.EMAIL);
 		}
 		
-		if(hasTelephoneNumbers()) {
-			Iterator<TelephoneFeature> iter = getTelephoneNumbers();
-			while(iter.hasNext()) {
-				TelephoneFeature telephone = iter.next();
-				cloned.addTelephoneNumber(telephone.clone());
+	}
+
+	public MailerType getMailer()
+	{
+		if(TYPES_TABLE.containsKey(VCardTypeName.MAILER)) {
+			return (MailerType)TYPES_TABLE.get(VCardTypeName.MAILER);
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void setMailer(MailerType mailer) {
+		if(mailer != null) {
+			TYPES_TABLE.put(VCardTypeName.MAILER, mailer);
+		}
+		else {
+			if(TYPES_TABLE.containsKey(VCardTypeName.MAILER)) {
+				TYPES_TABLE.remove(VCardTypeName.MAILER);
+			}
+		}
+	}
+
+	public boolean hasMailer()
+	{
+		return TYPES_TABLE.containsKey(VCardTypeName.MAILER);
+	}
+
+	public void clearMailer() {
+		if(TYPES_TABLE.containsKey(VCardTypeName.MAILER)) {
+			TYPES_TABLE.remove(VCardTypeName.MAILER);
+		}
+	}
+
+	public TzType getTz()
+	{
+		if(TYPES_TABLE.containsKey(VCardTypeName.TZ)) {
+			return (TzType)TYPES_TABLE.get(VCardTypeName.TZ);
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void setTz(TzType timeZone) {
+		if(timeZone != null) {
+			TYPES_TABLE.put(VCardTypeName.TZ, timeZone);
+		}
+		else {
+			if(TYPES_TABLE.containsKey(VCardTypeName.TZ)) {
+				TYPES_TABLE.remove(VCardTypeName.TZ);
+			}
+		}
+	}
+
+	public boolean hasTz()
+	{
+		return TYPES_TABLE.containsKey(VCardTypeName.TZ);
+	}
+
+	public void clearTz() {
+		if(TYPES_TABLE.containsKey(VCardTypeName.TZ)) {
+			TYPES_TABLE.remove(VCardTypeName.TZ);
+		}
+	}
+
+	public GeoType getGeo()
+	{
+		if(TYPES_TABLE.containsKey(VCardTypeName.GEO)) {
+			return (GeoType)TYPES_TABLE.get(VCardTypeName.GEO);
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void setGeo(GeoType geo) {
+		if(geo != null) {
+			TYPES_TABLE.put(VCardTypeName.GEO, geo);
+		}
+		else {
+			if(TYPES_TABLE.containsKey(VCardTypeName.GEO)) {
+				TYPES_TABLE.remove(VCardTypeName.GEO);
+			}
+		}
+	}
+
+	public boolean hasGeo()
+	{
+		return TYPES_TABLE.containsKey(VCardTypeName.GEO);
+	}
+
+	public void clearGeo() {
+		if(TYPES_TABLE.containsKey(VCardTypeName.GEO)) {
+			TYPES_TABLE.remove(VCardTypeName.GEO);
+		}
+	}
+
+	public TitleType getTitle()
+	{
+		if(TYPES_TABLE.containsKey(VCardTypeName.TITLE)) {
+			return (TitleType)TYPES_TABLE.get(VCardTypeName.TITLE);
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void setTitle(TitleType title) {
+		if(title != null) {
+			TYPES_TABLE.put(VCardTypeName.TITLE, title);
+		}
+		else {
+			if(TYPES_TABLE.containsKey(VCardTypeName.TITLE)) {
+				TYPES_TABLE.remove(VCardTypeName.TITLE);
+			}
+		}
+	}
+
+	public boolean hasTitle()
+	{
+		return TYPES_TABLE.containsKey(VCardTypeName.TITLE);
+	}
+
+	public void clearTitle() {
+		if(TYPES_TABLE.containsKey(VCardTypeName.TITLE)) {
+			TYPES_TABLE.remove(VCardTypeName.TITLE);
+		}
+	}
+
+	public RoleType getRole()
+	{
+		if(TYPES_TABLE.containsKey(VCardTypeName.ROLE)) {
+			return (RoleType)TYPES_TABLE.get(VCardTypeName.ROLE);
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void setRole(RoleType role) {
+		if(role != null) {
+			TYPES_TABLE.put(VCardTypeName.ROLE, role);
+		}
+		else {
+			if(TYPES_TABLE.containsKey(VCardTypeName.ROLE)) {
+				TYPES_TABLE.remove(VCardTypeName.ROLE);
+			}
+		}
+	}
+
+	public boolean hasRole()
+	{
+		return TYPES_TABLE.containsKey(VCardTypeName.ROLE);
+	}
+
+	public void clearRole() {
+		if(TYPES_TABLE.containsKey(VCardTypeName.ROLE)) {
+			TYPES_TABLE.remove(VCardTypeName.ROLE);
+		}
+	}
+
+	public List<LogoType> getLogos()
+	{
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.LOGO)) {
+			List<VCardType> list = TYPES_LIST_TABLE.get(VCardTypeName.LOGO);
+			List<LogoType> logoList = new ArrayList<LogoType>(list.size());
+			
+			for(VCardType vCardType : list) {
+				logoList.add((LogoType)vCardType);
+			}
+			
+			return logoList;
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void addLogo(LogoType logo) throws NullPointerException {
+		if(logo != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.LOGO)) {
+				TYPES_LIST_TABLE.get(VCardTypeName.LOGO).add(logo);
+			}
+			else {
+				List<VCardType> newLogoList = new ArrayList<VCardType>();
+				newLogoList.add(logo);
+				TYPES_LIST_TABLE.put(VCardTypeName.LOGO, newLogoList);
+			}
+		}
+		else {
+			throw new NullPointerException("Cannot add a null logo type.");
+		}
+	}
+
+	public void addAllLogos(Collection<LogoType> logos) throws NullPointerException {
+		if(logos != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.LOGO)) {
+				TYPES_LIST_TABLE.get(VCardTypeName.LOGO).addAll(logos);
+			}
+			else {
+				List<VCardType> newLogoList = new ArrayList<VCardType>();
+				newLogoList.addAll(logos);
+				TYPES_LIST_TABLE.put(VCardTypeName.LOGO, newLogoList);
+			}
+		}
+		else {
+			throw new NullPointerException("Cannot add a null list of logo types.");
+		}
+	}
+
+	public boolean removeLogo(LogoType logo) throws NullPointerException {
+		if(logo != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.LOGO)) {
+				return TYPES_LIST_TABLE.get(VCardTypeName.LOGO).remove(logo);
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean containsLogo(LogoType logo)
+	{
+		if(logo != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.LOGO)) {
+				return TYPES_LIST_TABLE.get(VCardTypeName.LOGO).contains(logo);
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean hasLogos()
+	{
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.LOGO)) {
+			return !TYPES_LIST_TABLE.get(VCardTypeName.LOGO).isEmpty();
+		}
+		else {
+			return false;
+		}
+	}
+
+	public void clearLogos() {
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.LOGO)) {
+			TYPES_LIST_TABLE.remove(VCardTypeName.LOGO);
+		}
+	}
+
+	public List<AgentType> getAgents()
+	{
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.AGENT)) {
+			List<VCardType> list = TYPES_LIST_TABLE.get(VCardTypeName.AGENT);
+			List<AgentType> agentList = new ArrayList<AgentType>(list.size());
+			
+			for(VCardType vCardType : list) {
+				agentList.add((AgentType)vCardType);
+			}
+			
+			return agentList;
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void addAgent(AgentType agent) throws NullPointerException {
+		if(agent != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.AGENT)) {
+				TYPES_LIST_TABLE.get(VCardTypeName.AGENT).add(agent);
+			}
+			else {
+				List<VCardType> newAgentList = new ArrayList<VCardType>();
+				newAgentList.add(agent);
+				TYPES_LIST_TABLE.put(VCardTypeName.AGENT, newAgentList);
+			}
+		}
+		else {
+			throw new NullPointerException("Cannot add a null agent type.");
+		}
+	}
+	
+	public void addAllAgents(Collection<AgentType> agents) throws NullPointerException {
+		if(agents != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.AGENT)) {
+				TYPES_LIST_TABLE.get(VCardTypeName.AGENT).addAll(agents);
+			}
+			else {
+				List<VCardType> newAgentList = new ArrayList<VCardType>();
+				newAgentList.addAll(agents);
+				TYPES_LIST_TABLE.put(VCardTypeName.AGENT, newAgentList);
+			}
+		}
+		else {
+			throw new NullPointerException("Cannot add a null list of agent types.");
+		}
+	}
+
+	public boolean removeAgent(AgentType agent) throws NullPointerException {
+		if(agent != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.AGENT)) {
+				return TYPES_LIST_TABLE.get(VCardTypeName.AGENT).remove(agent);
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean containsAgent(AgentType agent)
+	{
+		if(agent != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.AGENT)) {
+				return TYPES_LIST_TABLE.get(VCardTypeName.AGENT).contains(agent);
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean hasAgents()
+	{
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.AGENT)) {
+			return !TYPES_LIST_TABLE.get(VCardTypeName.AGENT).isEmpty();
+		}
+		else {
+			return false;
+		}
+	}
+
+	public void clearAgents() {
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.AGENT)) {
+			TYPES_LIST_TABLE.remove(VCardTypeName.AGENT);
+		}
+	}
+
+	public OrgType getOrg()
+	{
+		if(TYPES_TABLE.containsKey(VCardTypeName.ORG)) {
+			return (OrgType)TYPES_TABLE.get(VCardTypeName.ORG);
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void setOrg(OrgType organization) {
+		if(organization != null) {
+			TYPES_TABLE.put(VCardTypeName.ORG, organization);
+		}
+		else {
+			if(TYPES_TABLE.containsKey(VCardTypeName.ORG)) {
+				TYPES_TABLE.remove(VCardTypeName.ORG);
+			}
+		}
+	}
+
+	public boolean hasOrg()
+	{
+		return TYPES_TABLE.containsKey(VCardTypeName.ORG);
+	}
+
+	public void clearOrg() {
+		if(TYPES_TABLE.containsKey(VCardTypeName.ORG)) {
+			TYPES_TABLE.remove(VCardTypeName.ORG);
+		}
+	}
+
+	public CategoriesType getCategories()
+	{
+		if(TYPES_TABLE.containsKey(VCardTypeName.CATEGORIES)) {
+			return (CategoriesType)TYPES_TABLE.get(VCardTypeName.CATEGORIES);
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void setCategories(CategoriesType categories) {
+		if(categories != null) {
+			TYPES_TABLE.put(VCardTypeName.CATEGORIES, categories);
+		}
+		else {
+			if(TYPES_TABLE.containsKey(VCardTypeName.CATEGORIES)) {
+				TYPES_TABLE.remove(VCardTypeName.CATEGORIES);
 			}
 		}
 		
-		if(hasEmails()) {
-			Iterator<EmailFeature> iter = getEmails();
-			while(iter.hasNext()) {
-				EmailFeature email = iter.next();
-				cloned.addEmail(email.clone());
+	}
+
+	public boolean hasCategories()
+	{
+		return TYPES_TABLE.containsKey(VCardTypeName.CATEGORIES);
+	}
+
+	public void clearCategories() {
+		if(TYPES_TABLE.containsKey(VCardTypeName.CATEGORIES)) {
+			TYPES_TABLE.remove(VCardTypeName.CATEGORIES);
+		}
+	}
+
+	public List<NoteType> getNotes()
+	{
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.NOTE)) {
+			List<VCardType> list = TYPES_LIST_TABLE.get(VCardTypeName.NOTE);
+			List<NoteType> noteList = new ArrayList<NoteType>(list.size());
+			
+			for(VCardType vCardType : list) {
+				noteList.add((NoteType)vCardType);
+			}
+			
+			return noteList;
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void addNote(NoteType note) throws NullPointerException {
+		if(note != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.NOTE)) {
+				TYPES_LIST_TABLE.get(VCardTypeName.NOTE).add(note);
+			}
+			else {
+				List<VCardType> newNoteList = new ArrayList<VCardType>();
+				newNoteList.add(note);
+				TYPES_LIST_TABLE.put(VCardTypeName.NOTE, newNoteList);
 			}
 		}
-		
-		if(hasMailer()) {
-			cloned.setMailer(mailer.clone());
+		else {
+			throw new NullPointerException("Cannot add a null note type.");
 		}
-		
-		if(hasTimeZone()) {
-			cloned.setTimeZone(timeZone.clone());
-		}
-		
-		if(hasGeographicPosition()) {
-			cloned.setGeographicPosition(geographicPosition.clone());
-		}
-		
-		if(hasTitle()) {
-			cloned.setTitle(title.clone());
-		}
-		
-		if(hasRole()) {
-			cloned.setRole(role.clone());
-		}
-		
-		if(hasLogos()) {
-			Iterator<LogoFeature> iter = getLogos();
-			while(iter.hasNext()) {
-				LogoFeature logo = iter.next();
-				cloned.addLogo(logo.clone());
+	}
+
+	public void addAllNotes(Collection<NoteType> notes) throws NullPointerException {
+		if(notes != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.NOTE)) {
+				TYPES_LIST_TABLE.get(VCardTypeName.NOTE).addAll(notes);
 			}
+			else {
+				List<VCardType> newNoteList = new ArrayList<VCardType>();
+				newNoteList.addAll(notes);
+				TYPES_LIST_TABLE.put(VCardTypeName.NOTE, newNoteList);
+			}
+		}
+		else {
+			throw new NullPointerException("Cannot add a null list of note types.");
+		}
+	}
+
+	public boolean removeNote(NoteType note) throws NullPointerException
+	{
+		if(note != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.NOTE)) {
+				return TYPES_LIST_TABLE.get(VCardTypeName.NOTE).remove(note);
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean containsNote(NoteType note)
+	{
+		if(note != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.NOTE)) {
+				return TYPES_LIST_TABLE.get(VCardTypeName.NOTE).contains(note);
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean hasNotes()
+	{
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.NOTE)) {
+			return !TYPES_LIST_TABLE.get(VCardTypeName.NOTE).isEmpty();
+		}
+		else {
+			return false;
+		}
+	}
+
+	public void clearNotes() {
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.NOTE)) {
+			TYPES_LIST_TABLE.remove(VCardTypeName.NOTE);
+		}
+	}
+
+	public ProdIdType getProdId()
+	{
+		if(TYPES_TABLE.containsKey(VCardTypeName.PRODID)) {
+			return (ProdIdType)TYPES_TABLE.get(VCardTypeName.PRODID);
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void setProdId(ProdIdType productId) {
+		if(productId != null) {
+			TYPES_TABLE.put(VCardTypeName.PRODID, productId);
+		}
+		else {
+			if(TYPES_TABLE.containsKey(VCardTypeName.PRODID)) {
+				TYPES_TABLE.remove(VCardTypeName.PRODID);
+			}
+		}
+	}
+
+	public boolean hasProdId()
+	{
+		return TYPES_TABLE.containsKey(VCardTypeName.PRODID);
+	}
+
+	public void clearProdId() {
+		if(TYPES_TABLE.containsKey(VCardTypeName.PRODID)) {
+			TYPES_TABLE.remove(VCardTypeName.PRODID);
+		}
+	}
+
+	public RevType getRev()
+	{
+		if(TYPES_TABLE.containsKey(VCardTypeName.REV)) {
+			return (RevType)TYPES_TABLE.get(VCardTypeName.REV);
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void setRev(RevType revision) {
+		if(revision != null) {
+			TYPES_TABLE.put(VCardTypeName.REV, revision);
+		}
+		else {
+			if(TYPES_TABLE.containsKey(VCardTypeName.REV)) {
+				TYPES_TABLE.remove(VCardTypeName.REV);
+			}
+		}
+	}
+
+	public boolean hasRev()
+	{
+		return TYPES_TABLE.containsKey(VCardTypeName.REV);
+	}
+
+	public void clearRev() {
+		if(TYPES_TABLE.containsKey(VCardTypeName.REV)) {
+			TYPES_TABLE.remove(VCardTypeName.REV);
+		}
+	}
+
+	public SortStringType getSortString()
+	{
+		if(TYPES_TABLE.containsKey(VCardTypeName.SORT_STRING)) {
+			return (SortStringType)TYPES_TABLE.get(VCardTypeName.SORT_STRING);
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void setSortString(SortStringType sortString) {
+		if(sortString != null) {
+			TYPES_TABLE.put(VCardTypeName.SORT_STRING, sortString);
+		}
+		else {
+			if(TYPES_TABLE.containsKey(VCardTypeName.SORT_STRING)) {
+				TYPES_TABLE.remove(VCardTypeName.SORT_STRING);
+			}
+		}
+	}
+
+	public boolean hasSortString()
+	{
+		return TYPES_TABLE.containsKey(VCardTypeName.SORT_STRING);
+	}
+
+	public void clearSortString() {
+		if(TYPES_TABLE.containsKey(VCardTypeName.SORT_STRING)) {
+			TYPES_TABLE.remove(VCardTypeName.SORT_STRING);
+		}
+	}
+
+	public List<SoundType> getSounds()
+	{
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.SOUND)) {
+			List<VCardType> list = TYPES_LIST_TABLE.get(VCardTypeName.SOUND);
+			List<SoundType> soundList = new ArrayList<SoundType>(list.size());
+			
+			for(VCardType vCardType : list) {
+				soundList.add((SoundType)vCardType);
+			}
+			
+			return soundList;
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void addSound(SoundType sound) throws NullPointerException {
+		if(sound != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.SOUND)) {
+				TYPES_LIST_TABLE.get(VCardTypeName.SOUND).add(sound);
+			}
+			else {
+				List<VCardType> newSoundList = new ArrayList<VCardType>();
+				newSoundList.add(sound);
+				TYPES_LIST_TABLE.put(VCardTypeName.SOUND, newSoundList);
+			}
+		}
+		else {
+			throw new NullPointerException("Cannot add a null sound type.");
+		}
+	}
+
+	public void addAllSounds(Collection<SoundType> sounds) throws NullPointerException {
+		if(sounds != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.SOUND)) {
+				TYPES_LIST_TABLE.get(VCardTypeName.SOUND).addAll(sounds);
+			}
+			else {
+				List<VCardType> newSoundList = new ArrayList<VCardType>();
+				newSoundList.addAll(sounds);
+				TYPES_LIST_TABLE.put(VCardTypeName.SOUND, newSoundList);
+			}
+		}
+		else {
+			throw new NullPointerException("Cannot add a null list of sound types.");
+		}
+	}
+
+	public boolean removeSound(SoundType sound) throws NullPointerException
+	{
+		if(sound != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.SOUND)) {
+				return TYPES_LIST_TABLE.get(VCardTypeName.SOUND).remove(sound);
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean containsSound(SoundType sound)
+	{
+		if(sound != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.SOUND)) {
+				return TYPES_LIST_TABLE.get(VCardTypeName.SOUND).contains(sound);
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean hasSounds()
+	{
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.SOUND)) {
+			return !TYPES_LIST_TABLE.get(VCardTypeName.SOUND).isEmpty();
+		}
+		else {
+			return false;
+		}
+	}
+
+	public void clearSounds() {
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.SOUND)) {
+			TYPES_LIST_TABLE.remove(VCardTypeName.SOUND);
+		}
+	}
+
+	public UidType getUid()
+	{
+		if(TYPES_TABLE.containsKey(VCardTypeName.UID)) {
+			return (UidType)TYPES_TABLE.get(VCardTypeName.UID);
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void setUid(UidType uid) {
+		if(uid != null) {
+			TYPES_TABLE.put(VCardTypeName.UID, uid);
+		}
+		else {
+			if(TYPES_TABLE.containsKey(VCardTypeName.UID)) {
+				TYPES_TABLE.remove(VCardTypeName.UID);
+			}
+		}
+	}
+
+	public boolean hasUid()
+	{
+		return TYPES_TABLE.containsKey(VCardTypeName.UID);
+	}
+
+	public void clearUid()
+	{
+		if(TYPES_TABLE.containsKey(VCardTypeName.UID)) {
+			TYPES_TABLE.remove(VCardTypeName.UID);
+		}
+	}
+
+	public List<UrlType> getUrls()
+	{
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.URL)) {
+			List<VCardType> list = TYPES_LIST_TABLE.get(VCardTypeName.URL);
+			List<UrlType> urlList = new ArrayList<UrlType>(list.size());
+			
+			for(VCardType vCardType : list) {
+				urlList.add((UrlType)vCardType);
+			}
+			
+			return urlList;
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void addUrl(UrlType url) throws NullPointerException {
+		if(url != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.URL)) {
+				TYPES_LIST_TABLE.get(VCardTypeName.URL).add(url);
+			}
+			else {
+				List<VCardType> newUrlList = new ArrayList<VCardType>();
+				newUrlList.add(url);
+				TYPES_LIST_TABLE.put(VCardTypeName.URL, newUrlList);
+			}
+		}
+		else {
+			throw new NullPointerException("Cannot add a null url type.");
+		}
+	}
+
+	public void addAllUrls(Collection<UrlType> urls) throws NullPointerException {
+		if(urls != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.URL)) {
+				TYPES_LIST_TABLE.get(VCardTypeName.URL).addAll(urls);
+			}
+			else {
+				List<VCardType> newUrlList = new ArrayList<VCardType>();
+				newUrlList.addAll(urls);
+				TYPES_LIST_TABLE.put(VCardTypeName.URL, newUrlList);
+			}
+		}
+		else {
+			throw new NullPointerException("Cannot add a null list of url types.");
+		}
+	}
+
+	public boolean removeUrl(UrlType url) throws NullPointerException
+	{
+		if(url != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.URL)) {
+				return TYPES_LIST_TABLE.get(VCardTypeName.URL).remove(url);
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean containsUrl(UrlType url)
+	{
+		if(url != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.URL)) {
+				return TYPES_LIST_TABLE.get(VCardTypeName.URL).contains(url);
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean hasUrls()
+	{
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.URL)) {
+			return !TYPES_LIST_TABLE.get(VCardTypeName.URL).isEmpty();
+		}
+		else {
+			return false;
+		}
+	}
+
+	public void clearUrls() {
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.URL)) {
+			TYPES_LIST_TABLE.remove(VCardTypeName.URL);
+		}
+	}
+
+	public List<ImppType> getIMPPs()
+	{
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.IMPP)) {
+			List<VCardType> list = TYPES_LIST_TABLE.get(VCardTypeName.IMPP);
+			List<ImppType> imppList = new ArrayList<ImppType>(list.size());
+			
+			for(VCardType vCardType : list) {
+				imppList.add((ImppType)vCardType);
+			}
+			
+			return imppList;
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void addImpp(ImppType impp) throws NullPointerException {
+		if(impp != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.IMPP)) {
+				TYPES_LIST_TABLE.get(VCardTypeName.IMPP).add(impp);
+			}
+			else {
+				List<VCardType> newImppList = new ArrayList<VCardType>();
+				newImppList.add(impp);
+				TYPES_LIST_TABLE.put(VCardTypeName.IMPP, newImppList);
+			}
+		}
+		else {
+			throw new NullPointerException("Cannot add a null impp type.");
+		}
+	}
+	
+	public void addAllImpp(Collection<ImppType> impps) throws NullPointerException {
+		if(impps != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.IMPP)) {
+				TYPES_LIST_TABLE.get(VCardTypeName.IMPP).addAll(impps);
+			}
+			else {
+				List<VCardType> newImppList = new ArrayList<VCardType>();
+				newImppList.addAll(impps);
+				TYPES_LIST_TABLE.put(VCardTypeName.IMPP, newImppList);
+			}
+		}
+		else {
+			throw new NullPointerException("Cannot add a null list of impp types.");
+		}
+	}
+
+	public boolean removeImpp(ImppType impp) throws NullPointerException
+	{
+		if(impp != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.IMPP)) {
+				return TYPES_LIST_TABLE.get(VCardTypeName.IMPP).remove(impp);
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean containsImpp(ImppType impp)
+	{
+		if(impp != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.IMPP)) {
+				return TYPES_LIST_TABLE.get(VCardTypeName.IMPP).contains(impp);
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean hasImpps()
+	{
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.IMPP)) {
+			return !TYPES_LIST_TABLE.get(VCardTypeName.IMPP).isEmpty();
+		}
+		else {
+			return false;
+		}
+	}
+
+	public void clearImpp() {
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.IMPP)) {
+			TYPES_LIST_TABLE.remove(VCardTypeName.IMPP);
+		}
+	}
+
+	public VersionType getVersion()
+	{
+		if(TYPES_TABLE.containsKey(VCardTypeName.VERSION)) {
+			return (VersionType)TYPES_TABLE.get(VCardTypeName.VERSION);
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void setVersion(VersionType version) throws NullPointerException {
+		if(version != null) {
+			TYPES_TABLE.put(VCardTypeName.VERSION, version);
+		}
+		else {
+			throw new NullPointerException("VCard must have a version type.");
+		}
+	}
+
+	public ClassType getSecurityClass()
+	{
+		if(TYPES_TABLE.containsKey(VCardTypeName.CLASS)) {
+			return (ClassType)TYPES_TABLE.get(VCardTypeName.CLASS);
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void setSecurityClass(ClassType securityClass) {
+		if(securityClass != null) {
+			TYPES_TABLE.put(VCardTypeName.CLASS, securityClass);
+		}
+		else {
+			if(TYPES_TABLE.containsKey(VCardTypeName.CLASS)) {
+				TYPES_TABLE.remove(VCardTypeName.CLASS);
+			}
+		}
+	}
+
+	public boolean hasSecurityClass()
+	{
+		return TYPES_TABLE.containsKey(VCardTypeName.CLASS);
+	}
+
+	public void clearSecurityClass() {
+		if(TYPES_TABLE.containsKey(VCardTypeName.CLASS)) {
+			TYPES_TABLE.remove(VCardTypeName.CLASS);
+		}
+	}
+
+	public List<KeyType> getKeys()
+	{
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.KEY)) {
+			List<VCardType> list = TYPES_LIST_TABLE.get(VCardTypeName.KEY);
+			List<KeyType> keyList = new ArrayList<KeyType>(list.size());
+			
+			for(VCardType vCardType : list) {
+				keyList.add((KeyType)vCardType);
+			}
+			
+			return keyList;
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void addKey(KeyType key) throws NullPointerException {
+		if(key != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.KEY)) {
+				TYPES_LIST_TABLE.get(VCardTypeName.KEY).add(key);
+			}
+			else {
+				List<VCardType> newKeyList = new ArrayList<VCardType>();
+				newKeyList.add(key);
+				TYPES_LIST_TABLE.put(VCardTypeName.KEY, newKeyList);
+			}
+		}
+		else {
+			throw new NullPointerException("Cannot add a null key type.");
+		}
+	}
+
+	public void addAllKeys(Collection<KeyType> keys) throws NullPointerException {
+		if(keys != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.KEY)) {
+				TYPES_LIST_TABLE.get(VCardTypeName.KEY).addAll(keys);
+			}
+			else {
+				List<VCardType> newKeyList = new ArrayList<VCardType>();
+				newKeyList.addAll(keys);
+				TYPES_LIST_TABLE.put(VCardTypeName.KEY, newKeyList);
+			}
+		}
+		else {
+			throw new NullPointerException("Cannot add a null list of key types.");
+		}
+	}
+
+	public boolean removeKey(KeyType key) throws NullPointerException
+	{
+		if(key != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.KEY)) {
+				return TYPES_LIST_TABLE.get(VCardTypeName.KEY).remove(key);
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean containsKey(KeyType key)
+	{
+		if(key != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.KEY)) {
+				return TYPES_LIST_TABLE.get(VCardTypeName.KEY).contains(key);
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean hasKeys()
+	{
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.KEY)) {
+			return !TYPES_LIST_TABLE.get(VCardTypeName.KEY).isEmpty();
+		}
+		else {
+			return false;
+		}
+	}
+
+	public void clearKeys() {
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.KEY)) {
+			TYPES_LIST_TABLE.remove(VCardTypeName.KEY);
+		}
+	}
+
+	public List<ExtendedType> getExtendedTypes()
+	{
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.XTENDED)) {
+			List<VCardType> list = TYPES_LIST_TABLE.get(VCardTypeName.XTENDED);
+			List<ExtendedType> xtendedList = new ArrayList<ExtendedType>(list.size());
+			
+			for(VCardType vCardType : list) {
+				xtendedList.add((ExtendedType)vCardType);
+			}
+			
+			return xtendedList;
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void addExtendedType(ExtendedType extension) throws NullPointerException {
+		if(extension != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.XTENDED)) {
+				TYPES_LIST_TABLE.get(VCardTypeName.XTENDED).add(extension);
+			}
+			else {
+				List<VCardType> newXtendedList = new ArrayList<VCardType>();
+				newXtendedList.add(extension);
+				TYPES_LIST_TABLE.put(VCardTypeName.XTENDED, newXtendedList);
+			}
+		}
+		else {
+			throw new NullPointerException("Cannot add a null extended type.");
+		}
+	}
+
+	public void addAllExtendedTypes(Collection<ExtendedType> extensions) throws NullPointerException {
+		if(extensions != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.XTENDED)) {
+				TYPES_LIST_TABLE.get(VCardTypeName.XTENDED).addAll(extensions);
+			}
+			else {
+				List<VCardType> newXtendedList = new ArrayList<VCardType>();
+				newXtendedList.addAll(extensions);
+				TYPES_LIST_TABLE.put(VCardTypeName.XTENDED, newXtendedList);
+			}
+		}
+		else {
+			throw new NullPointerException("Cannot add a null list of extended types.");
+		}
+	}
+
+	public boolean removeExtendedType(ExtendedType extension) throws NullPointerException
+	{
+		if(extension != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.XTENDED)) {
+				return TYPES_LIST_TABLE.get(VCardTypeName.XTENDED).remove(extension);
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean containsExtendedType(ExtendedType extension)
+	{
+		if(extension != null) {
+			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.XTENDED)) {
+				return TYPES_LIST_TABLE.get(VCardTypeName.XTENDED).contains(extension);
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean hasExtendedTypes()
+	{
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.XTENDED)) {
+			return !TYPES_LIST_TABLE.get(VCardTypeName.XTENDED).isEmpty();
+		}
+		else {
+			return false;
+		}
+	}
+
+	public void clearExtendedTypes() {
+		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.XTENDED)) {
+			TYPES_LIST_TABLE.remove(VCardTypeName.XTENDED);
+		}
+	}
+
+	public void clear() {
+		TYPES_TABLE.clear();
+		TYPES_LIST_TABLE.clear();
+	}
+
+	// ----- VCardErrorHandler Interface Methods ---------------------------
+	
+	public List<VCardError> getErrors()
+	{
+		return Collections.unmodifiableList(VCARD_ERRORS);
+	}
+
+	public void addError(VCardError error) throws NullPointerException {
+		if(error == null) {
+			throw new NullPointerException("Cannot add a null VCardError.");
+		}
+		
+		VCARD_ERRORS.add(error);
+	}
+
+	public void addError(String errorMessage, ErrorSeverity severity, Throwable error) throws NullPointerException {
+		if(errorMessage == null) {
+			throw new NullPointerException("Cannot add a null errorMessage.");
+		}
+		
+		VCARD_ERRORS.add(new VCardError(errorMessage, error, severity));
+	}
+
+	public ErrorSeverity getErrorSeverity()
+	{
+		return errorSeverity;
+	}
+
+	public void setThrowExceptions(boolean throwExceptions) {
+		this.throwsExceptions = throwExceptions;
+	}
+
+	public boolean isThrowExceptions()
+	{
+		return throwsExceptions;
+	}
+
+	public boolean hasErrors()
+	{
+		return !VCARD_ERRORS.isEmpty();
+	}
+
+	public void clearErrors() {
+		VCARD_ERRORS.clear();
+	}
+	
+	//---------------------------------------------------------
+	
+	@Override
+	public VCardImpl clone()
+	{
+		VCardImpl cloned = new VCardImpl();
+		cloned.setBegin(getBegin());
+		cloned.setEnd(getEnd());
+		cloned.setVersion(getVersion());
+		cloned.setN(getN());
+		cloned.setFN(getFN());
+		
+		cloned.setBDay(getBDay());
+		cloned.setCategories(getCategories());
+		cloned.setGeo(getGeo());
+		cloned.setMailer(getMailer());
+		cloned.setName(getName());
+		cloned.setNickname(getNicknames());
+		cloned.setOrg(getOrg());
+		cloned.setProdId(getProdId());
+		cloned.setProfile(getProfile());
+		cloned.setRev(getRev());
+		cloned.setRole(getRole());
+		cloned.setSecurityClass(getSecurityClass());
+		cloned.setSortString(getSortString());
+		cloned.setSource(getSource());
+		cloned.setTitle(getTitle());
+		cloned.setTz(getTz());
+		cloned.setUid(getUid());
+		
+		if(hasAdrs()) {
+			cloned.addAllAdrs(getAdrs());
 		}
 		
 		if(hasAgents()) {
-			Iterator<AgentFeature> iter = getAgents();
-			while(iter.hasNext()) {
-				AgentFeature agent = iter.next();
-				cloned.addAgent(agent.clone());
-			}
+			cloned.addAllAgents(getAgents());
 		}
 		
-		if(hasOrganizations()) {
-			cloned.setOrganizations(organizations.clone());
-		}
-		
-		if(hasCategories()) {
-			cloned.setCategories(categories.clone());
-		}
-		
-		if(hasNotes()) {
-			Iterator<NoteFeature> iter = getNotes();
-			while(iter.hasNext()) {
-				NoteFeature note = iter.next();
-				cloned.addNote(note.clone());
-			}
-		}
-		
-		if(hasProductId()) {
-			cloned.setProductId(productId.clone());
-		}
-		
-		if(hasRevision()) {
-			cloned.setRevision(revision.clone());
-		}
-		
-		if(hasSortString()) {
-			cloned.setSortString(sortString.clone());
-		}
-		
-		if(hasSounds()) {
-			Iterator<SoundFeature> iter = getSounds();
-			while(iter.hasNext()) {
-				SoundFeature sound = iter.next();
-				cloned.addSound(sound.clone());
-			}
-		}
-		
-		if(hasUID()) {
-			cloned.setUID(uid.clone());
-		}
-		
-		if(hasURLs()) {
-			Iterator<URLFeature> iter = getURLs();
-			while(iter.hasNext()) {
-				URLFeature url = iter.next();
-				cloned.addURL(url.clone());
-			}
-		}
-		
-		if(hasIMPPs()) {
-			Iterator<IMPPFeature> iter = getIMPPs();
-			while(iter.hasNext()) {
-				IMPPFeature impp = iter.next();
-				cloned.addIMPP(impp.clone());
-			}
-		}
-		
-		if(version != null) {
-			cloned.setVersion(version.clone());
-		}
-		
-		if(hasSecurityClass()) {
-			cloned.setSecurityClass(securityClass.clone());
-		}
-		
-		if(hasKeys()) {
-			Iterator<KeyFeature> iter = getKeys();
-			while(iter.hasNext()) {
-				KeyFeature key = iter.next();
-				cloned.addKey(key.clone());
-			}
+		if(hasEmails()) {
+			cloned.addAllEmails(getEmails());
 		}
 		
 		if(hasExtendedTypes()) {
-			Iterator<ExtendedFeature> iter = getExtendedTypes();
-			while(iter.hasNext()) {
-				ExtendedFeature extension = iter.next();
-				cloned.addExtendedType(extension.clone());
-			}
+			cloned.addAllExtendedTypes(getExtendedTypes());
 		}
 		
-		cloned.setThrowExceptions(isThrowsExceptions);
-		if(hasErrors()) {
-			List<VCardError> errs = getErrors();
-			for (VCardError err : errs) {
-				cloned.addError(err.clone());
-			}
+		if(hasImpps()) {
+			cloned.addAllImpp(getIMPPs());
 		}
 		
-		if(id != null) {
-			cloned.setID(new String(id));
+		if(hasKeys()) {
+			cloned.addAllKeys(getKeys());
+		}
+		
+		if(hasLogos()) {
+			cloned.addAllLogos(getLogos());
+		}
+		
+		if(hasNotes()) {
+			cloned.addAllNotes(getNotes());
+		}
+		
+		if(hasPhotos()) {
+			cloned.addAllPhotos(getPhotos());
+		}
+		
+		if(hasSounds()) {
+			cloned.addAllSounds(getSounds());
+		}
+		
+		if(hasTels()) {
+			cloned.addAllTels(getTels());
+		}
+		
+		if(hasUrls()) {
+			cloned.addAllUrls(getUrls());
+		}
+		
+		cloned.throwsExceptions = throwsExceptions;
+		cloned.errorSeverity = errorSeverity;
+		for(VCardError vcardError: VCARD_ERRORS) {
+			cloned.addError(vcardError);
 		}
 		
 		return cloned;
+	}
+	
+	private String[] getContents()
+	{
+		String[] contents = new String[37];
+		contents[0] = (getBegin() != null ? getBegin().toString() : "");
+		contents[1] = (getEnd() != null ? getEnd().toString() : "");
+		contents[2] = (getVersion() != null ? getVersion().toString() : "");
+		contents[3] = (getN() != null ? getN().toString() : "");
+		contents[4] = (getFN() != null ?  getFN().toString() : "");
+		contents[5] = (getBDay() != null ? getBDay().toString() : "");
+		contents[6] = (getCategories() != null ? getCategories().toString() : "");
+		contents[7] = (getGeo() != null ? getGeo().toString() : "");
+		contents[8] = (getMailer() != null ? getMailer().toString() : "");
+		contents[9] = (getName() != null ? getName().toString() : "");
+		contents[10] = (getNicknames() != null ?  getNicknames().toString() : "");
+		contents[11] = (getOrg() != null ? getOrg().toString() : "");
+		contents[12] = (getProdId() != null ? getProdId().toString() : "");
+		contents[13] = (getProfile() != null ? getProfile().toString() : "");
+		contents[14] = (getRev() != null ? getRev().toString() : "");
+		contents[15] = (getRole() != null ? getRole().toString() : "");
+		contents[16] = (getSecurityClass() != null ? getSecurityClass().toString() : "");
+		contents[17] = (getSortString() != null ? getSortString().toString() : "");
+		contents[18] = (getSource() != null ? getSource().toString() : "");
+		contents[19] = (getTitle() != null ? getTitle().toString() : "");
+		contents[20] = (getTz() != null ? getTz().toString() : "");
+		contents[21] = (getUid() != null ? getUid().toString() : "");
+		
+		if(hasAdrs()) {
+			contents[22] = getAdrs().toString();
+		}
+		else {
+			contents[22] = "";
+		}
+		
+		if(hasAgents()) {
+			contents[23] = getAgents().toString();
+		}
+		else {
+			contents[23] = "";
+		}
+		
+		
+		if(hasEmails()) {
+			contents[24] = getEmails().toString();
+		}
+		else {
+			contents[24] = "";
+		}
+		
+		if(hasExtendedTypes()) {
+			contents[25] = getExtendedTypes().toString();
+		}
+		else {
+			contents[25] = "";
+		}
+		
+		if(hasImpps()) {
+			contents[26] = getIMPPs().toString();
+		}
+		else {
+			contents[26] = "";
+		}
+		
+		if(hasKeys()) {
+			contents[27] = getKeys().toString();
+		}
+		else {
+			contents[27] = "";
+		}
+		
+		if(hasLogos()) {
+			contents[28] = getLogos().toString();
+		}
+		else {
+			contents[28] = "";
+		}
+		
+		if(hasNotes()) {
+			contents[29] = getNotes().toString();
+		}
+		else {
+			contents[29] = "";
+		}
+		
+		if(hasPhotos()) {
+			contents[30] = getPhotos().toString();
+		}
+		else {
+			contents[30] = "";
+		}
+		
+		if(hasSounds()) {
+			contents[31] = getSounds().toString();
+		}
+		else {
+			contents[31] = "";
+		}
+		
+		if(hasTels()) {
+			contents[32] = getTels().toString();
+		}
+		else {
+			contents[32] = "";
+		}
+		
+		if(hasUrls()) {
+			contents[33] = getUrls().toString();
+		}
+		else {
+			contents[33] = "";
+		}
+		
+		contents[34] = String.valueOf(throwsExceptions);
+		contents[35] = errorSeverity.toString();
+		
+		if(!VCARD_ERRORS.isEmpty()) {
+			StringBuilder sb = new StringBuilder();
+			for(VCardError vcardError : VCARD_ERRORS) {
+				sb.append(vcardError.toString());
+				sb.append(",");
+			}
+			
+			sb.deleteCharAt(sb.length()-1);
+			contents[36] = sb.toString();
+		}
+		else {
+			contents[36] = "";
+		}
+		
+		
+		
+		return contents;
+	}
+	
+	public int compareTo(VCardImpl obj)
+	{
+		if(obj != null) {
+			String[] contents = obj.getContents();
+			String[] myContents = getContents();
+			if(Arrays.equals(myContents, contents)) {
+				return 0;
+			}
+			else {
+				return 1;
+			}
+		}
+		else {
+			return -1;
+		}
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return Util.generateHashCode(getContents());
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(obj != null) {
+			if(obj instanceof VCardImpl) {
+				return this.compareTo((VCardImpl)obj) == 0;
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+	
+	@Override
+	public String toString()
+	{
+		String[] contents = getContents();
+		StringBuilder sb = new StringBuilder();
+		sb.append(this.getClass().getName());
+		sb.append(" [");
+		
+		for(int i = 0; i < contents.length; i++) {
+			sb.append(contents[i]);
+			sb.append(",");
+		}
+		
+		sb.deleteCharAt(sb.length()-1);
+		sb.append("]");
+		return sb.toString();
 	}
 }

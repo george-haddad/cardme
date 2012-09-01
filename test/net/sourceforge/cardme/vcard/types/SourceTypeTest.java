@@ -3,14 +3,13 @@ package net.sourceforge.cardme.vcard.types;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.SourceFeature;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -41,7 +40,7 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 3, 2011
+ * Aug 27, 2012
  *
  */
 public class SourceTypeTest {
@@ -65,6 +64,18 @@ public class SourceTypeTest {
 	}
 	
 	@Test
+	public void testSetSourceSecure() {
+		String source = "TEST";
+		sourceType.setSource(source);
+		
+		String sourceCopy = sourceType.getSource();
+		
+		assertFalse(source == sourceCopy);
+		assertTrue(source.compareTo(sourceCopy) == 0);
+		assertTrue(source.equals(sourceCopy));
+	}
+	
+	@Test
 	public void testHasSource() {
 		assertTrue(sourceType.hasSource());
 	}
@@ -77,7 +88,7 @@ public class SourceTypeTest {
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(sourceType.getTypeString(), VCardType.SOURCE.getType());
+		assertEquals(VCardTypeName.SOURCE.getType(), sourceType.getVCardTypeName().getType());
 	}
 	
 	@Test
@@ -96,9 +107,16 @@ public class SourceTypeTest {
 	}
 	
 	@Test
+	public void testCompareTo() {
+		SourceType sourceType2 = new SourceType("WHATEVER");
+		assertTrue(sourceType.compareTo(sourceType2) == 0);
+	}
+	
+	@Test
 	public void testClone() {
-		SourceFeature cloned = sourceType.clone();
+		SourceType cloned = sourceType.clone();
 		assertEquals(cloned, sourceType);
 		assertTrue(sourceType.equals(cloned));
+		assertTrue(sourceType.compareTo(cloned) == 0);
 	}
 }

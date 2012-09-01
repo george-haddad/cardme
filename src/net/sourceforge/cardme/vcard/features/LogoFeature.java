@@ -1,15 +1,13 @@
 package net.sourceforge.cardme.vcard.features;
 
-import net.sourceforge.cardme.vcard.EncodingType;
-import net.sourceforge.cardme.vcard.types.media.ImageMediaType;
-import net.sourceforge.cardme.vcard.types.parameters.LogoParameterType;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import net.sourceforge.cardme.vcard.types.media.ImageMediaType;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -40,7 +38,7 @@ import java.net.URL;
  * 
  * @author George El-Haddad
  * <br/>
- * Feb 4, 2010
+ * Aug 8, 2012
  * 
  * <p><b>RFC 2426</b><br/>
  * <b>3.5.3 LOGO Type Definition</b>
@@ -53,133 +51,29 @@ import java.net.URL;
  * </ul>
  * </p>
  */
-public interface LogoFeature extends TypeTools, TypeData {
+public interface LogoFeature {
 	
-	/**
-	 * <p>Returns the logo as an array of bytes.</p>
-	 *
-	 * @return byte[]
-	 */
 	public byte[] getLogo();
 	
-	/**
-	 * <p>Returns the logo URI.</p>
-	 *
-	 * @return {@link URI}
-	 */
-	public URI getLogoURI();
+	public void setLogo(byte[] logo);
 	
-	/**
-	 * <p>Returns the logo's URI as a URL.</p>
-	 *
-	 * @return {@link URL}
-	 * @throws MalformedURLException
-	 */
-	public URL getLogoURL() throws MalformedURLException;
-	
-	/**
-	 * <p>Returns the encoding type of this logo.</p>
-	 *
-	 * @return {@link EncodingType}
-	 */
-	public EncodingType getEncodingType();
-	
-	/**
-	 * <p>Returns the parameter type of this logo.</p>
-	 *
-	 * @return {@link LogoParameterType}
-	 */
-	public LogoParameterType getLogoParameterType();
-	
-	/**
-	 * <p>Returns the image format for this logo.</p>
-	 *
-	 * @return {@link ImageMediaType}
-	 */
-	public ImageMediaType getImageMediaType();
-	
-	/**
-	 * <p>Sets the logo.</p>
-	 *
-	 * @param logoBytes
-	 */
-	public void setLogo(byte[] logoBytes);
-	
-	/**
-	 * <p>Sets the URI.</p>
-	 *
-	 * @param logoUri
-	 */
-	public void setLogoURI(URI logoUri);
-	
-	/**
-	 * <p>Sets the logo's URL.</p>
-	 *
-	 * @param logoUrl
-	 * @throws URISyntaxException
-	 */
-	public void setLogoURL(URL logoUrl) throws URISyntaxException;
-	
-	/**
-	 * <p>Sets the encoding type.</p>
-	 *
-	 * @param encodingType
-	 */
-	public void setEncodingType(EncodingType encodingType);
-	
-	/**
-	 * <p>Sets the parameter type.</p>
-	 *
-	 * @param logoParameterType
-	 */
-	public void setLogoParameterType(LogoParameterType logoParameterType);
-	
-	/**
-	 * <p>Sets the image format type.</p>
-	 *
-	 * @param imageMediaType
-	 */
-	public void setImageMediaType(ImageMediaType imageMediaType);
-	
-	/**
-	 * <p>Returns true if a logo exists, URI or in-line data.</p>
-	 *
-	 * @return boolean
-	 */
 	public boolean hasLogo();
 	
-	/**
-	 * <p>Returns true if the logo has a URI.</p>
-	 *
-	 * @return boolean
-	 */
+	public void clearLogo();
+	
+	public URI getLogoURI();
+	
+	public void setLogoURI(URI logoUri);
+	
 	public boolean isURI();
 	
-	/**
-	 * <p>Returns true if the logo has in-line data.</p>
-	 *
-	 * @return boolean
-	 */
-	public boolean isInline();
+	public void setLogoURL(URL logoUrl) throws URISyntaxException;
 	
-	/**
-	 * <p>Returns true if this logo has a parameter type.</p>
-	 *
-	 * @return boolean
-	 */
-	public boolean hasLogoParameterType();
+	public URL getLogoURL() throws MalformedURLException;
 	
-	/**
-	 * <p>Returns true if this logo has an image format type.</p>
-	 *
-	 * @return boolean
-	 */
+	public ImageMediaType getImageMediaType();
+	
+	public void setImageMediaType(ImageMediaType imageMediaType);
+	
 	public boolean hasImageMediaType();
-	
-	/**
-	 * <p>Returns a full copy of this object.</p>
-	 *
-	 * @return {@link LogoFeature}
-	 */
-	public LogoFeature clone();
 }

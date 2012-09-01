@@ -3,14 +3,13 @@ package net.sourceforge.cardme.vcard.types;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.SortStringFeature;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -41,7 +40,7 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 3, 2011
+ * Aug 27, 2012
  *
  */
 public class SortStringTypeTest {
@@ -65,6 +64,18 @@ public class SortStringTypeTest {
 	}
 	
 	@Test
+	public void testSetSortStringSecure() {
+		String sortString = "B";
+		sortStringType.setSortString(sortString);
+		
+		String sortStringCopy = sortStringType.getSortString();
+		
+		assertFalse(sortString == sortStringCopy);
+		assertTrue(sortString.compareTo(sortStringCopy) == 0);
+		assertTrue(sortString.equals(sortStringCopy));
+	}
+	
+	@Test
 	public void testHasSortString() {
 		assertTrue(sortStringType.hasSortString());
 	}
@@ -77,7 +88,7 @@ public class SortStringTypeTest {
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(sortStringType.getTypeString(), VCardType.SORT_STRING.getType());
+		assertEquals(VCardTypeName.SORT_STRING.getType(), sortStringType.getVCardTypeName().getType());
 	}
 	
 	@Test
@@ -96,9 +107,16 @@ public class SortStringTypeTest {
 	}
 	
 	@Test
+	public void testCompareTo() {
+		SortStringType sortStringType2 = new SortStringType("A");
+		assertTrue(sortStringType.compareTo(sortStringType2) == 0);
+	}
+	
+	@Test
 	public void testClone() {
-		SortStringFeature cloned = sortStringType.clone();
+		SortStringType cloned = sortStringType.clone();
 		assertEquals(cloned, sortStringType);
 		assertTrue(sortStringType.equals(cloned));
+		assertTrue(sortStringType.compareTo(cloned) == 0);
 	}
 }

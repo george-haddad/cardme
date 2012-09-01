@@ -1,15 +1,13 @@
 package net.sourceforge.cardme.vcard.features;
 
-import net.sourceforge.cardme.vcard.EncodingType;
-import net.sourceforge.cardme.vcard.types.media.AudioMediaType;
-import net.sourceforge.cardme.vcard.types.parameters.SoundParameterType;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import net.sourceforge.cardme.vcard.types.media.AudioMediaType;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -40,7 +38,7 @@ import java.net.URL;
  * 
  * @author George El-Haddad
  * <br/>
- * Feb 4, 2010
+ * Aug 9, 2012
  * 
  * <p><b>RFC 2426</b><br/>
  * <b>3.6.6 SOUND Type Definition</b>
@@ -53,133 +51,29 @@ import java.net.URL;
  * </ul>
  * </p>
  */
-public interface SoundFeature extends TypeTools, TypeData {
+public interface SoundFeature {
 	
-	/**
-	 * <p>Returns the sound as an array of bytes.</p>
-	 *
-	 * @return byte[]
-	 */
 	public byte[] getSound();
 	
-	/**
-	 * <p>Returns the sound's URI.</p>
-	 *
-	 * @return {@link URI}
-	 */
-	public URI getSoundURI();
+	public void setSound(byte[] sound);
 	
-	/**
-	 * <p>Returns the sound's URL representation of the URI.</p>
-	 *
-	 * @return {@link URL}
-	 * @throws MalformedURLException
-	 */
-	public URL getSoundURL() throws MalformedURLException;
-	
-	/**
-	 * <p>Returns this sound's encoding type.</p>
-	 *
-	 * @return {@link EncodingType}
-	 */
-	public EncodingType getEncodingType();
-	
-	/**
-	 * <p>Returns the parameter type.</p>
-	 *
-	 * @return {@link SoundParameterType}
-	 */
-	public SoundParameterType getSoundParameterType();
-	
-	/**
-	 * <p>Returns the format type.</p>
-	 *
-	 * @return {@link AudioMediaType}
-	 */
-	public AudioMediaType getAudioMediaType();
-	
-	/**
-	 * <p>Sets the sound.</p>
-	 *
-	 * @param soundBytes
-	 */
-	public void setSound(byte[] soundBytes);
-	
-	/**
-	 * <p>Sets the sound's URI.</p>
-	 *
-	 * @param soundUri
-	 */
-	public void setSoundURI(URI soundUri);
-	
-	/**
-	 * <p>Sets the sound's URL.</p>
-	 *
-	 * @param soundUrl
-	 * @throws URISyntaxException
-	 */
-	public void setSoundURL(URL soundUrl) throws URISyntaxException;
-	
-	/**
-	 * <p>Returns true if a sound exists, URI or in-line data.</p>
-	 *
-	 * @return boolean
-	 */
 	public boolean hasSound();
 	
-	/**
-	 * <p>Returns true if the sound has a URI.</p>
-	 *
-	 * @return boolean
-	 */
+	public void clearSound();
+	
+	public URI getSoundURI();
+	
+	public void setSoundURI(URI soundUri);
+	
 	public boolean isURI();
 	
-	/**
-	 * <p>Returns true if the sound has in-line data.</p>
-	 *
-	 * @return boolean
-	 */
-	public boolean isInline();
+	public void setSoundURL(URL soundUrl) throws URISyntaxException;
 	
-	/**
-	 * <p>Sets the encoding type.</p>
-	 *
-	 * @param encodingType
-	 */
-	public void setEncodingType(EncodingType encodingType);
+	public URL getSoundURL() throws MalformedURLException;
 	
-	/**
-	 * <p>Sets the parameter type.</p>
-	 *
-	 * @param soundParameterType
-	 */
-	public void setSoundParameterType(SoundParameterType soundParameterType);
+	public AudioMediaType getAudioMediaType();
 	
-	/**
-	 * <p>Sets the audio format.</p>
-	 *
-	 * @param audioMediaType
-	 */
 	public void setAudioMediaType(AudioMediaType audioMediaType);
 	
-	/**
-	 * <p>Returns true if this sound has a parameter type.</p>
-	 *
-	 * @return boolean
-	 */
-	public boolean hasSoundParameterType();
-	
-	/**
-	 * <p>Returns true if this sound has an audio format.</p>
-	 *
-	 * @return boolean
-	 */
 	public boolean hasAudioMediaType();
-	
-	/**
-	 * <p>Returns a full copy of this object.</p>
-	 *
-	 * @return {@link SoundFeature}
-	 */
-	public SoundFeature clone();
 }

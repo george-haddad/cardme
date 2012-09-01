@@ -1,13 +1,10 @@
 package net.sourceforge.cardme.vcard.features;
 
-import net.sourceforge.cardme.vcard.EncodingType;
-import net.sourceforge.cardme.vcard.types.parameters.EmailParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.XEmailParameterType;
-import java.util.Iterator;
 import java.util.List;
+import net.sourceforge.cardme.vcard.types.params.EmailParamType;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -38,7 +35,7 @@ import java.util.List;
  * 
  * @author George El-Haddad
  * <br/>
- * Feb 4, 2010
+ * Aug 8, 2012
  * 
  * <p><b>RFC 2426</b><br/>
  * <b>3.3.2 EMAIL Type Definition</b>
@@ -51,174 +48,21 @@ import java.util.List;
  * </ul>
  * </p>
  */
-public interface EmailFeature extends TypeTools, TypeData {
-	
-	/**
-	 * <p>Returns the email.</p>
-	 *
-	 * @return {@link String}
-	 */
+public interface EmailFeature {
+
 	public String getEmail();
 	
-	/**
-	 * <p>Sets the email.</p>
-	 *
-	 * @param email
-	 */
 	public void setEmail(String email);
 	
-	/**
-	 * <p>Returns the encoding type.</p>
-	 *
-	 * @see EncodingType
-	 * @return {@link EncodingType}
-	 */
-	public EncodingType getEncodingType();
-	
-	/**
-	 * <p>Sets the encoding type.</p>
-	 *
-	 * @param encodingType
-	 */
-	public void setEncodingType(EncodingType encodingType);
-	
-	/**
-	 * <p>Returns an iterator of all parameter types.</p>
-	 *
-	 * @return {@link Iterator}&lt;EmailParameterType&gt;
-	 */
-	public Iterator<EmailParameterType> getEmailParameterTypes();
-	
-	/**
-	 * <p>Returns an unmodifiable list of parameter types.</p>
-	 *
-	 * @return {@link List}&lt;EmailParameterType&gt;
-	 */
-	public List<EmailParameterType> getEmailParameterTypesList();
-	
-	/**
-	 * <p>Returns the number of parameter types.</p>
-	 *
-	 * @return int
-	 */
-	public int getEmailParameterSize();
-	
-	/**
-	 * <p>Adds a parameter type.</p>
-	 *
-	 * @param emailParameterType
-	 */
-	public void addEmailParameterType(EmailParameterType emailParameterType);
-	
-	/**
-	 * <p>Removes a parameter type.</p>
-	 *
-	 * @param emailParameterType
-	 */
-	public void removeEmailParameterType(EmailParameterType emailParameterType);
-	
-	/**
-	 * <p>Returns true if the parameter type exists.</p>
-	 *
-	 * @param emailParameterType
-	 * @return boolean
-	 */
-	public boolean containsEmailParameterType(EmailParameterType emailParameterType);
-	
-	/**
-	 * <p>Returns true if all parameter types exist.</p>
-	 *
-	 * @param emailParameterTypes
-	 * @return boolean
-	 */
-	public boolean containsAllEmailParameterTypes(List<EmailParameterType> emailParameterTypes);
-	
-	/**
-	 * <p>Returns true if this email has parameter types.</p>
-	 *
-	 * @return boolean
-	 */
-	public boolean hasEmailParameterTypes();
-	
-	/**
-	 * <p>Removes all email parameter types.</p>
-	 */
-	public void clearEmailParameterTypes();
-	
-	/**
-	 * <p>Returns an iterator of extended email parameter types.</p>
-	 * 
-	 * @return {@link Iterator}&lt;XEmailParameterType&gt;
-	 */
-	public Iterator<XEmailParameterType> getExtendedEmailParameterTypes();
-	
-	/**
-	 * <p>Returns an unmodifiable list of extended parameter types.</p>
-	 *
-	 * @return {@link List}&lt;EmailParameterType&gt;
-	 */
-	public List<XEmailParameterType> getExtendedEmailParameterTypesList();
-	
-	/**
-	 * <p>Returns the number of extended parameter types.</p>
-	 *
-	 * @return int
-	 */
-	public int getExtendedEmailParameterSize();
-	
-	/**
-	 * <p>Adds an extended email parameter type.</p>
-	 * 
-	 * @param xtendedEmailParameterType
-	 */
-	public void addExtendedEmailParameterType(XEmailParameterType xtendedEmailParameterType);
-	
-	/**
-	 * <p>Removes the specified extended email parameter type.</p>
-	 * 
-	 * @param xtendedEmailParameterType
-	 */
-	public void removeExtendedEmailParameterType(XEmailParameterType xtendedEmailParameterType);
-	
-	/**
-	 * <p>Returns true if the specified extended email parameter type exists.</p>
-	 * 
-	 * @param xtendedEmailParameterType
-	 * @return boolean
-	 */
-	public boolean containsExtendedEmailParameterType(XEmailParameterType xtendedEmailParameterType);
-	
-	/**
-	 * <p>Returns true if all extended parameter types exist.</p>
-	 *
-	 * @param xtendedEmailParameterTypes
-	 * @return boolean
-	 */
-	public boolean containsAllExtendedEmailParameterTypes(List<XEmailParameterType> xtendedEmailParameterTypes);
-	
-	/**
-	 * <p>Returns true if this email number has extended parameter types.</p>
-	 * 
-	 * @return boolean
-	 */
-	public boolean hasExtendedEmailParameterTypes();
-	
-	/**
-	 * <p>Removes all extended email parameter types.</p>
-	 */
-	public void clearExtendedEmailParameterTypes();
-	
-	/**
-	 * <p>Returns true if the email exists.</p>
-	 *
-	 * @return boolean
-	 */
 	public boolean hasEmail();
 	
-	/**
-	 * <p>Returns a full copy of this object.</p>
-	 *
-	 * @return {@link EmailFeature}
-	 */
-	public EmailFeature clone();
+	public List<EmailParamType> getParams();
+	public int getParamSize();
+	public EmailFeature addParam(EmailParamType emailParamType) throws NullPointerException;
+	public EmailFeature addAllParams(List<EmailParamType> emailParamTypes) throws NullPointerException;
+	public EmailFeature removeParam(EmailParamType emailParamType) throws NullPointerException;
+	public boolean containsParam(EmailParamType emailParamType);
+	public boolean containsAllParams(List<EmailParamType> emailParamTypes);
+	public boolean hasParams();
+	public void clearParams();
 }

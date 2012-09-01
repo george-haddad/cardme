@@ -3,15 +3,14 @@ package net.sourceforge.cardme.vcard.types;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.OrganizationFeature;
-import java.util.Iterator;
+import java.util.List;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -42,18 +41,17 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 3, 2011
+ * Aug 27, 2012
  *
  */
 public class OrganizationTypeTest {
 
-	private OrganizationType orgType = null;
+	private OrgType orgType = null;
 	
 	@Before
 	public void setUp() throws Exception {
-		orgType = new OrganizationType();
-		orgType.addOrganization("Acme Inc.");
-		orgType.addOrganization("Big Widget Inc.");
+		orgType = new OrgType();
+		orgType.setOrgName("Acme Inc.").addOrgUnit("Big Widget Inc.");
 	}
 	
 	@After
@@ -62,60 +60,61 @@ public class OrganizationTypeTest {
 	}
 	
 	@Test
-	public void testGetOrganizations() {
-		Iterator<String> iter = orgType.getOrganizations();
-		assertEquals("Acme Inc.", iter.next());
-		assertEquals("Big Widget Inc.", iter.next());
+	public void testGetOrgName() {
+		assertEquals("Acme Inc.", orgType.getOrgName());
 	}
 	
 	@Test
-	public void testAddOrganization() {
-		orgType.addOrganization("BLA BLA");
-		assertTrue(orgType.containsOrganization("BLA BLA"));
+	public void testGetOrgUnits() {
+		List<String> list = orgType.getOrgUnits();
+		assertEquals("Big Widget Inc.", list.get(0));
 	}
 	
 	@Test
-	public void testRemoveOrganization() {
-		orgType.removeOrganization("Acme Inc.");
-		assertFalse(orgType.containsOrganization("Acme Inc."));
+	public void testAddOrgUnit() {
+		orgType.addOrgUnit("BLA BLA");
+		assertTrue(orgType.containsOrgUnit("BLA BLA"));
 	}
 	
 	@Test
-	public void testContainsOrganization() {
-		assertTrue(orgType.containsOrganization("Acme Inc."));
-		assertTrue(orgType.containsOrganization("Big Widget Inc."));
+	public void testRemoveOrgUnit() {
+		orgType.removeOrgUnit("Big Widget Inc.");
+		assertFalse(orgType.containsOrgUnit("Big Widget Inc."));
+	}
+	
+	@Test
+	public void testContainsOrgUnit() {
+		assertTrue(orgType.containsOrgUnit("Big Widget Inc."));
 	}
 	
 	@Test
 	public void testHasOrganizations() {
-		assertTrue(orgType.hasOrganizations());
+		assertTrue(orgType.hasOrgUnits());
 	}
 	
 	@Test
 	public void testClearOrganizations() {
-		orgType.clearOrganizations();
-		assertFalse(orgType.hasOrganizations());
+		orgType.clearOrgUnits();
+		assertFalse(orgType.hasOrgUnits());
 	}
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(orgType.getTypeString(), VCardType.ORG.getType());
+		assertEquals(VCardTypeName.ORG.getType(), orgType.getVCardTypeName().getType());
 	}
 	
 	@Test
 	public void testEquals() {
-		OrganizationType orgType2 = new OrganizationType();
-		orgType2.addOrganization("Acme Inc.");
-		orgType2.addOrganization("Big Widget Inc.");
+		OrgType orgType2 = new OrgType();
+		orgType2.setOrgName("Acme Inc.").addOrgUnit("Big Widget Inc.");
 		
 		assertTrue(orgType.equals(orgType2));
 	}
 	
 	@Test
 	public void testHashcode() {
-		OrganizationType orgType2 = new OrganizationType();
-		orgType2.addOrganization("Acme Inc.");
-		orgType2.addOrganization("Big Widget Inc.");
+		OrgType orgType2 = new OrgType();
+		orgType2.setOrgName("Acme Inc.").addOrgUnit("Big Widget Inc.");
 		
 		int hcode1 = orgType.hashCode();
 		int hcode2 = orgType2.hashCode();
@@ -123,9 +122,18 @@ public class OrganizationTypeTest {
 	}
 	
 	@Test
+	public void testCompareTo() {
+		OrgType orgType2 = new OrgType();
+		orgType2.setOrgName("Acme Inc.").addOrgUnit("Big Widget Inc.");
+		
+		assertTrue(orgType.compareTo(orgType2) == 0);
+	}
+	
+	@Test
 	public void testClone() {
-		OrganizationFeature cloned = orgType.clone();
+		OrgType cloned = orgType.clone();
 		assertEquals(cloned, orgType);
 		assertTrue(orgType.equals(cloned));
+		assertTrue(orgType.compareTo(cloned) == 0);
 	}
 }

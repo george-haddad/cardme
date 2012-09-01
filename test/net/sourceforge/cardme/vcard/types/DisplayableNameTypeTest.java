@@ -1,15 +1,15 @@
 package net.sourceforge.cardme.vcard.types;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.DisplayableNameFeature;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -40,53 +40,86 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 1, 2011
+ * Aug 24, 2012
  *
  */
 public class DisplayableNameTypeTest {
 
-	private DisplayableNameType displayableNameType = null;
+	private NameType nameType = null;
 	
 	@Before
 	public void setUp() throws Exception {
-		displayableNameType = new DisplayableNameType();
-		displayableNameType.setName("Whatever");
+		nameType = new NameType();
+		nameType.setName("Whatever");
 	}
 	
 	@After
 	public void tearDown() throws Exception {
-		displayableNameType = null;
+		nameType = null;
 	}
 	
 	@Test
 	public void testGetName() {
-		assertEquals("Whatever", displayableNameType.getName());
+		assertEquals("Whatever", nameType.getName());
+	}
+	
+	@Test
+	public void testSetName() {
+		nameType.setName("Test");
+		assertEquals("Test", nameType.getName());
+		assertTrue(nameType.hasName());
+	}
+	
+	@Test
+	public void testSetNameNull() {
+		nameType.setName(null);
+		assertEquals(null, nameType.getName());
+		assertFalse(nameType.hasName());
+	}
+	
+	@Test
+	public void testSetNameSecure() {
+		String name = "Whatever";
+		nameType.setName(name);
+		
+		String nameCopy = nameType.getName();
+		
+		assertFalse(name == nameCopy);
+		assertTrue(name.compareTo(nameCopy) == 0);
+		assertTrue(name.equals(nameCopy));
 	}
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(displayableNameType.getTypeString(), VCardType.NAME.getType());
+		assertEquals(VCardTypeName.NAME.getType(), nameType.getVCardTypeName().getType());
 	}
 	
 	@Test
 	public void testEquals() {
-		DisplayableNameType displayableNameType2= new DisplayableNameType("Whatever");
-		assertTrue(displayableNameType.equals(displayableNameType2));
+		NameType nameType2= new NameType("Whatever");
+		assertTrue(nameType.equals(nameType2));
+	}
+	
+	@Test
+	public void testCompareTo() {
+		NameType nameType2= new NameType("Whatever");
+		assertTrue(nameType.compareTo(nameType2) == 0);
 	}
 	
 	@Test
 	public void testHashcode() {
-		DisplayableNameType displayableNameType2= new DisplayableNameType("Whatever");
+		NameType nameType2= new NameType("Whatever");
 		
-		int hcode1 = displayableNameType.hashCode();
-		int hcode2 = displayableNameType2.hashCode();
+		int hcode1 = nameType.hashCode();
+		int hcode2 = nameType2.hashCode();
 		assertEquals(hcode1, hcode2);
 	}
 	
 	@Test
 	public void testClone() {
-		DisplayableNameFeature cloned = displayableNameType.clone();
-		assertEquals(cloned, displayableNameType);
-		assertTrue(displayableNameType.equals(cloned));
+		NameType cloned = nameType.clone();
+		assertEquals(cloned, nameType);
+		assertTrue(nameType.equals(cloned));
+		assertTrue(nameType.compareTo(cloned) == 0);
 	}
 }

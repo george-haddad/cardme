@@ -3,19 +3,18 @@ package net.sourceforge.cardme.vcard.types;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.cardme.vcard.EncodingType;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.SoundFeature;
-import net.sourceforge.cardme.vcard.types.media.AudioMediaType;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import net.sourceforge.cardme.vcard.arch.EncodingType;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
+import net.sourceforge.cardme.vcard.types.media.AudioMediaType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -46,7 +45,7 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 3, 2011
+ * Aug 27, 2012
  *
  */
 public class SoundTypeTest {
@@ -83,9 +82,9 @@ public class SoundTypeTest {
 	}
 	
 	@Test
-	public void testIsCompression() {
-		assertFalse(soundTypeBin.isSetCompression());
-		assertFalse(soundTypeUri.isSetCompression());
+	public void testIsCompressed() {
+		assertFalse(soundTypeBin.isCompressed());
+		assertFalse(soundTypeUri.isCompressed());
 	}
 	
 	@Test
@@ -95,14 +94,14 @@ public class SoundTypeTest {
 	}
 	
 	@Test
-	public void testIsInline() {
-		assertTrue(soundTypeBin.isInline());
-		assertFalse(soundTypeUri.isInline());
+	public void testIsBinary() {
+		assertTrue(soundTypeBin.isBinary());
+		assertFalse(soundTypeUri.isBinary());
 	}
 	
 	@Test
 	public void testGetTypeString() {
-		assertEquals(soundTypeBin.getTypeString(), VCardType.SOUND.getType());
+		assertEquals(VCardTypeName.SOUND.getType(), soundTypeBin.getVCardTypeName().getType());
 	}
 	
 	@Test
@@ -143,14 +142,33 @@ public class SoundTypeTest {
 	}
 	
 	@Test
+	public void testCompareTo() throws URISyntaxException {
+		SoundType soundTypeBin2 = new SoundType();
+		soundTypeBin2.setSound(new byte[] {0x01, 0x02, 0x03, 0x04, 0x05});
+		soundTypeBin2.setEncodingType(EncodingType.BINARY);
+		soundTypeBin2.setCompression(false);
+		soundTypeBin2.setAudioMediaType(AudioMediaType.VORBIS);
+		
+		SoundType soundTypeUri2 = new SoundType();
+		soundTypeUri2.setSoundURI(new URI("file://C:/my_sounds/john.ogg"));
+		soundTypeUri2.setEncodingType(EncodingType.EIGHT_BIT);
+		
+		assertTrue(soundTypeBin.compareTo(soundTypeBin2) == 0);
+		assertTrue(soundTypeUri.compareTo(soundTypeUri2) == 0);
+	}
+	
+	@Test
 	public void testClone() {
-		SoundFeature cloned1 = soundTypeBin.clone(); 
-		SoundFeature cloned2 = soundTypeUri.clone(); 
+		SoundType cloned1 = soundTypeBin.clone();
+		SoundType cloned2 = soundTypeUri.clone(); 
 		
 		assertEquals(cloned1, soundTypeBin);
 		assertTrue(soundTypeBin.equals(cloned1));
 		
 		assertEquals(cloned2, soundTypeUri);
 		assertTrue(soundTypeUri.equals(cloned2));
+		
+		assertTrue(soundTypeBin.compareTo(cloned1) == 0);
+		assertTrue(soundTypeUri.compareTo(cloned2) == 0);
 	}
 }

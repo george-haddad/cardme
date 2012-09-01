@@ -1,19 +1,17 @@
 package net.sourceforge.cardme.vcard.types;
 
-import net.sourceforge.cardme.util.Util;
-import net.sourceforge.cardme.vcard.EncodingType;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.EmailFeature;
-import net.sourceforge.cardme.vcard.types.parameters.EmailParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
-import net.sourceforge.cardme.vcard.types.parameters.XEmailParameterType;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
+import net.sourceforge.cardme.util.StringUtil;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
+import net.sourceforge.cardme.vcard.features.EmailFeature;
+import net.sourceforge.cardme.vcard.types.params.EmailParamType;
+import net.sourceforge.cardme.vcard.types.params.ExtendedParamType;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -44,229 +42,204 @@ import java.util.List;
  * 
  * @author George El-Haddad
  * <br/>
- * Feb 4, 2010
+ * Aug 8, 2012
  *
  */
-public class EmailType extends Type implements EmailFeature {
+public class EmailType extends AbstractVCardType implements Comparable<EmailType>, Cloneable, EmailFeature {
 
-	private static final long serialVersionUID = 5369053015805412586L;
+	private static final long serialVersionUID = -7906212797176603907L;
 	
 	private String email = null;
-	private List<EmailParameterType> emailParameterTypes = null;
-	private List<XEmailParameterType> xtendedEmailParameterTypes = null;
-	private boolean isSetCompression = false;
+	private List<EmailParamType> emailParamTypes = null;
 	
 	public EmailType() {
 		this(null);
 	}
 	
 	public EmailType(String email) {
-		super(EncodingType.EIGHT_BIT, ParameterTypeStyle.PARAMETER_VALUE_LIST);
-		emailParameterTypes = new ArrayList<EmailParameterType>();
-		xtendedEmailParameterTypes = new ArrayList<XEmailParameterType>();
+		super(VCardTypeName.EMAIL);
+		emailParamTypes = new ArrayList<EmailParamType>();
 		setEmail(email);
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	public String getEmail()
 	{
-		return email;
+		if(email != null) {
+			return new String(email);
+		}
+		else {
+			return null;
+		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void setEmail(String email) {
-		this.email = email;
+		if(email != null) {
+			this.email = new String(email);
+		}
+		else {
+			this.email = null;
+		}
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Iterator<EmailParameterType> getEmailParameterTypes()
-	{
-		return emailParameterTypes.listIterator();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public List<EmailParameterType> getEmailParameterTypesList()
-	{
-		return Collections.unmodifiableList(emailParameterTypes);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getEmailParameterSize()
-	{
-		return emailParameterTypes.size();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addEmailParameterType(EmailParameterType emailParameterType) {
-		emailParameterTypes.add(emailParameterType);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void removeEmailParameterType(EmailParameterType emailParameterType) {
-		emailParameterTypes.remove(emailParameterType);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean containsEmailParameterType(EmailParameterType emailParameterType)
-	{
-		return emailParameterTypes.contains(emailParameterType);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean containsAllEmailParameterTypes(List<EmailParameterType> emailParameterTypes)
-	{
-		return this.emailParameterTypes.containsAll(emailParameterTypes);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasEmailParameterTypes()
-	{
-		return !emailParameterTypes.isEmpty();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void clearEmailParameterTypes() {
-		emailParameterTypes.clear();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Iterator<XEmailParameterType> getExtendedEmailParameterTypes()
-	{
-		return xtendedEmailParameterTypes.listIterator();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public List<XEmailParameterType> getExtendedEmailParameterTypesList()
-	{
-		return Collections.unmodifiableList(xtendedEmailParameterTypes);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getExtendedEmailParameterSize()
-	{
-		return xtendedEmailParameterTypes.size();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addExtendedEmailParameterType(XEmailParameterType xtendedEmailParameterType) {
-		xtendedEmailParameterTypes.add(xtendedEmailParameterType);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void removeExtendedEmailParameterType(XEmailParameterType xtendedEmailParameterType) {
-		xtendedEmailParameterTypes.remove(xtendedEmailParameterType);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean containsExtendedEmailParameterType(XEmailParameterType xtendedEmailParameterType)
-	{
-		return xtendedEmailParameterTypes.contains(xtendedEmailParameterType);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean containsAllExtendedEmailParameterTypes(List<XEmailParameterType> xtendedEmailParameterTypes)
-	{
-		return this.xtendedEmailParameterTypes.containsAll(xtendedEmailParameterTypes);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasExtendedEmailParameterTypes()
-	{
-		return !xtendedEmailParameterTypes.isEmpty();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void clearExtendedEmailParameterTypes() {
-		xtendedEmailParameterTypes.clear();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	public boolean hasEmail()
 	{
 		return email != null;
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getTypeString()
+
+	public List<EmailParamType> getParams()
 	{
-		return VCardType.EMAIL.getType();
+		return Collections.unmodifiableList(emailParamTypes);
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setCompression(boolean compress) {
-		isSetCompression = compress;
+
+	public int getParamSize()
+	{
+		return emailParamTypes.size();
+	}
+
+	public EmailType addParam(EmailParamType emailParamType) throws NullPointerException {
+		if(emailParamType == null) {
+			throw new NullPointerException("Cannot add a null emailParamType.");
+		}
 		
+		emailParamTypes.add(emailParamType);
+		return this;
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isSetCompression()
+
+	public EmailType addAllParams(List<EmailParamType> emailParamTypes) throws NullPointerException {
+		if(emailParamTypes == null) {
+			throw new NullPointerException("Cannot add a null emailParamTypes list.");
+		}
+		
+		this.emailParamTypes.addAll(emailParamTypes);
+		return this;
+	}
+
+	public EmailType removeParam(EmailParamType emailParamType) throws NullPointerException {
+		if(emailParamType == null) {
+			throw new NullPointerException("Cannot remove a null emailParamType.");
+		}
+		
+		emailParamTypes.remove(emailParamType);
+		return this;
+	}
+
+	public boolean containsParam(EmailParamType emailParamType)
 	{
-		return isSetCompression;
+		if(emailParamType != null) {
+			return emailParamTypes.contains(emailParamType);
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean containsAllParams(List<EmailParamType> emailParamTypes)
+	{
+		if(emailParamTypes != null) {
+			return this.emailParamTypes.containsAll(emailParamTypes);
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean hasParams()
+	{
+		return !emailParamTypes.isEmpty();
+	}
+
+	public void clearParams() {
+		emailParamTypes.clear();
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
+	public EmailType clone()
+	{
+		EmailType cloned = new EmailType();
+		cloned.setEncodingType(getEncodingType());
+		cloned.setVCardTypeName(getVCardTypeName());
+
+		if(hasCharset()) {
+			cloned.setCharset(getCharset());
+		}
+		
+		cloned.setGroup(getGroup());
+		cloned.setLanguage(getLanguage());
+		cloned.setParameterTypeStyle(getParameterTypeStyle());
+		cloned.addAllExtendedParams(getExtendedParams());
+		cloned.addAllParams(emailParamTypes);
+		cloned.setEmail(email);
+		return cloned;
+	}
+	
+	public int compareTo(EmailType obj)
+	{
+		if(obj != null) {
+			String[] contents = obj.getContents();
+			String[] myContents = getContents();
+			if(Arrays.equals(myContents, contents)) {
+				return 0;
+			}
+			else {
+				return 1;
+			}
+		}
+		else {
+			return -1;
+		}
+	}
+
+	@Override
+	protected String[] getContents()
+	{
+		String[] contents = new String[9];
+		contents[0] = getVCardTypeName().getType();
+		contents[1] = getEncodingType().getType();
+		contents[2] = StringUtil.getString(getGroup());
+		contents[3] = (getCharset() != null ? getCharset().name() : "");
+		contents[4] = (getLanguage() != null ? getLanguage().getLanguageCode() : "");
+		contents[5] = getParameterTypeStyle().toString();
+		
+		if(hasExtendedParams()) {
+			List<ExtendedParamType> xParams = getExtendedParams();
+			StringBuilder sb = new StringBuilder();
+			for(ExtendedParamType xParamType : xParams) {
+				sb.append(xParamType.toString());
+				sb.append(",");
+			}
+			
+			sb.deleteCharAt(sb.length()-1);
+			contents[6] = sb.toString();
+		}
+		else {
+			contents[6] = "";
+		}
+		
+		if(!emailParamTypes.isEmpty()) {
+			StringBuilder sb = new StringBuilder();
+			for(EmailParamType emailParamType: emailParamTypes) {
+				sb.append(emailParamType.getType());
+				sb.append(",");
+			}
+			
+			sb.deleteCharAt(sb.length()-1);
+			contents[7] = sb.toString();
+		}
+		else {
+			contents[7] = "";
+		}
+		
+		contents[8] = StringUtil.getString(email);
+		
+		return contents;
+	}
+
 	@Override
 	public boolean equals(Object obj)
 	{
 		if(obj != null) {
 			if(obj instanceof EmailType) {
-				if(this == obj || ((EmailType)obj).hashCode() == this.hashCode()) {
-					return true;
-				}
-				else {
-					return false;
-				}
+				return this.compareTo((EmailType)obj) == 0;
 			}
 			else {
 				return false;
@@ -275,87 +248,5 @@ public class EmailType extends Type implements EmailFeature {
 		else {
 			return false;
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int hashCode()
-	{
-		return Util.generateHashCode(toString());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append(this.getClass().getName());
-		sb.append("[ ");
-		if(encodingType != null) {
-			sb.append(encodingType.getType());
-			sb.append(",");
-		}
-		
-		if(email != null) {
-			sb.append(email);
-			sb.append(",");
-		}
-		
-		if(!emailParameterTypes.isEmpty()) {
-			for(int i = 0; i < emailParameterTypes.size(); i++) {
-				sb.append(emailParameterTypes.get(i).getType());
-				sb.append(",");
-			}
-		}
-		
-		if(!xtendedEmailParameterTypes.isEmpty()) {
-			for(int i = 0; i < xtendedEmailParameterTypes.size(); i++) {
-				sb.append(xtendedEmailParameterTypes.get(i).getType());
-				sb.append(",");
-			}
-		}
-
-		if(super.id != null) {
-			sb.append(super.id);
-			sb.append(",");
-		}
-		
-		sb.deleteCharAt(sb.length()-1);	//Remove last comma.
-		sb.append(" ]");
-		return sb.toString();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public EmailFeature clone()
-	{
-		EmailType cloned = new EmailType();
-		
-		if(email != null) {
-			cloned.setEmail(new String(email));
-		}
-		
-		if(!emailParameterTypes.isEmpty()) {
-			for(int i = 0; i < emailParameterTypes.size(); i++) {
-				cloned.addEmailParameterType(emailParameterTypes.get(i));
-			}
-		}
-		
-		if(!xtendedEmailParameterTypes.isEmpty()) {
-			for(int i = 0; i < xtendedEmailParameterTypes.size(); i++) {
-				cloned.addExtendedEmailParameterType(xtendedEmailParameterTypes.get(i));
-			}
-		}
-		
-		cloned.setParameterTypeStyle(getParameterTypeStyle());
-		cloned.setEncodingType(getEncodingType());
-		cloned.setID(getID());
-		return cloned;
 	}
 }

@@ -1,13 +1,14 @@
 package net.sourceforge.cardme.vcard.types;
 
-import net.sourceforge.cardme.util.Util;
-import net.sourceforge.cardme.vcard.EncodingType;
-import net.sourceforge.cardme.vcard.VCardType;
+import java.util.Arrays;
+import java.util.List;
+import net.sourceforge.cardme.util.StringUtil;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import net.sourceforge.cardme.vcard.features.ExtendedFeature;
-import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
+import net.sourceforge.cardme.vcard.types.params.ExtendedParamType;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -38,99 +39,158 @@ import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
  * 
  * @author George El-Haddad
  * <br/>
- * Feb 4, 2010
+ * Aug 11, 2012
  *
  */
-public class ExtendedType extends Type implements ExtendedFeature {
-
-	private static final long serialVersionUID = -3691263043608520321L;
+public class ExtendedType extends AbstractVCardType implements Comparable<ExtendedType>, Cloneable, ExtendedFeature {
 	
-	private String extensionName = null;
-	private String extensionData = null;
+	private static final long serialVersionUID = 7521366589218639708L;
+	
+	private String name = null;
+	private String value = null;
 	
 	public ExtendedType() {
-		super(EncodingType.EIGHT_BIT, ParameterTypeStyle.PARAMETER_VALUE_LIST);
+		this(null, null);
 	}
 	
-	public ExtendedType(String extensionName, String extensionData) {
-		super(EncodingType.EIGHT_BIT, ParameterTypeStyle.PARAMETER_VALUE_LIST);
-		setExtensionName(extensionName);
-		setExtensionData(extensionData);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getExtensionName()
-	{
-		return extensionName;
+	public ExtendedType(String name, String value) {
+		super(VCardTypeName.XTENDED);
+		setExtendedName(name);
+		setExtendedValue(value);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setExtensionName(String extension) {
-		if(extension.toUpperCase().startsWith("X-")) {
-			this.extensionName = extension;
+	public String getExtendedName()
+	{
+		if(name != null) {
+			return new String(name);
 		}
 		else {
-			throw new IllegalArgumentException("Extensions must start with X-");
+			return null;
 		}
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getExtensionData()
-	{
-		return extensionData;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setExtensionData(String extensionData) {
-		this.extensionData = extensionData;
+
+	public void setExtendedName(String name) throws IllegalArgumentException {
+		if(name != null) {
+			if(name.startsWith("X-")) {
+				this.name = new String(name);
+			}
+			else {
+				throw new IllegalArgumentException("Extended type name must start with X-");
+			}
+		}
+		else {
+			this.name = null;
+		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	public String getExtendedValue()
+	{
+		if(value != null) {
+			return new String(value);
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void setExtendedValue(String value) {
+		if(value != null) {
+			this.value = new String(value);
+		}
+		else {
+			this.value = null;
+		}
+	}
+
+	public boolean hasExtendedValue()
+	{
+		return name != null && value != null;
+	}
+
 	public void clearExtension() {
-		extensionName = null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasExtension()
-	{
-		return extensionName != null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getTypeString()
-	{
-		return VCardType.XTENDED.getType();
+		name = null;
+		value = null;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+	public boolean hasParams()
+	{
+		return false;
+	}
+	
+	@Override
+	public ExtendedType clone()
+	{
+		ExtendedType cloned = new ExtendedType();
+		cloned.setEncodingType(getEncodingType());
+		cloned.setVCardTypeName(getVCardTypeName());
+
+		if(hasCharset()) {
+			cloned.setCharset(getCharset());
+		}
+		
+		cloned.setGroup(getGroup());
+		cloned.setLanguage(getLanguage());
+		cloned.setParameterTypeStyle(getParameterTypeStyle());
+		cloned.addAllExtendedParams(getExtendedParams());
+		cloned.setExtendedName(name);
+		cloned.setExtendedValue(value);
+		return cloned;
+	}
+	
+	public int compareTo(ExtendedType obj)
+	{
+		if(obj != null) {
+			String[] contents = obj.getContents();
+			String[] myContents = getContents();
+			if(Arrays.equals(myContents, contents)) {
+				return 0;
+			}
+			else {
+				return 1;
+			}
+		}
+		else {
+			return -1;
+		}
+	}
+
+	@Override
+	protected String[] getContents()
+	{
+		String[] contents = new String[9];
+		contents[0] = getVCardTypeName().getType();
+		contents[1] = getEncodingType().getType();
+		contents[2] = StringUtil.getString(getGroup());
+		contents[3] = (getCharset() != null ? getCharset().name() : "");
+		contents[4] = (getLanguage() != null ? getLanguage().getLanguageCode() : "");
+		contents[5] = getParameterTypeStyle().toString();
+		
+		if(hasExtendedParams()) {
+			List<ExtendedParamType> xParams = getExtendedParams();
+			StringBuilder sb = new StringBuilder();
+			for(ExtendedParamType xParamType : xParams) {
+				sb.append(xParamType.toString());
+				sb.append(",");
+			}
+			
+			sb.deleteCharAt(sb.length()-1);
+			contents[6] = sb.toString();
+		}
+		else {
+			contents[6] = "";
+		}
+		
+		contents[7] = StringUtil.getString(name);
+		contents[8] = StringUtil.getString(value);
+		return contents;
+	}
+
 	@Override
 	public boolean equals(Object obj)
 	{
 		if(obj != null) {
 			if(obj instanceof ExtendedType) {
-				if(this == obj || ((ExtendedType)obj).hashCode() == this.hashCode()) {
-					return true;
-				}
-				else {
-					return false;
-				}
+				return this.compareTo((ExtendedType)obj) == 0;
 			}
 			else {
 				return false;
@@ -139,70 +199,5 @@ public class ExtendedType extends Type implements ExtendedFeature {
 		else {
 			return false;
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int hashCode()
-	{
-		return Util.generateHashCode(toString());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append(this.getClass().getName());
-		sb.append("[ ");
-		if(encodingType != null) {
-			sb.append(encodingType.getType());
-			sb.append(",");
-		}
-		
-		if(extensionName != null) {
-			sb.append(extensionName);
-			sb.append(",");
-		}
-		
-		if(extensionData != null) {
-			sb.append(extensionData);
-			sb.append(",");
-		}
-
-		if(super.id != null) {
-			sb.append(super.id);
-			sb.append(",");
-		}
-		
-		sb.deleteCharAt(sb.length()-1);	//Remove last comma.
-		sb.append(" ]");
-		return sb.toString();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ExtendedFeature clone()
-	{
-		ExtendedType cloned = new ExtendedType();
-		
-		if(extensionName != null) {
-			cloned.setExtensionName(new String(extensionName));
-		}
-		
-		if(extensionData != null) {
-			cloned.setExtensionData(new String(extensionData));
-		}
-		
-		cloned.setParameterTypeStyle(getParameterTypeStyle());
-		cloned.setEncodingType(getEncodingType());
-		cloned.setID(getID());
-		return cloned;
 	}
 }

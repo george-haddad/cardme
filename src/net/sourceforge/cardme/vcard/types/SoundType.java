@@ -1,21 +1,21 @@
 package net.sourceforge.cardme.vcard.types;
 
-import net.sourceforge.cardme.util.StringUtil;
-import net.sourceforge.cardme.util.Util;
-import net.sourceforge.cardme.vcard.EncodingType;
-import net.sourceforge.cardme.vcard.VCardType;
-import net.sourceforge.cardme.vcard.features.SoundFeature;
-import net.sourceforge.cardme.vcard.types.media.AudioMediaType;
-import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
-import net.sourceforge.cardme.vcard.types.parameters.SoundParameterType;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.List;
+import net.sourceforge.cardme.util.StringUtil;
+import net.sourceforge.cardme.vcard.arch.EncodingType;
+import net.sourceforge.cardme.vcard.arch.VCardBinaryType;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
+import net.sourceforge.cardme.vcard.features.SoundFeature;
+import net.sourceforge.cardme.vcard.types.media.AudioMediaType;
+import net.sourceforge.cardme.vcard.types.params.ExtendedParamType;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -46,188 +46,250 @@ import java.util.Arrays;
  * 
  * @author George El-Haddad
  * <br/>
- * Feb 4, 2010
+ * Aug 9, 2012
  *
  */
-public class SoundType extends Type implements SoundFeature {
-
-	private static final long serialVersionUID = -1314657498192254406L;
+public class SoundType extends AbstractVCardType implements VCardBinaryType, Comparable<SoundType>, Cloneable, SoundFeature {
+	
+	private static final long serialVersionUID = 4114549778577481477L;
 	
 	private byte[] soundBytes = null;
 	private URI soundUri = null;
-	private SoundParameterType soundParameterType = null;
-	private AudioMediaType audioMediaType = null;
-	private boolean isSetCompression = false;
+	private AudioMediaType soundMediaType = null;
+	private boolean compressed = false;
 	
 	public SoundType() {
-		
+		this((byte[])null);
 	}
 	
-	public SoundType(URI soundUri, EncodingType encodingType, SoundParameterType soundParameterType) {
-		super(encodingType, ParameterTypeStyle.PARAMETER_VALUE_LIST);
-		setSoundURI(soundUri);
-		setSoundParameterType(soundParameterType);
-	}
-	
-	public SoundType(byte[] soundBytes, EncodingType encodingType, SoundParameterType soundParameterType) {
-		super(encodingType, ParameterTypeStyle.PARAMETER_VALUE_LIST);
+	public SoundType(byte[] soundBytes) {
+		super(VCardTypeName.SOUND);
 		setSound(soundBytes);
-		setSoundParameterType(soundParameterType);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public byte[] getSound()
-	{
-		return soundBytes;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public URI getSoundURI()
-	{
-		return soundUri;
+	public SoundType(URI soundUri) {
+		super(VCardTypeName.SOUND);
+		setSoundURI(soundUri);
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public URL getSoundURL() throws MalformedURLException
+
+	public byte[] getSound()
 	{
-		return soundUri.toURL();
+		return getBinaryData();
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
+	public void setSound(byte[] logo) {
+		setBinaryData(logo);
+	}
+
 	public boolean hasSound()
 	{
 		return soundBytes != null || soundUri != null;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+	public void clearSound() {
+		soundBytes = null;
+		soundUri = null;
+	}
+	
+	public URI getSoundURI()
+	{
+		return soundUri;
+	}
+
+	public void setSoundURI(URI soundUri) {
+		if(soundUri != null) {
+			this.soundUri = soundUri;
+		}
+		else {
+			this.soundUri = null;
+		}
+	}
+
 	public boolean isURI()
 	{
 		return soundUri != null;
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isInline()
-	{
-		return soundBytes != null;
+
+	public void setSoundURL(URL soundUrl) throws URISyntaxException {
+		if(soundUrl != null) {
+			this.soundUri = soundUrl.toURI();
+		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public SoundParameterType getSoundParameterType()
+	public URL getSoundURL() throws MalformedURLException
 	{
-		return soundParameterType;
+		if(soundUri != null) {
+			return soundUri.toURL();
+		}
+		else {
+			return null;
+		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public AudioMediaType getAudioMediaType()
 	{
-		return audioMediaType;
+		return soundMediaType;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setSoundParameterType(SoundParameterType soundParameterType) {
-		this.soundParameterType = soundParameterType;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public void setAudioMediaType(AudioMediaType audioMediaType) {
-		this.audioMediaType = audioMediaType;
+		if(audioMediaType != null) {
+			this.soundMediaType = audioMediaType;
+		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setSound(byte[] soundBytes) {
-		this.soundBytes = soundBytes;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setSoundURI(URI soundUri) {
-		this.soundUri = soundUri;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setSoundURL(URL soundUrl) throws URISyntaxException {
-		this.soundUri = soundUrl.toURI();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasSoundParameterType()
-	{
-		return soundParameterType != null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public boolean hasAudioMediaType()
 	{
-		return audioMediaType != null;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setCompression(boolean compression) {
-		isSetCompression = compression;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isSetCompression()
-	{
-		return isSetCompression;
+		return soundMediaType != null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getTypeString()
+	public boolean isCompressed()
 	{
-		return VCardType.SOUND.getType();
+		return compressed;
+	}
+
+	public void setCompression(boolean compressed)
+	{
+		this.compressed = compressed;
+		
+	}
+
+	public byte[] getBinaryData()
+	{
+		if(soundBytes != null) {
+			return soundBytes;
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void setBinaryData(byte[] binaryData) {
+		if(binaryData != null) {
+			this.soundBytes = Arrays.copyOf(binaryData, binaryData.length);
+		}
+		else {
+			this.soundBytes = null;
+		}
+	}
+
+	public boolean isBinary()
+	{
+		return EncodingType.BINARY.equals(getEncodingType());
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+	public boolean hasParams()
+	{
+		return false;
+	}
+
+	@Override
+	public SoundType clone()
+	{
+		SoundType cloned = new SoundType();
+		cloned.setEncodingType(getEncodingType());
+		cloned.setVCardTypeName(getVCardTypeName());
+
+		if(hasCharset()) {
+			cloned.setCharset(getCharset());
+		}
+		
+		cloned.setGroup(getGroup());
+		cloned.setLanguage(getLanguage());
+		cloned.setParameterTypeStyle(getParameterTypeStyle());
+		cloned.addAllExtendedParams(getExtendedParams());
+		
+		if(soundBytes != null) {
+			byte[] clonedBytes = Arrays.copyOf(soundBytes, soundBytes.length);
+			cloned.setSound(clonedBytes);
+		}
+		
+		if(soundUri != null) {
+			cloned.setSoundURI(soundUri);
+		}
+		
+		if(soundMediaType != null) {
+			cloned.setAudioMediaType(soundMediaType);
+		}
+		
+		cloned.setCompression(compressed);
+		return cloned;
+	}
+	
+	public int compareTo(SoundType obj)
+	{
+		if(obj != null) {
+			String[] contents = obj.getContents();
+			String[] myContents = getContents();
+			if(Arrays.equals(myContents, contents)) {
+				return 0;
+			}
+			else {
+				return 1;
+			}
+		}
+		else {
+			return -1;
+		}
+	}
+
+	@Override
+	protected String[] getContents()
+	{
+		String[] contents = new String[11];
+		contents[0] = getVCardTypeName().getType();
+		contents[1] = getEncodingType().getType();
+		contents[2] = StringUtil.getString(getGroup());
+		contents[3] = (getCharset() != null ? getCharset().name() : "");
+		contents[4] = (getLanguage() != null ? getLanguage().getLanguageCode() : "");
+		contents[5] = getParameterTypeStyle().toString();
+		
+		if(hasExtendedParams()) {
+			List<ExtendedParamType> xParams = getExtendedParams();
+			StringBuilder sb = new StringBuilder();
+			for(ExtendedParamType xParamType : xParams) {
+				sb.append(xParamType.toString());
+				sb.append(",");
+			}
+			
+			sb.deleteCharAt(sb.length()-1);
+			contents[6] = sb.toString();
+		}
+		else {
+			contents[6] = "";
+		}
+		
+		if(soundBytes != null) {
+			contents[7] = StringUtil.toHexString(soundBytes);
+		}
+		else {
+			contents[7] = "";
+		}
+		
+		if(soundUri != null) {
+			contents[8] = soundUri.toString();
+		}
+		else {
+			contents[8] = "";
+		}
+		
+		if(soundMediaType != null) {
+			contents[9] = soundMediaType.toString();
+		}
+		else {
+			contents[9] = "";
+		}
+		
+		contents[10] = String.valueOf(compressed);
+		
+		return contents;
+	}
+
 	@Override
 	public boolean equals(Object obj)
 	{
 		if(obj != null) {
 			if(obj instanceof SoundType) {
-				if(this == obj || ((SoundType)obj).hashCode() == this.hashCode()) {
-					return true;
-				}
-				else {
-					return false;
-				}
+				return this.compareTo((SoundType)obj) == 0;
 			}
 			else {
 				return false;
@@ -236,90 +298,5 @@ public class SoundType extends Type implements SoundFeature {
 		else {
 			return false;
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int hashCode()
-	{
-		return Util.generateHashCode(toString());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append(this.getClass().getName());
-		sb.append("[ ");
-		if(encodingType != null) {
-			sb.append(encodingType.getType());
-			sb.append(",");
-		}
-		
-		if(soundBytes != null) {
-			sb.append(StringUtil.toHexString(soundBytes));
-			sb.append(",");
-		}
-		
-		if(soundUri != null) {
-			sb.append(soundUri.toString());
-			sb.append(",");
-		}
-		
-		if(soundParameterType != null) {
-			sb.append(soundParameterType.getType());
-			sb.append(",");
-		}
-
-		if(super.id != null) {
-			sb.append(super.id);
-			sb.append(",");
-		}
-		
-		sb.deleteCharAt(sb.length()-1);	//Remove last comma.
-		sb.append(" ]");
-		return sb.toString();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public SoundFeature clone()
-	{
-		SoundType cloned = new SoundType();
-		
-		if(soundBytes != null) {
-			byte[] clonedBytes = Arrays.copyOf(soundBytes, soundBytes.length);
-			cloned.setSound(clonedBytes);
-		}
-		
-		if(soundUri != null) {
-			try {
-				cloned.setSoundURI(new URI(soundUri.toString()));
-			}
-			catch(URISyntaxException e) {
-				cloned.setSoundURI(null);
-			}
-		}
-		
-		if(soundParameterType != null) {
-			cloned.setSoundParameterType(soundParameterType);
-		}
-		
-		if(audioMediaType != null) {
-			cloned.setAudioMediaType(audioMediaType);
-		}
-		
-		cloned.setCompression(isSetCompression);
-		cloned.setParameterTypeStyle(getParameterTypeStyle());
-		cloned.setEncodingType(getEncodingType());
-		cloned.setID(getID());
-		return cloned;
 	}
 }

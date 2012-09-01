@@ -3,20 +3,17 @@ package net.sourceforge.cardme.vcard.types;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
-import net.sourceforge.cardme.vcard.types.parameters.LabelParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.XLabelParameterType;
-
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
+import net.sourceforge.cardme.vcard.types.params.ExtendedParamType;
+import net.sourceforge.cardme.vcard.types.params.LabelParamType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -47,7 +44,7 @@ import org.junit.Test;
  * 
  * @author George El-Haddad
  * <br/>
- * Oct 1, 2011
+ * Aug 27, 2012
  *
  */
 public class LabelTypeTest {
@@ -58,10 +55,10 @@ public class LabelTypeTest {
 	public void setUp() throws Exception {
 		labelType = new LabelType();
 		labelType.setLabel("Cardme");
-		labelType.addLabelParameterType(LabelParameterType.POSTAL);
-		labelType.addLabelParameterType(LabelParameterType.PARCEL);
-		labelType.addExtendedLabelParameterType(new XLabelParameterType("X-DHL"));
-		labelType.addExtendedLabelParameterType(new XLabelParameterType("X-TRACKING-NO", "SADF-9123840932180941"));
+		labelType.addParam(LabelParamType.POSTAL);
+		labelType.addParam(LabelParamType.PARCEL);
+		labelType.addExtendedParam(new ExtendedParamType("X-DHL", VCardTypeName.LABEL));
+		labelType.addExtendedParam(new ExtendedParamType("X-TRACKING-NO", "SADF-9123840932180941", VCardTypeName.LABEL));
 	}
 	
 	@After
@@ -75,118 +72,104 @@ public class LabelTypeTest {
 	}
 	
 	@Test
-	public void testAddLabelParameterType() {
-		labelType.addLabelParameterType(LabelParameterType.HOME);
-		assertTrue(labelType.containsLabelParameterType(LabelParameterType.HOME));
+	public void testAddParam() {
+		labelType.addParam(LabelParamType.HOME);
+		assertTrue(labelType.containsParam(LabelParamType.HOME));
 	}
 	
 	@Test
-	public void testGetLabelParameterTypes() {
-		Iterator<LabelParameterType> iter = labelType.getLabelParameterTypes();
-		assertEquals(LabelParameterType.POSTAL, iter.next());
-		assertEquals(LabelParameterType.PARCEL, iter.next());
+	public void testGetParams() {
+		List<LabelParamType> list = labelType.getParams();
+		assertEquals(LabelParamType.POSTAL, list.get(0));
+		assertEquals(LabelParamType.PARCEL, list.get(1));
 	}
 	
 	@Test
-	public void testGetLabelParameterTypesList() {
-		List<LabelParameterType> list = labelType.getLabelParameterTypesList();
-		assertEquals(LabelParameterType.POSTAL, list.get(0));
-		assertEquals(LabelParameterType.PARCEL, list.get(1));
+	public void testRemoveParam() {
+		labelType.removeParam(LabelParamType.POSTAL);
+		assertFalse(labelType.containsParam(LabelParamType.POSTAL));
 	}
 	
 	@Test
-	public void testRemoveLabelParameterType() {
-		labelType.removeLabelParameterType(LabelParameterType.POSTAL);
-		assertFalse(labelType.containsLabelParameterType(LabelParameterType.POSTAL));
+	public void testGetParamSize() {
+		assertEquals(2, labelType.getParamSize());
 	}
 	
 	@Test
-	public void testGetLabelParameterSize() {
-		assertEquals(2, labelType.getLabelParameterSize());
+	public void testContainsParam() {
+		assertTrue(labelType.containsParam(LabelParamType.POSTAL));
+		assertTrue(labelType.containsParam(LabelParamType.PARCEL));
 	}
 	
 	@Test
-	public void testContainsLabelParameterType() {
-		assertTrue(labelType.containsLabelParameterType(LabelParameterType.POSTAL));
-		assertTrue(labelType.containsLabelParameterType(LabelParameterType.PARCEL));
-	}
-	
-	@Test
-	public void testContainsAllLabelParameterTypes() {
-		List<LabelParameterType> types = new ArrayList<LabelParameterType>(2);
-		types.add(LabelParameterType.POSTAL);
-		types.add(LabelParameterType.PARCEL);
+	public void testContainsAllParams() {
+		List<LabelParamType> list = new ArrayList<LabelParamType>(2);
+		list.add(LabelParamType.POSTAL);
+		list.add(LabelParamType.PARCEL);
 		
-		assertTrue(labelType.conatinsAllLabelParameterTypes(types));
+		assertTrue(labelType.containsAllParams(list));
 	}
 	
 	@Test
-	public void testClearLabelParameterTypes() {
-		labelType.clearLabelParameterTypes();
-		assertFalse(labelType.containsLabelParameterType(LabelParameterType.POSTAL));
-		assertFalse(labelType.containsLabelParameterType(LabelParameterType.PARCEL));
-		assertFalse(labelType.hasLabelParameterTypes());
+	public void testClearParams() {
+		labelType.clearParams();
+		assertFalse(labelType.containsParam(LabelParamType.POSTAL));
+		assertFalse(labelType.containsParam(LabelParamType.PARCEL));
+		assertFalse(labelType.hasParams());
 	}
 	
 	@Test
-	public void testHasLabelParameterTypes() {
-		assertTrue(labelType.hasLabelParameterTypes());
+	public void testHasParameters() {
+		assertTrue(labelType.hasParams());
 	}
 	
 	@Test
-	public void testGetExtendedLabelParameterTypes() {
-		Iterator<XLabelParameterType> iter = labelType.getExtendedLabelParameterTypes();
-		assertEquals(new XLabelParameterType("X-DHL"), iter.next());
-		assertEquals(new XLabelParameterType("X-TRACKING-NO", "SADF-9123840932180941"), iter.next());
+	public void testGetExtendedParams() {
+		List<ExtendedParamType> list = labelType.getExtendedParams();
+		assertEquals(new ExtendedParamType("X-DHL", VCardTypeName.LABEL), list.get(0));
+		assertEquals(new ExtendedParamType("X-TRACKING-NO", "SADF-9123840932180941", VCardTypeName.LABEL), list.get(1));
 	}
 	
 	@Test
-	public void testGetExtendedLabelParameterTypesList() {
-		List<XLabelParameterType> list = labelType.getExtendedLabelParameterTypesList();
-		assertEquals(new XLabelParameterType("X-DHL"), list.get(0));
-		assertEquals(new XLabelParameterType("X-TRACKING-NO", "SADF-9123840932180941"), list.get(1));
+	public void testGetExtendedParamSize() {
+		assertEquals(2, labelType.getExtendedParamSize());
 	}
 	
 	@Test
-	public void testGetExtendedLabelParameterSize() {
-		assertEquals(2, labelType.getExtendedLabelParameterSize());
+	public void testAddExtendedParam() {
+		labelType.addExtendedParam(new ExtendedParamType("X-BLA", VCardTypeName.LABEL));
+		assertTrue(labelType.containsExtendedParam(new ExtendedParamType("X-BLA", VCardTypeName.LABEL)));
 	}
 	
 	@Test
-	public void testAddExtendedLabelParameterType() {
-		labelType.addExtendedLabelParameterType(new XLabelParameterType("X-BLA"));
-		assertTrue(labelType.containsExtendedLabelParameterType(new XLabelParameterType("X-BLA")));
+	public void testRemoveExtendedParam() {
+		labelType.removeExtendedParam(new ExtendedParamType("X-DHL", VCardTypeName.LABEL));
+		assertFalse(labelType.containsExtendedParam(new ExtendedParamType("X-DHL", VCardTypeName.LABEL)));
 	}
 	
 	@Test
-	public void testRemoveExtendedLabelParameterType() {
-		labelType.removeExtendedLabelParameterType(new XLabelParameterType("X-DHL"));
-		assertFalse(labelType.containsExtendedLabelParameterType(new XLabelParameterType("X-DHL")));
+	public void testContainsExtendedParam() {
+		assertTrue(labelType.containsExtendedParam(new ExtendedParamType("X-DHL", VCardTypeName.LABEL)));
+		assertTrue(labelType.containsExtendedParam(new ExtendedParamType("X-TRACKING-NO", "SADF-9123840932180941", VCardTypeName.LABEL)));
 	}
 	
 	@Test
-	public void testContainsExtendedLabelParameterType() {
-		assertTrue(labelType.containsExtendedLabelParameterType(new XLabelParameterType("X-DHL")));
-		assertTrue(labelType.containsExtendedLabelParameterType(new XLabelParameterType("X-TRACKING-NO", "SADF-9123840932180941")));
-	}
-	
-	@Test
-	public void testContainsAllExtendedLabelParameterTypes() {
-		List<XLabelParameterType> types = new ArrayList<XLabelParameterType>(2);
-		types.add(new XLabelParameterType("X-DHL"));
-		types.add(new XLabelParameterType("X-TRACKING-NO", "SADF-9123840932180941"));
+	public void testContainsAllExtendedParam() {
+		List<ExtendedParamType> types = new ArrayList<ExtendedParamType>(2);
+		types.add(new ExtendedParamType("X-DHL", VCardTypeName.LABEL));
+		types.add(new ExtendedParamType("X-TRACKING-NO", "SADF-9123840932180941", VCardTypeName.LABEL));
 		
-		assertTrue(labelType.containsAllExtendedLabelParameterTypes(types));
+		assertTrue(labelType.containsAllExtendedParams(types));
 	}
 	
 	@Test
 	public void testHasExtendedLabelParameterTypes() {
-		assertTrue(labelType.hasExtendedLabelParameterTypes());
+		assertTrue(labelType.hasExtendedParams());
 	}
 	
 	@Test
-	public void testClearExtendedLabelParameterTypes() {
-		labelType.clearExtendedLabelParameterTypes();
-		assertFalse(labelType.hasExtendedLabelParameterTypes());
+	public void testClearExtendedParams() {
+		labelType.clearExtendedParams();
+		assertFalse(labelType.hasExtendedParams());
 	}
 }

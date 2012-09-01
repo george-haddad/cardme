@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -12,82 +11,61 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Calendar;
-
 import net.sourceforge.cardme.engine.VCardEngine;
 import net.sourceforge.cardme.io.BinaryFoldingScheme;
 import net.sourceforge.cardme.io.CompatibilityMode;
 import net.sourceforge.cardme.io.FoldingScheme;
 import net.sourceforge.cardme.io.VCardWriter;
 import net.sourceforge.cardme.util.Util;
-import net.sourceforge.cardme.vcard.EncodingType;
-import net.sourceforge.cardme.vcard.LanguageType;
 import net.sourceforge.cardme.vcard.VCard;
 import net.sourceforge.cardme.vcard.VCardImpl;
-import net.sourceforge.cardme.vcard.VCardVersion;
-import net.sourceforge.cardme.vcard.errors.VCardErrorHandling;
-import net.sourceforge.cardme.vcard.features.AddressFeature;
-import net.sourceforge.cardme.vcard.features.CategoriesFeature;
-import net.sourceforge.cardme.vcard.features.DisplayableNameFeature;
-import net.sourceforge.cardme.vcard.features.EmailFeature;
-import net.sourceforge.cardme.vcard.features.ExtendedFeature;
-import net.sourceforge.cardme.vcard.features.FormattedNameFeature;
-import net.sourceforge.cardme.vcard.features.IMPPFeature;
-import net.sourceforge.cardme.vcard.features.KeyFeature;
-import net.sourceforge.cardme.vcard.features.LabelFeature;
-import net.sourceforge.cardme.vcard.features.LogoFeature;
-import net.sourceforge.cardme.vcard.features.NameFeature;
-import net.sourceforge.cardme.vcard.features.NicknameFeature;
-import net.sourceforge.cardme.vcard.features.NoteFeature;
-import net.sourceforge.cardme.vcard.features.OrganizationFeature;
-import net.sourceforge.cardme.vcard.features.PhotoFeature;
-import net.sourceforge.cardme.vcard.features.ProfileFeature;
-import net.sourceforge.cardme.vcard.features.SoundFeature;
-import net.sourceforge.cardme.vcard.features.SourceFeature;
-import net.sourceforge.cardme.vcard.features.TelephoneFeature;
-import net.sourceforge.cardme.vcard.types.AddressType;
-import net.sourceforge.cardme.vcard.types.BirthdayType;
+import net.sourceforge.cardme.vcard.arch.EncodingType;
+import net.sourceforge.cardme.vcard.arch.LanguageType;
+import net.sourceforge.cardme.vcard.arch.ParameterTypeStyle;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
+import net.sourceforge.cardme.vcard.arch.VCardVersion;
+import net.sourceforge.cardme.vcard.errors.VCardErrorHandler;
+import net.sourceforge.cardme.vcard.types.AdrType;
+import net.sourceforge.cardme.vcard.types.BDayType;
 import net.sourceforge.cardme.vcard.types.CategoriesType;
 import net.sourceforge.cardme.vcard.types.ClassType;
-import net.sourceforge.cardme.vcard.types.DisplayableNameType;
 import net.sourceforge.cardme.vcard.types.EmailType;
 import net.sourceforge.cardme.vcard.types.ExtendedType;
-import net.sourceforge.cardme.vcard.types.FormattedNameType;
-import net.sourceforge.cardme.vcard.types.GeographicPositionType;
-import net.sourceforge.cardme.vcard.types.IMPPType;
+import net.sourceforge.cardme.vcard.types.FNType;
+import net.sourceforge.cardme.vcard.types.GeoType;
+import net.sourceforge.cardme.vcard.types.ImppType;
 import net.sourceforge.cardme.vcard.types.KeyType;
 import net.sourceforge.cardme.vcard.types.LabelType;
 import net.sourceforge.cardme.vcard.types.LogoType;
 import net.sourceforge.cardme.vcard.types.MailerType;
+import net.sourceforge.cardme.vcard.types.NType;
 import net.sourceforge.cardme.vcard.types.NameType;
 import net.sourceforge.cardme.vcard.types.NicknameType;
 import net.sourceforge.cardme.vcard.types.NoteType;
-import net.sourceforge.cardme.vcard.types.OrganizationType;
+import net.sourceforge.cardme.vcard.types.OrgType;
 import net.sourceforge.cardme.vcard.types.PhotoType;
-import net.sourceforge.cardme.vcard.types.ProductIdType;
+import net.sourceforge.cardme.vcard.types.ProdIdType;
 import net.sourceforge.cardme.vcard.types.ProfileType;
-import net.sourceforge.cardme.vcard.types.RevisionType;
+import net.sourceforge.cardme.vcard.types.RevType;
 import net.sourceforge.cardme.vcard.types.RoleType;
 import net.sourceforge.cardme.vcard.types.SortStringType;
 import net.sourceforge.cardme.vcard.types.SoundType;
 import net.sourceforge.cardme.vcard.types.SourceType;
-import net.sourceforge.cardme.vcard.types.TelephoneType;
-import net.sourceforge.cardme.vcard.types.TimeZoneType;
+import net.sourceforge.cardme.vcard.types.TelType;
 import net.sourceforge.cardme.vcard.types.TitleType;
-import net.sourceforge.cardme.vcard.types.UIDType;
-import net.sourceforge.cardme.vcard.types.URLType;
+import net.sourceforge.cardme.vcard.types.TzType;
+import net.sourceforge.cardme.vcard.types.UidType;
+import net.sourceforge.cardme.vcard.types.UrlType;
 import net.sourceforge.cardme.vcard.types.VersionType;
 import net.sourceforge.cardme.vcard.types.media.AudioMediaType;
 import net.sourceforge.cardme.vcard.types.media.ImageMediaType;
 import net.sourceforge.cardme.vcard.types.media.KeyTextType;
-import net.sourceforge.cardme.vcard.types.parameters.AddressParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.EmailParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.IMPPParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.LabelParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.ParameterTypeStyle;
-import net.sourceforge.cardme.vcard.types.parameters.TelephoneParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.XAddressParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.XIMPPParameterType;
-
+import net.sourceforge.cardme.vcard.types.params.AdrParamType;
+import net.sourceforge.cardme.vcard.types.params.EmailParamType;
+import net.sourceforge.cardme.vcard.types.params.ExtendedParamType;
+import net.sourceforge.cardme.vcard.types.params.ImppParamType;
+import net.sourceforge.cardme.vcard.types.params.LabelParamType;
+import net.sourceforge.cardme.vcard.types.params.TelParamType;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -130,8 +108,8 @@ import org.junit.Test;
  */
 public class TestVCard {
 
-	private static VCard vcard = null;
-	private static VCard vcardFull = null;
+	private static VCardImpl vcard = null;
+	private static VCardImpl vcardFull = null;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -165,13 +143,13 @@ public class TestVCard {
 	}
 	
 	@Test(expected=NullPointerException.class)
-	public void testSetFormattedNameNullPointer() {
-		vcard.setFormattedName(null);
+	public void testSetFNNullPointer() {
+		vcard.setFN(null);
 	}
 	
 	@Test(expected=NullPointerException.class)
-	public void testSetNameNullPointer() {
-		vcard.setName(null);
+	public void testSetNNullPointer() {
+		vcard.setN(null);
 	}
 	
 	@Test(expected=NullPointerException.class)
@@ -179,9 +157,9 @@ public class TestVCard {
 		vcard.addPhoto(null);
 	}
 	
-	@Test(expected=NullPointerException.class)
+	@Test
 	public void testRemovePhotoNullPointer() {
-		vcard.removePhoto(null);
+		assertFalse(vcard.removePhoto(null));
 	}
 	
 	@Test(expected=NullPointerException.class)
@@ -190,53 +168,33 @@ public class TestVCard {
 	}
 	
 	@Test(expected=NullPointerException.class)
-	public void testAddAddressNullPointer() {
-		vcard.addAddress(null);
+	public void testAddAdrNullPointer() {
+		vcard.addAdr(null);
+	}
+	
+	@Test
+	public void testRemoveAdrNullPointer() {
+		assertFalse(vcard.removeAdr(null));
 	}
 	
 	@Test(expected=NullPointerException.class)
-	public void testRemoveAddressNullPointer() {
-		vcard.removeAddress(null);
+	public void testAddAllAdrsNullPointer() {
+		vcard.addAllAdrs(null);
 	}
 	
 	@Test(expected=NullPointerException.class)
-	public void testAddAllAddressesNullPointer() {
-		vcard.addAllAddresses(null);
+	public void testAddTelNullPointer() {
+		vcard.addTel(null);
+	}
+	
+	@Test
+	public void testRemoveTelNullPointer() {
+		assertFalse(vcard.removeTel(null));
 	}
 	
 	@Test(expected=NullPointerException.class)
-	public void testSetLabelNullPointer1() {
-		vcard.setLabel(null, new AddressType());
-	}
-	
-	@Test(expected=NullPointerException.class)
-	public void testSetLabelNullPointer2() {
-		vcard.setLabel(new LabelType(), null);
-	}
-	
-	@Test(expected=NullPointerException.class)
-	public void testRemoveLabelNullPointer1() {
-		vcard.removeLabel(null, new AddressType());
-	}
-	
-	@Test(expected=NullPointerException.class)
-	public void testRemoveLabelNullPointer2() {
-		vcard.removeLabel(new LabelType(), null);
-	}
-	
-	@Test(expected=NullPointerException.class)
-	public void testAddTelephoneNumberNullPointer() {
-		vcard.addTelephoneNumber(null);
-	}
-	
-	@Test(expected=NullPointerException.class)
-	public void testRemoveTelephoneNumberNullPointer() {
-		vcard.removeTelephoneNumber(null);
-	}
-	
-	@Test(expected=NullPointerException.class)
-	public void testAddAllTelephoneNumbersNullPointer() {
-		vcard.addAllTelephoneNumber(null);
+	public void testAddAllTelsNullPointer() {
+		vcard.addAllTels(null);
 	}
 	
 	@Test(expected=NullPointerException.class)
@@ -244,9 +202,9 @@ public class TestVCard {
 		vcard.addEmail(null);
 	}
 	
-	@Test(expected=NullPointerException.class)
+	@Test
 	public void testRemoveEmailNullPointer() {
-		vcard.removeEmail(null);
+		assertFalse(vcard.removeEmail(null));
 	}
 	
 	@Test(expected=NullPointerException.class)
@@ -259,9 +217,9 @@ public class TestVCard {
 		vcard.addLogo(null);
 	}
 	
-	@Test(expected=NullPointerException.class)
+	@Test
 	public void testRemoveLogoNullPointer() {
-		vcard.removeLogo(null);
+		assertFalse(vcard.removeLogo(null));
 	}
 	
 	@Test(expected=NullPointerException.class)
@@ -274,9 +232,9 @@ public class TestVCard {
 		vcard.addAgent(null);
 	}
 	
-	@Test(expected=NullPointerException.class)
+	@Test
 	public void testRemoveAgentNullPointer() {
-		vcard.removeAgent(null);
+		assertFalse(vcard.removeAgent(null));
 	}
 	
 	@Test(expected=NullPointerException.class)
@@ -289,9 +247,9 @@ public class TestVCard {
 		vcard.addNote(null);
 	}
 	
-	@Test(expected=NullPointerException.class)
+	@Test
 	public void testRemoveNoteNullPointer() {
-		vcard.removeNote(null);
+		assertFalse(vcard.removeNote(null));
 	}
 	
 	@Test(expected=NullPointerException.class)
@@ -304,9 +262,9 @@ public class TestVCard {
 		vcard.addSound(null);
 	}
 	
-	@Test(expected=NullPointerException.class)
+	@Test
 	public void testRemoveSoundNullPointer() {
-		vcard.removeSound(null);
+		assertFalse(vcard.removeSound(null));
 	}
 	
 	@Test(expected=NullPointerException.class)
@@ -316,17 +274,17 @@ public class TestVCard {
 	
 	@Test(expected=NullPointerException.class)
 	public void testAddUrlNullPointer() {
-		vcard.addURL(null);
+		vcard.addUrl(null);
 	}
 	
-	@Test(expected=NullPointerException.class)
+	@Test
 	public void testRemoveUrlNullPointer() {
-		vcard.removeURL(null);
+		assertFalse(vcard.removeUrl(null));
 	}
 	
 	@Test(expected=NullPointerException.class)
 	public void testAddAllUrlsNullPointer() {
-		vcard.addAllURLs(null);
+		vcard.addAllUrls(null);
 	}
 	
 	@Test(expected=NullPointerException.class)
@@ -339,9 +297,9 @@ public class TestVCard {
 		vcard.addKey(null);
 	}
 	
-	@Test(expected=NullPointerException.class)
+	@Test
 	public void testRemoveKeyNullPointer() {
-		vcard.removeKey(null);
+		assertFalse(vcard.removeKey(null));
 	}
 	
 	@Test(expected=NullPointerException.class)
@@ -354,9 +312,9 @@ public class TestVCard {
 		vcard.addExtendedType(null);
 	}
 	
-	@Test(expected=NullPointerException.class)
+	@Test
 	public void testRemoveExtendedTypeNullPointer() {
-		vcard.removeExtendedType(null);
+		assertFalse(vcard.removeExtendedType(null));
 	}
 	
 	@Test(expected=NullPointerException.class)
@@ -405,7 +363,7 @@ public class TestVCard {
 		VCard _vcard = vcardEngine.parse(vcardString);
 		
 		assertNotNull(_vcard);
-		assertFalse(((VCardErrorHandling)_vcard).hasErrors());
+		assertFalse(((VCardErrorHandler)_vcard).hasErrors());
 		
 		//TODO the below tests fail.
 		//
@@ -436,89 +394,89 @@ public class TestVCard {
 		vcardEngine.setCompatibilityMode(CompatibilityMode.RFC2426);
 		VCard _vcard = vcardEngine.parse(vcardString);
 		
-		assertEquals("DÖe", _vcard.getName().getFamilyName());
+		assertEquals("DÖe", _vcard.getN().getFamilyName());
 	}
 	
-	private static VCard getFullVCardNoErrors() throws IOException, URISyntaxException
+	private static VCardImpl getFullVCardNoErrors() throws IOException, URISyntaxException
 	{
-		VCard vcard = new VCardImpl();
+		VCardImpl vcard = new VCardImpl();
 		vcard.setVersion(new VersionType(VCardVersion.V3_0));
 		
-		DisplayableNameFeature displayableName = new DisplayableNameType();
-		displayableName.setName("VCard for John Doe");
-		vcard.setDisplayableNameFeature(displayableName);
+		NameType name = new NameType();
+		name.setName("VCard for John Doe");
+		vcard.setName(name);
 		
-		ProfileFeature profile = new ProfileType();
+		ProfileType profile = new ProfileType();
 		profile.setProfile("VCard");
 		vcard.setProfile(profile);
 		
-		SourceFeature source = new SourceType();
+		SourceType source = new SourceType();
 		source.setSource("Whatever");
 		vcard.setSource(source);
 		
-		NameFeature name = new NameType();
-		name.setEncodingType(EncodingType.QUOTED_PRINTABLE);
-		name.setCharset(Charset.forName("UTF-8"));
-		name.setLanguage(LanguageType.EN);
-		name.setFamilyName("DÖe");
-//		name.setFamilyName("Doe");
-		name.setGivenName("John");
-		name.addHonorificPrefix("Mr.");
-		name.addHonorificSuffix("I");
-		name.addAdditionalName("Johny");
-		vcard.setName(name);
+		NType n = new NType();
+		n.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+		n.setCharset(Charset.forName("UTF-8"));
+		n.setLanguage(LanguageType.EN);
+		n.setFamilyName("DÖe");
+//		n.setFamilyName("Doe");
+		n.setGivenName("John");
+		n.addHonorificPrefix("Mr.");
+		n.addHonorificSuffix("I");
+		n.addAdditionalName("Johny");
+		vcard.setN(n);
 		
-		FormattedNameFeature formattedName = new FormattedNameType();
-		formattedName.setFormattedName("John \"Johny\" Doe");
-		formattedName.setCharset(Charset.forName("UTF-8"));
-		formattedName.setLanguage(LanguageType.EN);
-		vcard.setFormattedName(formattedName);
+		FNType fn = new FNType();
+		fn.setFormattedName("John \"Johny\" Doe");
+		fn.setCharset(Charset.forName("UTF-8"));
+		fn.setLanguage(LanguageType.EN);
+		vcard.setFN(fn);
 		
-		NicknameFeature nicknames = new NicknameType();
+		NicknameType nicknames = new NicknameType();
 		nicknames.addNickname("Johny");
 		nicknames.addNickname("JayJay");
-		vcard.setNicknames(nicknames);
+		vcard.setNickname(nicknames);
 		
-		CategoriesFeature categories = new CategoriesType();
+		CategoriesType categories = new CategoriesType();
 		categories.addCategory("Category 1");
 		categories.addCategory("Category 2");
 		categories.addCategory("Category 3");
 		vcard.setCategories(categories);
 		
 		vcard.setSecurityClass(new ClassType("Public"));
-		vcard.setProductId(new ProductIdType("31e78c0d-fb07-479d-b6af-95a9a3f2916f"));
+		vcard.setProdId(new ProdIdType("31e78c0d-fb07-479d-b6af-95a9a3f2916f"));
 		vcard.setSortString(new SortStringType("JOHN"));
 		
 		vcard.setMailer(new MailerType("Mozilla Thunderbird"));
 		vcard.setTitle(new TitleType("Generic Accountant"));
 		vcard.setRole(new RoleType("Counting Money"));
 		
-		OrganizationFeature organizations = new OrganizationType();
-		organizations.addOrganization("IBM");
-		organizations.addOrganization("SUN");
-		vcard.setOrganizations(organizations);
+		OrgType organizations = new OrgType();
+		organizations.setOrgName("IBM");
+		organizations.addOrgUnit("SUN");
+		vcard.setOrg(organizations);
 		
-		vcard.setUID(new UIDType("c0ff639f-9633-4e57-bcfd-55079cfd9d65"));
-		vcard.addURL(new URLType(new URL("http://www.sun.com")));
-		vcard.setGeographicPosition(new GeographicPositionType(3.4f, -2.6f));
+		vcard.setUid(new UidType("c0ff639f-9633-4e57-bcfd-55079cfd9d65"));
+		vcard.addUrl(new UrlType(new URL("http://www.sun.com")));
+		vcard.setGeo(new GeoType(3.4f, -2.6f));
 
 		Calendar birthday = Calendar.getInstance();
 		birthday.clear();
 		birthday.set(Calendar.YEAR, 1980);
 		birthday.set(Calendar.MONTH, 4);
 		birthday.set(Calendar.DAY_OF_MONTH, 21);
-		vcard.setBirthday(new BirthdayType(birthday));
+		vcard.setBDay(new BDayType(birthday));
 
 		Calendar revision = Calendar.getInstance();
 		revision.clear();
 		revision.set(Calendar.YEAR, 2012);
 		revision.set(Calendar.MONTH, 6);
 		revision.set(Calendar.DAY_OF_MONTH, 8);
-		vcard.setRevision(new RevisionType(revision));
+		vcard.setRev(new RevType(revision));
 		
-		vcard.setTimeZone(new TimeZoneType(Calendar.getInstance().getTimeZone()));
+		vcard.setTz(new TzType(Calendar.getInstance().getTimeZone()));
 		
-		AddressFeature address1 = new AddressType();
+		AdrType address1 = new AdrType();
 		address1.setCharset("UTF-8");
 		address1.setExtendedAddress("");
 		address1.setCountryName("U.S.A.");
@@ -527,50 +485,52 @@ public class TestVCard {
 		address1.setPostalCode("NYC887");
 		address1.setPostOfficeBox("25334");
 		address1.setStreetAddress("South cresent drive, Building 5, 3rd floor");
-		address1.addAddressParameterType(AddressParameterType.HOME);
-		address1.addAddressParameterType(AddressParameterType.PARCEL);
-		address1.addAddressParameterType(AddressParameterType.PREF);
-		address1.addExtendedAddressParameterType(new XAddressParameterType("CUSTOM-PARAM-TYPE"));
-		address1.addExtendedAddressParameterType(new XAddressParameterType("CUSTOM-PARAM-TYPE", "WITH-CUSTOM-VALUE"));
-		vcard.addAddress(address1);
-
-		LabelFeature labelForAddress1 = new LabelType();
-		labelForAddress1.setCharset("UTF-8");
-		labelForAddress1.addLabelParameterType(LabelParameterType.HOME);
-		labelForAddress1.addLabelParameterType(LabelParameterType.PARCEL);
-		labelForAddress1.addLabelParameterType(LabelParameterType.PREF);
-		labelForAddress1.setLabel("John Doe\nNew York, NewYork,\nSouth Crecent Drive,\nBuilding 5, floor 3,\nUSA");
-		vcard.setLabel(labelForAddress1, address1);
+		address1.addParam(AdrParamType.HOME)
+		.addParam(AdrParamType.PARCEL)
+		.addParam(AdrParamType.PREF)
+		.addExtendedParam(new ExtendedParamType("CUSTOM-PARAM-TYPE", VCardTypeName.ADR))
+		.addExtendedParam(new ExtendedParamType("CUSTOM-PARAM-TYPE", "WITH-CUSTOM-VALUE", VCardTypeName.ADR));
 		
-		TelephoneFeature telephone = new TelephoneType();
+
+		LabelType labelForAddress1 = new LabelType();
+		labelForAddress1.setCharset("UTF-8");
+		labelForAddress1.addParam(LabelParamType.HOME)
+		.addParam(LabelParamType.PARCEL)
+		.addParam(LabelParamType.PREF)
+		.setLabel("John Doe\nNew York, NewYork,\nSouth Crecent Drive,\nBuilding 5, floor 3,\nUSA");
+		
+		address1.setLabel(labelForAddress1);
+		vcard.addAdr(address1);
+		
+		TelType telephone = new TelType();
 		telephone.setCharset("UTF-8");
 		telephone.setTelephone("+1 (212) 204-34456");
-		telephone.addTelephoneParameterType(TelephoneParameterType.CELL);
-		telephone.addTelephoneParameterType(TelephoneParameterType.HOME);
-		telephone.setParameterTypeStyle(ParameterTypeStyle.PARAMETER_VALUE_LIST);
-		vcard.addTelephoneNumber(telephone);
+		telephone.addParam(TelParamType.CELL)
+		.addParam(TelParamType.HOME)
+		.setParameterTypeStyle(ParameterTypeStyle.PARAMETER_VALUE_LIST);
+		vcard.addTel(telephone);
 		
-		TelephoneFeature telephone2 = new TelephoneType();
+		TelType telephone2 = new TelType();
 		telephone2.setTelephone("00-1-212-555-7777");
-		telephone2.addTelephoneParameterType(TelephoneParameterType.FAX);
-		telephone2.addTelephoneParameterType(TelephoneParameterType.WORK);
-		telephone2.setParameterTypeStyle(ParameterTypeStyle.PARAMETER_LIST);
-		vcard.addTelephoneNumber(telephone2);
+		telephone2.addParam(TelParamType.FAX)
+		.addParam(TelParamType.WORK)
+		.setParameterTypeStyle(ParameterTypeStyle.PARAMETER_LIST);
+		vcard.addTel(telephone2);
 		
-		EmailFeature email = new EmailType();
+		EmailType email = new EmailType();
 		email.setEmail("john.doe@ibm.com");
-		email.addEmailParameterType(EmailParameterType.IBMMAIL);
-		email.addEmailParameterType(EmailParameterType.INTERNET);
-		email.addEmailParameterType(EmailParameterType.PREF);
-		email.setCharset("UTF-8");
+		email.addParam(EmailParamType.IBMMAIL)
+		.addParam(EmailParamType.INTERNET)
+		.addParam(EmailParamType.PREF)
+		.setCharset("UTF-8");
 		vcard.addEmail(email);
 		vcard.addEmail(new EmailType("billy_bob@gmail.com"));
 		
-		NoteFeature note = new NoteType();
+		NoteType note = new NoteType();
 		note.setNote("THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"\nAND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\nIMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE\nARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE\nLIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR\nCONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF\nSUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS\nINTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN\nCONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)\nARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\nPOSSIBILITY OF SUCH DAMAGE.");
 		vcard.addNote(note);
 		
-		PhotoFeature photo1 = new PhotoType();
+		PhotoType photo1 = new PhotoType();
 		photo1.setCompression(false);
 		photo1.setEncodingType(EncodingType.BINARY);
 		photo1.setImageMediaType(ImageMediaType.PNG);
@@ -578,7 +538,7 @@ public class TestVCard {
 		photo1.setPhoto(tuxPicture1);
 		vcard.addPhoto(photo1);
 		
-		LogoFeature logo = new LogoType();
+		LogoType logo = new LogoType();
 		logo.setCompression(true);
 		logo.setEncodingType(EncodingType.BINARY);
 		logo.setImageMediaType(ImageMediaType.PNG);
@@ -586,14 +546,14 @@ public class TestVCard {
 		logo.setLogo(tuxPicture2);
 		vcard.addLogo(logo);
 		
-		SoundFeature sound = new SoundType();
+		SoundType sound = new SoundType();
 		sound.setCompression(false);
 		sound.setEncodingType(EncodingType.BINARY);
 		sound.setAudioMediaType(AudioMediaType.OGG);
 		sound.setSoundURI(new File("test/images/smallTux.png").toURI());
 		vcard.addSound(sound);
 		
-		KeyFeature key = new KeyType();
+		KeyType key = new KeyType();
 		key.setKeyTextType(KeyTextType.GPG);
 		key.setEncodingType(EncodingType.BINARY);
 		key.setCompression(false);
@@ -601,23 +561,23 @@ public class TestVCard {
 		key.setKey(keyBytes);
 		vcard.addKey(key);
 		
-		ExtendedFeature xGenerator = new ExtendedType("X-GENERATOR", "Cardme Generator");
+		ExtendedType xGenerator = new ExtendedType("X-GENERATOR", "Cardme Generator");
 		xGenerator.setCharset("UTF-8");
 		
 		vcard.addExtendedType(xGenerator);
 		vcard.addExtendedType(new ExtendedType("X-LONG-STRING", "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"));
 		
-		vcard.addIMPP(new IMPPType("im:alice@example.com"));
-		vcard.addIMPP(new IMPPType(new URI("im:alice2@example.com")));
+		vcard.addImpp(new ImppType("im:alice@example.com"));
+		vcard.addImpp(new ImppType(new URI("im:alice2@example.com")));
 		
-		IMPPFeature impp = new IMPPType();
-		impp.setURI(new URI("im:alice3@example.com"));
-		impp.addIMPPParameterType(IMPPParameterType.HOME);
-		impp.addIMPPParameterType(IMPPParameterType.PREF);
-		impp.addExtendedIMPPParameterType(new XIMPPParameterType("X-BLA", "BLE"));
-		vcard.addIMPP(impp);
+		ImppType impp = new ImppType();
+		impp.setUri(new URI("im:alice3@example.com"));
+		impp.addParam(ImppParamType.HOME)
+		.addParam(ImppParamType.PREF)
+		.addExtendedParam(new ExtendedParamType("X-BLA", "BLE", VCardTypeName.IMPP));
+		vcard.addImpp(impp);
 		
-		((VCardErrorHandling)vcard).setThrowExceptions(false);
+		((VCardErrorHandler)vcard).setThrowExceptions(false);
 		
 		return vcard;
 	}

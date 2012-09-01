@@ -1,7 +1,7 @@
 package net.sourceforge.cardme.vcard.features;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -32,7 +32,7 @@ package net.sourceforge.cardme.vcard.features;
  * 
  * @author George El-Haddad
  * <br/>
- * Feb 4, 2010
+ * Aug 11, 2012
  * 
  * <p><b>RFC 2426</b><br/>
  * <b>3.7.1 CLASS Type Definition</b>
@@ -45,38 +45,13 @@ package net.sourceforge.cardme.vcard.features;
  * </ul>
  * </p>
  */
-public interface ClassFeature extends TypeTools {
-	
-	/**
-	 * <p>Returns the security class.</p>
-	 *
-	 * @return {@link String}
-	 */
+public interface ClassFeature {
+
 	public String getSecurityClass();
 	
-	/**
-	 * <p>Sets the security class.</p>
-	 *
-	 * @param securityClass
-	 */
 	public void setSecurityClass(String securityClass);
 	
-	/**
-	 * <p>Returns true if a security class exists.</p>
-	 *
-	 * @return boolean
-	 */
 	public boolean hasSecurityClass();
 	
-	/**
-	 * <p>Clears the security class.</p>
-	 */
 	public void clearSecurityClass();
-	
-	/**
-	 * <p>Returns a full copy of this object.</p>
-	 *
-	 * @return {@link ClassFeature}
-	 */
-	public ClassFeature clone();
 }

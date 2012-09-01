@@ -1,7 +1,7 @@
 package net.sourceforge.cardme.vcard.features;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -32,7 +32,7 @@ package net.sourceforge.cardme.vcard.features;
  * 
  * @author George El-Haddad
  * <br/>
- * Mar 10, 2010
+ * Aug 7, 2012
  * 
  * <p><b>RFC 2426</b><br/>
  * <b>2.1.3 PROFILE Type Definition</b>
@@ -45,40 +45,13 @@ package net.sourceforge.cardme.vcard.features;
  * </ul>
  * </p>
  */
-public interface ProfileFeature extends TypeTools {
-	
-	/**
-	 * <p>Returns the profile.</p>
-	 *
-	 * @return {@link String}
-	 */
+public interface ProfileFeature {
+
 	public String getProfile();
 	
-	/**
-	 * <p>Sets the profile.</p>
-	 *
-	 * @param profile
-	 * @throws IllegalArgumentException
-	 */
-	public void setProfile(String profile) throws IllegalArgumentException;
+	public void setProfile(String profile);
 	
-	/**
-	 * <p>Returns true if there is a profile.</p>
-	 *
-	 * @return boolean
-	 */
 	public boolean hasProfile();
 	
-	/**
-	 * <p>Clears the profile.</p>
-	 *
-	 */
 	public void clearProfile();
-	
-	/**
-	 * <p>Returns a full copy of this object.</p>
-	 *
-	 * @return {@link ProfileFeature}
-	 */
-	public ProfileFeature clone();
 }

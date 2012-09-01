@@ -1,62 +1,60 @@
 package net.sourceforge.cardme;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
-
 import net.sourceforge.cardme.engine.VCardEngine;
 import net.sourceforge.cardme.io.CompatibilityMode;
 import net.sourceforge.cardme.util.ISOFormat;
 import net.sourceforge.cardme.util.StringUtil;
-import net.sourceforge.cardme.vcard.EncodingType;
-import net.sourceforge.cardme.vcard.LanguageType;
 import net.sourceforge.cardme.vcard.VCard;
 import net.sourceforge.cardme.vcard.VCardImpl;
-import net.sourceforge.cardme.vcard.VCardVersion;
+import net.sourceforge.cardme.vcard.arch.EncodingType;
+import net.sourceforge.cardme.vcard.arch.LanguageType;
+import net.sourceforge.cardme.vcard.arch.VCardVersion;
 import net.sourceforge.cardme.vcard.errors.VCardError;
-import net.sourceforge.cardme.vcard.features.AddressFeature;
-import net.sourceforge.cardme.vcard.features.BirthdayFeature;
-import net.sourceforge.cardme.vcard.features.CategoriesFeature;
-import net.sourceforge.cardme.vcard.features.ClassFeature;
-import net.sourceforge.cardme.vcard.features.DisplayableNameFeature;
-import net.sourceforge.cardme.vcard.features.EmailFeature;
-import net.sourceforge.cardme.vcard.features.ExtendedFeature;
-import net.sourceforge.cardme.vcard.features.FormattedNameFeature;
-import net.sourceforge.cardme.vcard.features.GeographicPositionFeature;
-import net.sourceforge.cardme.vcard.features.LabelFeature;
+import net.sourceforge.cardme.vcard.exceptions.VCardParseException;
 import net.sourceforge.cardme.vcard.features.MailerFeature;
-import net.sourceforge.cardme.vcard.features.NameFeature;
-import net.sourceforge.cardme.vcard.features.NicknameFeature;
 import net.sourceforge.cardme.vcard.features.NoteFeature;
-import net.sourceforge.cardme.vcard.features.OrganizationFeature;
-import net.sourceforge.cardme.vcard.features.PhotoFeature;
-import net.sourceforge.cardme.vcard.features.ProductIdFeature;
-import net.sourceforge.cardme.vcard.features.ProfileFeature;
-import net.sourceforge.cardme.vcard.features.RevisionFeature;
 import net.sourceforge.cardme.vcard.features.RoleFeature;
 import net.sourceforge.cardme.vcard.features.SortStringFeature;
 import net.sourceforge.cardme.vcard.features.SourceFeature;
-import net.sourceforge.cardme.vcard.features.TelephoneFeature;
-import net.sourceforge.cardme.vcard.features.TimeZoneFeature;
-import net.sourceforge.cardme.vcard.features.TitleFeature;
-import net.sourceforge.cardme.vcard.features.UIDFeature;
-import net.sourceforge.cardme.vcard.features.URLFeature;
+import net.sourceforge.cardme.vcard.types.AdrType;
+import net.sourceforge.cardme.vcard.types.BDayType;
+import net.sourceforge.cardme.vcard.types.CategoriesType;
+import net.sourceforge.cardme.vcard.types.ClassType;
+import net.sourceforge.cardme.vcard.types.EmailType;
+import net.sourceforge.cardme.vcard.types.ExtendedType;
+import net.sourceforge.cardme.vcard.types.FNType;
+import net.sourceforge.cardme.vcard.types.GeoType;
+import net.sourceforge.cardme.vcard.types.LabelType;
+import net.sourceforge.cardme.vcard.types.NType;
+import net.sourceforge.cardme.vcard.types.NameType;
+import net.sourceforge.cardme.vcard.types.NicknameType;
+import net.sourceforge.cardme.vcard.types.NoteType;
+import net.sourceforge.cardme.vcard.types.OrgType;
+import net.sourceforge.cardme.vcard.types.PhotoType;
+import net.sourceforge.cardme.vcard.types.ProdIdType;
+import net.sourceforge.cardme.vcard.types.ProfileType;
+import net.sourceforge.cardme.vcard.types.RevType;
+import net.sourceforge.cardme.vcard.types.RoleType;
+import net.sourceforge.cardme.vcard.types.TelType;
+import net.sourceforge.cardme.vcard.types.TitleType;
+import net.sourceforge.cardme.vcard.types.TzType;
+import net.sourceforge.cardme.vcard.types.UidType;
+import net.sourceforge.cardme.vcard.types.UrlType;
 import net.sourceforge.cardme.vcard.types.media.ImageMediaType;
-import net.sourceforge.cardme.vcard.types.parameters.AddressParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.EmailParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.ExtendedParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.LabelParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.TelephoneParameterType;
-import net.sourceforge.cardme.vcard.types.parameters.URLParameterType;
-
+import net.sourceforge.cardme.vcard.types.params.AdrParamType;
+import net.sourceforge.cardme.vcard.types.params.EmailParamType;
+import net.sourceforge.cardme.vcard.types.params.ExtendedParamType;
+import net.sourceforge.cardme.vcard.types.params.LabelParamType;
+import net.sourceforge.cardme.vcard.types.params.TelParamType;
+import net.sourceforge.cardme.vcard.types.params.UrlParamType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -110,7 +108,7 @@ public class VCardsTest {
 	}
 	
 	@Test
-	public void testEvolutionVCard() throws IOException {
+	public void testEvolutionVCard() throws IOException, VCardParseException {
 		File evoCard = new File(System.getProperty("user.dir")+File.separator+"test"+File.separator+"vcards"+File.separator+"John_Doe_EVOLUTION.vcf");
 		
 		VCardEngine engine = new VCardEngine();
@@ -122,158 +120,163 @@ public class VCardsTest {
 		
 		//URL
 		{
-			Iterator<URLFeature> it = vcard.getURLs();
-			URLFeature f = it.next();
-			assertEquals("http://www.ibm.com", f.getURL().toString());
+			List<UrlType> it = vcard.getUrls();
+			assertEquals(1, it.size());
 			
-			List<ExtendedParameterType> xlist = f.getExtendedParametersList();
+			UrlType f = it.get(0);
+			assertEquals("http://www.ibm.com", f.getRawUrl().toString());
+			
+			List<ExtendedParamType> xlist = f.getExtendedParams();
 			assertEquals(1, xlist.size());
-			assertEquals("X-COUCHDB-UUID", xlist.get(0).getXtendedTypeName());
-			assertEquals("0abc9b8d-0845-47d0-9a91-3db5bb74620d".toUpperCase(), xlist.get(0).getXtendedTypeValue());
-			
-			assertFalse(it.hasNext());
+			assertEquals("X-COUCHDB-UUID", xlist.get(0).getTypeName());
+			assertEquals("0abc9b8d-0845-47d0-9a91-3db5bb74620d".toUpperCase(), xlist.get(0).getTypeValue());
 		}
 		
 		//TEL
 		{
-			Iterator<TelephoneFeature> it = vcard.getTelephoneNumbers();
-			TelephoneFeature f = it.next();
+			List<TelType> it = vcard.getTels();
+			assertEquals(2, it.size());
+			
+			TelType f = it.get(0);
 			assertEquals("905-666-1234", f.getTelephone());
 			
-			List<TelephoneParameterType> types = f.getTelephoneParameterTypesList();
+			List<TelParamType> types = f.getParams();
 			assertEquals(1, types.size());
-			assertTrue(types.contains(TelephoneParameterType.CELL));
+			assertTrue(types.contains(TelParamType.CELL));
 			
-			List<ExtendedParameterType> xlist = f.getExtendedParametersList();
+			List<ExtendedParamType> xlist = f.getExtendedParams();
 			assertEquals(1, xlist.size());
-			assertEquals("X-COUCHDB-UUID", xlist.get(0).getXtendedTypeName());
-			assertEquals("c2fa1caa-2926-4087-8971-609cfc7354ce".toUpperCase(), xlist.get(0).getXtendedTypeValue());
+			assertEquals("X-COUCHDB-UUID", xlist.get(0).getTypeName());
+			assertEquals("c2fa1caa-2926-4087-8971-609cfc7354ce".toUpperCase(), xlist.get(0).getTypeValue());
 			
-			f = it.next();
+			f = it.get(1);
 			assertEquals("905-555-1234", f.getTelephone());
 			
-			types = f.getTelephoneParameterTypesList();
+			types = f.getParams();
 			assertEquals(2, types.size());
-			assertTrue(types.contains(TelephoneParameterType.WORK));
-			assertTrue(types.contains(TelephoneParameterType.VOICE));
+			assertTrue(types.contains(TelParamType.WORK));
+			assertTrue(types.contains(TelParamType.VOICE));
 			
-			xlist = f.getExtendedParametersList();
+			xlist = f.getExtendedParams();
 			assertEquals(1, xlist.size());
-			assertEquals("X-COUCHDB-UUID", xlist.get(0).getXtendedTypeName());
-			assertEquals("fbfb2722-4fd8-4dbf-9abd-eeb24072fd8e".toUpperCase(), xlist.get(0).getXtendedTypeValue());
-			
-			assertFalse(it.hasNext());
+			assertEquals("X-COUCHDB-UUID", xlist.get(0).getTypeName());
+			assertEquals("fbfb2722-4fd8-4dbf-9abd-eeb24072fd8e".toUpperCase(), xlist.get(0).getTypeValue());
 		}
 		
 		//UID
 		{
-			UIDFeature f = vcard.getUID();
-			assertEquals("477343c8e6bf375a9bac1f96a5000837", f.getUID());
+			UidType f = vcard.getUid();
+			assertEquals("477343c8e6bf375a9bac1f96a5000837", f.getUid());
 		}
 		
 		//N
 		{
-			NameFeature f = vcard.getName();
+			NType f = vcard.getN();
 			assertEquals("Doe", f.getFamilyName());
 			assertEquals("John", f.getGivenName());
-			Iterator<String> it = f.getAdditionalNames();
-			assertEquals("Richter, James", it.next());
-			assertFalse(it.hasNext());
+			
+			List<String> it = f.getAdditionalNames();
+			assertEquals(1, it.size());
+			assertEquals("Richter, James", it.get(0));
+			
 			it = f.getHonorificPrefixes();
-			assertEquals("Mr.", it.next());
-			assertFalse(it.hasNext());
+			assertEquals(1, it.size());
+			assertEquals("Mr.", it.get(0));
+			
 			it = f.getHonorificSuffixes();
-			assertEquals("Sr.", it.next());
-			assertFalse(it.hasNext());
+			assertEquals(1, it.size());
+			assertEquals("Sr.", it.get(0));
 		}
 		
 		//FN
 		{
-			FormattedNameFeature f = vcard.getFormattedName();
+			FNType f = vcard.getFN();
 			assertEquals("Mr. John Richter, James Doe Sr.", f.getFormattedName());
 		}
 		
 		//NICKNAME
 		{
-			NicknameFeature f = vcard.getNicknames();
-			Iterator<String> it = f.getNicknames();
-			assertEquals("Johny", it.next());
-			assertFalse(it.hasNext());
+			NicknameType f = vcard.getNicknames();
+			List<String> it = f.getNicknames();
+			assertEquals(1, it.size());
+			assertEquals("Johny", it.get(0));
 		}
 		
 		//ORG
 		{
-			OrganizationFeature f = vcard.getOrganizations();
-			Iterator<String> it = f.getOrganizations();
-			assertEquals("IBM", it.next());
-			assertEquals("Accounting", it.next());
-			assertEquals("Dungeon", it.next());
-			assertFalse(it.hasNext());
+			OrgType f = vcard.getOrg();
+			assertEquals("IBM", f.getOrgName());
+			
+			List<String> it = f.getOrgUnits();
+			assertEquals(2, it.size());
+			assertEquals("Accounting", it.get(0));
+			assertEquals("Dungeon", it.get(1));
 		}
 		
 		//TITLE
 		{
-			TitleFeature f = vcard.getTitle();
+			TitleType f = vcard.getTitle();
 			assertEquals("Money Counter", f.getTitle());
 		}
 		
 		//CATEGORIES
 		{
-			CategoriesFeature f = vcard.getCategories();
-			Iterator<String> it = f.getCategories();
-			assertEquals("VIP", it.next());
-			assertFalse(it.hasNext());
+			CategoriesType f = vcard.getCategories();
+			List<String> it = f.getCategories();
+			assertEquals(1, it.size());
+			assertEquals("VIP", it.get(0));
 		}
 		
 		//NOTE
 		{
-			Iterator<NoteFeature> it = vcard.getNotes();
-			NoteFeature f = it.next();
+			List<NoteType> it = vcard.getNotes();
+			assertEquals(1, it.size());
+			NoteFeature f = it.get(0);
 			assertEquals("THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.", f.getNote());
-			assertFalse(it.hasNext());
 		}
 		
 		//EMAIL
 		{
-			Iterator<EmailFeature> it = vcard.getEmails();
-			EmailFeature f = it.next();
+			List<EmailType> it = vcard.getEmails();
+			assertEquals(1, it.size());
+			
+			EmailType f = it.get(0);
 			assertEquals("john.doe@ibm.com", f.getEmail());
 			
-			List<EmailParameterType> types = f.getEmailParameterTypesList();
+			List<EmailParamType> types = f.getParams();
 			assertEquals(1, types.size());
-			assertTrue(types.contains(EmailParameterType.WORK));
+			assertTrue(types.contains(EmailParamType.WORK));
 			
-			List<ExtendedParameterType> xlist = f.getExtendedParametersList();
+			List<ExtendedParamType> xlist = f.getExtendedParams();
 			assertEquals(1, xlist.size());
-			assertEquals("X-COUCHDB-UUID", xlist.get(0).getXtendedTypeName());
-			assertEquals("83a75a5d-2777-45aa-bab5-76a4bd972490".toUpperCase(), xlist.get(0).getXtendedTypeValue());
-			
-			assertFalse(it.hasNext());
+			assertEquals("X-COUCHDB-UUID", xlist.get(0).getTypeName());
+			assertEquals("83a75a5d-2777-45aa-bab5-76a4bd972490".toUpperCase(), xlist.get(0).getTypeValue());
 		}
 		
 		//ADR
 		{
-			Iterator<AddressFeature> it = vcard.getAddresses();
-			AddressFeature f = it.next();
+			List<AdrType> it = vcard.getAdrs();
+			assertEquals(1, it.size());
+			
+			AdrType f = it.get(0);
 			assertEquals("ASB-123", f.getPostOfficeBox());
 			assertEquals("", f.getExtendedAddress());
 			assertEquals("15 Crescent moon drive", f.getStreetAddress());
 			assertEquals("Albaney", f.getLocality());
 			assertEquals("New York", f.getRegion());
 			assertEquals("12345", f.getPostalCode());
+			
 			//FIXME the space between "United" and "States" is lost because it was included with the folding character and ignored (see .vcf file)
-			assertEquals("UnitedStates of America", f.getCountryName());
+			assertEquals("United States of America", f.getCountryName());
 			
-			List<AddressParameterType> types = f.getAddressParameterTypesList();
+			List<AdrParamType> types = f.getParams();
 			assertEquals(1, types.size());
-			assertTrue(types.contains(AddressParameterType.HOME));
-			
-			assertFalse(it.hasNext());
+			assertTrue(types.contains(AdrParamType.HOME));
 		}
 		
 		//BDAY
 		{
-			BirthdayFeature f = vcard.getBirthDay();
+			BDayType f = vcard.getBDay();
 			assertEquals(1980, f.getBirthday().get(Calendar.YEAR));
 			assertEquals(Calendar.MARCH, f.getBirthday().get(Calendar.MONTH));
 			assertEquals(22, f.getBirthday().get(Calendar.DAY_OF_MONTH));
@@ -281,7 +284,7 @@ public class VCardsTest {
 		
 		//REV
 		{
-			RevisionFeature f = vcard.getRevision();
+			RevType f = vcard.getRev();
 			Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 			c.clear();
 			c.set(Calendar.YEAR, 2012);
@@ -296,42 +299,47 @@ public class VCardsTest {
 		
 		//custom types
 		{
-			Iterator<ExtendedFeature> it = vcard.getExtendedTypes();
-			ExtendedFeature f = it.next();
-			assertEquals("X-COUCHDB-APPLICATION-ANNOTATIONS", f.getExtensionName());
-			assertEquals("{\"Evolution\":{\"revision\":\"2012-03-05T13:32:54Z\"}}", f.getExtensionData());
+			List<ExtendedType> it = vcard.getExtendedTypes();
+			assertEquals(7, it.size());
 			
-			f = it.next();
-			assertEquals("X-AIM", f.getExtensionName());
-			assertEquals("johnny5@aol.com", f.getExtensionData());
-			List<ExtendedParameterType> xlist = f.getExtendedParametersList();
-			assertEquals(2, xlist.size());
-			assertEquals("TYPE", xlist.get(0).getXtendedTypeName());
-			assertEquals("HOME".toUpperCase(), xlist.get(0).getXtendedTypeValue());
-			assertEquals("X-COUCHDB-UUID", xlist.get(1).getXtendedTypeName());
-			assertEquals("cb9e11fc-bb97-4222-9cd8-99820c1de454".toUpperCase(), xlist.get(1).getXtendedTypeValue());
+			ExtendedType f = it.get(0);
+			assertEquals("X-COUCHDB-APPLICATION-ANNOTATIONS", f.getExtendedName());
+			assertEquals("{\"Evolution\":{\"revision\":\"2012-03-05T13:32:54Z\"}}", f.getExtendedValue());
 			
-			f = it.next();
-			assertEquals("X-EVOLUTION-FILE-AS", f.getExtensionName());
-			assertEquals("Doe, John", f.getExtensionData());
+			f = it.get(1);
+			assertEquals("X-AIM", f.getExtendedName());
+			assertEquals("johnny5@aol.com", f.getExtendedValue());
 			
-			f = it.next();
-			assertEquals("X-EVOLUTION-SPOUSE", f.getExtensionName());
-			assertEquals("Maria", f.getExtensionData());
+			List<ExtendedParamType> xParamTypes = f.getExtendedParams();
+			assertEquals(2, xParamTypes.size());
+			
+			ExtendedParamType xParamType = xParamTypes.get(0);
+			assertEquals("TYPE", xParamType.getTypeName());
+			assertEquals("HOME", xParamType.getTypeValue());
+			
+			xParamType = xParamTypes.get(1);
+			assertEquals("X-COUCHDB-UUID",xParamType.getTypeName());
+			assertEquals("cb9e11fc-bb97-4222-9cd8-99820c1de454".toUpperCase(), xParamType.getTypeValue());
+			
+			f = it.get(2);
+			assertEquals("X-EVOLUTION-FILE-AS", f.getExtendedName());
+			assertEquals("Doe, John", f.getExtendedValue());
+			
+			f = it.get(3);
+			assertEquals("X-EVOLUTION-SPOUSE", f.getExtendedName());
+			assertEquals("Maria", f.getExtendedValue());
 
-			f = it.next();
-			assertEquals("X-EVOLUTION-MANAGER", f.getExtensionName());
-			assertEquals("Big Blue", f.getExtensionData());
+			f = it.get(4);
+			assertEquals("X-EVOLUTION-MANAGER", f.getExtendedName());
+			assertEquals("Big Blue", f.getExtendedValue());
 			
-			f = it.next();
-			assertEquals("X-EVOLUTION-ASSISTANT", f.getExtensionName());
-			assertEquals("Little Red", f.getExtensionData());
+			f = it.get(5);
+			assertEquals("X-EVOLUTION-ASSISTANT", f.getExtendedName());
+			assertEquals("Little Red", f.getExtendedValue());
 			
-			f = it.next();
-			assertEquals("X-EVOLUTION-ANNIVERSARY", f.getExtensionName());
-			assertEquals("1980-03-22", f.getExtensionData());
-			
-			assertFalse(it.hasNext());
+			f = it.get(6);
+			assertEquals("X-EVOLUTION-ANNIVERSARY", f.getExtendedName());
+			assertEquals("1980-03-22", f.getExtendedValue());
 		}
 		
 		VCardImpl vcard2 = (VCardImpl)vcard;
@@ -347,7 +355,7 @@ public class VCardsTest {
 	}
 	
 	@Test
-	public void testGmailVCard() throws IOException {
+	public void testGmailVCard() throws IOException, VCardParseException {
 		File gmailCard = new File(System.getProperty("user.dir")+File.separator+"test"+File.separator+"vcards"+File.separator+"John_Doe_GMAIL.vcf");
 		
 		VCardEngine engine = new VCardEngine();
@@ -359,97 +367,97 @@ public class VCardsTest {
 		
 		//FN
 		{
-			FormattedNameFeature f = vcard.getFormattedName();
+			FNType f = vcard.getFN();
 			assertEquals("Mr. John Richter, James Doe Sr.", f.getFormattedName());
 		}
 		
 		//N
 		{
-			NameFeature f = vcard.getName();
+			NType f = vcard.getN();
 			assertEquals("Doe", f.getFamilyName());
 			assertEquals("John", f.getGivenName());
-			Iterator<String> it = f.getAdditionalNames();
-			assertEquals("Richter, James", it.next());
-			assertFalse(it.hasNext());
+			
+			List<String> it = f.getAdditionalNames();
+			assertEquals(1, it.size());
+			assertEquals("Richter, James", it.get(0));
+			
 			it = f.getHonorificPrefixes();
-			assertEquals("Mr.", it.next());
-			assertFalse(it.hasNext());
+			assertEquals(1, it.size());
+			assertEquals("Mr.", it.get(0));
+			
 			it = f.getHonorificSuffixes();
-			assertEquals("Sr.", it.next());
-			assertFalse(it.hasNext());
+			assertEquals(1, it.size());
+			assertEquals("Sr.", it.get(0));
 		}
 		
 		//EMAIL
 		{
-			Iterator<EmailFeature> it = vcard.getEmails();
-			EmailFeature f = it.next();
+			List<EmailType> it = vcard.getEmails();
+			assertEquals(1, it.size());
+			
+			EmailType f = it.get(0);
 			assertEquals("john.doe@ibm.com", f.getEmail());
 			
-			List<EmailParameterType> types = f.getEmailParameterTypesList();
+			List<EmailParamType> types = f.getParams();
 			assertEquals(2, types.size());
-			assertTrue(types.contains(EmailParameterType.INTERNET));
-			assertTrue(types.contains(EmailParameterType.HOME));
-			
-			assertFalse(it.hasNext());
+			assertTrue(types.contains(EmailParamType.INTERNET));
+			assertTrue(types.contains(EmailParamType.HOME));
 		}
 		
 		//TEL
 		{
-			Iterator<TelephoneFeature> it = vcard.getTelephoneNumbers();
+			List<TelType> it = vcard.getTels();
+			assertEquals(2, it.size());
 			
-			TelephoneFeature f = it.next();
+			TelType f = it.get(0);
 			assertEquals("905-555-1234", f.getTelephone());
 			
-			List<TelephoneParameterType> types = f.getTelephoneParameterTypesList();
+			List<TelParamType> types = f.getParams();
 			assertEquals(1, types.size());
-			assertTrue(types.contains(TelephoneParameterType.CELL));
+			assertTrue(types.contains(TelParamType.CELL));
 
-			f = it.next();
+			f = it.get(1);
 			assertEquals("905-666-1234", f.getTelephone());
 			
-			types = f.getTelephoneParameterTypesList();
+			types = f.getParams();
 			assertEquals(1, types.size());
-			assertTrue(types.contains(TelephoneParameterType.HOME));
-
-			assertFalse(it.hasNext());
+			assertTrue(types.contains(TelParamType.HOME));
 		}
 		
 		//ADR
 		{
-			Iterator<AddressFeature> it = vcard.getAddresses();
-			AddressFeature f = it.next();
+			List<AdrType> it = vcard.getAdrs();
+			assertEquals(1, it.size());
+			
+			AdrType f = it.get(0);
 			assertEquals("", f.getPostOfficeBox());
-			assertEquals("Crescent moon drive\n555-asd\nNice Area, Albaney, New York12345\nUnited States of America", f.getExtendedAddress());
+			assertEquals("Crescent moon drive\n555-asd\nNice Area, Albaney, New York 12345\nUnited States of America", f.getExtendedAddress());
 			assertEquals("", f.getStreetAddress());
 			assertEquals("", f.getLocality());
 			assertEquals("", f.getRegion());
 			assertEquals("", f.getPostalCode());
 			assertEquals("", f.getCountryName());
 			
-			List<AddressParameterType> types = f.getAddressParameterTypesList();
+			List<AdrParamType> types = f.getParams();
 			assertEquals(1, types.size());
-			assertTrue(types.contains(AddressParameterType.HOME));
-			
-			assertFalse(it.hasNext());
+			assertTrue(types.contains(AdrParamType.HOME));
 		}
 		
 		//ORG
 		{
-			OrganizationFeature f = vcard.getOrganizations();
-			Iterator<String> it = f.getOrganizations();
-			assertEquals("IBM", it.next());
-			assertFalse(it.hasNext());
+			OrgType f = vcard.getOrg();
+			assertEquals("IBM", f.getOrgName());
 		}
 		
 		//TITLE
 		{
-			TitleFeature f = vcard.getTitle();
+			TitleType f = vcard.getTitle();
 			assertEquals("Money Counter", f.getTitle());
 		}
 		
 		//BDAY
 		{
-			BirthdayFeature f = vcard.getBirthDay();
+			BDayType f = vcard.getBDay();
 			assertEquals(1980, f.getBirthday().get(Calendar.YEAR));
 			assertEquals(Calendar.MARCH, f.getBirthday().get(Calendar.MONTH));
 			assertEquals(22, f.getBirthday().get(Calendar.DAY_OF_MONTH));
@@ -457,58 +465,58 @@ public class VCardsTest {
 		
 		//URL
 		{
-			Iterator<URLFeature> it = vcard.getURLs();
-			URLFeature f = it.next();
-			assertEquals("http://www.ibm.com", f.getURL().toString());
+			List<UrlType> it = vcard.getUrls();
+			assertEquals(1, it.size());
 			
-			List<URLParameterType> types = f.getURLParameterTypesList();
+			UrlType f = it.get(0);
+			assertEquals("http://www.ibm.com", f.getUrl().toString());
+			assertEquals("http://www.ibm.com", f.getRawUrl());
+			
+			List<UrlParamType> types = f.getParams();
 			assertEquals(1, types.size());
-			assertTrue(types.contains(URLParameterType.WORK));
-
-			assertFalse(it.hasNext());
+			assertTrue(types.contains(UrlParamType.WORK));
 		}
 
 		//NOTE
 		{
-			Iterator<NoteFeature> it = vcard.getNotes();
-			NoteFeature f = it.next();
+			List<NoteType> it = vcard.getNotes();
+			assertEquals(1, it.size());
+			NoteType f = it.get(0);
 			assertEquals("THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \\\"AS IS\\\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\nFavotire Color: Blue", f.getNote());
-			assertFalse(it.hasNext());
 		}
 		
 		//custom types
 		{
-			Iterator<ExtendedFeature> it = vcard.getExtendedTypes();
+			List<ExtendedType> it = vcard.getExtendedTypes();
+			assertEquals(6, it.size());
 			
-			ExtendedFeature f = it.next();
-			assertEquals("X-PHONETIC-FIRST-NAME", f.getExtensionName());
-			assertEquals("Jon", f.getExtensionData());
+			ExtendedType f = it.get(0);
+			assertEquals("X-PHONETIC-FIRST-NAME", f.getExtendedName());
+			assertEquals("Jon", f.getExtendedValue());
 			
-			f = it.next();
-			assertEquals("X-PHONETIC-LAST-NAME", f.getExtensionName());
-			assertEquals("Dow", f.getExtensionData());
+			f = it.get(1);
+			assertEquals("X-PHONETIC-LAST-NAME", f.getExtendedName());
+			assertEquals("Dow", f.getExtendedValue());
 
-			f = it.next();
+			f = it.get(2);
 			assertEquals("item1", f.getGroup());
-			assertEquals("X-ABDATE", f.getExtensionName());
-			assertEquals("1975-03-01", f.getExtensionData());
+			assertEquals("X-ABDATE", f.getExtendedName());
+			assertEquals("1975-03-01", f.getExtendedValue());
 			
-			f = it.next();
+			f = it.get(3);
 			assertEquals("item1", f.getGroup());
-			assertEquals("X-ABLABEL", f.getExtensionName());
-			assertEquals("_$!<Anniversary>!$_", f.getExtensionData());
+			assertEquals("X-ABLABEL", f.getExtendedName());
+			assertEquals("_$!<Anniversary>!$_", f.getExtendedValue());
 
-			f = it.next();
+			f = it.get(4);
 			assertEquals("item2", f.getGroup());
-			assertEquals("X-ABRELATEDNAMES", f.getExtensionName());
-			assertEquals("Jenny", f.getExtensionData());
+			assertEquals("X-ABRELATEDNAMES", f.getExtendedName());
+			assertEquals("Jenny", f.getExtendedValue());
 			
-			f = it.next();
+			f = it.get(5);
 			assertEquals("item2", f.getGroup());
-			assertEquals("X-ABLABEL", f.getExtensionName());
-			assertEquals("_$!<Spouse>!$_", f.getExtensionData());
-			
-			assertFalse(it.hasNext());
+			assertEquals("X-ABLABEL", f.getExtendedName());
+			assertEquals("_$!<Spouse>!$_", f.getExtendedValue());
 		}
 		
 		VCardImpl vcard2 = (VCardImpl)vcard;
@@ -524,7 +532,7 @@ public class VCardsTest {
 	}
 	
 	@Test
-	public void testIPhoneVCard() throws IOException {
+	public void testIPhoneVCard() throws IOException, VCardParseException {
 		File iphoneCard = new File(System.getProperty("user.dir")+File.separator+"test"+File.separator+"vcards"+File.separator+"John_Doe_IPHONE.vcf");
 		
 		VCardEngine engine = new VCardEngine();
@@ -536,130 +544,134 @@ public class VCardsTest {
 		
 		//PRODID
 		{
-			ProductIdFeature f = vcard.getProductId();
-			assertEquals("-//Apple Inc.//iOS 5.0.1//EN", f.getProductId());
+			ProdIdType f = vcard.getProdId();
+			assertEquals("-//Apple Inc.//iOS 5.0.1//EN", f.getProdId());
 		}
 		
 		//N
 		{
-			NameFeature f = vcard.getName();
+			NType f = vcard.getN();
 			assertEquals("Doe", f.getFamilyName());
 			assertEquals("John", f.getGivenName());
-			Iterator<String> it = f.getAdditionalNames();
-			assertEquals("Richter", it.next());
-			assertEquals("James", it.next());
-			assertFalse(it.hasNext());
+			
+			List<String> it = f.getAdditionalNames();
+			assertEquals(2, it.size());
+			assertEquals("Richter", it.get(0));
+			assertEquals("James", it.get(1));
+			
 			it = f.getHonorificPrefixes();
-			assertEquals("Mr.", it.next());
-			assertFalse(it.hasNext());
+			assertEquals(1, it.size());
+			assertEquals("Mr.", it.get(0));
+			
 			it = f.getHonorificSuffixes();
-			assertEquals("Sr.", it.next());
-			assertFalse(it.hasNext());
+			assertEquals(1, it.size());
+			assertEquals("Sr.", it.get(0));
 		}
 		
 		//FN
 		{
-			FormattedNameFeature f = vcard.getFormattedName();
+			FNType f = vcard.getFN();
 			assertEquals("Mr. John Richter James Doe Sr.", f.getFormattedName());
 		}
 		
 		//NICKNAME
 		{
-			NicknameFeature f = vcard.getNicknames();
-			Iterator<String> it = f.getNicknames();
-			assertEquals("Johny", it.next());
-			assertFalse(it.hasNext());
+			NicknameType f = vcard.getNicknames();
+			List<String> it = f.getNicknames();
+			assertEquals("Johny", it.get(0));
 		}
 		
 		//ORG
 		{
-			OrganizationFeature f = vcard.getOrganizations();
-			Iterator<String> it = f.getOrganizations();
-			assertEquals("IBM", it.next());
-			assertEquals("Accounting", it.next());
-			assertFalse(it.hasNext());
+			OrgType f = vcard.getOrg();
+			assertEquals("IBM", f.getOrgName());
+			
+			List<String> it = f.getOrgUnits();
+			assertEquals(1, it.size());
+			assertEquals("Accounting", it.get(0));
 		}
 		
 		//TITLE
 		{
-			TitleFeature f = vcard.getTitle();
+			TitleType f = vcard.getTitle();
 			assertEquals("Money Counter", f.getTitle());
 		}
 		
 		//EMAIL
 		{
-			Iterator<EmailFeature> it = vcard.getEmails();
-			EmailFeature f = it.next();
+			List<EmailType> it = vcard.getEmails();
+			assertEquals(1, it.size());
+			
+			EmailType f = it.get(0);
 			assertEquals("item1", f.getGroup());
 			assertEquals("john.doe@ibm.com", f.getEmail());
 			
-			List<EmailParameterType> types = f.getEmailParameterTypesList();
+			List<EmailParamType> types = f.getParams();
 			assertEquals(2, types.size());
-			assertTrue(types.contains(EmailParameterType.INTERNET));
-			assertTrue(types.contains(EmailParameterType.PREF));
-
-			assertFalse(it.hasNext());
+			assertTrue(types.contains(EmailParamType.INTERNET));
+			assertTrue(types.contains(EmailParamType.PREF));
 		}
 		
 		//TEL
 		{
-			Iterator<TelephoneFeature> it = vcard.getTelephoneNumbers();
-			TelephoneFeature f = it.next();
+			List<TelType> it = vcard.getTels();
+			assertEquals(7, it.size());
+			
+			TelType f = it.get(0);
 			assertEquals("905-555-1234", f.getTelephone());
-			List<TelephoneParameterType> types = f.getTelephoneParameterTypesList();
-			assertEquals(3, types.size());
-			assertTrue(types.contains(TelephoneParameterType.CELL));
-			assertTrue(types.contains(TelephoneParameterType.VOICE));
-			assertTrue(types.contains(TelephoneParameterType.PREF));
+			List<TelParamType> paramsTypes = f.getParams();
+			assertEquals(3, paramsTypes.size());
+			assertTrue(paramsTypes.contains(TelParamType.CELL));
+			assertTrue(paramsTypes.contains(TelParamType.VOICE));
+			assertTrue(paramsTypes.contains(TelParamType.PREF));
 
-			f = it.next();
+			f = it.get(1);
 			assertEquals("905-666-1234", f.getTelephone());
-			types = f.getTelephoneParameterTypesList();
-			assertEquals(2, types.size());
-			assertTrue(types.contains(TelephoneParameterType.HOME));
-			assertTrue(types.contains(TelephoneParameterType.VOICE));
+			paramsTypes = f.getParams();
+			assertEquals(2, paramsTypes.size());
+			assertTrue(paramsTypes.contains(TelParamType.HOME));
+			assertTrue(paramsTypes.contains(TelParamType.VOICE));
 			
-			f = it.next();
+			f = it.get(2);
 			assertEquals("905-777-1234", f.getTelephone());
-			types = f.getTelephoneParameterTypesList();
-			assertEquals(2, types.size());
-			assertTrue(types.contains(TelephoneParameterType.WORK));
-			assertTrue(types.contains(TelephoneParameterType.VOICE));
+			paramsTypes = f.getParams();
+			assertEquals(2, paramsTypes.size());
+			assertTrue(paramsTypes.contains(TelParamType.WORK));
+			assertTrue(paramsTypes.contains(TelParamType.VOICE));
 			
-			f = it.next();
+			f = it.get(3);
 			assertEquals("905-888-1234", f.getTelephone());
-			types = f.getTelephoneParameterTypesList();
-			assertEquals(2, types.size());
-			assertTrue(types.contains(TelephoneParameterType.HOME));
-			assertTrue(types.contains(TelephoneParameterType.FAX));
+			paramsTypes = f.getParams();
+			assertEquals(2, paramsTypes.size());
+			assertTrue(paramsTypes.contains(TelParamType.HOME));
+			assertTrue(paramsTypes.contains(TelParamType.FAX));
 				
-			f = it.next();
+			f = it.get(4);
 			assertEquals("905-999-1234", f.getTelephone());
-			types = f.getTelephoneParameterTypesList();
-			assertEquals(2, types.size());
-			assertTrue(types.contains(TelephoneParameterType.WORK));
-			assertTrue(types.contains(TelephoneParameterType.FAX));
+			paramsTypes = f.getParams();
+			assertEquals(2, paramsTypes.size());
+			assertTrue(paramsTypes.contains(TelParamType.WORK));
+			assertTrue(paramsTypes.contains(TelParamType.FAX));
 			
-			f = it.next();
+			f = it.get(5);
 			assertEquals("905-111-1234", f.getTelephone());
-			types = f.getTelephoneParameterTypesList();
-			assertEquals(1, types.size());
-			assertTrue(types.contains(TelephoneParameterType.PAGER));
+			paramsTypes = f.getParams();
+			assertEquals(1, paramsTypes.size());
+			assertTrue(paramsTypes.contains(TelParamType.PAGER));
 			
-			f = it.next();
+			f = it.get(6);
 			assertEquals("905-222-1234", f.getTelephone());
 			assertEquals("item2", f.getGroup());
-			types = f.getTelephoneParameterTypesList();
-			assertEquals(0, types.size());
-			
-			assertFalse(it.hasNext());
+			paramsTypes = f.getParams();
+			assertEquals(0, paramsTypes.size());
 		}
 		
 		//ADR
 		{
-			Iterator<AddressFeature> it = vcard.getAddresses();
+			List<AdrType> it = vcard.getAdrs();
+			assertEquals(2, it.size());
 			
-			AddressFeature f = it.next();
+			AdrType f = it.get(0);
 			assertEquals("item3", f.getGroup());
 			assertEquals("", f.getPostOfficeBox());
 			assertEquals("", f.getExtendedAddress());
@@ -669,12 +681,12 @@ public class VCardsTest {
 			assertEquals("12345", f.getPostalCode());
 			assertEquals("United States of America", f.getCountryName());
 			
-			List<AddressParameterType> types = f.getAddressParameterTypesList();
-			assertEquals(2, types.size());
-			assertTrue(types.contains(AddressParameterType.HOME));
-			assertTrue(types.contains(AddressParameterType.PREF));
+			List<AdrParamType> paramTypes = f.getParams();
+			assertEquals(2, paramTypes.size());
+			assertTrue(paramTypes.contains(AdrParamType.HOME));
+			assertTrue(paramTypes.contains(AdrParamType.PREF));
 			
-			f = it.next();
+			f = it.get(1);
 			assertEquals("item4", f.getGroup());
 			assertEquals("", f.getPostOfficeBox());
 			assertEquals("", f.getExtendedAddress());
@@ -684,30 +696,28 @@ public class VCardsTest {
 			assertEquals("12345", f.getPostalCode());
 			assertEquals("USA", f.getCountryName());
 			
-			types = f.getAddressParameterTypesList();
-			assertEquals(1, types.size());
-			assertTrue(types.contains(AddressParameterType.WORK));
-			
-			assertFalse(it.hasNext());
+			paramTypes = f.getParams();
+			assertEquals(1, paramTypes.size());
+			assertTrue(paramTypes.contains(AdrParamType.WORK));
 		}
 		
 		//URL
 		{
-			Iterator<URLFeature> it = vcard.getURLs();
-			URLFeature f = it.next();
+			List<UrlType> it = vcard.getUrls();
+			assertEquals(1, it.size());
+			
+			UrlType f = it.get(0);
 			assertEquals("item5", f.getGroup());
-			assertEquals("http://www.ibm.com", f.getURL().toString());
+			assertEquals("http://www.ibm.com", f.getRawUrl());
 			
-			List<URLParameterType> types = f.getURLParameterTypesList();
+			List<UrlParamType> types = f.getParams();
 			assertEquals(1, types.size());
-			assertTrue(types.contains(URLParameterType.PREF));
-			
-			assertFalse(it.hasNext());
+			assertTrue(types.contains(UrlParamType.PREF));
 		}
 		
 		//BDAY
 		{
-			BirthdayFeature f = vcard.getBirthDay();
+			BDayType f = vcard.getBDay();
 			assertEquals(2012, f.getBirthday().get(Calendar.YEAR));
 			assertEquals(Calendar.JUNE, f.getBirthday().get(Calendar.MONTH));
 			assertEquals(6, f.getBirthday().get(Calendar.DAY_OF_MONTH));
@@ -716,9 +726,10 @@ public class VCardsTest {
 		
 		//PHOTO
 		{
-			Iterator<PhotoFeature> it = vcard.getPhotos();
+			List<PhotoType> it = vcard.getPhotos();
+			assertEquals(1, it.size());
 			
-			PhotoFeature f = it.next();
+			PhotoType f = it.get(0);
 			assertEquals(EncodingType.BINARY, f.getEncodingType());
 			assertEquals(ImageMediaType.JPEG, f.getImageMediaType());
 			assertEquals(32531, f.getPhoto().length);
@@ -726,29 +737,28 @@ public class VCardsTest {
 		
 		//custom types
 		{
-			Iterator<ExtendedFeature> it = vcard.getExtendedTypes();
+			List<ExtendedType> it = vcard.getExtendedTypes();
+			assertEquals(4, it.size());
 			
-			ExtendedFeature f = it.next();
+			ExtendedType f = it.get(0);
 			assertEquals("item2", f.getGroup());
-			assertEquals("X-ABLABEL", f.getExtensionName());
-			assertEquals("_$!<AssistantPhone>!$_", f.getExtensionData());
+			assertEquals("X-ABLABEL", f.getExtendedName());
+			assertEquals("_$!<AssistantPhone>!$_", f.getExtendedValue());
 
-			f = it.next();
+			f = it.get(1);
 			assertEquals("item3", f.getGroup());
-			assertEquals("X-ABADR", f.getExtensionName());
-			assertEquals("Silicon Alley", f.getExtensionData());
+			assertEquals("X-ABADR", f.getExtendedName());
+			assertEquals("Silicon Alley", f.getExtendedValue());
 			
-			f = it.next();
+			f = it.get(2);
 			assertEquals("item4", f.getGroup());
-			assertEquals("X-ABADR", f.getExtensionName());
-			assertEquals("Street 4, Building 6,\n Floor 8\nNew York\nUSA", f.getExtensionData());
+			assertEquals("X-ABADR", f.getExtendedName());
+			assertEquals("Street 4, Building 6,\n Floor 8\nNew York\nUSA", f.getExtendedValue());
 			
-			f = it.next();
+			f = it.get(3);
 			assertEquals("item5", f.getGroup());
-			assertEquals("X-ABLABEL", f.getExtensionName());
-			assertEquals("_$!<HomePage>!$_", f.getExtensionData());
-			
-			assertFalse(it.hasNext());
+			assertEquals("X-ABLABEL", f.getExtendedName());
+			assertEquals("_$!<HomePage>!$_", f.getExtendedValue());
 		}
 		
 		VCardImpl vcard2 = (VCardImpl)vcard;
@@ -764,7 +774,13 @@ public class VCardsTest {
 	}
 	
 	@Test
-	public void testLotusNotesVCard() throws IOException {
+	public void testLotusNotesVCard() throws IOException, VCardParseException {
+		//TODO the entire lotus vcard is inconsistent.
+		//1: Folding non-binary text is using 2 spaces instead of 1
+		//2: The folded LABEL is 1 character more than the folded binary
+		//3: NOTE and ADR are not folded but there is a space in the word "floor"
+		//we need some more proper samples.
+		
 		File lotusNotesCard = new File(System.getProperty("user.dir")+File.separator+"test"+File.separator+"vcards"+File.separator+"John_Doe_LOTUS_NOTES.vcf");
 		
 		VCardEngine engine = new VCardEngine();
@@ -776,103 +792,108 @@ public class VCardsTest {
 		
 		//PRODID
 		{
-			ProductIdFeature f = vcard.getProductId();
-			assertEquals("-//Apple Inc.//Address Book 6.1//EN", f.getProductId());
+			ProdIdType f = vcard.getProdId();
+			assertEquals("-//Apple Inc.//Address Book 6.1//EN", f.getProdId());
 		}
 		
 		//N
 		{
-			NameFeature f = vcard.getName();
+			NType f = vcard.getN();
 			assertEquals("Doe", f.getFamilyName());
 			assertEquals("John", f.getGivenName());
-			Iterator<String> it = f.getAdditionalNames();
-			assertEquals("Johny", it.next());
-			assertFalse(it.hasNext());
+			
+			List<String> it = f.getAdditionalNames();
+			assertEquals(1, it.size());
+			assertEquals("Johny", it.get(0));
+			
 			it = f.getHonorificPrefixes();
-			assertEquals("Mr.", it.next());
-			assertFalse(it.hasNext());
+			assertEquals(1, it.size());
+			assertEquals("Mr.", it.get(0));
+			
 			it = f.getHonorificSuffixes();
-			assertEquals("I", it.next());
-			assertFalse(it.hasNext());
+			assertEquals(1, it.size());
+			assertEquals("I", it.get(0));
 		}
 		
 		//FN
 		{
-			FormattedNameFeature f = vcard.getFormattedName();
+			FNType f = vcard.getFN();
 			assertEquals("Mr. Doe John I Johny", f.getFormattedName());
 		}
 		
 		//NICKNAME
 		{
-			NicknameFeature f = vcard.getNicknames();
-			Iterator<String> it = f.getNicknames();
-			assertEquals("Johny,JayJay", it.next());
-			assertFalse(it.hasNext());
+			NicknameType f = vcard.getNicknames();
+			List<String> it = f.getNicknames();
+			assertEquals(1, it.size());
+			assertEquals("Johny,JayJay", it.get(0));
 		}
 		
 		//ORG
 		{
-			OrganizationFeature f = vcard.getOrganizations();
-			Iterator<String> it = f.getOrganizations();
-			assertEquals("IBM", it.next());
-			assertEquals("SUN", it.next());
-			assertFalse(it.hasNext());
+			OrgType f = vcard.getOrg();
+			assertEquals("IBM", f.getOrgName());
+			
+			List<String> it = f.getOrgUnits();
+			assertEquals(1, it.size());
+			assertEquals("SUN", it.get(0));
 		}
 		
 		//TITLE
 		{
-			TitleFeature f = vcard.getTitle();
+			TitleType f = vcard.getTitle();
 			assertEquals("Generic Accountant", f.getTitle());
 		}
 		
 		//EMAIL
 		{
-			Iterator<EmailFeature> it = vcard.getEmails();
+			List<EmailType> it = vcard.getEmails();
+			assertEquals(2, it.size());
 			
-			EmailFeature f = it.next();
+			EmailType f = it.get(0);
 			assertEquals("john.doe@ibm.com", f.getEmail());
-			List<EmailParameterType> types = f.getEmailParameterTypesList();
-			assertEquals(3, types.size());
-			assertTrue(types.contains(EmailParameterType.INTERNET));
-			assertTrue(types.contains(EmailParameterType.WORK));
-			assertTrue(types.contains(EmailParameterType.PREF));
 			
-			f = it.next();
+			List<EmailParamType> types = f.getParams();
+			assertEquals(3, types.size());
+			assertTrue(types.contains(EmailParamType.INTERNET));
+			assertTrue(types.contains(EmailParamType.WORK));
+			assertTrue(types.contains(EmailParamType.PREF));
+			
+			f = it.get(1);
 			assertEquals("billy_bob@gmail.com", f.getEmail());
-			types = f.getEmailParameterTypesList();
+			types = f.getParams();
 			assertEquals(2, types.size());
-			assertTrue(types.contains(EmailParameterType.INTERNET));
-			assertTrue(types.contains(EmailParameterType.WORK));
-
-			assertFalse(it.hasNext());
+			assertTrue(types.contains(EmailParamType.INTERNET));
+			assertTrue(types.contains(EmailParamType.WORK));
 		}
 		
 		//TEL
 		{
-			Iterator<TelephoneFeature> it = vcard.getTelephoneNumbers();
-			TelephoneFeature f = it.next();
-			assertEquals("+1 (212) 204-34456", f.getTelephone());
-			List<TelephoneParameterType> types = f.getTelephoneParameterTypesList();
-			assertEquals(3, types.size());
-			assertTrue(types.contains(TelephoneParameterType.CELL));
-			assertTrue(types.contains(TelephoneParameterType.VOICE));
-			assertTrue(types.contains(TelephoneParameterType.PREF));
-
-			f = it.next();
-			assertEquals("00-1-212-555-7777", f.getTelephone());
-			types = f.getTelephoneParameterTypesList();
-			assertEquals(2, types.size());
-			assertTrue(types.contains(TelephoneParameterType.WORK));
-			assertTrue(types.contains(TelephoneParameterType.FAX));
+			List<TelType> it = vcard.getTels();
+			assertEquals(2, it.size());
 			
-			assertFalse(it.hasNext());
+			TelType f = it.get(0);
+			assertEquals("+1 (212) 204-34456", f.getTelephone());
+			List<TelParamType> types = f.getParams();
+			assertEquals(3, types.size());
+			assertTrue(types.contains(TelParamType.CELL));
+			assertTrue(types.contains(TelParamType.VOICE));
+			assertTrue(types.contains(TelParamType.PREF));
+
+			f = it.get(1);
+			assertEquals("00-1-212-555-7777", f.getTelephone());
+			types = f.getParams();
+			assertEquals(2, types.size());
+			assertTrue(types.contains(TelParamType.WORK));
+			assertTrue(types.contains(TelParamType.FAX));
 		}
 		
 		//ADR
 		{
-			Iterator<AddressFeature> it = vcard.getAddresses();
+			List<AdrType> it = vcard.getAdrs();
+			assertEquals(1, it.size());
 			
-			AddressFeature f = it.next();
+			AdrType f = it.get(0);
 			assertEquals("item1", f.getGroup());
 			assertEquals("", f.getPostOfficeBox());
 			assertEquals("", f.getExtendedAddress());
@@ -882,39 +903,37 @@ public class VCardsTest {
 			assertEquals("NYC887", f.getPostalCode());
 			assertEquals("U.S.A.", f.getCountryName());
 			
-			List<AddressParameterType> types = f.getAddressParameterTypesList();
+			List<AdrParamType> types = f.getParams();
 			assertEquals(2, types.size());
-			assertTrue(types.contains(AddressParameterType.HOME));
-			assertTrue(types.contains(AddressParameterType.PREF));
-			
-			assertFalse(it.hasNext());
+			assertTrue(types.contains(AdrParamType.HOME));
+			assertTrue(types.contains(AdrParamType.PREF));
 		}
 		
 		//NOTE
 		{
-			Iterator<NoteFeature> it = vcard.getNotes();
-			NoteFeature f = it.next();
+			List<NoteType> it = vcard.getNotes();
+			assertEquals(1, it.size());
+			NoteType f = it.get(0);
 			assertEquals("THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"\nAND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO , THE\nIMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR P URPOSE\nARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTOR S BE\nLIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR\nCONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF\n SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS \nINTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN\n CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)\nA RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n POSSIBILITY OF SUCH DAMAGE.", f.getNote());
-			assertFalse(it.hasNext());
 		}
 		
 		//URL
 		{
-			Iterator<URLFeature> it = vcard.getURLs();
-			URLFeature f = it.next();
+			List<UrlType> it = vcard.getUrls();
+			assertEquals(1, it.size());
+			
+			UrlType f = it.get(0);
 			assertEquals("item2", f.getGroup());
-			assertEquals("http://www.sun.com", f.getURL().toString());
+			assertEquals("http://www.sun.com", f.getRawUrl());
 			
-			List<URLParameterType> types = f.getURLParameterTypesList();
+			List<UrlParamType> types = f.getParams();
 			assertEquals(1, types.size());
-			assertTrue(types.contains(URLParameterType.PREF));
-			
-			assertFalse(it.hasNext());
+			assertTrue(types.contains(UrlParamType.PREF));
 		}
 		
 		//BDAY
 		{
-			BirthdayFeature f = vcard.getBirthDay();
+			BDayType f = vcard.getBDay();
 			assertEquals(1980, f.getBirthday().get(Calendar.YEAR));
 			assertEquals(Calendar.MAY, f.getBirthday().get(Calendar.MONTH));
 			assertEquals(21, f.getBirthday().get(Calendar.DAY_OF_MONTH));
@@ -923,9 +942,10 @@ public class VCardsTest {
 		
 		//PHOTO
 		{
-			Iterator<PhotoFeature> it = vcard.getPhotos();
+			List<PhotoType> it = vcard.getPhotos();
+			assertEquals(1, it.size());
 			
-			PhotoFeature f = it.next();
+			PhotoType f = it.get(0);
 			assertEquals(EncodingType.BINARY, f.getEncodingType());
 			assertEquals(ImageMediaType.JPEG, f.getImageMediaType());
 			assertEquals(7957, f.getPhoto().length);
@@ -933,52 +953,65 @@ public class VCardsTest {
 		
 		//UID
 		{
-			UIDFeature f = vcard.getUID();
-			assertEquals("0e7602cc-443e-4b82-b4b1-90f62f99a199", f.getUID());
+			UidType f = vcard.getUid();
+			assertEquals("0e7602cc-443e-4b82-b4b1-90f62f99a199", f.getUid());
 		}
 		
 		//GEO
 		{
-			GeographicPositionFeature f = vcard.getGeographicPosition();
+			GeoType f = vcard.getGeo();
 			assertEquals(-2.6, f.getLatitude(), .01);
 			assertEquals(3.4, f.getLongitude(), .01);
 		}
 		
 		//CLASS
 		{
-			ClassFeature f = vcard.getSecurityClass();
+			ClassType f = vcard.getSecurityClass();
 			assertEquals("Public", f.getSecurityClass());
 		}
 		
 		//PROFILE
 		{
-			ProfileFeature f = vcard.getProfile();
+			ProfileType f = vcard.getProfile();
 			assertEquals("VCard", f.getProfile());
 		}
 		
 		//TZ
 		{
-			TimeZoneFeature f = vcard.getTimeZone();
+			TzType f = vcard.getTz();
 			assertEquals(1, f.getHourOffset());
 			assertEquals(0, f.getMinuteOffset());
 		}
 		
 		//LABEL
 		{
-			Iterator<LabelFeature> it = vcard.getLables();
+			//This label does not get parsed because its parameter types
+			//do not match any of the parameter types of any of the existing
+			//addresses. In this case the parameter type PARCEL is extra from
+			//the address.
+			//
+			//This is an issue with the way Labels and Addresses are defined in
+			//the VCard RFC. There are 2 ways to go about it:
+			//
+			//1: An ADR may have only 1 LABEL associated to it, the LABEL directly under it
+			//2: An ADR may have only 1 LABEL associated to it by parameter types. Only
+			//   one ADR and LABEL without zero parameter types may hold an association.
+			//
+			// Cardme takes approach 2.
 			
-			//FIXME does not parse this LABEL
 			/*
-			LabelFeature f = it.next();
+			List<LabelType> it = vcard.getLables();
+			assertEquals(1, it.size());
+			
+			LabelType f = it.get(0);
 			assertEquals("John Doe\nNew York, NewYork,\nSouth Crecent Drive,\nBuilding 5, floor 3,\nUSA", f.getLabel());
-			List<LabelParameterType> types = f.getLabelParameterTypesList();
+			List<LabelParamType> types = f.getParams();
 			assertEquals(3, types.size());
-			assertTrue(types.contains(LabelParameterType.HOME));
-			assertTrue(types.contains(LabelParameterType.PARCEL));
-			assertTrue(types.contains(LabelParameterType.PREF));
+			assertTrue(types.contains(LabelParamType.HOME));
+			assertTrue(types.contains(LabelParamType.PARCEL));
+			assertTrue(types.contains(LabelParamType.PREF));
 			*/
 			
-			assertFalse(it.hasNext());
 		}
 		
 		//SORT-STRING
@@ -1007,32 +1040,31 @@ public class VCardsTest {
 		
 		//NAME
 		{
-			DisplayableNameFeature f = vcard.getDisplayableNameFeature();
+			NameType f = vcard.getName();
 			assertEquals("VCard for John Doe", f.getName());
 		}
 		
 		//custom types
 		{
-			Iterator<ExtendedFeature> it = vcard.getExtendedTypes();
+			List<ExtendedType> it = vcard.getExtendedTypes();
+			assertEquals(4, it.size());
 			
-			ExtendedFeature f = it.next();
+			ExtendedType f = it.get(0);
 			assertEquals("item2", f.getGroup());
-			assertEquals("X-ABLABEL", f.getExtensionName());
-			assertEquals("_$!<HomePage>!$_", f.getExtensionData());
+			assertEquals("X-ABLABEL", f.getExtendedName());
+			assertEquals("_$!<HomePage>!$_", f.getExtendedValue());
 
-			f = it.next();
-			assertEquals("X-ABUID", f.getExtensionName());
-			assertEquals("0E7602CC-443E-4B82-B4B1-90F62F99A199:ABPerson", f.getExtensionData());
+			f = it.get(1);
+			assertEquals("X-ABUID", f.getExtendedName());
+			assertEquals("0E7602CC-443E-4B82-B4B1-90F62F99A199:ABPerson", f.getExtendedValue());
 			
-			f = it.next();
-			assertEquals("X-GENERATOR", f.getExtensionName());
-			assertEquals("Cardme Generator", f.getExtensionData());
+			f = it.get(2);
+			assertEquals("X-GENERATOR", f.getExtendedName());
+			assertEquals("Cardme Generator", f.getExtendedValue());
 			
-			f = it.next();
-			assertEquals("X-LONG-STRING", f.getExtensionName());
-			assertEquals("1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890", f.getExtensionData());
-			
-			assertFalse(it.hasNext());
+			f = it.get(3);
+			assertEquals("X-LONG-STRING", f.getExtendedName());
+			assertEquals("12345678901234567890123456789012345678901234567890123456789012 34567890123456789012345678901234567890", f.getExtendedValue());
 		}
 		
 		VCardImpl vcard2 = (VCardImpl)vcard;
@@ -1048,7 +1080,7 @@ public class VCardsTest {
 	}
 	
 	@Test
-	public void testMsOutlookVCard() throws IOException {
+	public void testMsOutlookVCard() throws IOException, VCardParseException {
 		File msOutlookCard = new File(System.getProperty("user.dir")+File.separator+"test"+File.separator+"vcards"+File.separator+"John_Doe_MS_OUTLOOK.vcf");
 		
 		VCardEngine engine = new VCardEngine();
@@ -1060,84 +1092,90 @@ public class VCardsTest {
 		
 		//N
 		{
-			NameFeature f = vcard.getName();
+			NType f = vcard.getN();
 			assertEquals(LanguageType.EN_US, f.getLanguage());
 			assertEquals("Doe", f.getFamilyName());
 			assertEquals("John", f.getGivenName());
-			Iterator<String> it = f.getAdditionalNames();
-			assertEquals("Richter", it.next());
-			assertEquals("James", it.next());
-			assertFalse(it.hasNext());
+			
+			List<String> it = f.getAdditionalNames();
+			assertEquals(2, it.size());
+			assertEquals("Richter", it.get(0));
+			assertEquals("James", it.get(1));
+			
 			it = f.getHonorificPrefixes();
-			assertEquals("Mr.", it.next());
-			assertFalse(it.hasNext());
+			assertEquals(1, it.size());
+			assertEquals("Mr.", it.get(0));
+			
 			it = f.getHonorificSuffixes();
-			assertEquals("Sr.", it.next());
-			assertFalse(it.hasNext());
+			assertEquals(1, it.size());
+			assertEquals("Sr.", it.get(0));
 		}
 		
 		//FN
 		{
-			FormattedNameFeature f = vcard.getFormattedName();
+			FNType f = vcard.getFN();
 			assertEquals("Mr. John Richter James Doe Sr.", f.getFormattedName());
 		}
 		
 		//NICKNAME
 		{
-			NicknameFeature f = vcard.getNicknames();
-			Iterator<String> it = f.getNicknames();
-			assertEquals("Johny", it.next());
-			assertFalse(it.hasNext());
+			NicknameType f = vcard.getNicknames();
+			List<String> it = f.getNicknames();
+			assertEquals(1, it.size());
+			assertEquals("Johny", it.get(0));
 		}
 		
 		//ORG
 		{
-			OrganizationFeature f = vcard.getOrganizations();
-			Iterator<String> it = f.getOrganizations();
-			assertEquals("IBM", it.next());
-			assertEquals("Accounting", it.next());
-			assertFalse(it.hasNext());
+			OrgType f = vcard.getOrg();
+			assertEquals("IBM", f.getOrgName());
+			
+			List<String> it = f.getOrgUnits();
+			assertEquals(1, it.size());
+			assertEquals("Accounting", it.get(0));
 		}
 		
 		//TITLE
 		{
-			TitleFeature f = vcard.getTitle();
+			TitleType f = vcard.getTitle();
 			assertEquals("Money Counter", f.getTitle());
 		}
 		
 		//NOTE
 		{
-			Iterator<NoteFeature> it = vcard.getNotes();
-			NoteFeature f = it.next();
+			List<NoteType> it = vcard.getNotes();
+			assertEquals(1, it.size());
+			
+			NoteType f = it.get(0);
 			assertEquals("THIS SOFTWARE IS PROVIDED BY GEORGE EL-HADDAD ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL GEORGE EL-HADDAD OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.", f.getNote());
-			assertFalse(it.hasNext());
 		}
 		
 		//TEL
 		{
-			Iterator<TelephoneFeature> it = vcard.getTelephoneNumbers();
-			TelephoneFeature f = it.next();
+			List<TelType> it = vcard.getTels();
+			assertEquals(2, it.size());
+			
+			TelType f = it.get(0);
 			assertEquals("(905) 555-1234", f.getTelephone());
-			List<TelephoneParameterType> types = f.getTelephoneParameterTypesList();
+			List<TelParamType> types = f.getParams();
 			assertEquals(2, types.size());
-			assertTrue(types.contains(TelephoneParameterType.WORK));
-			assertTrue(types.contains(TelephoneParameterType.VOICE));
+			assertTrue(types.contains(TelParamType.WORK));
+			assertTrue(types.contains(TelParamType.VOICE));
 
-			f = it.next();
+			f = it.get(1);
 			assertEquals("(905) 666-1234", f.getTelephone());
-			types = f.getTelephoneParameterTypesList();
+			types = f.getParams();
 			assertEquals(2, types.size());
-			assertTrue(types.contains(TelephoneParameterType.HOME));
-			assertTrue(types.contains(TelephoneParameterType.VOICE));
-
-			assertFalse(it.hasNext());
+			assertTrue(types.contains(TelParamType.HOME));
+			assertTrue(types.contains(TelParamType.VOICE));
 		}
 		
 		//ADR
 		{
-			Iterator<AddressFeature> it = vcard.getAddresses();
+			List<AdrType> it = vcard.getAdrs();
+			assertEquals(2, it.size());
 			
-			AddressFeature f = it.next();
+			AdrType f = it.get(0);
 			assertEquals("", f.getPostOfficeBox());
 			assertEquals("", f.getExtendedAddress());
 			assertEquals("Cresent moon drive", f.getStreetAddress());
@@ -1146,12 +1184,12 @@ public class VCardsTest {
 			assertEquals("12345", f.getPostalCode());
 			assertEquals("United States of America", f.getCountryName());
 			
-			List<AddressParameterType> types = f.getAddressParameterTypesList();
+			List<AdrParamType> types = f.getParams();
 			assertEquals(2, types.size());
-			assertTrue(types.contains(AddressParameterType.WORK));
-			assertTrue(types.contains(AddressParameterType.PREF));
+			assertTrue(types.contains(AdrParamType.WORK));
+			assertTrue(types.contains(AdrParamType.PREF));
 			
-			f = it.next();
+			f = it.get(1);
 			assertEquals("", f.getPostOfficeBox());
 			assertEquals("", f.getExtendedAddress());
 			assertEquals("Silicon Alley 5,", f.getStreetAddress());
@@ -1160,57 +1198,53 @@ public class VCardsTest {
 			assertEquals("12345", f.getPostalCode());
 			assertEquals("United States of America", f.getCountryName());
 			
-			types = f.getAddressParameterTypesList();
+			types = f.getParams();
 			assertEquals(1, types.size());
-			assertTrue(types.contains(AddressParameterType.HOME));
-			
-			
-			assertFalse(it.hasNext());
+			assertTrue(types.contains(AdrParamType.HOME));
 		}
 		
 		//LABEL
 		{
-			Iterator<LabelFeature> it = vcard.getLables();
-
-			LabelFeature f = it.next();
+			List<LabelType> it = vcard.getLables();
+			assertEquals(2, it.size());
+			
+			LabelType f = it.get(0);
 			assertEquals("Cresent moon drive\r\nAlbaney, New York  12345", f.getLabel());
 			
-			List<LabelParameterType> types = f.getLabelParameterTypesList();
+			List<LabelParamType> types = f.getParams();
 			assertEquals(2, types.size());
-			assertTrue(types.contains(LabelParameterType.WORK));
-			assertTrue(types.contains(LabelParameterType.PREF));
+			assertTrue(types.contains(LabelParamType.WORK));
+			assertTrue(types.contains(LabelParamType.PREF));
 			
-			f = it.next();
+			f = it.get(1);
 			assertEquals("Silicon Alley 5,\r\nNew York, New York  12345", f.getLabel());
-			types = f.getLabelParameterTypesList();
+			types = f.getParams();
 			assertEquals(1, types.size());
-			assertTrue(types.contains(LabelParameterType.HOME));
-			
-			assertFalse(it.hasNext());
+			assertTrue(types.contains(LabelParamType.HOME));
 		}
 		
 		//URL
 		{
-			Iterator<URLFeature> it = vcard.getURLs();
-			URLFeature f = it.next();
-			assertEquals("http://www.ibm.com", f.getURL().toString());
+			List<UrlType> it = vcard.getUrls();
+			assertEquals(1, it.size());
 			
-			List<URLParameterType> types = f.getURLParameterTypesList();
+			UrlType f = it.get(0);
+			assertEquals("http://www.ibm.com", f.getRawUrl());
+			
+			List<UrlParamType> types = f.getParams();
 			assertEquals(1, types.size());
-			assertTrue(types.contains(URLParameterType.WORK));
-			
-			assertFalse(it.hasNext());
+			assertTrue(types.contains(UrlParamType.WORK));
 		}
 		
 		//ROLE
 		{
-			RoleFeature f = vcard.getRole();
+			RoleType f = vcard.getRole();
 			assertEquals("Counting Money", f.getRole());
 		}
 		
 		//BDAY
 		{
-			BirthdayFeature f = vcard.getBirthDay();
+			BDayType f = vcard.getBDay();
 			assertEquals(1980, f.getBirthday().get(Calendar.YEAR));
 			assertEquals(Calendar.MARCH, f.getBirthday().get(Calendar.MONTH));
 			assertEquals(22, f.getBirthday().get(Calendar.DAY_OF_MONTH));
@@ -1218,23 +1252,24 @@ public class VCardsTest {
 		
 		//EMAIL
 		{
-			Iterator<EmailFeature> it = vcard.getEmails();
-			EmailFeature f = it.next();
+			List<EmailType> it = vcard.getEmails();
+			assertEquals(1, it.size());
+			
+			EmailType f = it.get(0);
 			assertEquals("john.doe@ibm.cm", f.getEmail());
 			
-			List<EmailParameterType> types = f.getEmailParameterTypesList();
+			List<EmailParamType> types = f.getParams();
 			assertEquals(2, types.size());
-			assertTrue(types.contains(EmailParameterType.PREF));
-			assertTrue(types.contains(EmailParameterType.INTERNET));
-
-			assertFalse(it.hasNext());
+			assertTrue(types.contains(EmailParamType.PREF));
+			assertTrue(types.contains(EmailParamType.INTERNET));
 		}
 
 		//PHOTO
 		{
-			Iterator<PhotoFeature> it = vcard.getPhotos();
+			List<PhotoType> it = vcard.getPhotos();
+			assertEquals(1, it.size());
 			
-			PhotoFeature f = it.next();
+			PhotoType f = it.get(0);
 			assertEquals(EncodingType.BINARY, f.getEncodingType());
 			assertEquals(ImageMediaType.JPEG, f.getImageMediaType());
 			assertEquals(860, f.getPhoto().length);
@@ -1242,7 +1277,7 @@ public class VCardsTest {
 		
 		//REV
 		{
-			RevisionFeature f = vcard.getRevision();
+			RevType f = vcard.getRev();
 			Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 			c.clear();
 			c.set(Calendar.YEAR, 2012);
@@ -1257,36 +1292,33 @@ public class VCardsTest {
 		
 		//custom types
 		{
-			Iterator<ExtendedFeature> it = vcard.getExtendedTypes();
+			List<ExtendedType> it = vcard.getExtendedTypes();
+			assertEquals(6, it.size());
 			
-			ExtendedFeature f;
+			ExtendedType f = it.get(0);
+			assertEquals("X-MS-OL-DEFAULT-POSTAL-ADDRESS", f.getExtendedName());
+			assertEquals("2", f.getExtendedValue());
 			
-			f = it.next();
-			assertEquals("X-MS-OL-DEFAULT-POSTAL-ADDRESS", f.getExtensionName());
-			assertEquals("2", f.getExtensionData());
+			f = it.get(1);
+			assertEquals("X-MS-ANNIVERSARY", f.getExtendedName());
+			assertEquals("20110113", f.getExtendedValue());
 			
-			f = it.next();
-			assertEquals("X-MS-ANNIVERSARY", f.getExtensionName());
-			assertEquals("20110113", f.getExtensionData());
-			
-			f = it.next();
-			assertEquals("X-MS-IMADDRESS", f.getExtensionName());
-			assertEquals("johny5@aol.com", f.getExtensionData());
+			f = it.get(2);
+			assertEquals("X-MS-IMADDRESS", f.getExtendedName());
+			assertEquals("johny5@aol.com", f.getExtendedValue());
 
-			f = it.next();
-			assertEquals("X-MS-OL-DESIGN", f.getExtensionName());
-			assertEquals("<card xmlns=\"http://schemas.microsoft.com/office/outlook/12/electronicbusinesscards\" ver=\"1.0\" layout=\"left\" bgcolor=\"ffffff\"><img xmlns=\"\" align=\"tleft\" area=\"32\" use=\"photo\"/><fld xmlns=\"\" prop=\"name\" align=\"left\" dir=\"ltr\" style=\"b\" color=\"000000\" size=\"10\"/><fld xmlns=\"\" prop=\"org\" align=\"left\" dir=\"ltr\" color=\"000000\" size=\"8\"/><fld xmlns=\"\" prop=\"title\" align=\"left\" dir=\"ltr\" color=\"000000\" size=\"8\"/><fld xmlns=\"\" prop=\"dept\" align=\"left\" dir=\"ltr\" color=\"000000\" size=\"8\"/><fld xmlns=\"\" prop=\"telwork\" align=\"left\" dir=\"ltr\" color=\"000000\" size=\"8\"><label align=\"right\" color=\"626262\">Work</label></fld><fld xmlns=\"\" prop=\"telhome\" align=\"left\" dir=\"ltr\" color=\"000000\" size=\"8\"><label align=\"right\" color=\"626262\">Home</label></fld><fld xmlns=\"\" prop=\"email\" align=\"left\" dir=\"ltr\" color=\"000000\" size=\"8\"/><fld xmlns=\"\" prop=\"addrwork\" align=\"left\" dir=\"ltr\" color=\"000000\" size=\"8\"/><fld xmlns=\"\" prop=\"addrhome\" align=\"left\" dir=\"ltr\" color=\"000000\" size=\"8\"/><fld xmlns=\"\" prop=\"webwork\" align=\"left\" dir=\"ltr\" color=\"000000\" size=\"8\"/><fld xmlns=\"\" prop=\"blank\" size=\"8\"/><fld xmlns=\"\" prop=\"blank\" size=\"8\"/><fld xmlns=\"\" prop=\"blank\" size=\"8\"/><fld xmlns=\"\" prop=\"blank\" size=\"8\"/><fld xmlns=\"\" prop=\"blank\" size=\"8\"/><fld xmlns=\"\" prop=\"blank\" size=\"8\"/></card>", f.getExtensionData());
+			f = it.get(3);
+			assertEquals("X-MS-OL-DESIGN", f.getExtendedName());
+			assertEquals("<card xmlns=\"http://schemas.microsoft.com/office/outlook/12/electronicbusinesscards\" ver=\"1.0\" layout=\"left\" bgcolor=\"ffffff\"><img xmlns=\"\" align=\"tleft\" area=\"32\" use=\"photo\"/><fld xmlns=\"\" prop=\"name\" align=\"left\" dir=\"ltr\" style=\"b\" color=\"000000\" size=\"10\"/><fld xmlns=\"\" prop=\"org\" align=\"left\" dir=\"ltr\" color=\"000000\" size=\"8\"/><fld xmlns=\"\" prop=\"title\" align=\"left\" dir=\"ltr\" color=\"000000\" size=\"8\"/><fld xmlns=\"\" prop=\"dept\" align=\"left\" dir=\"ltr\" color=\"000000\" size=\"8\"/><fld xmlns=\"\" prop=\"telwork\" align=\"left\" dir=\"ltr\" color=\"000000\" size=\"8\"><label align=\"right\" color=\"626262\">Work</label></fld><fld xmlns=\"\" prop=\"telhome\" align=\"left\" dir=\"ltr\" color=\"000000\" size=\"8\"><label align=\"right\" color=\"626262\">Home</label></fld><fld xmlns=\"\" prop=\"email\" align=\"left\" dir=\"ltr\" color=\"000000\" size=\"8\"/><fld xmlns=\"\" prop=\"addrwork\" align=\"left\" dir=\"ltr\" color=\"000000\" size=\"8\"/><fld xmlns=\"\" prop=\"addrhome\" align=\"left\" dir=\"ltr\" color=\"000000\" size=\"8\"/><fld xmlns=\"\" prop=\"webwork\" align=\"left\" dir=\"ltr\" color=\"000000\" size=\"8\"/><fld xmlns=\"\" prop=\"blank\" size=\"8\"/><fld xmlns=\"\" prop=\"blank\" size=\"8\"/><fld xmlns=\"\" prop=\"blank\" size=\"8\"/><fld xmlns=\"\" prop=\"blank\" size=\"8\"/><fld xmlns=\"\" prop=\"blank\" size=\"8\"/><fld xmlns=\"\" prop=\"blank\" size=\"8\"/></card>", f.getExtendedValue());
 			assertEquals(Charset.forName("UTF-8"), f.getCharset());
 			
-			f = it.next();
-			assertEquals("X-MS-MANAGER", f.getExtensionName());
-			assertEquals("Big Blue", f.getExtensionData());
+			f = it.get(4);
+			assertEquals("X-MS-MANAGER", f.getExtendedName());
+			assertEquals("Big Blue", f.getExtendedValue());
 			
-			f = it.next();
-			assertEquals("X-MS-ASSISTANT", f.getExtensionName());
-			assertEquals("Jenny", f.getExtensionData());
-			
-			assertFalse(it.hasNext());
+			f = it.get(5);
+			assertEquals("X-MS-ASSISTANT", f.getExtendedName());
+			assertEquals("Jenny", f.getExtendedValue());
 		}
 		
 		VCardImpl vcard2 = (VCardImpl)vcard;
@@ -1302,7 +1334,7 @@ public class VCardsTest {
 	}
 	
 	@Test
-	public void testMacAddressBookVCard() throws IOException {
+	public void testMacAddressBookVCard() throws IOException, VCardParseException {
 		File macAddressBookCard = new File(System.getProperty("user.dir")+File.separator+"test"+File.separator+"vcards"+File.separator+"John_Doe_MAC_ADDRESS_BOOK.vcf");
 		
 		VCardEngine engine = new VCardEngine();
@@ -1314,120 +1346,125 @@ public class VCardsTest {
 		
 		//N
 		{
-			NameFeature f = vcard.getName();
+			NType f = vcard.getN();
 			assertEquals("Doe", f.getFamilyName());
 			assertEquals("John", f.getGivenName());
-			Iterator<String> it = f.getAdditionalNames();
-			assertEquals("Richter,James", it.next());
-			assertFalse(it.hasNext());
+			
+			List<String> it = f.getAdditionalNames();
+			assertEquals(1, it.size());
+			assertEquals("Richter,James", it.get(0));
+			
 			it = f.getHonorificPrefixes();
-			assertEquals("Mr.", it.next());
-			assertFalse(it.hasNext());
+			assertEquals(1, it.size());
+			assertEquals("Mr.", it.get(0));
+			
 			it = f.getHonorificSuffixes();
-			assertEquals("Sr.", it.next());
-			assertFalse(it.hasNext());
+			assertEquals(1, it.size());
+			assertEquals("Sr.", it.get(0));
 		}
 		
 		//FN
 		{
-			FormattedNameFeature f = vcard.getFormattedName();
+			FNType f = vcard.getFN();
 			assertEquals("Mr. John Richter,James Doe Sr.", f.getFormattedName());
 		}
 		
 		//NICKNAME
 		{
-			NicknameFeature f = vcard.getNicknames();
-			Iterator<String> it = f.getNicknames();
-			assertEquals("Johny", it.next());
-			assertFalse(it.hasNext());
+			NicknameType f = vcard.getNicknames();
+			List<String> it = f.getNicknames();
+			assertEquals(1, it.size());
+			assertEquals("Johny", it.get(0));
 		}
 		
 		//ORG
 		{
-			OrganizationFeature f = vcard.getOrganizations();
-			Iterator<String> it = f.getOrganizations();
-			assertEquals("IBM", it.next());
-			assertEquals("Accounting", it.next());
-			assertFalse(it.hasNext());
+			OrgType f = vcard.getOrg();
+			assertEquals("IBM", f.getOrgName());
+			
+			List<String> it = f.getOrgUnits();
+			assertEquals(1, it.size());
+			assertEquals("Accounting", it.get(0));
 		}
 		
 		//TITLE
 		{
-			TitleFeature f = vcard.getTitle();
+			TitleType f = vcard.getTitle();
 			assertEquals("Money Counter", f.getTitle());
 		}
 		
 		//EMAIL
 		{
-			Iterator<EmailFeature> it = vcard.getEmails();
-			EmailFeature f = it.next();
+			List<EmailType> it = vcard.getEmails();
+			assertEquals(1, it.size());
+			
+			EmailType f = it.get(0);
 			assertEquals("john.doe@ibm.com", f.getEmail());
 			
-			List<EmailParameterType> types = f.getEmailParameterTypesList();
+			List<EmailParamType> types = f.getParams();
 			assertEquals(3, types.size());
-			assertTrue(types.contains(EmailParameterType.INTERNET));
-			assertTrue(types.contains(EmailParameterType.WORK));
-			assertTrue(types.contains(EmailParameterType.PREF));
-
-			assertFalse(it.hasNext());
+			assertTrue(types.contains(EmailParamType.INTERNET));
+			assertTrue(types.contains(EmailParamType.WORK));
+			assertTrue(types.contains(EmailParamType.PREF));
 		}
 		
 		//TEL
 		{
-			Iterator<TelephoneFeature> it = vcard.getTelephoneNumbers();
-			TelephoneFeature f = it.next();
+			List<TelType> it = vcard.getTels();
+			assertEquals(7, it.size());
+			
+			TelType f = it.get(0);
 			assertEquals("905-777-1234", f.getTelephone());
-			List<TelephoneParameterType> types = f.getTelephoneParameterTypesList();
+			List<TelParamType> types = f.getParams();
 			assertEquals(2, types.size());
-			assertTrue(types.contains(TelephoneParameterType.WORK));
-			assertTrue(types.contains(TelephoneParameterType.PREF));
+			assertTrue(types.contains(TelParamType.WORK));
+			assertTrue(types.contains(TelParamType.PREF));
 
-			f = it.next();
+			f = it.get(1);
 			assertEquals("905-666-1234", f.getTelephone());
-			types = f.getTelephoneParameterTypesList();
+			types = f.getParams();
 			assertEquals(1, types.size());
-			assertTrue(types.contains(TelephoneParameterType.HOME));
+			assertTrue(types.contains(TelParamType.HOME));
 			
-			f = it.next();
+			f = it.get(2);
 			assertEquals("905-555-1234", f.getTelephone());
-			types = f.getTelephoneParameterTypesList();
+			types = f.getParams();
 			assertEquals(1, types.size());
-			assertTrue(types.contains(TelephoneParameterType.CELL));
+			assertTrue(types.contains(TelParamType.CELL));
 			
-			f = it.next();
+			f = it.get(3);
 			assertEquals("905-888-1234", f.getTelephone());
-			types = f.getTelephoneParameterTypesList();
+			types = f.getParams();
 			assertEquals(2, types.size());
-			assertTrue(types.contains(TelephoneParameterType.HOME));
-			assertTrue(types.contains(TelephoneParameterType.FAX));
+			assertTrue(types.contains(TelParamType.HOME));
+			assertTrue(types.contains(TelParamType.FAX));
 				
-			f = it.next();
+			f = it.get(4);
 			assertEquals("905-999-1234", f.getTelephone());
-			types = f.getTelephoneParameterTypesList();
+			types = f.getParams();
 			assertEquals(2, types.size());
-			assertTrue(types.contains(TelephoneParameterType.WORK));
-			assertTrue(types.contains(TelephoneParameterType.FAX));
+			assertTrue(types.contains(TelParamType.WORK));
+			assertTrue(types.contains(TelParamType.FAX));
 			
-			f = it.next();
+			f = it.get(5);
 			assertEquals("905-111-1234", f.getTelephone());
-			types = f.getTelephoneParameterTypesList();
+			types = f.getParams();
 			assertEquals(1, types.size());
-			assertTrue(types.contains(TelephoneParameterType.PAGER));
+			assertTrue(types.contains(TelParamType.PAGER));
 			
-			f = it.next();
+			f = it.get(6);
 			assertEquals("905-222-1234", f.getTelephone());
 			assertEquals("item1", f.getGroup());
-			types = f.getTelephoneParameterTypesList();
+			types = f.getParams();
 			assertEquals(0, types.size());
-			
-			assertFalse(it.hasNext());
 		}
 		
 		//ADR
 		{
-			Iterator<AddressFeature> it = vcard.getAddresses();
+			List<AdrType> it = vcard.getAdrs();
+			assertEquals(2, it.size());
 			
-			AddressFeature f = it.next();
+			AdrType f = it.get(0);
 			assertEquals("item2", f.getGroup());
 			assertEquals("", f.getPostOfficeBox());
 			assertEquals("", f.getExtendedAddress());
@@ -1437,12 +1474,12 @@ public class VCardsTest {
 			assertEquals("12345", f.getPostalCode());
 			assertEquals("United States of America", f.getCountryName());
 			
-			List<AddressParameterType> types = f.getAddressParameterTypesList();
+			List<AdrParamType> types = f.getParams();
 			assertEquals(2, types.size());
-			assertTrue(types.contains(AddressParameterType.HOME));
-			assertTrue(types.contains(AddressParameterType.PREF));
+			assertTrue(types.contains(AdrParamType.HOME));
+			assertTrue(types.contains(AdrParamType.PREF));
 			
-			f = it.next();
+			f = it.get(1);
 			assertEquals("item3", f.getGroup());
 			assertEquals("", f.getPostOfficeBox());
 			assertEquals("", f.getExtendedAddress());
@@ -1452,38 +1489,37 @@ public class VCardsTest {
 			assertEquals("12345", f.getPostalCode());
 			assertEquals("USA", f.getCountryName());
 			
-			types = f.getAddressParameterTypesList();
+			types = f.getParams();
 			assertEquals(1, types.size());
-			assertTrue(types.contains(AddressParameterType.WORK));
-			
-			assertFalse(it.hasNext());
+			assertTrue(types.contains(AdrParamType.WORK));
 		}
 		
 		//NOTE
 		{
-			Iterator<NoteFeature> it = vcard.getNotes();
-			NoteFeature f = it.next();
+			List<NoteType> it = vcard.getNotes();
+			assertEquals(1, it.size());
+			
+			NoteType f = it.get(0);
 			assertEquals("THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \\\"AS IS\\\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\nFavotire Color: Blue", f.getNote());
-			assertFalse(it.hasNext());
 		}
 		
 		//URL
 		{
-			Iterator<URLFeature> it = vcard.getURLs();
-			URLFeature f = it.next();
+			List<UrlType> it = vcard.getUrls();
+			assertEquals(1, it.size());
+			
+			UrlType f = it.get(0);
 			assertEquals("item4", f.getGroup());
-			assertEquals("http://www.ibm.com", f.getURL().toString());
+			assertEquals("http://www.ibm.com", f.getRawUrl());
 			
-			List<URLParameterType> types = f.getURLParameterTypesList();
+			List<UrlParamType> types = f.getParams();
 			assertEquals(1, types.size());
-			assertTrue(types.contains(URLParameterType.PREF));
-			
-			assertFalse(it.hasNext());
+			assertTrue(types.contains(UrlParamType.PREF));
 		}
 		
 		//BDAY
 		{
-			BirthdayFeature f = vcard.getBirthDay();
+			BDayType f = vcard.getBDay();
 			assertEquals(2012, f.getBirthday().get(Calendar.YEAR));
 			assertEquals(Calendar.JUNE, f.getBirthday().get(Calendar.MONTH));
 			assertEquals(6, f.getBirthday().get(Calendar.DAY_OF_MONTH));
@@ -1492,9 +1528,10 @@ public class VCardsTest {
 		
 		//PHOTO
 		{
-			Iterator<PhotoFeature> it = vcard.getPhotos();
+			List<PhotoType> it = vcard.getPhotos();
+			assertEquals(1, it.size());
 			
-			PhotoFeature f = it.next();
+			PhotoType f = it.get(0);
 			assertEquals(EncodingType.BINARY, f.getEncodingType());
 			assertEquals(null, f.getImageMediaType());
 			assertEquals(18242, f.getPhoto().length);
@@ -1502,55 +1539,55 @@ public class VCardsTest {
 		
 		//custom types
 		{
-			Iterator<ExtendedFeature> it = vcard.getExtendedTypes();
+			List<ExtendedType> it = vcard.getExtendedTypes();
+			assertEquals(9, it.size());
 			
-			ExtendedFeature f = it.next();
-			assertEquals("X-PHONETIC-FIRST-NAME", f.getExtensionName());
-			assertEquals("Jon", f.getExtensionData());
+			ExtendedType f = it.get(0);
+			assertEquals("X-PHONETIC-FIRST-NAME", f.getExtendedName());
+			assertEquals("Jon", f.getExtendedValue());
 			
-			f = it.next();
-			assertEquals("X-PHONETIC-LAST-NAME", f.getExtensionName());
-			assertEquals("Dow", f.getExtensionData());
+			f = it.get(1);
+			assertEquals("X-PHONETIC-LAST-NAME", f.getExtendedName());
+			assertEquals("Dow", f.getExtendedValue());
 			
-			f = it.next();
+			f = it.get(2);
 			assertEquals("item1", f.getGroup());
-			assertEquals("X-ABLABEL", f.getExtensionName());
-			assertEquals("AssistantPhone", f.getExtensionData());
+			assertEquals("X-ABLABEL", f.getExtendedName());
+			assertEquals("AssistantPhone", f.getExtendedValue());
 
-			f = it.next();
+			f = it.get(3);
 			assertEquals("item2", f.getGroup());
-			assertEquals("X-ABADR", f.getExtensionName());
-			assertEquals("Silicon Alley", f.getExtensionData());
+			assertEquals("X-ABADR", f.getExtendedName());
+			assertEquals("Silicon Alley", f.getExtendedValue());
 			
-			f = it.next();
+			f = it.get(4);
 			assertEquals("item3", f.getGroup());
-			assertEquals("X-ABADR", f.getExtensionName());
-			assertEquals("Street 4, Building 6,\nFloor 8\nNew York\nUSA", f.getExtensionData());
+			assertEquals("X-ABADR", f.getExtendedName());
+			assertEquals("Street 4, Building 6,\nFloor 8\nNew York\nUSA", f.getExtendedValue());
 			
-			f = it.next();
+			f = it.get(5);
 			assertEquals("item4", f.getGroup());
-			assertEquals("X-ABLABEL", f.getExtensionName());
-			assertEquals("_$!<HomePage>!$_", f.getExtensionData());
+			assertEquals("X-ABLABEL", f.getExtendedName());
+			assertEquals("_$!<HomePage>!$_", f.getExtendedValue());
 			
-			f = it.next();
+			f = it.get(6);
 			assertEquals("item5", f.getGroup());
-			assertEquals("X-ABRELATEDNAMES", f.getExtensionName());
-			assertEquals("Jenny", f.getExtensionData());
-			List<ExtendedParameterType> xlist = f.getExtendedParametersList();
+			assertEquals("X-ABRELATEDNAMES", f.getExtendedName());
+			assertEquals("Jenny", f.getExtendedValue());
+			
+			List<ExtendedParamType> xlist = f.getExtendedParams();
 			assertEquals(1, xlist.size());
-			assertEquals("TYPE", xlist.get(0).getXtendedTypeName());
-			assertEquals("PREF", xlist.get(0).getXtendedTypeValue());
+			assertEquals("TYPE", xlist.get(0).getTypeName());
+			assertEquals("PREF", xlist.get(0).getTypeValue());
 			
-			f = it.next();
+			f = it.get(7);
 			assertEquals("item5", f.getGroup());
-			assertEquals("X-ABLABEL", f.getExtensionName());
-			assertEquals("Spouse", f.getExtensionData());
+			assertEquals("X-ABLABEL", f.getExtendedName());
+			assertEquals("Spouse", f.getExtendedValue());
 			
-			f = it.next();
-			assertEquals("X-ABUID", f.getExtensionName());
-			assertEquals("6B29A774-D124-4822-B8D0-2780EC117F60:ABPerson", f.getExtensionData());
-			
-			assertFalse(it.hasNext());
+			f = it.get(8);
+			assertEquals("X-ABUID", f.getExtendedName());
+			assertEquals("6B29A774-D124-4822-B8D0-2780EC117F60:ABPerson", f.getExtendedValue());
 		}
 		
 		VCardImpl vcard2 = (VCardImpl)vcard;

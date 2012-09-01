@@ -1,12 +1,14 @@
 package net.sourceforge.cardme.vcard.types;
 
-import net.sourceforge.cardme.util.Util;
-import net.sourceforge.cardme.vcard.EncodingType;
-import net.sourceforge.cardme.vcard.VCardType;
+import java.util.Arrays;
+import java.util.List;
+import net.sourceforge.cardme.util.StringUtil;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import net.sourceforge.cardme.vcard.features.ProfileFeature;
+import net.sourceforge.cardme.vcard.types.params.ExtendedParamType;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -37,82 +39,135 @@ import net.sourceforge.cardme.vcard.features.ProfileFeature;
  * 
  * @author George El-Haddad
  * <br/>
- * Mar 10, 2010
+ * Aug 7, 2012
  *
  */
-public class ProfileType extends Type implements ProfileFeature {
-
-	private static final long serialVersionUID = 8574166157122806348L;
+public class ProfileType extends AbstractVCardType implements Comparable<ProfileType>, Cloneable, ProfileFeature {
+	
+	private static final long serialVersionUID = -8492518979404375803L;
 	
 	private String profile = null;
 	
 	public ProfileType() {
-		super(EncodingType.EIGHT_BIT);
+		this(null);
 	}
 	
 	public ProfileType(String profile) {
-		super(EncodingType.EIGHT_BIT);
+		super(VCardTypeName.PROFILE);
 		setProfile(profile);
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	public String getProfile()
 	{
-		return profile;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setProfile(String profile) throws IllegalArgumentException {
-		if(profile.compareToIgnoreCase("VCARD") == 0) {
-			this.profile = profile;
+		if(profile != null) {
+			return new String(profile);
 		}
 		else {
-			throw new IllegalArgumentException("profile must be \"VCard\"");
+			return null;
 		}
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
+	public void setProfile(String profile) throws IllegalArgumentException {
+		if(profile != null) {
+			if("VCARD".equalsIgnoreCase(profile)) {
+				this.profile = new String(profile);
+			}
+			else {
+				throw new IllegalArgumentException("Profile valie must be \"VCard\"");
+			}
+		}
+		else {
+			this.profile = null;
+		}
+	}
+
 	public boolean hasProfile()
 	{
 		return profile != null;
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	public void clearProfile() {
 		profile = null;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getTypeString()
+	public boolean hasParams()
 	{
-		return VCardType.PROFILE.getType();
+		return false;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
+	public ProfileType clone()
+	{
+		ProfileType cloned = new ProfileType();
+		cloned.setEncodingType(getEncodingType());
+		cloned.setVCardTypeName(getVCardTypeName());
+
+		if(hasCharset()) {
+			cloned.setCharset(getCharset());
+		}
+		
+		cloned.setGroup(getGroup());
+		cloned.setLanguage(getLanguage());
+		cloned.setParameterTypeStyle(getParameterTypeStyle());
+		cloned.addAllExtendedParams(getExtendedParams());
+		cloned.setProfile(profile);
+		return cloned;
+	}
+
+	public int compareTo(ProfileType obj)
+	{
+		if(obj != null) {
+			String[] contents = obj.getContents();
+			String[] myContents = getContents();
+			if(Arrays.equals(myContents, contents)) {
+				return 0;
+			}
+			else {
+				return 1;
+			}
+		}
+		else {
+			return -1;
+		}
+	}
+
+	@Override
+	protected String[] getContents()
+	{
+		String[] contents = new String[8];
+		contents[0] = getVCardTypeName().getType();
+		contents[1] = getEncodingType().getType();
+		contents[2] = StringUtil.getString(getGroup());
+		contents[3] = (getCharset() != null ? getCharset().name() : "");
+		contents[4] = (getLanguage() != null ? getLanguage().getLanguageCode() : "");
+		contents[5] = getParameterTypeStyle().toString();
+		
+		if(hasExtendedParams()) {
+			List<ExtendedParamType> xParams = getExtendedParams();
+			StringBuilder sb = new StringBuilder();
+			for(ExtendedParamType xParamType : xParams) {
+				sb.append(xParamType.toString());
+				sb.append(",");
+			}
+			
+			sb.deleteCharAt(sb.length()-1);
+			contents[6] = sb.toString();
+		}
+		else {
+			contents[6] = "";
+		}
+		
+		contents[7] = StringUtil.getString(profile);
+		
+		return contents;
+	}
+
 	@Override
 	public boolean equals(Object obj)
 	{
 		if(obj != null) {
 			if(obj instanceof ProfileType) {
-				if(this == obj || ((ProfileType)obj).hashCode() == this.hashCode()) {
-					return true;
-				}
-				else {
-					return false;
-				}
+				return this.compareTo((ProfileType)obj) == 0;
 			}
 			else {
 				return false;
@@ -121,60 +176,5 @@ public class ProfileType extends Type implements ProfileFeature {
 		else {
 			return false;
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int hashCode()
-	{
-		return Util.generateHashCode(toString());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append(this.getClass().getName());
-		sb.append("[ ");
-		if(encodingType != null) {
-			sb.append(encodingType.getType());
-			sb.append(",");
-		}
-		
-		if(profile != null) {
-			sb.append(profile);
-			sb.append(",");
-		}
-
-		if(super.id != null) {
-			sb.append(super.id);
-			sb.append(",");
-		}
-		
-		sb.deleteCharAt(sb.length()-1);	//Remove last comma.
-		sb.append(" ]");
-		return sb.toString();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ProfileFeature clone()
-	{
-		ProfileType cloned = new ProfileType();
-		
-		if(profile != null) {
-			cloned.setProfile(profile);
-		}
-		
-		cloned.setEncodingType(getEncodingType());
-		cloned.setID(getID());
-		return cloned;
 	}
 }

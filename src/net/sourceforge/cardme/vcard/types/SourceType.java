@@ -1,12 +1,14 @@
 package net.sourceforge.cardme.vcard.types;
 
-import net.sourceforge.cardme.util.Util;
-import net.sourceforge.cardme.vcard.EncodingType;
-import net.sourceforge.cardme.vcard.VCardType;
+import java.util.Arrays;
+import java.util.List;
+import net.sourceforge.cardme.util.StringUtil;
+import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import net.sourceforge.cardme.vcard.features.SourceFeature;
+import net.sourceforge.cardme.vcard.types.params.ExtendedParamType;
 
 /*
- * Copyright 2011 George El-Haddad. All rights reserved.
+ * Copyright 2012 George El-Haddad. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -37,77 +39,130 @@ import net.sourceforge.cardme.vcard.features.SourceFeature;
  * 
  * @author George El-Haddad
  * <br/>
- * Mar 10, 2010
+ * Aug 7, 2012
  *
  */
-public class SourceType extends Type implements SourceFeature {
+public class SourceType extends AbstractVCardType implements Comparable<SourceType>, Cloneable, SourceFeature {
 
-	private static final long serialVersionUID = -4083725439445597960L;
+	private static final long serialVersionUID = -7879671787299195236L;
 	
 	private String source = null;
 	
 	public SourceType() {
-		super(EncodingType.EIGHT_BIT);
+		this(null);
 	}
 	
 	public SourceType(String source) {
-		super(EncodingType.EIGHT_BIT);
+		super(VCardTypeName.SOURCE);
 		setSource(source);
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	public String getSource()
 	{
-		return source;
+		if(source != null) {
+			return new String(source);
+		}
+		else {
+			return null;
+		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void setSource(String source) {
-		this.source = source;
+		if(source != null) {
+			this.source = new String(source);
+		}
+		else {
+			this.source = null;
+		}
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	public boolean hasSource()
 	{
 		return source != null;
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	public void clearSource() {
 		source = null;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getTypeString()
+	public boolean hasParams()
 	{
-		return VCardType.SOURCE.getType();
+		return false;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
+	public SourceType clone()
+	{
+		SourceType cloned = new SourceType();
+		cloned.setEncodingType(getEncodingType());
+		cloned.setVCardTypeName(getVCardTypeName());
+
+		if(hasCharset()) {
+			cloned.setCharset(getCharset());
+		}
+		
+		cloned.setGroup(getGroup());
+		cloned.setLanguage(getLanguage());
+		cloned.setParameterTypeStyle(getParameterTypeStyle());
+		cloned.addAllExtendedParams(getExtendedParams());
+		cloned.setSource(source);
+		return cloned;
+	}
+
+	public int compareTo(SourceType obj)
+	{
+		if(obj != null) {
+			String[] contents = obj.getContents();
+			String[] myContents = getContents();
+			if(Arrays.equals(myContents, contents)) {
+				return 0;
+			}
+			else {
+				return 1;
+			}
+		}
+		else {
+			return -1;
+		}
+	}
+
+	@Override
+	protected String[] getContents()
+	{
+		String[] contents = new String[8];
+		contents[0] = getVCardTypeName().getType();
+		contents[1] = getEncodingType().getType();
+		contents[2] = StringUtil.getString(getGroup());
+		contents[3] = (getCharset() != null ? getCharset().name() : "");
+		contents[4] = (getLanguage() != null ? getLanguage().getLanguageCode() : "");
+		contents[5] = getParameterTypeStyle().toString();
+		
+		if(hasExtendedParams()) {
+			List<ExtendedParamType> xParams = getExtendedParams();
+			StringBuilder sb = new StringBuilder();
+			for(ExtendedParamType xParamType : xParams) {
+				sb.append(xParamType.toString());
+				sb.append(",");
+			}
+			
+			sb.deleteCharAt(sb.length()-1);
+			contents[6] = sb.toString();
+		}
+		else {
+			contents[6] = "";
+		}
+		
+		contents[7] = StringUtil.getString(source);
+		
+		return contents;
+	}
+
 	@Override
 	public boolean equals(Object obj)
 	{
 		if(obj != null) {
 			if(obj instanceof SourceType) {
-				if(this == obj || ((SourceType)obj).hashCode() == this.hashCode()) {
-					return true;
-				}
-				else {
-					return false;
-				}
+				return this.compareTo((SourceType)obj) == 0;
 			}
 			else {
 				return false;
@@ -116,60 +171,5 @@ public class SourceType extends Type implements SourceFeature {
 		else {
 			return false;
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int hashCode()
-	{
-		return Util.generateHashCode(toString());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append(this.getClass().getName());
-		sb.append("[ ");
-		if(encodingType != null) {
-			sb.append(encodingType.getType());
-			sb.append(",");
-		}
-		
-		if(source != null) {
-			sb.append(source);
-			sb.append(",");
-		}
-
-		if(super.id != null) {
-			sb.append(super.id);
-			sb.append(",");
-		}
-		
-		sb.deleteCharAt(sb.length()-1);	//Remove last comma.
-		sb.append(" ]");
-		return sb.toString();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public SourceFeature clone()
-	{
-		SourceType cloned = new SourceType();
-		
-		if(source != null) {
-			cloned.setSource(source);
-		}
-		
-		cloned.setEncodingType(getEncodingType());
-		cloned.setID(getID());
-		return cloned;
 	}
 }
