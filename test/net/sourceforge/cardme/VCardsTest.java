@@ -267,7 +267,7 @@ public class VCardsTest {
 			assertEquals("12345", f.getPostalCode());
 			
 			//FIXME the space between "United" and "States" is lost because it was included with the folding character and ignored (see .vcf file)
-			assertEquals("United States of America", f.getCountryName());
+			assertEquals("UnitedStates of America", f.getCountryName());
 			
 			List<AdrParamType> types = f.getParams();
 			assertEquals(1, types.size());
@@ -431,7 +431,7 @@ public class VCardsTest {
 			
 			AdrType f = it.get(0);
 			assertEquals("", f.getPostOfficeBox());
-			assertEquals("Crescent moon drive\n555-asd\nNice Area, Albaney, New York 12345\nUnited States of America", f.getExtendedAddress());
+			assertEquals("Crescent moon drive\n555-asd\nNice Area, Albaney, New York12345\nUnited States of America", f.getExtendedAddress());
 			assertEquals("", f.getStreetAddress());
 			assertEquals("", f.getLocality());
 			assertEquals("", f.getRegion());
@@ -1064,7 +1064,7 @@ public class VCardsTest {
 			
 			f = it.get(3);
 			assertEquals("X-LONG-STRING", f.getExtendedName());
-			assertEquals("12345678901234567890123456789012345678901234567890123456789012 34567890123456789012345678901234567890", f.getExtendedValue());
+			assertEquals("1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890", f.getExtendedValue());
 		}
 		
 		VCardImpl vcard2 = (VCardImpl)vcard;

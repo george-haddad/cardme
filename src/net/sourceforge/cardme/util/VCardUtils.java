@@ -332,7 +332,7 @@ public final class VCardUtils {
 		
 		String unfold1 = "=\n(\\p{Blank}*(=))";
 		String unfold2 = "=\n([^\\p{Blank}]([^:\n]*))\n";
-		String unfold3 = "\n\\p{Blank}";
+		String unfold3 = "\n\\p{Blank}+";
 		String unfold4 = "\\p{Blank}+=";
 		
 		StringBuffer sb = new StringBuffer();

@@ -61,7 +61,7 @@ public class TzType extends AbstractVCardType implements Comparable<TzType>, Clo
 	private int minuteOffset = 0;
 	private String shortText = null;
 	private String longText = null;
-	private TzParamType tzParamType = null;
+	private TzParamType tzParamType = TzParamType.UTC_OFFSET;
 	
 	public TzType() {
 		this(null);
