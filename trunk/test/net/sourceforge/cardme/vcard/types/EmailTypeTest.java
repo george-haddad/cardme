@@ -81,7 +81,7 @@ public class EmailTypeTest {
 	public void testSetEmailNull() {
 		emailType.setEmail(null);
 		assertEquals(null, emailType.getEmail());
-		assertTrue(emailType.hasEmail());
+		assertFalse(emailType.hasEmail());
 	}
 	
 	@Test

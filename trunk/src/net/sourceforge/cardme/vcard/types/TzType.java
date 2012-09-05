@@ -90,6 +90,11 @@ public class TzType extends AbstractVCardType implements Comparable<TzType>, Clo
 
 	public void setTimeZone(TimeZone timeZone) {
 		if(timeZone != null) {
+			int offsetMillis = timeZone.getRawOffset();
+			hourOffset = offsetMillis / 1000 / 60 / 60;
+			minuteOffset = Math.abs((offsetMillis / 1000 / 60) % 60); //minute value must be positive
+			shortText = null;
+			longText = timeZone.getDisplayName();
 			this.timeZone = timeZone;
 		}
 		else {

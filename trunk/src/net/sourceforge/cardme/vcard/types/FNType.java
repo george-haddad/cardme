@@ -39,12 +39,13 @@ public class FNType extends AbstractVCardType implements Comparable<FNType>, Clo
 		}
 	}
 
-	public void setFormattedName(String formattedName) throws NullPointerException {
-		if(formattedName == null) {
-			throw new NullPointerException("formattedName cannot be set to null.");
+	public void setFormattedName(String formattedName) {
+		if(formattedName != null) {
+			this.formattedName = new String(formattedName);
 		}
-		
-		this.formattedName = new String(formattedName);
+		else {
+			this.formattedName = null;
+		}
 	}
 	
 	public boolean hasParams()

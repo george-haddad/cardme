@@ -265,7 +265,7 @@ public class VCardWriterTest {
 		
 		String vcardStr = vcardWriter.buildVCardString();
 		
-		assertTrue(vcardStr.contains("ROLE:Counting Money\r\n"));
+		assertTrue(vcardStr.contains("GEO:3.400000;-2.600000\r\n"));
 	}
 	
 	@Test
