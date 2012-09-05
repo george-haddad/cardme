@@ -29,6 +29,7 @@ import net.sourceforge.cardme.vcard.types.VersionType;
 import net.sourceforge.cardme.vcard.types.media.KeyTextType;
 import net.sourceforge.cardme.vcard.types.params.AdrParamType;
 import net.sourceforge.cardme.vcard.types.params.BDayParamType;
+import net.sourceforge.cardme.vcard.types.params.TzParamType;
 import org.junit.Test;
 
 /*
@@ -301,9 +302,12 @@ public class VCardWriterTest {
 	}
 	
 	@Test
-	public void testBuildTzType() throws VCardBuildException {
+	public void testBuildTzTypeUTC_OFFSET() throws VCardBuildException {
+		TzType tz = new TzType(TimeZone.getTimeZone("Asia/Beirut"));
+		tz.setParamType(TzParamType.UTC_OFFSET);
+		
 		VCardImpl vcard = getSimpleVCard();
-		vcard.setTz(new TzType(TimeZone.getTimeZone("Asia/Beirut")));
+		vcard.setTz(tz);
 		
 		VCardWriter vcardWriter = new VCardWriter();
 		vcardWriter.setOutputVersion(VCardVersion.V3_0);
@@ -314,6 +318,25 @@ public class VCardWriterTest {
 		String vcardStr = vcardWriter.buildVCardString();
 		
 		assertTrue(vcardStr.contains("TZ:+02:00\r\n"));
+	}
+	
+	@Test
+	public void testBuildTzType_TEXT() throws VCardBuildException {
+		TzType tz = new TzType(TimeZone.getTimeZone("Asia/Beirut"));
+		tz.setParamType(TzParamType.TEXT);
+		
+		VCardImpl vcard = getSimpleVCard();
+		vcard.setTz(tz);
+		
+		VCardWriter vcardWriter = new VCardWriter();
+		vcardWriter.setOutputVersion(VCardVersion.V3_0);
+		vcardWriter.setCompatibilityMode(CompatibilityMode.RFC2426);
+		vcardWriter.setFoldingScheme(FoldingScheme.MIME_DIR);
+		vcardWriter.setVCard(vcard);
+		
+		String vcardStr = vcardWriter.buildVCardString();
+		
+		assertTrue(vcardStr.contains("TZ;VALUE=TEXT:+02:00;;Eastern European Time\r\n"));
 	}
 	
 	@Test

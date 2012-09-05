@@ -60,6 +60,7 @@ import net.sourceforge.cardme.vcard.types.params.ExtendedParamType;
 import net.sourceforge.cardme.vcard.types.params.ImppParamType;
 import net.sourceforge.cardme.vcard.types.params.LabelParamType;
 import net.sourceforge.cardme.vcard.types.params.TelParamType;
+import net.sourceforge.cardme.vcard.types.params.TzParamType;
 import net.sourceforge.cardme.vcard.types.params.UrlParamType;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.net.QuotedPrintableCodec;
@@ -1765,27 +1766,62 @@ public class VCardWriter {
 				}
 				
 				tmpSb.append(tzType.getVCardTypeName().getType());
-
-				if(tzType.getShortText() != null || tzType.getLongText() != null) {
-					tmpSb.append(";");
-					tmpSb.append("VALUE=TEXT:");
-					tmpSb.append(tzType.getIso8601Offset());
-					tmpSb.append(';');
-					
-					if (tzType.getShortText() != null){
-						tmpSb.append(tzType.getShortText());
-					}
-					
-					tmpSb.append(';');
-					
-					if (tzType.getLongText() != null){
-						tmpSb.append(tzType.getLongText());
+				
+				if(tzType.hasParamType()) {
+					TzParamType paramType = tzType.getParamType();
+					switch(paramType)
+					{
+						case TEXT:
+						{
+							tmpSb.append(";");
+							tmpSb.append("VALUE=TEXT:");
+							tmpSb.append(tzType.getIso8601Offset());
+							tmpSb.append(';');
+							
+							if (tzType.getShortText() != null){
+								tmpSb.append(tzType.getShortText());
+							}
+							
+							tmpSb.append(';');
+							
+							if (tzType.getLongText() != null){
+								tmpSb.append(tzType.getLongText());
+							}
+							
+							break;
+						}
+						
+						case UTC_OFFSET:
+						{
+							tmpSb.append(":");
+							tmpSb.append(tzType.getIso8601Offset());
+							break;
+						}
 					}
 				}
 				else {
-					tmpSb.append(":");
-					tmpSb.append(tzType.getIso8601Offset());
+					if(tzType.getShortText() != null || tzType.getLongText() != null) {
+						tmpSb.append(";");
+						tmpSb.append("VALUE=TEXT:");
+						tmpSb.append(tzType.getIso8601Offset());
+						tmpSb.append(';');
+						
+						if (tzType.getShortText() != null){
+							tmpSb.append(tzType.getShortText());
+						}
+						
+						tmpSb.append(';');
+						
+						if (tzType.getLongText() != null){
+							tmpSb.append(tzType.getLongText());
+						}
+					}
+					else {
+						tmpSb.append(":");
+						tmpSb.append(tzType.getIso8601Offset());
+					}
 				}
+				
 
 				String tmpTimeZoneLine = tmpSb.toString();
 				String foldedTimeZoneLine = VCardUtils.foldLine(tmpTimeZoneLine, eol, foldingScheme);
@@ -3397,6 +3433,7 @@ public class VCardWriter {
 							case KDE_ADDRESS_BOOK:
 							case RFC2426:
 							case I_PHONE:
+							default:
 							{
 								tmpSb.append("ENCODING=");
 								tmpSb.append(photoType.getEncodingType().getType());
@@ -3449,6 +3486,7 @@ public class VCardWriter {
 							case EVOLUTION:
 							case KDE_ADDRESS_BOOK:
 							case I_PHONE:
+							default:
 							{
 								try {
 									byte[] photoBytes = photoType.getPhoto();
@@ -3489,6 +3527,7 @@ public class VCardWriter {
 						case KDE_ADDRESS_BOOK:
 						case I_PHONE:
 						case MAC_ADDRESS_BOOK:
+						default:
 						{
 							sb.append(eol);
 							break;

@@ -174,7 +174,8 @@ public class PhotoType extends AbstractVCardType implements VCardBinaryType, Com
 
 	public boolean isBinary()
 	{
-		return EncodingType.BINARY.equals(getEncodingType());
+		EncodingType t = getEncodingType();
+		return EncodingType.BINARY.equals(t) || EncodingType.BASE64.equals(t);
 	}
 	
 	public boolean hasParams()
