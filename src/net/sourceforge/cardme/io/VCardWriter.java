@@ -338,7 +338,7 @@ public class VCardWriter {
 	 * If not set then the default CRLF is used. See below list
 	 * for compatible types:
 	 * <ul>
-	 * 		<li><strong>LF or <code>\n</code></strong>: Unix, GNU/Linux, AIX, Xenix, Mac OS X, FreeBSD, BeOS, Amiga, and RISC OS</li>
+	 * 	<li><strong>LF or <code>\n</code></strong>: Unix, GNU/Linux, AIX, Xenix, Mac OS X, FreeBSD, BeOS, Amiga, and RISC OS</li>
 	 *  	<li><strong>CR or <code>\r</code></strong>:  Commodore 8-bit machines, Acorn BBC, TRS-80, Apple II family, Mac OS up to version 9 and OS-9</li>
 	 *  	<li><strong>CRLF or <code>\r\n</code></strong>:  Microsoft Windows, DEC TOPS-10, RT-11, CP/M, MP/M, DOS (MS-DOS, PC-DOS, etc.), Atari TOS, OS/2, Symbian OS, Palm OS</li>
 	 * </ul>
@@ -1895,60 +1895,8 @@ public class VCardWriter {
 									}
 								}
 								
-								//TODO check if this is needed for both cases.
 								tmpSb.deleteCharAt(tmpSb.length()-1);
 							}
-							
-//							if(urlType.hasExtendedParams()) {
-//								switch(urlType.getParameterTypeStyle())
-//								{
-//									case PARAMETER_LIST:
-//									{
-//										tmpSb.append(";");
-//										List<ExtendedParamType> xParamTypes = urlType.getExtendedParams();
-//										for(ExtendedParamType xParamType : xParamTypes) {
-//											tmpSb.append("TYPE=");
-//											tmpSb.append(xParamType.getTypeName());
-//											
-//											if(xParamType.hasTypeValue()) {
-//												tmpSb.append("=");
-//												tmpSb.append(xParamType.getTypeValue());
-//											}
-//											
-//											tmpSb.append(";");
-//										}
-//
-//										break;
-//									}
-//
-//									case PARAMETER_VALUE_LIST:
-//									{
-//										if(urlType.hasParams()) {
-//											//Continue from the list
-//											tmpSb.append(",");
-//										}
-//										else {
-//											//Start a new
-//											tmpSb.append(";TYPE=");
-//										}
-//										
-//										List<ExtendedParamType> xParamTypes = urlType.getExtendedParams();
-//										for(ExtendedParamType xParamType : xParamTypes) {
-//											tmpSb.append(xParamType.getTypeName());
-//											if(xParamType.hasTypeValue()) {
-//												tmpSb.append("=");
-//												tmpSb.append(xParamType.getTypeValue());
-//											}
-//											
-//											tmpSb.append(",");
-//										}
-//
-//										break;
-//									}
-//								}
-//
-//								tmpSb.deleteCharAt(tmpSb.length()-1);
-//							}
 							
 							break;
 						}
@@ -2240,57 +2188,6 @@ public class VCardWriter {
 					tmpSb.deleteCharAt(tmpSb.length()-1);
 				}
 				
-//				if(adrType.hasExtendedParams()) {
-//					switch(adrType.getParameterTypeStyle())
-//					{
-//						case PARAMETER_LIST:
-//						{
-//							tmpSb.append(";");
-//							
-//							List<ExtendedParamType> xParamTypes = adrType.getExtendedParams();
-//							for(ExtendedParamType xParamType : xParamTypes) {
-//								tmpSb.append("TYPE=");
-//								tmpSb.append(xParamType.getTypeName());
-//								if(xParamType.hasTypeValue()) {
-//									tmpSb.append("=");
-//									tmpSb.append(xParamType.getTypeValue());
-//								}
-//								
-//								tmpSb.append(";");
-//							}
-//
-//							break;
-//						}
-//
-//						case PARAMETER_VALUE_LIST:
-//						{
-//							if(adrType.hasParams()) {
-//								//Continue from the list
-//								tmpSb.append(",");
-//							}
-//							else {
-//								//Start a new
-//								tmpSb.append(";TYPE=");
-//							}
-//							
-//							List<ExtendedParamType> xParamTypes = adrType.getExtendedParams();
-//							for(ExtendedParamType xParamType : xParamTypes) {
-//								tmpSb.append(xParamType.getTypeName());
-//								if(xParamType.hasTypeValue()) {
-//									tmpSb.append("=");
-//									tmpSb.append(xParamType.getTypeValue());
-//								}
-//								
-//								tmpSb.append(",");
-//							}
-//
-//							break;
-//						}
-//					}
-//
-//					tmpSb.deleteCharAt(tmpSb.length()-1);
-//				}
-				
 				if(adrType.hasExtendedParams()) {
 					buildExtendParameters(adrType, tmpSb);
 				}
@@ -2420,56 +2317,6 @@ public class VCardWriter {
 						tmpSb.deleteCharAt(tmpSb.length()-1);
 					}
 					
-//					if(labelType.hasExtendedParams()) {
-//						switch(labelType.getParameterTypeStyle())
-//						{
-//							case PARAMETER_LIST:
-//							{
-//								tmpSb.append(";");
-//								List<ExtendedParamType> xParamTypes = labelType.getExtendedParams();
-//								for(ExtendedParamType xParamType : xParamTypes) {
-//									tmpSb.append("TYPE=");
-//									tmpSb.append(xParamType.getTypeName());
-//									if(xParamType.hasTypeValue()) {
-//										tmpSb.append("=");
-//										tmpSb.append(xParamType.getTypeValue());
-//									}
-//									
-//									tmpSb.append(";");
-//								}
-//
-//								break;
-//							}
-//
-//							case PARAMETER_VALUE_LIST:
-//							{
-//								if(labelType.hasParams()) {
-//									//Continue from the list
-//									tmpSb.append(",");
-//								}
-//								else {
-//									//Start a new
-//									tmpSb.append(";TYPE=");
-//								}
-//								
-//								List<ExtendedParamType> xParamTypes = labelType.getExtendedParams();
-//								for(ExtendedParamType xParamType : xParamTypes) {
-//									tmpSb.append(xParamType.getTypeName());
-//									if(xParamType.hasTypeValue()) {
-//										tmpSb.append("=");
-//										tmpSb.append(xParamType.getTypeValue());
-//									}
-//									
-//									tmpSb.append(",");
-//								}
-//
-//								break;
-//							}
-//						}
-//
-//						tmpSb.deleteCharAt(tmpSb.length()-1);
-//					}
-					
 					if(labelType.hasExtendedParams()) {
 						buildExtendParameters(labelType, tmpSb);
 					}
@@ -2570,56 +2417,6 @@ public class VCardWriter {
 						tmpSb.deleteCharAt(tmpSb.length()-1);
 					}
 					
-//					if(telType.hasExtendedParams()) {
-//						switch(telType.getParameterTypeStyle())
-//						{
-//							case PARAMETER_LIST:
-//							{
-//								tmpSb.append(";");
-//								List<ExtendedParamType> xParamTypes = telType.getExtendedParams();
-//								for(ExtendedParamType xParamType : xParamTypes) {
-//									tmpSb.append("TYPE=");
-//									tmpSb.append(xParamType.getTypeName());
-//									if(xParamType.hasTypeValue()) {
-//										tmpSb.append("=");
-//										tmpSb.append(xParamType.getTypeValue());
-//									}
-//									
-//									tmpSb.append(";");
-//								}
-//
-//								break;
-//							}
-//
-//							case PARAMETER_VALUE_LIST:
-//							{
-//								if(telType.hasParams()) {
-//									//Continue from the list
-//									tmpSb.append(",");
-//								}
-//								else {
-//									//Start a new
-//									tmpSb.append(";TYPE=");
-//								}
-//								
-//								List<ExtendedParamType> xParamTypes = telType.getExtendedParams();
-//								for(ExtendedParamType xParamType : xParamTypes) {
-//									tmpSb.append(xParamType.getTypeName());
-//									if(xParamType.hasTypeValue()) {
-//										tmpSb.append("=");
-//										tmpSb.append(xParamType.getTypeValue());
-//									}
-//									
-//									tmpSb.append(",");
-//								}
-//								
-//								break;
-//							}
-//						}
-//
-//						tmpSb.deleteCharAt(tmpSb.length()-1);
-//					}
-					
 					if(telType.hasExtendedParams()) {
 						buildExtendParameters(telType, tmpSb);
 					}
@@ -2713,56 +2510,6 @@ public class VCardWriter {
 					if(emailType.hasExtendedParams()) {
 						buildExtendParameters(emailType, tmpSb);
 					}
-					
-//					if(emailType.hasExtendedParams()) {
-//						switch(emailType.getParameterTypeStyle())
-//						{
-//							case PARAMETER_LIST:
-//							{
-//								tmpSb.append(";");
-//								List<ExtendedParamType> xParamTypes = emailType.getExtendedParams();
-//								for(ExtendedParamType xParamType : xParamTypes) {
-//									tmpSb.append("TYPE=");
-//									tmpSb.append(xParamType.getTypeName());
-//									if(xParamType.hasTypeValue()) {
-//										tmpSb.append("=");
-//										tmpSb.append(xParamType.getTypeValue());
-//									}
-//									
-//									tmpSb.append(";");
-//								}
-//
-//								break;
-//							}
-//
-//							case PARAMETER_VALUE_LIST:
-//							{
-//								if(emailType.hasParams()) {
-//									//Continue from the list
-//									tmpSb.append(",");
-//								}
-//								else {
-//									//Start a new
-//									tmpSb.append(";TYPE=");
-//								}
-//								
-//								List<ExtendedParamType> xParamTypes = emailType.getExtendedParams();
-//								for(ExtendedParamType xParamType : xParamTypes) {
-//									tmpSb.append(xParamType.getTypeName());
-//									if(xParamType.hasTypeValue()) {
-//										tmpSb.append("=");
-//										tmpSb.append(xParamType.getTypeValue());
-//									}
-//									
-//									tmpSb.append(",");
-//								}
-//
-//								break;
-//							}
-//						}
-//
-//						tmpSb.deleteCharAt(tmpSb.length()-1);
-//					}
 					
 					EncodingType encType = emailType.getEncodingType();
 					switch(encType)
@@ -4010,58 +3757,6 @@ public class VCardWriter {
 
 						tmpSb.deleteCharAt(tmpSb.length()-1);
 					}
-					
-//					if(imppType.hasExtendedParams()) {
-//						switch(imppType.getParameterTypeStyle())
-//						{
-//							case PARAMETER_LIST:
-//							{
-//								tmpSb.append(";");
-//								List<ExtendedParamType> xParamTypes = imppType.getExtendedParams();
-//								for(ExtendedParamType xParamType : xParamTypes) {
-//									tmpSb.append("TYPE=");
-//									tmpSb.append(xParamType.getTypeName());
-//									
-//									if(xParamType.hasTypeValue()) {
-//										tmpSb.append("=");
-//										tmpSb.append(xParamType.getTypeValue());
-//									}
-//									
-//									tmpSb.append(";");
-//								}
-//
-//								break;
-//							}
-//
-//							case PARAMETER_VALUE_LIST:
-//							{
-//								if(imppType.hasParams()) {
-//									//Continue from the list
-//									tmpSb.append(",");
-//								}
-//								else {
-//									//Start a new
-//									tmpSb.append(";TYPE=");
-//								}
-//								
-//								List<ExtendedParamType> xParamTypes = imppType.getExtendedParams();
-//								for(ExtendedParamType xParamType : xParamTypes) {
-//									tmpSb.append(xParamType.getTypeName());
-//									
-//									if(xParamType.hasTypeValue()) {
-//										tmpSb.append("=");
-//										tmpSb.append(xParamType.getTypeValue());
-//									}
-//									
-//									tmpSb.append(",");
-//								}
-//
-//								break;
-//							}
-//						}
-//
-//						tmpSb.deleteCharAt(tmpSb.length()-1);
-//					}
 					
 					if(imppType.hasExtendedParams()) {
 						buildExtendParameters(imppType, tmpSb);
