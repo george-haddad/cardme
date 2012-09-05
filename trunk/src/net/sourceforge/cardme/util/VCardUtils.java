@@ -357,14 +357,6 @@ public final class VCardUtils {
 		String s4 = s3.replaceAll(unfold4, "=");
 		
 		return s4;
-		
-		
-		/*
-		 * 
-		 * United\n
-  		     States of America
-  
-		 */
 	}
 	
 	/**

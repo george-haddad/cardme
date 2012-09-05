@@ -124,36 +124,4 @@ public final class Base64Wrapper {
 	{
 		return Base64.decode(base64String, Base64.NO_OPTIONS);
 	}
-
-//	/**
-//	 * 
-//	 * @param base64string
-//	 * @return String
-//	 */
-//	private static String unfoldBase64String(String base64string)
-//	{
-//		base64string = base64string.replaceAll(VCardUtils.LF, "");
-//		base64string = base64string.replaceAll(VCardUtils.CR, "");		
-//		return base64string;
-//	}
-//	
-//	public static void main(String ...args) {
-//		
-//		try {
-//			File file = new File(Base64Wrapper.class.getResource("tux.png").toURI());
-//			BufferedReader br = new BufferedReader(new FileReader(file));
-//			int b = -1;
-//			int i = 0;
-//			byte[] bytes = new byte[(int)file.length()];
-//			while((b = br.read()) != -1) {
-//				bytes[i] = (byte)b;
-//				i++;
-//			}
-//			
-//			System.out.println(Base64Wrapper.encode(bytes));
-//		}
-//		catch(Exception ex) {
-//			ex.printStackTrace();
-//		}
-//	}
 }
