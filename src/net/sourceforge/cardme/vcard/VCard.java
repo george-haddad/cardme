@@ -125,25 +125,119 @@ import net.sourceforge.cardme.vcard.types.VersionType;
  */
 public interface VCard {
 
+	/**
+	 * <p>Returns the BEGIN type. The type should always exist.</p>
+	 *
+	 * @return the begin type - {@link BeginType}
+	 */
 	public BeginType getBegin();
+	
+	/**
+	 * <p>Sets the BEGIN type. The type cannot be null and this
+	 * field is automatically generated if not explicitly set.</p>
+	 *
+	 * @param begin - the begin type
+	 * @throws NullPointerException
+	 * 	Thrown if begin type is null
+	 */
 	public void setBegin(BeginType begin) throws NullPointerException;
 	
+	/**
+	 * <p>Sets the END type. The type should always exist.</p>
+	 *
+	 * @return the end type - {@link EndType}
+	 */
 	public EndType getEnd();
+	
+	/**
+	 * <p>Sets the END type. The type cannot be null and this
+	 * field is automatically generated if not explicitly set.</p>
+	 *
+	 * @param end - the end type
+	 * @throws NullPointerException
+	 * 	Thrown if the end type is null
+	 */
 	public void setEnd(EndType end) throws NullPointerException;
 	
+	/**
+	 * <p>Returns the NAME type or null if one is not set.</p>
+	 *
+	 * @return the name type {@link NameType} or null if one is not set 
+	 */
 	public NameType getName();
+	
+	/**
+	 * <p>Sets the NAME type, this value can be null.</p>
+	 *
+	 * @param name the NAME type
+	 */
 	public void setName(NameType name);
+	
+	/**
+	 * <p>Returns true if the NAME type has been set.</p>
+	 *
+	 * @return true if the NAME type has been set
+	 */
 	public boolean hasName();
+	
+	/**
+	 * <p>Removes the NAME type from the VCard.</p>
+	 *
+	 */
 	public void clearName();
 	
+	/**
+	 * <p>Returns the PROFILE type or null if one is not set.</p>
+	 *
+	 * @return the profile type {@link ProfileType} or null if one is not set
+	 */
 	public ProfileType getProfile();
+	
+	/**
+	 * <p>Sets the PROFILE type, this value can be null.</p>
+	 *
+	 * @param profile the PROFILE type
+	 */
 	public void setProfile(ProfileType profile);
+	
+	/**
+	 * <p>Returns true if the PROFILE type has been set.</p>
+	 *
+	 * @return true if the PROFILE type has been set
+	 */
 	public boolean hasProfile();
+	
+	/**
+	 * <p>Removes the PROFILE type from the VCard.</p>
+	 *
+	 */
 	public void clearProfile();
 	
+	/**
+	 * <p>Returns the SOURCE type or null if one is not set.</p>
+	 *
+	 * @return the SOURCE type or null if one is not set
+	 */
 	public SourceType getSource();
+	
+	/**
+	 * <p>Sets the SOURCE type, this value can be null.</p>
+	 *
+	 * @param source the SOURCE type
+	 */
 	public void setSource(SourceType source);
+	
+	/**
+	 * <p>Returns true if the SOURCE type has been set.</p>
+	 *
+	 * @return true if the SOURCE type has been set
+	 */
 	public boolean hasSource();
+	
+	/**
+	 * <p>Removes the SOURCE type from the VCard.</p>
+	 *
+	 */
 	public void clearSource();
 	
 	public FNType getFN();
