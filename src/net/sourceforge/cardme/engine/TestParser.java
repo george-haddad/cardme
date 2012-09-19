@@ -12,12 +12,10 @@ import net.sourceforge.cardme.io.VCardWriter;
 import net.sourceforge.cardme.util.StringUtil;
 import net.sourceforge.cardme.vcard.VCard;
 import net.sourceforge.cardme.vcard.VCardImpl;
-import net.sourceforge.cardme.vcard.arch.ParameterTypeStyle;
 import net.sourceforge.cardme.vcard.arch.VCardVersion;
 import net.sourceforge.cardme.vcard.errors.VCardError;
 import net.sourceforge.cardme.vcard.exceptions.VCardBuildException;
 import net.sourceforge.cardme.vcard.exceptions.VCardParseException;
-import net.sourceforge.cardme.vcard.types.ImppType;
 
 /*
  * Copyright 2011 George El-Haddad. All rights reserved.
@@ -187,13 +185,6 @@ public class TestParser {
 					System.out.println(errors.get(j).getSeverity());
 					System.out.println(StringUtil.formatException(errors.get(j).getError()));
 				}
-			}
-			
-//			//Uncomment to change the output style of parameter list
-//			
-			List<ImppType> imppList = vcard.getIMPPs();
-			for(ImppType imppType : imppList) {
-				imppType.setParameterTypeStyle(ParameterTypeStyle.PARAMETER_VALUE_LIST);
 			}
 			
 			writer.setVCard(vcard);
