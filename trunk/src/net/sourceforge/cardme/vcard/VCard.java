@@ -216,7 +216,7 @@ public interface VCard {
 	/**
 	 * <p>Returns the SOURCE type or null if one is not set.</p>
 	 *
-	 * @return the SOURCE type or null if one is not set
+	 * @return the SOURCE type {@link SourceType} or null if one is not set
 	 */
 	public SourceType getSource();
 	
@@ -240,8 +240,27 @@ public interface VCard {
 	 */
 	public void clearSource();
 	
+	/**
+	 * <p>Returns the FN type, this type must always exist.</p>
+	 *
+	 * @return the FN type {@link FNType}
+	 */
 	public FNType getFN();
+	
+	/**
+	 * <p>Sets the FN type, this type should always exist.</p>
+	 *
+	 * @param formattedName - the formatted name
+	 * @throws NullPointerException
+	 * 	Thrown if the formatted name is null
+	 */
 	public void setFN(FNType formattedName) throws NullPointerException;
+	
+	/**
+	 * <p>Returns true if the FN type is set.</p>
+	 *
+	 * @return true if the FN type is set
+	 */
 	public boolean hasFN();
 	
 	public NType getN();
