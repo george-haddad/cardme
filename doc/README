@@ -12,6 +12,39 @@ We want to be the best VCard library on the net, so if there is a bug or a new f
 
 -------------------
 
+Card Me Version 0.4.0-b1
+
+!!!!!!
+This is an early stage beta release, this is not meant for production use.
+DO SO AT YOUR OWN RISK.
+!!!!!!
+
+This new version comes with a major over-haul of the API. The concept of using
+cardme is still the same, but the methods and functions may have changed a bit.
+Apologies for not completing the javadoc, wiki, user guide and developer guide
+documentation as the developers of cardme have been very busy. All the docs will
+be completed and provided on a gradual basis.
+
+Previous release of 0.3.6 will NOT be discontinued. Version 0.4 and 0.3.x will
+run in parallel. Version 0.3.x will be maintained for bug fixes and possible
+feature updates, but the main focus will lay in version 0.4.
+
+Please provide feedback (positive and negative) on the usage of cardme and
+what can be improved. Remember that this project relies greatly on user
+feedback. Use the Sourceforge forums and issue tracker to share your thoughts
+and post bug/feature/patch requests.
+
+CardMe thanks all its users for their support and greatly appreciate all those
+who have posted bug reports, requested for new features and contributed patches
+and code.
+
+George El-Haddad
+Project Leader
+
+Michael Rimov
+Maven Integration Contributor
+
+
 Card Me Version 0.3.6
 
 FEATURE[3554030]
