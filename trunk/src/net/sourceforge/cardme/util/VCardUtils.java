@@ -3,6 +3,7 @@ package net.sourceforge.cardme.util;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -102,7 +103,7 @@ public final class VCardUtils {
 		"\\:"
 	};
 	
-	private static NumberFormat GEO_NUM_FORMATTER = NumberFormat.getNumberInstance();
+	private static NumberFormat GEO_NUM_FORMATTER = NumberFormat.getNumberInstance(Locale.US);
 	
 	static {
 		GEO_NUM_FORMATTER.setMinimumFractionDigits(6);
