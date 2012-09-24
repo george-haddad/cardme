@@ -12,6 +12,14 @@ We want to be the best VCard library on the net, so if there is a bug or a new f
 
 -------------------
 
+Card Me Version 0.4.0-b2
+
+BUG[47]
+GEO type using commas instead of decimals when run on system whose default locale is NL.
+
+
+
+
 Card Me Version 0.4.0-b1
 
 !!!!!!
