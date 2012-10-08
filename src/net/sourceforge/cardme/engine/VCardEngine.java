@@ -2103,35 +2103,47 @@ public class VCardEngine {
 				paramName = paramName.toUpperCase().trim();
 				parameterTypes.add(new ParameterType(paramName, paramValue));
  			}
- 			else {
- 					//When the parameter types are missing we try to guess what they are.
- 					//We really should not as it breaks RFC rules but some apps do broken exports.
- 					
-					if(paramValue.equals(EncodingType.BASE64.getType())) {
-						parameterTypes.add(new ParameterType("ENCODING", paramValue));
- 					}
-					else if(paramValue.equals(EncodingType.BINARY.getType())) {
-						parameterTypes.add(new ParameterType("ENCODING", paramValue));
- 					}
-					else if(paramValue.equals(EncodingType.QUOTED_PRINTABLE.getType())) {
-						parameterTypes.add(new ParameterType("ENCODING", paramValue));
- 					}
-					else if(paramValue.equals("URI")) {
-						parameterTypes.add(new ParameterType("VALUE", paramValue));
- 					}
-					else if(Charset.isSupported(paramValue)) {
- 						//Hell, it could even be a charset
-						parameterTypes.add(new ParameterType("CHARSET", paramValue));
- 					}
- 					else {
- 						/*
+			else {
+				//When the parameter types are missing we try to guess what they are.
+				//We really should not as it breaks RFC rules but some apps do broken exports.
+
+				if(paramValue.equals(EncodingType.BASE64.getType())) {
+					parameterTypes.add(new ParameterType("ENCODING", paramValue));
+				}
+				else if(paramValue.equals(EncodingType.BINARY.getType())) {
+					parameterTypes.add(new ParameterType("ENCODING", paramValue));
+				}
+				else if(paramValue.equals(EncodingType.QUOTED_PRINTABLE.getType())) {
+					parameterTypes.add(new ParameterType("ENCODING", paramValue));
+				}
+				else if(paramValue.equals("URI")) {
+					parameterTypes.add(new ParameterType("VALUE", paramValue));
+				}
+				else {
+					try {
+						//It could be a charset
+						boolean isCharset = Charset.isSupported(paramValue);
+						if(isCharset) {
+							//it is a charset and supported
+							parameterTypes.add(new ParameterType("CHARSET", paramValue));
+						}
+						else {
+							//It is a charset but not supported
+							parameterTypes.add(new ParameterType("TYPE", paramValue));
+						}
+					}
+					catch(Exception ex) {
+						//It is not a charset
+
+						/*
 						 * Type special notes: The type can include the type parameter "TYPE" to
 						 * specify the graphic image format type. The TYPE parameter values MUST
 						 * be one of the IANA registered image formats or a non-standard image format.
 						 */
-						
+
 						parameterTypes.add(new ParameterType("TYPE", paramValue));
- 					}
+					}
+				}
  			}
 		}
 		

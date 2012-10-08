@@ -1,7 +1,6 @@
 package net.sourceforge.cardme.engine;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,6 +97,25 @@ public class TestParser {
 		
 		return vcards;
 	}
+	
+	public List<VCard> importVCardsMultiple() {
+		List<VCard> vcards = null;
+		
+		try {
+			 vcards = vcardEngine.parseMultiple(vcardFiles[0]);
+			
+		}
+		catch(IOException ioe) {
+			System.err.println("Could not read vcard file: "+vcardFiles[0].getAbsolutePath());
+			ioe.printStackTrace();
+		}
+		catch(VCardParseException ex) {
+			System.err.println("Could not read vcard file: "+vcardFiles[0].getAbsolutePath());
+			ex.printStackTrace();
+		}
+		
+		return vcards;
+	}
 
 //	Use command line arguments.
 //	
@@ -160,7 +178,9 @@ public class TestParser {
 //		testParser.setCompatibilityMode(CompatibilityMode.I_PHONE);
 //		testParser.setCompatibilityMode(CompatibilityMode.KDE_ADDRESS_BOOK);
 //		testParser.setCompatibilityMode(CompatibilityMode.MS_OUTLOOK);
-		List<VCard> vcards = testParser.importVCards();
+		
+//		List<VCard> vcards = testParser.importVCards();
+		List<VCard> vcards = testParser.importVCardsMultiple();
 		
 		VCardWriter writer = new VCardWriter();
 		writer.setOutputVersion(VCardVersion.V3_0);
@@ -197,16 +217,6 @@ public class TestParser {
 					System.out.println(errors.get(j).getSeverity());
 					System.out.println(StringUtil.formatException(errors.get(j).getError()));
 				}
-			}
-			
-			try {
-				FileWriter fw = new FileWriter(new File("/home/pcs/Desktop/George/output.vcf"));
-				fw.write(vstring);
-				fw.flush();
-				fw.close();
-			}
-			catch(Exception ex) {
-				ex.printStackTrace();
 			}
 			
 			System.out.println(vstring);
