@@ -23,6 +23,15 @@ GEO type using commas instead of decimals when run on system whose default local
 BUG[52]
 Semi-colons and other special characters are now properly escaped in QUOTED-PRINTABLE fields.
 
+Added new setForceEncodeQuotedPrintableSpaces() method to force cardme to take one extra
+pass at a Quoted-Printable string to convert all spaces to =20.
+
+George El-Haddad
+Project Leader
+
+Michael Rimov
+Maven Integration Contributor
+
 
 Card Me Version 0.4.0-b1
 
