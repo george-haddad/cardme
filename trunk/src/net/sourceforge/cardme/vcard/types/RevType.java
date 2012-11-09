@@ -64,11 +64,13 @@ public class RevType extends AbstractVCardType implements Comparable<RevType>, C
 		setRevision(revision);
 	}
 
+	@Override
 	public Calendar getRevision()
 	{
 		return revision;
 	}
 
+	@Override
 	public void setRevision(Calendar calendar) {
 		if(calendar != null) {
 			revision = Calendar.getInstance();
@@ -79,6 +81,7 @@ public class RevType extends AbstractVCardType implements Comparable<RevType>, C
 		}
 	}
 
+	@Override
 	public void setRevision(Date date) {
 		if(date != null) {
 			revision = Calendar.getInstance();
@@ -89,15 +92,18 @@ public class RevType extends AbstractVCardType implements Comparable<RevType>, C
 		}
 	}
 
+	@Override
 	public void clearRevision() {
 		revision = null;
 	}
 
+	@Override
 	public boolean hasRevision()
 	{
 		return revision != null;
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -122,6 +128,7 @@ public class RevType extends AbstractVCardType implements Comparable<RevType>, C
 		return cloned;
 	}
 
+	@Override
 	public int compareTo(RevType obj)
 	{
 		if(obj != null) {

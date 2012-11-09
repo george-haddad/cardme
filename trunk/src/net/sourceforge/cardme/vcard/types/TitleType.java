@@ -57,6 +57,7 @@ public class TitleType extends AbstractVCardType implements Comparable<TitleType
 		setTitle(title);
 	}
 
+	@Override
 	public String getTitle()
 	{
 		if(title != null) {
@@ -67,6 +68,7 @@ public class TitleType extends AbstractVCardType implements Comparable<TitleType
 		}
 	}
 
+	@Override
 	public void setTitle(String title) {
 		if(title != null) {
 			this.title = new String(title);
@@ -76,15 +78,18 @@ public class TitleType extends AbstractVCardType implements Comparable<TitleType
 		}
 	}
 
+	@Override
 	public void clearTitle() {
 		title = null;
 	}
 
+	@Override
 	public boolean hasTitle()
 	{
 		return title != null;
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -109,6 +114,7 @@ public class TitleType extends AbstractVCardType implements Comparable<TitleType
 		return cloned;
 	}
 
+	@Override
 	public int compareTo(TitleType obj)
 	{
 		if(obj != null) {

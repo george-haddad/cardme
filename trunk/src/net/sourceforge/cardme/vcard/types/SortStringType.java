@@ -57,6 +57,7 @@ public class SortStringType extends AbstractVCardType implements Comparable<Sort
 		setSortString(sortString);
 	}
 
+	@Override
 	public String getSortString()
 	{
 		if(sortString != null) {
@@ -67,6 +68,7 @@ public class SortStringType extends AbstractVCardType implements Comparable<Sort
 		}
 	}
 
+	@Override
 	public void setSortString(String sortString) {
 		if(sortString != null) {
 			this.sortString = new String(sortString);
@@ -76,15 +78,18 @@ public class SortStringType extends AbstractVCardType implements Comparable<Sort
 		}
 	}
 
+	@Override
 	public void clearSortString() {
 		sortString = null;
 	}
 
+	@Override
 	public boolean hasSortString()
 	{
 		return sortString != null;
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -109,6 +114,7 @@ public class SortStringType extends AbstractVCardType implements Comparable<Sort
 		return cloned;
 	}
 	
+	@Override
 	public int compareTo(SortStringType obj)
 	{
 		if(obj != null) {

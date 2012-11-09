@@ -62,6 +62,7 @@ public class EmailType extends AbstractVCardType implements Comparable<EmailType
 		setEmail(email);
 	}
 
+	@Override
 	public String getEmail()
 	{
 		if(email != null) {
@@ -72,6 +73,7 @@ public class EmailType extends AbstractVCardType implements Comparable<EmailType
 		}
 	}
 
+	@Override
 	public void setEmail(String email) {
 		if(email != null) {
 			this.email = new String(email);
@@ -81,21 +83,25 @@ public class EmailType extends AbstractVCardType implements Comparable<EmailType
 		}
 	}
 	
+	@Override
 	public boolean hasEmail()
 	{
 		return email != null;
 	}
 
+	@Override
 	public List<EmailParamType> getParams()
 	{
 		return Collections.unmodifiableList(emailParamTypes);
 	}
 
+	@Override
 	public int getParamSize()
 	{
 		return emailParamTypes.size();
 	}
 
+	@Override
 	public EmailType addParam(EmailParamType emailParamType) throws NullPointerException {
 		if(emailParamType == null) {
 			throw new NullPointerException("Cannot add a null emailParamType.");
@@ -105,6 +111,7 @@ public class EmailType extends AbstractVCardType implements Comparable<EmailType
 		return this;
 	}
 
+	@Override
 	public EmailType addAllParams(List<EmailParamType> emailParamTypes) throws NullPointerException {
 		if(emailParamTypes == null) {
 			throw new NullPointerException("Cannot add a null emailParamTypes list.");
@@ -114,6 +121,7 @@ public class EmailType extends AbstractVCardType implements Comparable<EmailType
 		return this;
 	}
 
+	@Override
 	public EmailType removeParam(EmailParamType emailParamType) throws NullPointerException {
 		if(emailParamType == null) {
 			throw new NullPointerException("Cannot remove a null emailParamType.");
@@ -123,6 +131,7 @@ public class EmailType extends AbstractVCardType implements Comparable<EmailType
 		return this;
 	}
 
+	@Override
 	public boolean containsParam(EmailParamType emailParamType)
 	{
 		if(emailParamType != null) {
@@ -133,6 +142,7 @@ public class EmailType extends AbstractVCardType implements Comparable<EmailType
 		}
 	}
 
+	@Override
 	public boolean containsAllParams(List<EmailParamType> emailParamTypes)
 	{
 		if(emailParamTypes != null) {
@@ -143,11 +153,13 @@ public class EmailType extends AbstractVCardType implements Comparable<EmailType
 		}
 	}
 
+	@Override
 	public boolean hasParams()
 	{
 		return !emailParamTypes.isEmpty();
 	}
 
+	@Override
 	public void clearParams() {
 		emailParamTypes.clear();
 	}
@@ -172,6 +184,7 @@ public class EmailType extends AbstractVCardType implements Comparable<EmailType
 		return cloned;
 	}
 	
+	@Override
 	public int compareTo(EmailType obj)
 	{
 		if(obj != null) {

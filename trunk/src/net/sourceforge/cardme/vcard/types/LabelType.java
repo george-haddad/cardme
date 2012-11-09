@@ -62,6 +62,7 @@ public class LabelType extends AbstractVCardType implements Comparable<LabelType
 		setLabel(label);
 	}
 
+	@Override
 	public String getLabel()
 	{
 		if(label != null) {
@@ -72,6 +73,7 @@ public class LabelType extends AbstractVCardType implements Comparable<LabelType
 		}
 	}
 
+	@Override
 	public void setLabel(String label) {
 		if(label != null) {
 			this.label = new String(label);
@@ -81,21 +83,25 @@ public class LabelType extends AbstractVCardType implements Comparable<LabelType
 		}
 	}
 
+	@Override
 	public boolean hasLabel()
 	{
 		return label != null;
 	}
 
+	@Override
 	public List<LabelParamType> getParams()
 	{
 		return Collections.unmodifiableList(labelParamTypes);
 	}
 
+	@Override
 	public int getParamSize()
 	{
 		return labelParamTypes.size();
 	}
 
+	@Override
 	public LabelType addParam(LabelParamType labelParamType) throws NullPointerException {
 		if(labelParamType == null) {
 			throw new NullPointerException("Cannot add a null labelParamType.");
@@ -105,6 +111,7 @@ public class LabelType extends AbstractVCardType implements Comparable<LabelType
 		return this;
 	}
 
+	@Override
 	public LabelType addAllParams(List<LabelParamType> labelParamTypes) throws NullPointerException {
 		if(labelParamTypes == null) {
 			throw new NullPointerException("Cannot add a null labelParamTypes list.");
@@ -114,6 +121,7 @@ public class LabelType extends AbstractVCardType implements Comparable<LabelType
 		return this;
 	}
 
+	@Override
 	public LabelType removeParam(LabelParamType labelParamType) throws NullPointerException {
 		if(labelParamType == null) {
 			throw new NullPointerException("Cannot remove a null labelParamType.");
@@ -123,6 +131,7 @@ public class LabelType extends AbstractVCardType implements Comparable<LabelType
 		return this;
 	}
 
+	@Override
 	public boolean containsParam(LabelParamType labelParamType)
 	{
 		if(labelParamType != null) {
@@ -133,6 +142,7 @@ public class LabelType extends AbstractVCardType implements Comparable<LabelType
 		}
 	}
 
+	@Override
 	public boolean containsAllParams(List<LabelParamType> labelParamTypes)
 	{
 		if(labelParamTypes != null) {
@@ -143,11 +153,13 @@ public class LabelType extends AbstractVCardType implements Comparable<LabelType
 		}
 	}
 
+	@Override
 	public boolean hasParams()
 	{
 		return !labelParamTypes.isEmpty();
 	}
 
+	@Override
 	public void clearParams() {
 		labelParamTypes.clear();
 	}
@@ -172,6 +184,7 @@ public class LabelType extends AbstractVCardType implements Comparable<LabelType
 		return cloned;
 	}
 	
+	@Override
 	public int compareTo(LabelType obj)
 	{
 		if(obj != null) {

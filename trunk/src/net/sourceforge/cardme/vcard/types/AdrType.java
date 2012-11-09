@@ -69,6 +69,7 @@ public class AdrType extends AbstractVCardType implements Comparable<AdrType>, C
 		setStreetAddress(streetAddress);
 	}
 
+	@Override
 	public String getPostOfficeBox()
 	{
 		if(postOfficeBox != null) {
@@ -79,6 +80,7 @@ public class AdrType extends AbstractVCardType implements Comparable<AdrType>, C
 		}
 	}
 
+	@Override
 	public void setPostOfficeBox(String postOfficeBox) {
 		if(postOfficeBox != null) {
 			this.postOfficeBox = new String(postOfficeBox);
@@ -88,11 +90,13 @@ public class AdrType extends AbstractVCardType implements Comparable<AdrType>, C
 		}
 	}
 
+	@Override
 	public boolean hasPostOfficebox()
 	{
 		return postOfficeBox != null;
 	}
 
+	@Override
 	public String getExtendedAddress()
 	{
 		if(extendedAddress != null) {
@@ -103,6 +107,7 @@ public class AdrType extends AbstractVCardType implements Comparable<AdrType>, C
 		}
 	}
 
+	@Override
 	public void setExtendedAddress(String extendedAddress) {
 		if(extendedAddress != null) {
 			this.extendedAddress = new String(extendedAddress);
@@ -112,11 +117,13 @@ public class AdrType extends AbstractVCardType implements Comparable<AdrType>, C
 		}
 	}
 
+	@Override
 	public boolean hasExtendedAddress()
 	{
 		return extendedAddress != null;
 	}
 
+	@Override
 	public String getStreetAddress()
 	{
 		if(streetAddress != null) {
@@ -127,6 +134,7 @@ public class AdrType extends AbstractVCardType implements Comparable<AdrType>, C
 		}
 	}
 
+	@Override
 	public void setStreetAddress(String streetAddress) {
 		if(streetAddress != null) {
 			this.streetAddress = new String(streetAddress);
@@ -136,11 +144,13 @@ public class AdrType extends AbstractVCardType implements Comparable<AdrType>, C
 		}
 	}
 
+	@Override
 	public boolean hasStreetAddress()
 	{
 		return streetAddress != null;
 	}
 
+	@Override
 	public String getLocality()
 	{
 		if(locality != null) {
@@ -151,6 +161,7 @@ public class AdrType extends AbstractVCardType implements Comparable<AdrType>, C
 		}
 	}
 
+	@Override
 	public void setLocality(String locality) {
 		if(locality != null) {
 			this.locality = new String(locality);
@@ -160,11 +171,13 @@ public class AdrType extends AbstractVCardType implements Comparable<AdrType>, C
 		}
 	}
 
+	@Override
 	public boolean hasLocality()
 	{
 		return locality != null;
 	}
 
+	@Override
 	public String getRegion()
 	{
 		if(region != null) {
@@ -175,6 +188,7 @@ public class AdrType extends AbstractVCardType implements Comparable<AdrType>, C
 		}
 	}
 
+	@Override
 	public void setRegion(String region) {
 		if(region != null) {
 			this.region = new String(region);
@@ -184,11 +198,13 @@ public class AdrType extends AbstractVCardType implements Comparable<AdrType>, C
 		}
 	}
 
+	@Override
 	public boolean hasRegion()
 	{
 		return region != null;
 	}
 
+	@Override
 	public String getPostalCode()
 	{
 		if(postalCode != null) {
@@ -199,6 +215,7 @@ public class AdrType extends AbstractVCardType implements Comparable<AdrType>, C
 		}
 	}
 
+	@Override
 	public void setPostalCode(String postalCode) {
 		if(postalCode != null) {
 			this.postalCode = new String(postalCode);
@@ -208,11 +225,13 @@ public class AdrType extends AbstractVCardType implements Comparable<AdrType>, C
 		}
 	}
 
+	@Override
 	public boolean hasPostalCode()
 	{
 		return postalCode != null;
 	}
 
+	@Override
 	public String getCountryName()
 	{
 		if(countryName != null) {
@@ -223,6 +242,7 @@ public class AdrType extends AbstractVCardType implements Comparable<AdrType>, C
 		}
 	}
 
+	@Override
 	public void setCountryName(String countryName) {
 		if(countryName != null) {
 			this.countryName = new String(countryName);
@@ -232,6 +252,7 @@ public class AdrType extends AbstractVCardType implements Comparable<AdrType>, C
 		}
 	}
 
+	@Override
 	public boolean hasCountryName()
 	{
 		return countryName != null;
@@ -265,11 +286,13 @@ public class AdrType extends AbstractVCardType implements Comparable<AdrType>, C
 		label = null;
 	}
 	
+	@Override
 	public List<AdrParamType> getParams()
 	{
 		return Collections.unmodifiableList(adrParamTypes);
 	}
 
+	@Override
 	public AdrType addParam(AdrParamType adrParamType) throws NullPointerException {
 		if(adrParamType == null) {
 			throw new NullPointerException("Cannot add a null adrParamType.");
@@ -279,6 +302,7 @@ public class AdrType extends AbstractVCardType implements Comparable<AdrType>, C
 		return this;
 	}
 
+	@Override
 	public AdrType addAllParams(List<AdrParamType> adrParamTypes) throws NullPointerException {
 		if(adrParamTypes == null) {
 			throw new NullPointerException("Cannot add a null adrParamTypes list.");
@@ -288,6 +312,7 @@ public class AdrType extends AbstractVCardType implements Comparable<AdrType>, C
 		return this;
 	}
 
+	@Override
 	public AdrType removeParam(AdrParamType adrParamType) throws NullPointerException {
 		if(adrParamType == null) {
 			throw new NullPointerException("Cannot remove a null adrParamType.");
@@ -297,6 +322,7 @@ public class AdrType extends AbstractVCardType implements Comparable<AdrType>, C
 		return this;
 	}
 
+	@Override
 	public boolean containsParam(AdrParamType adrParamType)
 	{
 		if(adrParamType != null) {
@@ -307,6 +333,7 @@ public class AdrType extends AbstractVCardType implements Comparable<AdrType>, C
 		}
 	}
 
+	@Override
 	public boolean containsAllParams(List<AdrParamType> adrParamTypes)
 	{
 		if(adrParamTypes != null) {
@@ -317,16 +344,19 @@ public class AdrType extends AbstractVCardType implements Comparable<AdrType>, C
 		}
 	}
 
+	@Override
 	public int getParamSize()
 	{
 		return adrParamTypes.size();
 	}
 
+	@Override
 	public boolean hasParams()
 	{
 		return !adrParamTypes.isEmpty();
 	}
 
+	@Override
 	public void clearParams() {
 		adrParamTypes.clear();
 	}
@@ -358,6 +388,7 @@ public class AdrType extends AbstractVCardType implements Comparable<AdrType>, C
 		return cloned;
 	}
 
+	@Override
 	public int compareTo(AdrType obj)
 	{
 		if(obj != null) {

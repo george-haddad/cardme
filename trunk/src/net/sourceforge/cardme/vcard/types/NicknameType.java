@@ -68,11 +68,13 @@ public class NicknameType extends AbstractVCardType implements Comparable<Nickna
 		addAllNicknames(nicknames);
 	}
 
+	@Override
 	public List<String> getNicknames()
 	{
 		return Collections.unmodifiableList(nicknames);
 	}
 
+	@Override
 	public NicknameType addNickname(String nickname) throws NullPointerException {
 		if(nickname == null) {
 			throw new NullPointerException("Cannot add a null nickname.");
@@ -82,6 +84,7 @@ public class NicknameType extends AbstractVCardType implements Comparable<Nickna
 		return this;
 	}
 
+	@Override
 	public NicknameType addAllNicknames(List<String> nicknames) throws NullPointerException {
 		if(nicknames == null) {
 			throw new NullPointerException("Cannot add a null nicknames list.");
@@ -91,6 +94,7 @@ public class NicknameType extends AbstractVCardType implements Comparable<Nickna
 		return this;
 	}
 
+	@Override
 	public NicknameType removeNickname(String nickname) throws NullPointerException {
 		if(nickname == null) {
 			throw new NullPointerException("Cannot remove a null nickname.");
@@ -100,6 +104,7 @@ public class NicknameType extends AbstractVCardType implements Comparable<Nickna
 		return this;
 	}
 
+	@Override
 	public boolean containsNickname(String nickname)
 	{
 		if(nickname != null) {
@@ -110,6 +115,7 @@ public class NicknameType extends AbstractVCardType implements Comparable<Nickna
 		}
 	}
 
+	@Override
 	public boolean containsAllNicknames(List<String> nicknames)
 	{
 		if(nicknames != null) {
@@ -120,15 +126,18 @@ public class NicknameType extends AbstractVCardType implements Comparable<Nickna
 		}
 	}
 
+	@Override
 	public boolean hasNicknames()
 	{
 		return !nicknames.isEmpty();
 	}
 
+	@Override
 	public void clearNicknames() {
 		nicknames.clear();
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -153,6 +162,7 @@ public class NicknameType extends AbstractVCardType implements Comparable<Nickna
 		return cloned;
 	}
 	
+	@Override
 	public int compareTo(NicknameType obj)
 	{
 		if(obj != null) {

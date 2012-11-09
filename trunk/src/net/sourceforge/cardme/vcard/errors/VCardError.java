@@ -107,6 +107,7 @@ public class VCardError implements Comparable<VCardError>, Cloneable, Serializab
 		return cloned;
 	}
 	
+	@Override
 	public int compareTo(VCardError obj)
 	{
 		if(obj != null) {

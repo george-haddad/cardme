@@ -67,20 +67,24 @@ public class GeoType extends AbstractVCardType implements Comparable<GeoType>, C
 		setLatitude(latitude);
 	}
 
+	@Override
 	public double getLongitude()
 	{
 		return lon;
 	}
 
+	@Override
 	public double getLatitude()
 	{
 		return lat;
 	}
 
+	@Override
 	public void setLongitude(double longitude) {
 		this.lon = longitude;
 	}
 
+	@Override
 	public void setLongitude(String longitude) throws IllegalArgumentException {
 		if(longitude == null) {
 			setLongitude(0.0d);
@@ -95,14 +99,17 @@ public class GeoType extends AbstractVCardType implements Comparable<GeoType>, C
 		}
 	}
 
+	@Override
 	public void setLongitude(double degrees, double minutes, double seconds) {
 		setLongitude(degrees + (minutes/60) + (seconds/3600));
 	}
 
+	@Override
 	public void setLatitude(double latitude) {
 		this.lat = latitude;
 	}
 
+	@Override
 	public void setLatitude(String latitude) {
 		if(latitude == null) {
 			setLatitude(0.0d);
@@ -117,10 +124,12 @@ public class GeoType extends AbstractVCardType implements Comparable<GeoType>, C
 		}
 	}
 
+	@Override
 	public void setLatitude(double degrees, double minutes, double seconds) {
 		setLatitude(degrees + (minutes/60) + (seconds/3600));
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -146,6 +155,7 @@ public class GeoType extends AbstractVCardType implements Comparable<GeoType>, C
 		return cloned;
 	}
 
+	@Override
 	public int compareTo(GeoType obj)
 	{
 		if(obj != null) {

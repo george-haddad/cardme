@@ -57,6 +57,7 @@ public class MailerType extends AbstractVCardType implements Comparable<MailerTy
 		setMailer(mailer);
 	}
 
+	@Override
 	public String getMailer()
 	{
 		if(mailer != null) {
@@ -67,6 +68,7 @@ public class MailerType extends AbstractVCardType implements Comparable<MailerTy
 		}
 	}
 
+	@Override
 	public void setMailer(String mailer) {
 		if(mailer != null) {
 			this.mailer = new String(mailer);
@@ -76,15 +78,18 @@ public class MailerType extends AbstractVCardType implements Comparable<MailerTy
 		}
 	}
 
+	@Override
 	public boolean hasMailer()
 	{
 		return mailer != null;
 	}
 
+	@Override
 	public void clearMailer() {
 		mailer = null;
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -109,6 +114,7 @@ public class MailerType extends AbstractVCardType implements Comparable<MailerTy
 		return cloned;
 	}
 	
+	@Override
 	public int compareTo(MailerType obj)
 	{
 		if(obj != null) {

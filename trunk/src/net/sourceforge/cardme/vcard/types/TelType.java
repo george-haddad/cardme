@@ -62,6 +62,7 @@ public class TelType extends AbstractVCardType implements Comparable<TelType>, C
 		setTelephone(telephone);
 	}
 
+	@Override
 	public String getTelephone()
 	{
 		if(telephone != null) {
@@ -72,6 +73,7 @@ public class TelType extends AbstractVCardType implements Comparable<TelType>, C
 		}
 	}
 
+	@Override
 	public void setTelephone(String telephone) {
 		if(telephone != null) {
 			this.telephone = new String(telephone);
@@ -81,21 +83,25 @@ public class TelType extends AbstractVCardType implements Comparable<TelType>, C
 		}
 	}
 
+	@Override
 	public boolean hasTelephone() 
 	{
 		return telephone != null;
 	}
 
+	@Override
 	public List<TelParamType> getParams()
 	{
 		return Collections.unmodifiableList(telParamTypes);
 	}
 
+	@Override
 	public int getParamSize()
 	{
 		return telParamTypes.size();
 	}
 
+	@Override
 	public TelType addParam(TelParamType telParamType) throws NullPointerException {
 		if(telParamType == null) {
 			throw new NullPointerException("Cannot add a null telParamType.");
@@ -105,6 +111,7 @@ public class TelType extends AbstractVCardType implements Comparable<TelType>, C
 		return this;
 	}
 
+	@Override
 	public TelType addAllParams(List<TelParamType> telParamTypes) throws NullPointerException {
 		if(telParamTypes == null) {
 			throw new NullPointerException("Cannot add a null telParamTypes list.");
@@ -114,6 +121,7 @@ public class TelType extends AbstractVCardType implements Comparable<TelType>, C
 		return this;
 	}
 
+	@Override
 	public TelType removeParam(TelParamType telParamType) throws NullPointerException {
 		if(telParamType == null) {
 			throw new NullPointerException("Cannot remove a null telParamType.");
@@ -123,6 +131,7 @@ public class TelType extends AbstractVCardType implements Comparable<TelType>, C
 		return this;
 	}
 
+	@Override
 	public boolean containsParam(TelParamType telParamType)
 	{
 		if(telParamType != null) {
@@ -133,6 +142,7 @@ public class TelType extends AbstractVCardType implements Comparable<TelType>, C
 		}
 	}
 
+	@Override
 	public boolean containsAllParams(List<TelParamType> telParamTypes)
 	{
 		if(telParamTypes != null) {
@@ -143,11 +153,13 @@ public class TelType extends AbstractVCardType implements Comparable<TelType>, C
 		}
 	}
 
+	@Override
 	public boolean hasParams()
 	{
 		return !telParamTypes.isEmpty();
 	}
 
+	@Override
 	public void clearParams() {
 		telParamTypes.clear();
 	}
@@ -173,6 +185,7 @@ public class TelType extends AbstractVCardType implements Comparable<TelType>, C
 		return cloned;
 	}
 	
+	@Override
 	public int compareTo(TelType obj)
 	{
 		if(obj != null) {

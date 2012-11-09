@@ -68,29 +68,35 @@ public class ImppType extends AbstractVCardType implements Comparable<ImppType>,
 		setUri(new URI(uri));
 	}
 
+	@Override
 	public URI getUri()
 	{
 		return imppUri;
 	}
 
+	@Override
 	public void setUri(URI uri) {
 		this.imppUri = uri;
 	}
 
+	@Override
 	public boolean hasUri()
 	{
 		return imppUri != null;
 	}
 
+	@Override
 	public void clearUri() {
 		imppUri = null;
 	}
 
+	@Override
 	public List<ImppParamType> getParams()
 	{
 		return Collections.unmodifiableList(imppParamTypes);
 	}
 
+	@Override
 	public ImppType addParam(ImppParamType imppParamType) throws NullPointerException {
 		if(imppParamType == null) {
 			throw new NullPointerException("Cannot add a null imppParamType.");
@@ -100,6 +106,7 @@ public class ImppType extends AbstractVCardType implements Comparable<ImppType>,
 		return this;
 	}
 
+	@Override
 	public ImppType addAllParams(List<ImppParamType> imppParamTypes) throws NullPointerException {
 		if(imppParamTypes == null) {
 			throw new NullPointerException("Cannot add a null imppParamType list.");
@@ -109,6 +116,7 @@ public class ImppType extends AbstractVCardType implements Comparable<ImppType>,
 		return this;
 	}
 
+	@Override
 	public ImppType removeParam(ImppParamType imppParamType) throws NullPointerException {
 		if(imppParamType == null) {
 			throw new NullPointerException("Cannot remove a null imppParamType.");
@@ -118,6 +126,7 @@ public class ImppType extends AbstractVCardType implements Comparable<ImppType>,
 		return this;
 	}
 
+	@Override
 	public boolean containsParam(ImppParamType imppParamType)
 	{
 		if(imppParamType != null) {
@@ -128,6 +137,7 @@ public class ImppType extends AbstractVCardType implements Comparable<ImppType>,
 		}
 	}
 
+	@Override
 	public boolean containsAllParams(List<ImppParamType> imppParamTypes)
 	{
 		if(imppParamTypes != null) {
@@ -138,11 +148,13 @@ public class ImppType extends AbstractVCardType implements Comparable<ImppType>,
 		}
 	}
 
+	@Override
 	public boolean hasParams()
 	{
 		return !imppParamTypes.isEmpty();
 	}
 
+	@Override
 	public void clearParams() {
 		imppParamTypes.clear();
 	}
@@ -167,6 +179,7 @@ public class ImppType extends AbstractVCardType implements Comparable<ImppType>,
 		return cloned;
 	}
 
+	@Override
 	public int compareTo(ImppType obj)
 	{
 		if(obj != null) {

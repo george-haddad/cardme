@@ -72,30 +72,36 @@ public class PhotoType extends AbstractVCardType implements VCardBinaryType, Com
 		setPhotoURI(photoUri);
 	}
 
+	@Override
 	public byte[] getPhoto()
 	{
 		return getBinaryData();
 	}
 
+	@Override
 	public void setPhoto(byte[] photo) {
 		setBinaryData(photo);
 	}
 
+	@Override
 	public boolean hasPhoto()
 	{
 		return photoBytes != null || photoUri != null;
 	}
 	
+	@Override
 	public void clearPhoto() {
 		photoBytes = null;
 		photoUri = null;
 	}
 
+	@Override
 	public URI getPhotoURI()
 	{
 		return photoUri;
 	}
 
+	@Override
 	public void setPhotoURI(URI photoUri) {
 		if(photoUri != null) {
 			this.photoUri = photoUri;
@@ -105,17 +111,20 @@ public class PhotoType extends AbstractVCardType implements VCardBinaryType, Com
 		}
 	}
 
+	@Override
 	public boolean isURI()
 	{
 		return photoUri != null;
 	}
 
+	@Override
 	public void setPhotoURL(URL photoUrl) throws URISyntaxException {
 		if(photoUrl != null) {
 			this.photoUri = photoUrl.toURI();
 		}
 	}
 
+	@Override
 	public URL getPhotoURL() throws MalformedURLException
 	{
 		if(photoUri != null) {
@@ -126,33 +135,39 @@ public class PhotoType extends AbstractVCardType implements VCardBinaryType, Com
 		}
 	}
 
+	@Override
 	public ImageMediaType getImageMediaType()
 	{
 		return imageMediaType;
 	}
 
+	@Override
 	public void setImageMediaType(ImageMediaType imageMediaType) {
 		if(imageMediaType != null) {
 			this.imageMediaType = imageMediaType;
 		}
 	}
 
+	@Override
 	public boolean hasImageMediaType()
 	{
 		return imageMediaType != null;
 	}
 
+	@Override
 	public boolean isCompressed()
 	{
 		return compressed;
 	}
 
+	@Override
 	public void setCompression(boolean compressed)
 	{
 		this.compressed = compressed;
 		
 	}
 
+	@Override
 	public byte[] getBinaryData()
 	{
 		if(photoBytes != null) {
@@ -163,6 +178,7 @@ public class PhotoType extends AbstractVCardType implements VCardBinaryType, Com
 		}
 	}
 
+	@Override
 	public void setBinaryData(byte[] binaryData) {
 		if(binaryData != null) {
 			this.photoBytes = Arrays.copyOf(binaryData, binaryData.length);
@@ -172,12 +188,14 @@ public class PhotoType extends AbstractVCardType implements VCardBinaryType, Com
 		}
 	}
 
+	@Override
 	public boolean isBinary()
 	{
 		EncodingType t = getEncodingType();
 		return EncodingType.BINARY.equals(t) || EncodingType.BASE64.equals(t);
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -216,6 +234,7 @@ public class PhotoType extends AbstractVCardType implements VCardBinaryType, Com
 		return cloned;
 	}
 	
+	@Override
 	public int compareTo(PhotoType obj)
 	{
 		if(obj != null) {

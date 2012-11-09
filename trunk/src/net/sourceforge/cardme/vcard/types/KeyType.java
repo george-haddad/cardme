@@ -44,16 +44,19 @@ public class KeyType  extends AbstractVCardType implements VCardBinaryType, Comp
 		setKeyTextType(keyTextType);
 	}
 
+	@Override
 	public byte[] getKey()
 	{
 		return getBinaryData();
 	}
 
+	@Override
 	public void setKey(byte[] keyBytes) {
 		setBinaryData(keyBytes);
 		setEncodingType(EncodingType.BINARY);
 	}
 
+	@Override
 	public void setKey(String keyText) {
 		if(keyText != null) {
 			setBinaryData(keyText.getBytes());
@@ -65,38 +68,46 @@ public class KeyType  extends AbstractVCardType implements VCardBinaryType, Comp
 		}
 	}
 
+	@Override
 	public boolean hasKey()
 	{
 		return keyBytes != null;
 	}
 
+	@Override
 	public void clearKey() {
 		keyBytes = null;
 	}
 
+	@Override
 	public KeyTextType getKeyTextType()
 	{
 		return keyTextType;
 	}
 
+	@Override
 	public void setKeyTextType(KeyTextType keyTextType) {
 		this.keyTextType = keyTextType;
 	}
 
+	@Override
 	public boolean hasKeyTextType()
 	{
 		return keyTextType != null;
 	}
 
+	@Override
 	public boolean isCompressed()
 	{
 		return compressed;
 	}
 
+	@Override
 	public void setCompression(boolean compressed) {
 		this.compressed = compressed;
 	}
 
+	@Override
 	public byte[] getBinaryData()
 	{
 		if(keyBytes != null) {
@@ -107,6 +118,7 @@ public class KeyType  extends AbstractVCardType implements VCardBinaryType, Comp
 		}
 	}
 
+	@Override
 	public void setBinaryData(byte[] binaryData) {
 		if(binaryData != null) {
 			this.keyBytes = Arrays.copyOf(binaryData, binaryData.length);
@@ -116,6 +128,7 @@ public class KeyType  extends AbstractVCardType implements VCardBinaryType, Comp
 		}
 	}
 
+	@Override
 	public boolean isBinary()
 	{
 		switch(getEncodingType())
@@ -133,6 +146,7 @@ public class KeyType  extends AbstractVCardType implements VCardBinaryType, Comp
 		}
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -168,6 +182,7 @@ public class KeyType  extends AbstractVCardType implements VCardBinaryType, Comp
 		return cloned;
 	}
 	
+	@Override
 	public int compareTo(KeyType obj)
 	{
 		if(obj != null) {

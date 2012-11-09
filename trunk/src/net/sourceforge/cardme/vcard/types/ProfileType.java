@@ -57,6 +57,7 @@ public class ProfileType extends AbstractVCardType implements Comparable<Profile
 		setProfile(profile);
 	}
 
+	@Override
 	public String getProfile()
 	{
 		if(profile != null) {
@@ -67,6 +68,7 @@ public class ProfileType extends AbstractVCardType implements Comparable<Profile
 		}
 	}
 
+	@Override
 	public void setProfile(String profile) throws IllegalArgumentException {
 		if(profile != null) {
 			if("VCARD".equalsIgnoreCase(profile)) {
@@ -81,15 +83,18 @@ public class ProfileType extends AbstractVCardType implements Comparable<Profile
 		}
 	}
 
+	@Override
 	public boolean hasProfile()
 	{
 		return profile != null;
 	}
 
+	@Override
 	public void clearProfile() {
 		profile = null;
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -114,6 +119,7 @@ public class ProfileType extends AbstractVCardType implements Comparable<Profile
 		return cloned;
 	}
 
+	@Override
 	public int compareTo(ProfileType obj)
 	{
 		if(obj != null) {

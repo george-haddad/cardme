@@ -72,30 +72,36 @@ public class LogoType extends AbstractVCardType implements VCardBinaryType, Comp
 		setLogoURI(photoUri);
 	}
 
+	@Override
 	public byte[] getLogo()
 	{
 		return getBinaryData();
 	}
 
+	@Override
 	public void setLogo(byte[] logo) {
 		setBinaryData(logo);
 	}
 
+	@Override
 	public boolean hasLogo()
 	{
 		return logoBytes != null || logoUri != null;
 	}
 	
+	@Override
 	public void clearLogo() {
 		logoBytes = null;
 		logoUri = null;
 	}
 	
+	@Override
 	public URI getLogoURI()
 	{
 		return logoUri;
 	}
 
+	@Override
 	public void setLogoURI(URI logoUri) {
 		if(logoUri != null) {
 			this.logoUri = logoUri;
@@ -105,17 +111,20 @@ public class LogoType extends AbstractVCardType implements VCardBinaryType, Comp
 		}
 	}
 
+	@Override
 	public boolean isURI()
 	{
 		return logoUri != null;
 	}
 
+	@Override
 	public void setLogoURL(URL logoUrl) throws URISyntaxException {
 		if(logoUrl != null) {
 			this.logoUri = logoUrl.toURI();
 		}
 	}
 
+	@Override
 	public URL getLogoURL() throws MalformedURLException
 	{
 		if(logoUri != null) {
@@ -126,31 +135,37 @@ public class LogoType extends AbstractVCardType implements VCardBinaryType, Comp
 		}
 	}
 
+	@Override
 	public ImageMediaType getImageMediaType()
 	{
 		return imageMediaType;
 	}
 
+	@Override
 	public void setImageMediaType(ImageMediaType imageMediaType) {
 		this.imageMediaType = imageMediaType;
 	}
 
+	@Override
 	public boolean hasImageMediaType()
 	{
 		return imageMediaType != null;
 	}
 
+	@Override
 	public boolean isCompressed()
 	{
 		return compressed;
 	}
 
+	@Override
 	public void setCompression(boolean compressed)
 	{
 		this.compressed = compressed;
 		
 	}
 
+	@Override
 	public byte[] getBinaryData()
 	{
 		if(logoBytes != null) {
@@ -161,6 +176,7 @@ public class LogoType extends AbstractVCardType implements VCardBinaryType, Comp
 		}
 	}
 
+	@Override
 	public void setBinaryData(byte[] binaryData) {
 		if(binaryData != null) {
 			this.logoBytes = Arrays.copyOf(binaryData, binaryData.length);
@@ -170,11 +186,13 @@ public class LogoType extends AbstractVCardType implements VCardBinaryType, Comp
 		}
 	}
 
+	@Override
 	public boolean isBinary()
 	{
 		return EncodingType.BINARY.equals(getEncodingType());
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -213,6 +231,7 @@ public class LogoType extends AbstractVCardType implements VCardBinaryType, Comp
 		return cloned;
 	}
 	
+	@Override
 	public int compareTo(LogoType obj)
 	{
 		if(obj != null) {

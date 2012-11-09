@@ -58,11 +58,13 @@ public class VersionType extends AbstractVCardType implements Comparable<Version
 		setVersion(version);
 	}
 	
+	@Override
 	public VCardVersion getVersion()
 	{
 		return version;
 	}
 	
+	@Override
 	public void setVersion(VCardVersion version) {
 		if(version != null) {
 			this.version = version;
@@ -72,6 +74,7 @@ public class VersionType extends AbstractVCardType implements Comparable<Version
 		}
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -96,6 +99,7 @@ public class VersionType extends AbstractVCardType implements Comparable<Version
 		return cloned;
 	}
 	
+	@Override
 	public int compareTo(VersionType obj)
 	{
 		if(obj != null) {

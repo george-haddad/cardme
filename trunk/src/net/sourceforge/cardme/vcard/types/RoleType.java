@@ -57,6 +57,7 @@ public class RoleType extends AbstractVCardType implements Comparable<RoleType>,
 		setRole(role);
 	}
 
+	@Override
 	public String getRole()
 	{
 		if(role != null) {
@@ -67,6 +68,7 @@ public class RoleType extends AbstractVCardType implements Comparable<RoleType>,
 		}
 	}
 
+	@Override
 	public void setRole(String role) {
 		if(role != null) {
 			this.role = new String(role);
@@ -76,15 +78,18 @@ public class RoleType extends AbstractVCardType implements Comparable<RoleType>,
 		}
 	}
 
+	@Override
 	public void clearRole() {
 		role = null;
 	}
 
+	@Override
 	public boolean hasRole()
 	{
 		return role != null;
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -109,6 +114,7 @@ public class RoleType extends AbstractVCardType implements Comparable<RoleType>,
 		return cloned;
 	}
 
+	@Override
 	public int compareTo(RoleType obj)
 	{
 		if(obj != null) {

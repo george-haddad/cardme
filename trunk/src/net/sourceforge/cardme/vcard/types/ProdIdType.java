@@ -57,6 +57,7 @@ public class ProdIdType extends AbstractVCardType implements Comparable<ProdIdTy
 		setProdId(prodId);
 	}
 
+	@Override
 	public String getProdId()
 	{
 		if(prodId != null) {
@@ -67,6 +68,7 @@ public class ProdIdType extends AbstractVCardType implements Comparable<ProdIdTy
 		}
 	}
 
+	@Override
 	public void setProdId(String prodId) {
 		if(prodId != null) {
 			//TODO regex check ISO 9070 syntax.
@@ -77,15 +79,18 @@ public class ProdIdType extends AbstractVCardType implements Comparable<ProdIdTy
 		}
 	}
 
+	@Override
 	public void clearProdId() {
 		prodId = null;
 	}
 
+	@Override
 	public boolean hasProdId()
 	{
 		return prodId != null;
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -110,6 +115,7 @@ public class ProdIdType extends AbstractVCardType implements Comparable<ProdIdTy
 		return cloned;
 	}
 	
+	@Override
 	public int compareTo(ProdIdType obj)
 	{
 		if(obj != null) {
