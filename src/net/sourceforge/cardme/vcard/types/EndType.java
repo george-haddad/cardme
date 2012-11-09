@@ -22,6 +22,7 @@ public class EndType extends AbstractVCardType implements Comparable<EndType>, C
 		super(VCardTypeName.END);
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -45,6 +46,7 @@ public class EndType extends AbstractVCardType implements Comparable<EndType>, C
 		return cloned;
 	}
 
+	@Override
 	public int compareTo(EndType obj)
 	{
 		if(obj != null) {

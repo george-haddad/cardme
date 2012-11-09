@@ -57,6 +57,7 @@ public class UidType extends AbstractVCardType implements Comparable<UidType>, C
 		setUid(uid);
 	}
 
+	@Override
 	public String getUid()
 	{
 		if(uid != null) {
@@ -67,6 +68,7 @@ public class UidType extends AbstractVCardType implements Comparable<UidType>, C
 		}
 	}
 
+	@Override
 	public void setUid(String uid) {
 		if(uid != null) {
 			this.uid = new String(uid);
@@ -76,15 +78,18 @@ public class UidType extends AbstractVCardType implements Comparable<UidType>, C
 		}
 	}
 
+	@Override
 	public void clearUid() {
 		uid = null;
 	}
 
+	@Override
 	public boolean hasUid()
 	{
 		return uid != null;
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -109,6 +114,7 @@ public class UidType extends AbstractVCardType implements Comparable<UidType>, C
 		return cloned;
 	}
 
+	@Override
 	public int compareTo(UidType obj)
 	{
 		if(obj != null) {

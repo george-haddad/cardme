@@ -72,6 +72,7 @@ public class NType extends AbstractVCardType implements Comparable<NType>, Clone
 		honorificSuffixes = new ArrayList<String>();
 	}
 
+	@Override
 	public String getFamilyName()
 	{
 		if(familyName != null) {
@@ -82,6 +83,7 @@ public class NType extends AbstractVCardType implements Comparable<NType>, Clone
 		}
 	}
 
+	@Override
 	public void setFamilyName(String familyName) {
 		if(familyName != null) {
 			this.familyName = new String(familyName);
@@ -91,11 +93,13 @@ public class NType extends AbstractVCardType implements Comparable<NType>, Clone
 		}
 	}
 
+	@Override
 	public boolean hasFamilyName()
 	{
 		return familyName != null;
 	}
 
+	@Override
 	public String getGivenName()
 	{
 		if(givenName != null) {
@@ -106,6 +110,7 @@ public class NType extends AbstractVCardType implements Comparable<NType>, Clone
 		}
 	}
 
+	@Override
 	public void setGivenName(String givenName) {
 		if(givenName != null) {
 			this.givenName = new String(givenName);
@@ -115,16 +120,19 @@ public class NType extends AbstractVCardType implements Comparable<NType>, Clone
 		}
 	}
 
+	@Override
 	public boolean hasGivenName()
 	{
 		return givenName != null;
 	}
 
+	@Override
 	public List<String> getAdditionalNames()
 	{
 		return Collections.unmodifiableList(additionalNames);
 	}
 
+	@Override
 	public void addAdditionalName(String additionalName) throws NullPointerException {
 		if(additionalName == null) {
 			throw new NullPointerException("Cannot add a null additionalName.");
@@ -133,6 +141,7 @@ public class NType extends AbstractVCardType implements Comparable<NType>, Clone
 		additionalNames.add(additionalName);
 	}
 	
+	@Override
 	public void addAllAdditionalNames(List<String> additionalNames) throws NullPointerException {
 		if(additionalNames == null) {
 			throw new NullPointerException("Cannot add a null additionalNames list.");
@@ -141,6 +150,7 @@ public class NType extends AbstractVCardType implements Comparable<NType>, Clone
 		this.additionalNames.addAll(additionalNames);
 	}
 	
+	@Override
 	public void removeAdditionalName(String additionalName) throws NullPointerException {
 		if(additionalName == null) {
 			throw new NullPointerException("Cannot remove a null additionalName.");
@@ -149,6 +159,7 @@ public class NType extends AbstractVCardType implements Comparable<NType>, Clone
 		additionalNames.remove(additionalName);
 	}
 
+	@Override
 	public boolean containsAdditionalName(String additionalName)
 	{
 		if(additionalName != null) {
@@ -159,20 +170,24 @@ public class NType extends AbstractVCardType implements Comparable<NType>, Clone
 		}
 	}
 
+	@Override
 	public boolean hasAdditionalNames()
 	{
 		return !additionalNames.isEmpty();
 	}
 
+	@Override
 	public void clearAdditionalNames() {
 		additionalNames.clear();
 	}
 
+	@Override
 	public List<String> getHonorificPrefixes()
 	{
 		return Collections.unmodifiableList(honorificPrefixes);
 	}
 
+	@Override
 	public void addHonorificPrefix(String honorificPrefix) throws NullPointerException {
 		if(honorificPrefix == null) {
 			throw new NullPointerException("Cannot add a null honorificPrefix.");
@@ -181,6 +196,7 @@ public class NType extends AbstractVCardType implements Comparable<NType>, Clone
 		honorificPrefixes.add(honorificPrefix);
 	}
 	
+	@Override
 	public void addAllHonorificPrefixes(List<String> honorificPrefixes) throws NullPointerException {
 		if(honorificPrefixes == null) {
 			throw new NullPointerException("Cannot add a null honorificPrefixes list.");
@@ -189,6 +205,7 @@ public class NType extends AbstractVCardType implements Comparable<NType>, Clone
 		this.honorificPrefixes.addAll(honorificPrefixes);
 	}
 	
+	@Override
 	public void removeHonorificPrefix(String honorificPrefix) throws NullPointerException {
 		if(honorificPrefix == null) {
 			throw new NullPointerException("Cannot remove a null honorificPrefix.");
@@ -197,6 +214,7 @@ public class NType extends AbstractVCardType implements Comparable<NType>, Clone
 		honorificPrefixes.remove(honorificPrefix);
 	}
 
+	@Override
 	public boolean containsHonorificPrefix(String honorificPrefix)
 	{
 		if(honorificPrefix != null) {
@@ -207,20 +225,24 @@ public class NType extends AbstractVCardType implements Comparable<NType>, Clone
 		}
 	}
 
+	@Override
 	public boolean hasHonorificPrefixes()
 	{
 		return !honorificPrefixes.isEmpty();
 	}
 
+	@Override
 	public void clearHonorificPrefixes() {
 		honorificPrefixes.clear();
 	}
 
+	@Override
 	public List<String> getHonorificSuffixes()
 	{
 		return Collections.unmodifiableList(honorificSuffixes);
 	}
 
+	@Override
 	public void addHonorificSuffix(String honorificSuffix) throws NullPointerException {
 		if(honorificSuffix == null) {
 			throw new NullPointerException("Cannot add a null honorificSuffix.");
@@ -229,6 +251,7 @@ public class NType extends AbstractVCardType implements Comparable<NType>, Clone
 		honorificSuffixes.add(honorificSuffix);
 	}
 	
+	@Override
 	public void addAllHonorificSuffixes(List<String> honorificSuffixes) throws NullPointerException {
 		if(honorificSuffixes == null) {
 			throw new NullPointerException("Cannot add a null honorificSuffixes list.");
@@ -237,6 +260,7 @@ public class NType extends AbstractVCardType implements Comparable<NType>, Clone
 		this.honorificSuffixes.addAll(honorificSuffixes);
 	}
 
+	@Override
 	public void removeHonorificSuffix(String honorificSuffix) throws NullPointerException {
 		if(honorificSuffix == null) {
 			throw new NullPointerException("Cannot remove a null honorificSuffix.");
@@ -245,20 +269,24 @@ public class NType extends AbstractVCardType implements Comparable<NType>, Clone
 		honorificSuffixes.remove(honorificSuffix);
 	}
 
+	@Override
 	public boolean containsHonorificSuffix(String honorificSuffix)
 	{
 		return honorificSuffixes.contains(honorificSuffix);
 	}
 
+	@Override
 	public boolean hasHonorificSuffixes()
 	{
 		return !honorificSuffixes.isEmpty();
 	}
 
+	@Override
 	public void clearHonorificSuffixes() {
 		honorificSuffixes.clear();
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -297,6 +325,7 @@ public class NType extends AbstractVCardType implements Comparable<NType>, Clone
 		return cloned;
 	}
 	
+	@Override
 	public int compareTo(NType obj)
 	{
 		if(obj != null) {

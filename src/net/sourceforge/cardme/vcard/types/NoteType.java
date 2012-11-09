@@ -57,6 +57,7 @@ public class NoteType extends AbstractVCardType implements Comparable<NoteType>,
 		setNote(note);
 	}
 
+	@Override
 	public String getNote()
 	{
 		if(note != null) {
@@ -67,6 +68,7 @@ public class NoteType extends AbstractVCardType implements Comparable<NoteType>,
 		}
 	}
 
+	@Override
 	public void setNote(String note) {
 		if(note != null) {
 			this.note = new String(note);
@@ -76,15 +78,18 @@ public class NoteType extends AbstractVCardType implements Comparable<NoteType>,
 		}
 	}
 
+	@Override
 	public boolean hasNote()
 	{
 		return note != null;
 	}
 
+	@Override
 	public void clearNote() {
 		note = null;
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -109,6 +114,7 @@ public class NoteType extends AbstractVCardType implements Comparable<NoteType>,
 		return cloned;
 	}
 
+	@Override
 	public int compareTo(NoteType obj)
 	{
 		if(obj != null) {

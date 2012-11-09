@@ -59,6 +59,7 @@ public class ExtendedType extends AbstractVCardType implements Comparable<Extend
 		setExtendedValue(value);
 	}
 
+	@Override
 	public String getExtendedName()
 	{
 		if(name != null) {
@@ -69,6 +70,7 @@ public class ExtendedType extends AbstractVCardType implements Comparable<Extend
 		}
 	}
 
+	@Override
 	public void setExtendedName(String name) throws IllegalArgumentException {
 		if(name != null) {
 			if(name.startsWith("X-")) {
@@ -83,6 +85,7 @@ public class ExtendedType extends AbstractVCardType implements Comparable<Extend
 		}
 	}
 
+	@Override
 	public String getExtendedValue()
 	{
 		if(value != null) {
@@ -93,6 +96,7 @@ public class ExtendedType extends AbstractVCardType implements Comparable<Extend
 		}
 	}
 
+	@Override
 	public void setExtendedValue(String value) {
 		if(value != null) {
 			this.value = new String(value);
@@ -102,16 +106,19 @@ public class ExtendedType extends AbstractVCardType implements Comparable<Extend
 		}
 	}
 
+	@Override
 	public boolean hasExtendedValue()
 	{
 		return name != null && value != null;
 	}
 
+	@Override
 	public void clearExtension() {
 		name = null;
 		value = null;
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -137,6 +144,7 @@ public class ExtendedType extends AbstractVCardType implements Comparable<Extend
 		return cloned;
 	}
 	
+	@Override
 	public int compareTo(ExtendedType obj)
 	{
 		if(obj != null) {

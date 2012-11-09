@@ -29,6 +29,7 @@ public class FNType extends AbstractVCardType implements Comparable<FNType>, Clo
 		setFormattedName(fn);
 	}
 
+	@Override
 	public String getFormattedName()
 	{
 		if(formattedName != null) {
@@ -39,6 +40,7 @@ public class FNType extends AbstractVCardType implements Comparable<FNType>, Clo
 		}
 	}
 
+	@Override
 	public void setFormattedName(String formattedName) {
 		if(formattedName != null) {
 			this.formattedName = new String(formattedName);
@@ -48,6 +50,7 @@ public class FNType extends AbstractVCardType implements Comparable<FNType>, Clo
 		}
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -72,6 +75,7 @@ public class FNType extends AbstractVCardType implements Comparable<FNType>, Clo
 		return cloned;
 	}
 
+	@Override
 	public int compareTo(FNType obj)
 	{
 		if(obj != null) {

@@ -69,11 +69,13 @@ public class UrlType extends AbstractVCardType implements Comparable<UrlType>, C
 		setRawUrl(rawUrl);
 	}
 
+	@Override
 	public URL getUrl()
 	{
 		return url;
 	}
 
+	@Override
 	public String getRawUrl()
 	{
 		if(rawUrl != null) {
@@ -84,6 +86,7 @@ public class UrlType extends AbstractVCardType implements Comparable<UrlType>, C
 		}
 	}
 
+	@Override
 	public void setUrl(URL url) {
 		this.url = url;
 		
@@ -92,6 +95,7 @@ public class UrlType extends AbstractVCardType implements Comparable<UrlType>, C
 		}
 	}
 
+	@Override
 	public void setRawUrl(String rawUrl) {
 		if(rawUrl != null) {
 			this.rawUrl = new String(rawUrl);
@@ -108,31 +112,37 @@ public class UrlType extends AbstractVCardType implements Comparable<UrlType>, C
 		}
 	}
 
+	@Override
 	public void clearUrl() {
 		url = null;
 		rawUrl = null;
 	}
 
+	@Override
 	public boolean hasUrl()
 	{
 		return url != null;
 	}
 
+	@Override
 	public boolean hasRawUrl()
 	{
 		return rawUrl != null;
 	}
 
+	@Override
 	public List<UrlParamType> getParams()
 	{
 		return Collections.unmodifiableList(urlParamTypes);
 	}
 
+	@Override
 	public int getParamSize()
 	{
 		return urlParamTypes.size();
 	}
 
+	@Override
 	public UrlType addParam(UrlParamType urlParamType) throws NullPointerException {
 		if(urlParamType == null) {
 			throw new NullPointerException("Cannot add a null urlParamType.");
@@ -142,6 +152,7 @@ public class UrlType extends AbstractVCardType implements Comparable<UrlType>, C
 		return this;
 	}
 
+	@Override
 	public UrlType addAllParams(List<UrlParamType> urlParamTypes) throws NullPointerException {
 		if(urlParamTypes == null) {
 			throw new NullPointerException("Cannot add a null urlParamTypes list.");
@@ -151,6 +162,7 @@ public class UrlType extends AbstractVCardType implements Comparable<UrlType>, C
 		return this;
 	}
 
+	@Override
 	public UrlType removeParam(UrlParamType urlParamType) throws NullPointerException {
 		if(urlParamType == null) {
 			throw new NullPointerException("Cannot add a null urlParamType.");
@@ -160,6 +172,7 @@ public class UrlType extends AbstractVCardType implements Comparable<UrlType>, C
 		return this;
 	}
 
+	@Override
 	public boolean containsParam(UrlParamType urlParamType)
 	{
 		if(urlParamType != null) {
@@ -170,6 +183,7 @@ public class UrlType extends AbstractVCardType implements Comparable<UrlType>, C
 		}
 	}
 
+	@Override
 	public boolean containsAllParams(List<UrlParamType> urlParamTypes)
 	{
 		if(urlParamTypes != null) {
@@ -180,11 +194,13 @@ public class UrlType extends AbstractVCardType implements Comparable<UrlType>, C
 		}
 	}
 
+	@Override
 	public boolean hasParams()
 	{
 		return !urlParamTypes.isEmpty();
 	}
 
+	@Override
 	public void clearParams() {
 		urlParamTypes.clear();
 	}
@@ -215,6 +231,7 @@ public class UrlType extends AbstractVCardType implements Comparable<UrlType>, C
 		return cloned;
 	}
 	
+	@Override
 	public int compareTo(UrlType obj)
 	{
 		if(obj != null) {

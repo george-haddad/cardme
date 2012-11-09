@@ -72,30 +72,36 @@ public class SoundType extends AbstractVCardType implements VCardBinaryType, Com
 		setSoundURI(soundUri);
 	}
 
+	@Override
 	public byte[] getSound()
 	{
 		return getBinaryData();
 	}
 
+	@Override
 	public void setSound(byte[] logo) {
 		setBinaryData(logo);
 	}
 
+	@Override
 	public boolean hasSound()
 	{
 		return soundBytes != null || soundUri != null;
 	}
 	
+	@Override
 	public void clearSound() {
 		soundBytes = null;
 		soundUri = null;
 	}
 	
+	@Override
 	public URI getSoundURI()
 	{
 		return soundUri;
 	}
 
+	@Override
 	public void setSoundURI(URI soundUri) {
 		if(soundUri != null) {
 			this.soundUri = soundUri;
@@ -105,17 +111,20 @@ public class SoundType extends AbstractVCardType implements VCardBinaryType, Com
 		}
 	}
 
+	@Override
 	public boolean isURI()
 	{
 		return soundUri != null;
 	}
 
+	@Override
 	public void setSoundURL(URL soundUrl) throws URISyntaxException {
 		if(soundUrl != null) {
 			this.soundUri = soundUrl.toURI();
 		}
 	}
 
+	@Override
 	public URL getSoundURL() throws MalformedURLException
 	{
 		if(soundUri != null) {
@@ -126,33 +135,39 @@ public class SoundType extends AbstractVCardType implements VCardBinaryType, Com
 		}
 	}
 
+	@Override
 	public AudioMediaType getAudioMediaType()
 	{
 		return soundMediaType;
 	}
 
+	@Override
 	public void setAudioMediaType(AudioMediaType audioMediaType) {
 		if(audioMediaType != null) {
 			this.soundMediaType = audioMediaType;
 		}
 	}
 
+	@Override
 	public boolean hasAudioMediaType()
 	{
 		return soundMediaType != null;
 	}
 
+	@Override
 	public boolean isCompressed()
 	{
 		return compressed;
 	}
 
+	@Override
 	public void setCompression(boolean compressed)
 	{
 		this.compressed = compressed;
 		
 	}
 
+	@Override
 	public byte[] getBinaryData()
 	{
 		if(soundBytes != null) {
@@ -163,6 +178,7 @@ public class SoundType extends AbstractVCardType implements VCardBinaryType, Com
 		}
 	}
 
+	@Override
 	public void setBinaryData(byte[] binaryData) {
 		if(binaryData != null) {
 			this.soundBytes = Arrays.copyOf(binaryData, binaryData.length);
@@ -172,11 +188,13 @@ public class SoundType extends AbstractVCardType implements VCardBinaryType, Com
 		}
 	}
 
+	@Override
 	public boolean isBinary()
 	{
 		return EncodingType.BINARY.equals(getEncodingType());
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -215,6 +233,7 @@ public class SoundType extends AbstractVCardType implements VCardBinaryType, Com
 		return cloned;
 	}
 	
+	@Override
 	public int compareTo(SoundType obj)
 	{
 		if(obj != null) {

@@ -75,6 +75,7 @@ public abstract class AbstractVCardType implements VCardType, VCardTypeFormatter
 		encodingType = EncodingType.EIGHT_BIT;
 	}
 	
+	@Override
 	public VCardTypeName getVCardTypeName()
 	{
 		return vcardTypeName;
@@ -88,11 +89,13 @@ public abstract class AbstractVCardType implements VCardType, VCardTypeFormatter
 		this.vcardTypeName = vcardTypeName;
 	}
 
+	@Override
 	public final EncodingType getEncodingType()
 	{
 		return encodingType;
 	}
 
+	@Override
 	public final void setEncodingType(EncodingType encodingType) throws NullPointerException {
 		if(encodingType == null) {
 			throw new NullPointerException("encodingType cannot be set to null.");
@@ -101,6 +104,7 @@ public abstract class AbstractVCardType implements VCardType, VCardTypeFormatter
 		this.encodingType = encodingType;
 	}
 
+	@Override
 	public final String getGroup()
 	{
 		if(group != null) {
@@ -111,6 +115,7 @@ public abstract class AbstractVCardType implements VCardType, VCardTypeFormatter
 		}
 	}
 
+	@Override
 	public final void setGroup(String group) {
 		if(group != null) {
 			this.group = new String(group);
@@ -120,16 +125,19 @@ public abstract class AbstractVCardType implements VCardType, VCardTypeFormatter
 		}
 	}
 
+	@Override
 	public final boolean hasGroup()
 	{
 		return group != null;
 	}
 
+	@Override
 	public final Charset getCharset()
 	{
 		return charset;
 	}
 
+	@Override
 	public final void setCharset(String strCharset) {
 		if(strCharset == null) {
 			charset = Charset.defaultCharset();
@@ -147,6 +155,7 @@ public abstract class AbstractVCardType implements VCardType, VCardTypeFormatter
 		}
 	}
 
+	@Override
 	public final void setCharset(Charset charset) {
 		if(charset == null) {
 			this.charset = Charset.defaultCharset();
@@ -156,16 +165,19 @@ public abstract class AbstractVCardType implements VCardType, VCardTypeFormatter
 		}
 	}
 
+	@Override
 	public final boolean hasCharset()
 	{
 		return charset != null;
 	}
 
+	@Override
 	public final LanguageType getLanguage()
 	{
 		return languageType;
 	}
 
+	@Override
 	public final void setLanguage(LanguageType languageType) {
 		if(languageType != null) {
 			this.languageType = languageType;
@@ -175,6 +187,7 @@ public abstract class AbstractVCardType implements VCardType, VCardTypeFormatter
 		}
 	}
 
+	@Override
 	public final void setLanguage(String languageType) {
 		if(languageType != null) {
 			try {
@@ -189,11 +202,13 @@ public abstract class AbstractVCardType implements VCardType, VCardTypeFormatter
 		}
 	}
 
+	@Override
 	public final boolean hasLanguage()
 	{
 		return languageType != null;
 	}
 
+	@Override
 	public final boolean isQuotedPrintable()
 	{
 		return EncodingType.QUOTED_PRINTABLE.equals(encodingType);
@@ -201,11 +216,13 @@ public abstract class AbstractVCardType implements VCardType, VCardTypeFormatter
 
 	// -----------------------------------------------------
 	
+	@Override
 	public final ParameterTypeStyle getParameterTypeStyle()
 	{
 		return paramTypeStyle;
 	}
 
+	@Override
 	public final void setParameterTypeStyle(ParameterTypeStyle paramTypeStyle) throws NullPointerException {
 		if(paramTypeStyle == null) {
 			throw new NullPointerException("paramTypeStyle cannot be set to null.");
@@ -216,16 +233,19 @@ public abstract class AbstractVCardType implements VCardType, VCardTypeFormatter
 	
 	// -----------------------------------------------------
 	
+	@Override
 	public final List<ExtendedParamType> getExtendedParams()
 	{
 		return Collections.unmodifiableList(extendedParameters);
 	}
 
+	@Override
 	public final int getExtendedParamSize()
 	{
 		return extendedParameters.size();
 	}
 
+	@Override
 	public final VCardParamTypeExtension addExtendedParam(ExtendedParamType xtendedParam) throws NullPointerException {
 		if(xtendedParam == null) {
 			throw new NullPointerException("Cannot add a null extended parameter.");
@@ -235,6 +255,7 @@ public abstract class AbstractVCardType implements VCardType, VCardTypeFormatter
 		return this;
 	}
 	
+	@Override
 	public final VCardParamTypeExtension addAllExtendedParams(List<ExtendedParamType> xtendedParams) throws NullPointerException {
 		if(xtendedParams == null) {
 			throw new NullPointerException("Cannot add a null extended parameters list.");
@@ -244,6 +265,7 @@ public abstract class AbstractVCardType implements VCardType, VCardTypeFormatter
 		return this;
 	}
 	
+	@Override
 	public final VCardParamTypeExtension removeExtendedParam(ExtendedParamType xtendedParam) throws NullPointerException {
 		if(xtendedParam == null) {
 			throw new NullPointerException("Cannot remove a null extended parameter.");
@@ -253,6 +275,7 @@ public abstract class AbstractVCardType implements VCardType, VCardTypeFormatter
 		return this;
 	}
 
+	@Override
 	public final boolean containsExtendedParam(ExtendedParamType xtendedParam)
 	{
 		if(xtendedParam != null) {
@@ -263,6 +286,7 @@ public abstract class AbstractVCardType implements VCardType, VCardTypeFormatter
 		}
 	}
 
+	@Override
 	public final boolean containsAllExtendedParams(List<ExtendedParamType> xtendedParams)
 	{
 		if(xtendedParams != null) {
@@ -273,11 +297,13 @@ public abstract class AbstractVCardType implements VCardType, VCardTypeFormatter
 		}
 	}
 
+	@Override
 	public final boolean hasExtendedParams()
 	{
 		return !extendedParameters.isEmpty();
 	}
 	
+	@Override
 	public final void clearExtendedParams() {
 		extendedParameters.clear();
 	}

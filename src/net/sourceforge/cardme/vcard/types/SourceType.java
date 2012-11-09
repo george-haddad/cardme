@@ -57,6 +57,7 @@ public class SourceType extends AbstractVCardType implements Comparable<SourceTy
 		setSource(source);
 	}
 
+	@Override
 	public String getSource()
 	{
 		if(source != null) {
@@ -67,6 +68,7 @@ public class SourceType extends AbstractVCardType implements Comparable<SourceTy
 		}
 	}
 
+	@Override
 	public void setSource(String source) {
 		if(source != null) {
 			this.source = new String(source);
@@ -76,15 +78,18 @@ public class SourceType extends AbstractVCardType implements Comparable<SourceTy
 		}
 	}
 
+	@Override
 	public boolean hasSource()
 	{
 		return source != null;
 	}
 
+	@Override
 	public void clearSource() {
 		source = null;
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -109,6 +114,7 @@ public class SourceType extends AbstractVCardType implements Comparable<SourceTy
 		return cloned;
 	}
 
+	@Override
 	public int compareTo(SourceType obj)
 	{
 		if(obj != null) {

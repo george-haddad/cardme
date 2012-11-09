@@ -112,6 +112,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		setEnd(new EndType());
 	}
 
+	@Override
 	public BeginType getBegin()
 	{
 		if(TYPES_TABLE.containsKey(VCardTypeName.BEGIN)) {
@@ -122,6 +123,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void setBegin(BeginType begin) throws NullPointerException {
 		if(begin == null) {
 			throw new NullPointerException("VCard cannot have a null Begin type.");
@@ -131,6 +133,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		
 	}
 
+	@Override
 	public EndType getEnd()
 	{
 		if(TYPES_TABLE.containsKey(VCardTypeName.END)) {
@@ -141,6 +144,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void setEnd(EndType end) throws NullPointerException {
 		if(end == null) {
 			throw new NullPointerException("VCard cannot have a null End type.");
@@ -149,6 +153,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		TYPES_TABLE.put(VCardTypeName.END, end);
 	}
 
+	@Override
 	public NameType getName()
 	{
 		if(TYPES_TABLE.containsKey(VCardTypeName.NAME)) {
@@ -159,6 +164,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void setName(NameType name) {
 		if(name != null) {
 			TYPES_TABLE.put(VCardTypeName.NAME, name);
@@ -170,17 +176,20 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasName()
 	{
 		return TYPES_TABLE.containsKey(VCardTypeName.NAME);
 	}
 
+	@Override
 	public void clearName() {
 		if(TYPES_TABLE.containsKey(VCardTypeName.NAME)) {
 			TYPES_TABLE.remove(VCardTypeName.NAME);
 		}
 	}
 
+	@Override
 	public ProfileType getProfile()
 	{
 		if(TYPES_TABLE.containsKey(VCardTypeName.PROFILE)) {
@@ -191,6 +200,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void setProfile(ProfileType profile) {
 		if(profile != null) {
 			TYPES_TABLE.put(VCardTypeName.PROFILE, profile);
@@ -202,17 +212,20 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasProfile()
 	{
 		return TYPES_TABLE.containsKey(VCardTypeName.PROFILE);
 	}
 	
+	@Override
 	public void clearProfile() {
 		if(TYPES_TABLE.containsKey(VCardTypeName.PROFILE)) {
 			TYPES_TABLE.remove(VCardTypeName.PROFILE);
 		}
 	}
 	
+	@Override
 	public SourceType getSource()
 	{
 		if(TYPES_TABLE.containsKey(VCardTypeName.SOURCE)) {
@@ -223,6 +236,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void setSource(SourceType source) {
 		if(source != null) {
 			TYPES_TABLE.put(VCardTypeName.SOURCE, source);
@@ -234,17 +248,20 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasSource()
 	{
 		return TYPES_TABLE.containsKey(VCardTypeName.SOURCE);
 	}
 	
+	@Override
 	public void clearSource() {
 		if(TYPES_TABLE.containsKey(VCardTypeName.SOURCE)) {
 			TYPES_TABLE.remove(VCardTypeName.SOURCE);
 		}
 	}
 
+	@Override
 	public FNType getFN()
 	{
 		if(TYPES_TABLE.containsKey(VCardTypeName.FN)) {
@@ -255,6 +272,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void setFN(FNType fn) throws NullPointerException {
 		if(fn != null) {
 			TYPES_TABLE.put(VCardTypeName.FN, fn);
@@ -264,11 +282,13 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasFN()
 	{
 		return TYPES_TABLE.containsKey(VCardTypeName.FN);
 	}
 
+	@Override
 	public NType getN()
 	{
 		if(TYPES_TABLE.containsKey(VCardTypeName.N)) {
@@ -279,6 +299,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void setN(NType n) throws NullPointerException {
 		if(n != null) {
 			TYPES_TABLE.put(VCardTypeName.N, n);
@@ -288,11 +309,13 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasN()
 	{
 		return TYPES_TABLE.containsKey(VCardTypeName.N);
 	}
 
+	@Override
 	public NicknameType getNicknames()
 	{
 		if(TYPES_TABLE.containsKey(VCardTypeName.NICKNAME)) {
@@ -303,6 +326,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 	
+	@Override
 	public void setNickname(NicknameType nicknames) {
 		if(nicknames != null) {
 			TYPES_TABLE.put(VCardTypeName.NICKNAME, nicknames);
@@ -314,17 +338,20 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasNicknames()
 	{
 		return TYPES_TABLE.containsKey(VCardTypeName.NICKNAME);
 	}
 
+	@Override
 	public void clearNickname() {
 		if(TYPES_TABLE.containsKey(VCardTypeName.NICKNAME)) {
 			TYPES_TABLE.remove(VCardTypeName.NICKNAME);
 		}
 	}
 
+	@Override
 	public List<PhotoType> getPhotos()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.PHOTO)) {
@@ -342,6 +369,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void addPhoto(PhotoType photo) throws NullPointerException {
 		if(photo != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.PHOTO)) {
@@ -358,6 +386,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void addAllPhotos(Collection<PhotoType> photos) throws NullPointerException {
 		if(photos != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.PHOTO)) {
@@ -374,6 +403,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean removePhoto(PhotoType photo) throws NullPointerException {
 		if(photo != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.PHOTO)) {
@@ -388,6 +418,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean containsPhoto(PhotoType photo) {
 		if(photo != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.PHOTO)) {
@@ -402,6 +433,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasPhotos()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.PHOTO)) {
@@ -412,12 +444,14 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void clearPhotos() {
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.PHOTO)) {
 			TYPES_LIST_TABLE.remove(VCardTypeName.PHOTO);
 		}
 	}
 
+	@Override
 	public BDayType getBDay()
 	{
 		if(TYPES_TABLE.containsKey(VCardTypeName.BDAY)) {
@@ -428,6 +462,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void setBDay(BDayType bday) {
 		if(bday != null) {
 			TYPES_TABLE.put(VCardTypeName.BDAY, bday);
@@ -439,11 +474,13 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasBDay()
 	{
 		return TYPES_TABLE.containsKey(VCardTypeName.BDAY);
 	}
 
+	@Override
 	public void clearBDay()
 	{
 		if(TYPES_TABLE.containsKey(VCardTypeName.BDAY)) {
@@ -451,6 +488,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public List<AdrType> getAdrs()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.ADR)) {
@@ -468,6 +506,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void addAdr(AdrType adr) throws NullPointerException {
 		if(adr != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.ADR)) {
@@ -484,6 +523,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void addAllAdrs(Collection<AdrType> adrs) throws NullPointerException {
 		if(adrs != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.ADR)) {
@@ -500,6 +540,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean removeAdr(AdrType adr) throws NullPointerException
 	{
 		if(adr != null) {
@@ -515,6 +556,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean containsAdr(AdrType adr)
 	{
 		if(adr != null) {
@@ -530,6 +572,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasAdrs()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.ADR)) {
@@ -540,6 +583,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void clearAdrs()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.ADR)) {
@@ -547,6 +591,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public List<LabelType> getLables()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.ADR)) {
@@ -567,6 +612,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean containsLabel(LabelType label)
 	{
 		boolean found = false;
@@ -595,6 +641,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void clearLabels()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.ADR)) {
@@ -606,6 +653,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public List<TelType> getTels()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.TEL)) {
@@ -623,6 +671,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void addTel(TelType tel) throws NullPointerException {
 		if(tel != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.TEL)) {
@@ -639,6 +688,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void addAllTels(Collection<TelType> tels) throws NullPointerException {
 		if(tels != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.TEL)) {
@@ -655,6 +705,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean removeTel(TelType tel) throws NullPointerException
 	{
 		if(tel != null) {
@@ -670,6 +721,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean containsTel(TelType tel)
 	{
 		if(tel != null) {
@@ -685,12 +737,14 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void clearTel() {
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.TEL)) {
 			TYPES_LIST_TABLE.remove(VCardTypeName.TEL);
 		}
 	}
 
+	@Override
 	public boolean hasTels()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.TEL)) {
@@ -701,6 +755,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public List<EmailType> getEmails()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.EMAIL)) {
@@ -718,6 +773,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void addEmail(EmailType email) {
 		if(email != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.EMAIL)) {
@@ -734,6 +790,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void addAllEmails(Collection<EmailType> emails) {
 		if(emails != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.EMAIL)) {
@@ -750,6 +807,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean removeEmail(EmailType email)
 	{
 		if(email != null) {
@@ -765,6 +823,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean containsEmail(EmailType email)
 	{
 		if(email != null) {
@@ -780,6 +839,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasEmails()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.EMAIL)) {
@@ -790,6 +850,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void clearEmails() {
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.EMAIL)) {
 			TYPES_LIST_TABLE.remove(VCardTypeName.EMAIL);
@@ -797,6 +858,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		
 	}
 
+	@Override
 	public MailerType getMailer()
 	{
 		if(TYPES_TABLE.containsKey(VCardTypeName.MAILER)) {
@@ -807,6 +869,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void setMailer(MailerType mailer) {
 		if(mailer != null) {
 			TYPES_TABLE.put(VCardTypeName.MAILER, mailer);
@@ -818,17 +881,20 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasMailer()
 	{
 		return TYPES_TABLE.containsKey(VCardTypeName.MAILER);
 	}
 
+	@Override
 	public void clearMailer() {
 		if(TYPES_TABLE.containsKey(VCardTypeName.MAILER)) {
 			TYPES_TABLE.remove(VCardTypeName.MAILER);
 		}
 	}
 
+	@Override
 	public TzType getTz()
 	{
 		if(TYPES_TABLE.containsKey(VCardTypeName.TZ)) {
@@ -839,6 +905,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void setTz(TzType timeZone) {
 		if(timeZone != null) {
 			TYPES_TABLE.put(VCardTypeName.TZ, timeZone);
@@ -850,17 +917,20 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasTz()
 	{
 		return TYPES_TABLE.containsKey(VCardTypeName.TZ);
 	}
 
+	@Override
 	public void clearTz() {
 		if(TYPES_TABLE.containsKey(VCardTypeName.TZ)) {
 			TYPES_TABLE.remove(VCardTypeName.TZ);
 		}
 	}
 
+	@Override
 	public GeoType getGeo()
 	{
 		if(TYPES_TABLE.containsKey(VCardTypeName.GEO)) {
@@ -871,6 +941,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void setGeo(GeoType geo) {
 		if(geo != null) {
 			TYPES_TABLE.put(VCardTypeName.GEO, geo);
@@ -882,17 +953,20 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasGeo()
 	{
 		return TYPES_TABLE.containsKey(VCardTypeName.GEO);
 	}
 
+	@Override
 	public void clearGeo() {
 		if(TYPES_TABLE.containsKey(VCardTypeName.GEO)) {
 			TYPES_TABLE.remove(VCardTypeName.GEO);
 		}
 	}
 
+	@Override
 	public TitleType getTitle()
 	{
 		if(TYPES_TABLE.containsKey(VCardTypeName.TITLE)) {
@@ -903,6 +977,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void setTitle(TitleType title) {
 		if(title != null) {
 			TYPES_TABLE.put(VCardTypeName.TITLE, title);
@@ -914,17 +989,20 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasTitle()
 	{
 		return TYPES_TABLE.containsKey(VCardTypeName.TITLE);
 	}
 
+	@Override
 	public void clearTitle() {
 		if(TYPES_TABLE.containsKey(VCardTypeName.TITLE)) {
 			TYPES_TABLE.remove(VCardTypeName.TITLE);
 		}
 	}
 
+	@Override
 	public RoleType getRole()
 	{
 		if(TYPES_TABLE.containsKey(VCardTypeName.ROLE)) {
@@ -935,6 +1013,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void setRole(RoleType role) {
 		if(role != null) {
 			TYPES_TABLE.put(VCardTypeName.ROLE, role);
@@ -946,17 +1025,20 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasRole()
 	{
 		return TYPES_TABLE.containsKey(VCardTypeName.ROLE);
 	}
 
+	@Override
 	public void clearRole() {
 		if(TYPES_TABLE.containsKey(VCardTypeName.ROLE)) {
 			TYPES_TABLE.remove(VCardTypeName.ROLE);
 		}
 	}
 
+	@Override
 	public List<LogoType> getLogos()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.LOGO)) {
@@ -974,6 +1056,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void addLogo(LogoType logo) throws NullPointerException {
 		if(logo != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.LOGO)) {
@@ -990,6 +1073,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void addAllLogos(Collection<LogoType> logos) throws NullPointerException {
 		if(logos != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.LOGO)) {
@@ -1006,6 +1090,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean removeLogo(LogoType logo) throws NullPointerException {
 		if(logo != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.LOGO)) {
@@ -1020,6 +1105,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean containsLogo(LogoType logo)
 	{
 		if(logo != null) {
@@ -1035,6 +1121,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasLogos()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.LOGO)) {
@@ -1045,12 +1132,14 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void clearLogos() {
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.LOGO)) {
 			TYPES_LIST_TABLE.remove(VCardTypeName.LOGO);
 		}
 	}
 
+	@Override
 	public List<AgentType> getAgents()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.AGENT)) {
@@ -1068,6 +1157,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void addAgent(AgentType agent) throws NullPointerException {
 		if(agent != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.AGENT)) {
@@ -1084,6 +1174,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 	
+	@Override
 	public void addAllAgents(Collection<AgentType> agents) throws NullPointerException {
 		if(agents != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.AGENT)) {
@@ -1100,6 +1191,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean removeAgent(AgentType agent) throws NullPointerException {
 		if(agent != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.AGENT)) {
@@ -1114,6 +1206,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean containsAgent(AgentType agent)
 	{
 		if(agent != null) {
@@ -1129,6 +1222,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasAgents()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.AGENT)) {
@@ -1139,12 +1233,14 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void clearAgents() {
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.AGENT)) {
 			TYPES_LIST_TABLE.remove(VCardTypeName.AGENT);
 		}
 	}
 
+	@Override
 	public OrgType getOrg()
 	{
 		if(TYPES_TABLE.containsKey(VCardTypeName.ORG)) {
@@ -1155,6 +1251,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void setOrg(OrgType organization) {
 		if(organization != null) {
 			TYPES_TABLE.put(VCardTypeName.ORG, organization);
@@ -1166,17 +1263,20 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasOrg()
 	{
 		return TYPES_TABLE.containsKey(VCardTypeName.ORG);
 	}
 
+	@Override
 	public void clearOrg() {
 		if(TYPES_TABLE.containsKey(VCardTypeName.ORG)) {
 			TYPES_TABLE.remove(VCardTypeName.ORG);
 		}
 	}
 
+	@Override
 	public CategoriesType getCategories()
 	{
 		if(TYPES_TABLE.containsKey(VCardTypeName.CATEGORIES)) {
@@ -1187,6 +1287,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void setCategories(CategoriesType categories) {
 		if(categories != null) {
 			TYPES_TABLE.put(VCardTypeName.CATEGORIES, categories);
@@ -1199,17 +1300,20 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		
 	}
 
+	@Override
 	public boolean hasCategories()
 	{
 		return TYPES_TABLE.containsKey(VCardTypeName.CATEGORIES);
 	}
 
+	@Override
 	public void clearCategories() {
 		if(TYPES_TABLE.containsKey(VCardTypeName.CATEGORIES)) {
 			TYPES_TABLE.remove(VCardTypeName.CATEGORIES);
 		}
 	}
 
+	@Override
 	public List<NoteType> getNotes()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.NOTE)) {
@@ -1227,6 +1331,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void addNote(NoteType note) throws NullPointerException {
 		if(note != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.NOTE)) {
@@ -1243,6 +1348,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void addAllNotes(Collection<NoteType> notes) throws NullPointerException {
 		if(notes != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.NOTE)) {
@@ -1259,6 +1365,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean removeNote(NoteType note) throws NullPointerException
 	{
 		if(note != null) {
@@ -1274,6 +1381,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean containsNote(NoteType note)
 	{
 		if(note != null) {
@@ -1289,6 +1397,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasNotes()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.NOTE)) {
@@ -1299,12 +1408,14 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void clearNotes() {
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.NOTE)) {
 			TYPES_LIST_TABLE.remove(VCardTypeName.NOTE);
 		}
 	}
 
+	@Override
 	public ProdIdType getProdId()
 	{
 		if(TYPES_TABLE.containsKey(VCardTypeName.PRODID)) {
@@ -1315,6 +1426,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void setProdId(ProdIdType productId) {
 		if(productId != null) {
 			TYPES_TABLE.put(VCardTypeName.PRODID, productId);
@@ -1326,17 +1438,20 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasProdId()
 	{
 		return TYPES_TABLE.containsKey(VCardTypeName.PRODID);
 	}
 
+	@Override
 	public void clearProdId() {
 		if(TYPES_TABLE.containsKey(VCardTypeName.PRODID)) {
 			TYPES_TABLE.remove(VCardTypeName.PRODID);
 		}
 	}
 
+	@Override
 	public RevType getRev()
 	{
 		if(TYPES_TABLE.containsKey(VCardTypeName.REV)) {
@@ -1347,6 +1462,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void setRev(RevType revision) {
 		if(revision != null) {
 			TYPES_TABLE.put(VCardTypeName.REV, revision);
@@ -1358,17 +1474,20 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasRev()
 	{
 		return TYPES_TABLE.containsKey(VCardTypeName.REV);
 	}
 
+	@Override
 	public void clearRev() {
 		if(TYPES_TABLE.containsKey(VCardTypeName.REV)) {
 			TYPES_TABLE.remove(VCardTypeName.REV);
 		}
 	}
 
+	@Override
 	public SortStringType getSortString()
 	{
 		if(TYPES_TABLE.containsKey(VCardTypeName.SORT_STRING)) {
@@ -1379,6 +1498,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void setSortString(SortStringType sortString) {
 		if(sortString != null) {
 			TYPES_TABLE.put(VCardTypeName.SORT_STRING, sortString);
@@ -1390,17 +1510,20 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasSortString()
 	{
 		return TYPES_TABLE.containsKey(VCardTypeName.SORT_STRING);
 	}
 
+	@Override
 	public void clearSortString() {
 		if(TYPES_TABLE.containsKey(VCardTypeName.SORT_STRING)) {
 			TYPES_TABLE.remove(VCardTypeName.SORT_STRING);
 		}
 	}
 
+	@Override
 	public List<SoundType> getSounds()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.SOUND)) {
@@ -1418,6 +1541,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void addSound(SoundType sound) throws NullPointerException {
 		if(sound != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.SOUND)) {
@@ -1434,6 +1558,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void addAllSounds(Collection<SoundType> sounds) throws NullPointerException {
 		if(sounds != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.SOUND)) {
@@ -1450,6 +1575,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean removeSound(SoundType sound) throws NullPointerException
 	{
 		if(sound != null) {
@@ -1465,6 +1591,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean containsSound(SoundType sound)
 	{
 		if(sound != null) {
@@ -1480,6 +1607,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasSounds()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.SOUND)) {
@@ -1490,12 +1618,14 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void clearSounds() {
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.SOUND)) {
 			TYPES_LIST_TABLE.remove(VCardTypeName.SOUND);
 		}
 	}
 
+	@Override
 	public UidType getUid()
 	{
 		if(TYPES_TABLE.containsKey(VCardTypeName.UID)) {
@@ -1506,6 +1636,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void setUid(UidType uid) {
 		if(uid != null) {
 			TYPES_TABLE.put(VCardTypeName.UID, uid);
@@ -1517,11 +1648,13 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasUid()
 	{
 		return TYPES_TABLE.containsKey(VCardTypeName.UID);
 	}
 
+	@Override
 	public void clearUid()
 	{
 		if(TYPES_TABLE.containsKey(VCardTypeName.UID)) {
@@ -1529,6 +1662,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public List<UrlType> getUrls()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.URL)) {
@@ -1546,6 +1680,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void addUrl(UrlType url) throws NullPointerException {
 		if(url != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.URL)) {
@@ -1562,6 +1697,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void addAllUrls(Collection<UrlType> urls) throws NullPointerException {
 		if(urls != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.URL)) {
@@ -1578,6 +1714,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean removeUrl(UrlType url) throws NullPointerException
 	{
 		if(url != null) {
@@ -1593,6 +1730,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean containsUrl(UrlType url)
 	{
 		if(url != null) {
@@ -1608,6 +1746,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasUrls()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.URL)) {
@@ -1618,12 +1757,14 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void clearUrls() {
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.URL)) {
 			TYPES_LIST_TABLE.remove(VCardTypeName.URL);
 		}
 	}
 
+	@Override
 	public List<ImppType> getIMPPs()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.IMPP)) {
@@ -1641,6 +1782,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void addImpp(ImppType impp) throws NullPointerException {
 		if(impp != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.IMPP)) {
@@ -1657,6 +1799,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 	
+	@Override
 	public void addAllImpp(Collection<ImppType> impps) throws NullPointerException {
 		if(impps != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.IMPP)) {
@@ -1673,6 +1816,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean removeImpp(ImppType impp) throws NullPointerException
 	{
 		if(impp != null) {
@@ -1688,6 +1832,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean containsImpp(ImppType impp)
 	{
 		if(impp != null) {
@@ -1703,6 +1848,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasImpps()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.IMPP)) {
@@ -1713,12 +1859,14 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void clearImpp() {
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.IMPP)) {
 			TYPES_LIST_TABLE.remove(VCardTypeName.IMPP);
 		}
 	}
 
+	@Override
 	public VersionType getVersion()
 	{
 		if(TYPES_TABLE.containsKey(VCardTypeName.VERSION)) {
@@ -1729,6 +1877,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void setVersion(VersionType version) throws NullPointerException {
 		if(version != null) {
 			TYPES_TABLE.put(VCardTypeName.VERSION, version);
@@ -1738,6 +1887,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public ClassType getSecurityClass()
 	{
 		if(TYPES_TABLE.containsKey(VCardTypeName.CLASS)) {
@@ -1748,6 +1898,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void setSecurityClass(ClassType securityClass) {
 		if(securityClass != null) {
 			TYPES_TABLE.put(VCardTypeName.CLASS, securityClass);
@@ -1759,17 +1910,20 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasSecurityClass()
 	{
 		return TYPES_TABLE.containsKey(VCardTypeName.CLASS);
 	}
 
+	@Override
 	public void clearSecurityClass() {
 		if(TYPES_TABLE.containsKey(VCardTypeName.CLASS)) {
 			TYPES_TABLE.remove(VCardTypeName.CLASS);
 		}
 	}
 
+	@Override
 	public List<KeyType> getKeys()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.KEY)) {
@@ -1787,6 +1941,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void addKey(KeyType key) throws NullPointerException {
 		if(key != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.KEY)) {
@@ -1803,6 +1958,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void addAllKeys(Collection<KeyType> keys) throws NullPointerException {
 		if(keys != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.KEY)) {
@@ -1819,6 +1975,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean removeKey(KeyType key) throws NullPointerException
 	{
 		if(key != null) {
@@ -1834,6 +1991,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean containsKey(KeyType key)
 	{
 		if(key != null) {
@@ -1849,6 +2007,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasKeys()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.KEY)) {
@@ -1859,12 +2018,14 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void clearKeys() {
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.KEY)) {
 			TYPES_LIST_TABLE.remove(VCardTypeName.KEY);
 		}
 	}
 
+	@Override
 	public List<ExtendedType> getExtendedTypes()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.XTENDED)) {
@@ -1882,6 +2043,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void addExtendedType(ExtendedType extension) throws NullPointerException {
 		if(extension != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.XTENDED)) {
@@ -1898,6 +2060,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void addAllExtendedTypes(Collection<ExtendedType> extensions) throws NullPointerException {
 		if(extensions != null) {
 			if(TYPES_LIST_TABLE.containsKey(VCardTypeName.XTENDED)) {
@@ -1914,6 +2077,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean removeExtendedType(ExtendedType extension) throws NullPointerException
 	{
 		if(extension != null) {
@@ -1929,6 +2093,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean containsExtendedType(ExtendedType extension)
 	{
 		if(extension != null) {
@@ -1944,6 +2109,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public boolean hasExtendedTypes()
 	{
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.XTENDED)) {
@@ -1954,12 +2120,14 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		}
 	}
 
+	@Override
 	public void clearExtendedTypes() {
 		if(TYPES_LIST_TABLE.containsKey(VCardTypeName.XTENDED)) {
 			TYPES_LIST_TABLE.remove(VCardTypeName.XTENDED);
 		}
 	}
 
+	@Override
 	public void clear() {
 		TYPES_TABLE.clear();
 		TYPES_LIST_TABLE.clear();
@@ -1967,11 +2135,13 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 
 	// ----- VCardErrorHandler Interface Methods ---------------------------
 	
+	@Override
 	public List<VCardError> getErrors()
 	{
 		return Collections.unmodifiableList(VCARD_ERRORS);
 	}
 
+	@Override
 	public void addError(VCardError error) throws NullPointerException {
 		if(error == null) {
 			throw new NullPointerException("Cannot add a null VCardError.");
@@ -1980,6 +2150,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		VCARD_ERRORS.add(error);
 	}
 
+	@Override
 	public void addError(String errorMessage, ErrorSeverity severity, Throwable error) throws NullPointerException {
 		if(errorMessage == null) {
 			throw new NullPointerException("Cannot add a null errorMessage.");
@@ -1988,25 +2159,30 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		VCARD_ERRORS.add(new VCardError(errorMessage, error, severity));
 	}
 
+	@Override
 	public ErrorSeverity getErrorSeverity()
 	{
 		return errorSeverity;
 	}
 
+	@Override
 	public void setThrowExceptions(boolean throwExceptions) {
 		this.throwsExceptions = throwExceptions;
 	}
 
+	@Override
 	public boolean isThrowExceptions()
 	{
 		return throwsExceptions;
 	}
 
+	@Override
 	public boolean hasErrors()
 	{
 		return !VCARD_ERRORS.isEmpty();
 	}
 
+	@Override
 	public void clearErrors() {
 		VCARD_ERRORS.clear();
 	}
@@ -2231,6 +2407,7 @@ public class VCardImpl implements VCard, VCardErrorHandler, Comparable<VCardImpl
 		return contents;
 	}
 	
+	@Override
 	public int compareTo(VCardImpl obj)
 	{
 		if(obj != null) {

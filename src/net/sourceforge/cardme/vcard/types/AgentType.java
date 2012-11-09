@@ -65,35 +65,42 @@ public class AgentType extends AbstractVCardType implements Comparable<AgentType
 		setAgent(agentVCard);
 	}
 
+	@Override
 	public VCard getAgent()
 	{
 		return agentVCard;
 	}
 
+	@Override
 	public void setAgent(VCard agent) {
 		this.agentVCard = agent;
 		
 	}
 
+	@Override
 	public URI getAgentURI()
 	{
 		return agentUri;
 	}
 
+	@Override
 	public boolean hasAgent()
 	{
 		return agentUri != null || agentVCard != null;
 	}
 
+	@Override
 	public boolean isURI()
 	{
 		return agentUri != null;
 	}
 
+	@Override
 	public void setAgentURI(URI agentUri) {
 		this.agentUri = agentUri;
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -119,6 +126,7 @@ public class AgentType extends AbstractVCardType implements Comparable<AgentType
 		return cloned;
 	}
 	
+	@Override
 	public int compareTo(AgentType obj)
 	{
 		if(obj != null) {

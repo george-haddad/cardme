@@ -68,6 +68,7 @@ public class BDayType extends AbstractVCardType implements Comparable<BDayType>,
 		setBirthday(bdayCal);
 	}
 
+	@Override
 	public Calendar getBirthday()
 	{
 		if(birthday != null) {
@@ -78,6 +79,7 @@ public class BDayType extends AbstractVCardType implements Comparable<BDayType>,
 		}
 	}
 
+	@Override
 	public void setBirthday(Calendar bdayCal) {
 		if(bdayCal != null) {
 			birthday = bdayCal;
@@ -87,6 +89,7 @@ public class BDayType extends AbstractVCardType implements Comparable<BDayType>,
 		}
 	}
 
+	@Override
 	public void setBirthday(Date bdayDate) {
 		if(bdayDate != null) {
 			birthday = Calendar.getInstance();
@@ -97,6 +100,7 @@ public class BDayType extends AbstractVCardType implements Comparable<BDayType>,
 		}
 	}
 
+	@Override
 	public void setParam(BDayParamType bdayParamType) {
 		if(bdayParamType != null) {
 			this.bdayParamType = bdayParamType;
@@ -106,6 +110,7 @@ public class BDayType extends AbstractVCardType implements Comparable<BDayType>,
 		}
 	}
 
+	@Override
 	public BDayParamType getParam()
 	{
 		if(bdayParamType != null) {
@@ -116,15 +121,18 @@ public class BDayType extends AbstractVCardType implements Comparable<BDayType>,
 		}
 	}
 
+	@Override
 	public void clearParam() {
 		bdayParamType = null;
 	}
 
+	@Override
 	public boolean hasParam()
 	{
 		return bdayParamType != null;
 	}
 
+	@Override
 	public void setISO8601Format(ISOFormat dateTimeFormat) {
 		if(dateTimeFormat != null) {
 			this.dateTimeFormat = dateTimeFormat;
@@ -134,6 +142,7 @@ public class BDayType extends AbstractVCardType implements Comparable<BDayType>,
 		}
 	}
 
+	@Override
 	public ISOFormat getISO8601Format()
 	{
 		if(bdayParamType != null) {
@@ -185,6 +194,7 @@ public class BDayType extends AbstractVCardType implements Comparable<BDayType>,
 		}
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -211,6 +221,7 @@ public class BDayType extends AbstractVCardType implements Comparable<BDayType>,
 		return cloned;
 	}
 	
+	@Override
 	public int compareTo(BDayType obj) 
 	{
 		if(obj != null) {

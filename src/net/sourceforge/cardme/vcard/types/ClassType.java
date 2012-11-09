@@ -57,6 +57,7 @@ public class ClassType extends AbstractVCardType implements Comparable<ClassType
 		setSecurityClass(securityClass);
 	}
 
+	@Override
 	public String getSecurityClass()
 	{
 		if(securityClass != null) {
@@ -67,6 +68,7 @@ public class ClassType extends AbstractVCardType implements Comparable<ClassType
 		}
 	}
 
+	@Override
 	public void setSecurityClass(String securityClass) {
 		if(securityClass != null) {
 			this.securityClass = new String(securityClass);
@@ -76,15 +78,18 @@ public class ClassType extends AbstractVCardType implements Comparable<ClassType
 		}
 	}
 
+	@Override
 	public boolean hasSecurityClass()
 	{
 		return securityClass != null;
 	}
 
+	@Override
 	public void clearSecurityClass() {
 		securityClass = null;
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -109,6 +114,7 @@ public class ClassType extends AbstractVCardType implements Comparable<ClassType
 		return cloned;
 	}
 	
+	@Override
 	public int compareTo(ClassType obj)
 	{
 		if(obj != null) {

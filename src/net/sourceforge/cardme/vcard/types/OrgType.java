@@ -70,6 +70,7 @@ public class OrgType extends AbstractVCardType implements Comparable<OrgType>, C
 		addAllOrgUnits(orgUnits);
 	}
 
+	@Override
 	public String getOrgName()
 	{
 		if(orgName != null) {
@@ -80,6 +81,7 @@ public class OrgType extends AbstractVCardType implements Comparable<OrgType>, C
 		}
 	}
 
+	@Override
 	public OrgType setOrgName(String orgName) {
 		if(orgName != null) {
 			this.orgName = new String(orgName);
@@ -91,16 +93,19 @@ public class OrgType extends AbstractVCardType implements Comparable<OrgType>, C
 		return this;
 	}
 
+	@Override
 	public void clearOrg() {
 		orgName = null;
 		orgUnits.clear();
 	}
 
+	@Override
 	public boolean hasOrgName()
 	{
 		return orgName != null;
 	}
 
+	@Override
 	public OrgType addOrgUnit(String orgUnit) throws NullPointerException, VCardException {
 		if(orgUnit == null) {
 			throw new NullPointerException("Cannot add a null organizational unit.");
@@ -114,6 +119,7 @@ public class OrgType extends AbstractVCardType implements Comparable<OrgType>, C
 		return this;
 	}
 
+	@Override
 	public OrgType addAllOrgUnits(List<String> orgUnits) throws NullPointerException, VCardException {
 		if(orgUnits == null) {
 			throw new NullPointerException("Cannot add a null organizational units list.");
@@ -127,6 +133,7 @@ public class OrgType extends AbstractVCardType implements Comparable<OrgType>, C
 		return this;
 	}
 
+	@Override
 	public OrgType removeOrgUnit(String orgUnit) throws NullPointerException {
 		if(orgUnit == null) {
 			throw new NullPointerException("Cannot remove a null organizational unit.");
@@ -136,6 +143,7 @@ public class OrgType extends AbstractVCardType implements Comparable<OrgType>, C
 		return this;
 	}
 
+	@Override
 	public boolean containsOrgUnit(String orgUnit)
 	{
 		if(orgUnit != null) {
@@ -146,6 +154,7 @@ public class OrgType extends AbstractVCardType implements Comparable<OrgType>, C
 		}
 	}
 	
+	@Override
 	public boolean containsAllOrgUnits(List<String> orgUnits)
 	{
 		if(orgUnits != null) {
@@ -156,6 +165,7 @@ public class OrgType extends AbstractVCardType implements Comparable<OrgType>, C
 		}
 	}
 
+	@Override
 	public List<String> getOrgUnits()
 	{
 		return Collections.unmodifiableList(orgUnits);
@@ -165,11 +175,13 @@ public class OrgType extends AbstractVCardType implements Comparable<OrgType>, C
 		orgUnits.clear();
 	}
 
+	@Override
 	public boolean hasOrgUnits()
 	{
 		return !orgUnits.isEmpty();
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -195,6 +207,7 @@ public class OrgType extends AbstractVCardType implements Comparable<OrgType>, C
 		return cloned;
 	}
 
+	@Override
 	public int compareTo(OrgType obj)
 	{
 		if(obj != null) {

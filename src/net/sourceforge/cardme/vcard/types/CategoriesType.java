@@ -65,11 +65,13 @@ public class CategoriesType extends AbstractVCardType implements Comparable<Cate
 		addAllCategories(categories);
 	}
 
+	@Override
 	public List<String> getCategories()
 	{
 		return Collections.unmodifiableList(categories);
 	}
 
+	@Override
 	public CategoriesType addCategory(String category) throws NullPointerException {
 		if(category == null) {
 			throw new NullPointerException("Cannot add a null category.");
@@ -79,6 +81,7 @@ public class CategoriesType extends AbstractVCardType implements Comparable<Cate
 		return this;
 	}
 	
+	@Override
 	public CategoriesType addAllCategories(List<String> categories) throws NullPointerException {
 		if(categories == null) {
 			throw new NullPointerException("Cannot add a null categories list.");
@@ -88,6 +91,7 @@ public class CategoriesType extends AbstractVCardType implements Comparable<Cate
 		return this;
 	}
 
+	@Override
 	public CategoriesType removeCategory(String category) throws NullPointerException {
 		if(category == null) {
 			throw new NullPointerException("Cannot remove a null category.");
@@ -97,6 +101,7 @@ public class CategoriesType extends AbstractVCardType implements Comparable<Cate
 		return this;
 	}
 
+	@Override
 	public boolean containsCategory(String category)
 	{
 		if(category != null) {
@@ -107,6 +112,7 @@ public class CategoriesType extends AbstractVCardType implements Comparable<Cate
 		}
 	}
 	
+	@Override
 	public boolean containsAllCategories(List<String> categories)
 	{
 		if(categories != null) {
@@ -117,15 +123,18 @@ public class CategoriesType extends AbstractVCardType implements Comparable<Cate
 		}
 	}
 	
+	@Override
 	public boolean hasCategories()
 	{
 		return !categories.isEmpty();
 	}
 
+	@Override
 	public void clearCategories() {
 		categories.clear();
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -150,6 +159,7 @@ public class CategoriesType extends AbstractVCardType implements Comparable<Cate
 		return cloned;
 	}
 
+	@Override
 	public int compareTo(CategoriesType obj)
 	{
 		if(obj != null) {

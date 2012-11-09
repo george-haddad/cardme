@@ -22,6 +22,7 @@ public class BeginType extends AbstractVCardType implements Comparable<BeginType
 		super(VCardTypeName.BEGIN);
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -45,6 +46,7 @@ public class BeginType extends AbstractVCardType implements Comparable<BeginType
 		return cloned;
 	}
 	
+	@Override
 	public int compareTo(BeginType obj)
 	{
 		if(obj != null) {

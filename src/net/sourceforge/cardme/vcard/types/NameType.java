@@ -57,6 +57,7 @@ public class NameType extends AbstractVCardType implements Comparable<NameType>,
 		setName(name);
 	}
 
+	@Override
 	public String getName()
 	{
 		if(name != null) {
@@ -67,6 +68,7 @@ public class NameType extends AbstractVCardType implements Comparable<NameType>,
 		}
 	}
 
+	@Override
 	public void setName(String name) {
 		if(name != null) {
 			this.name = new String(name);
@@ -76,15 +78,18 @@ public class NameType extends AbstractVCardType implements Comparable<NameType>,
 		}
 	}
 
+	@Override
 	public boolean hasName()
 	{
 		return name != null;
 	}
 
+	@Override
 	public void clearName() {
 		name = null;
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -109,6 +114,7 @@ public class NameType extends AbstractVCardType implements Comparable<NameType>,
 		return cloned;
 	}
 	
+	@Override
 	public int compareTo(NameType obj)
 	{
 		if(obj != null) {

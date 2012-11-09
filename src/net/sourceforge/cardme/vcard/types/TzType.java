@@ -83,11 +83,13 @@ public class TzType extends AbstractVCardType implements Comparable<TzType>, Clo
 		setLongText(longText);
 	}
 
+	@Override
 	public TimeZone getTimeZone()
 	{
 		return timeZone;
 	}
 
+	@Override
 	public void setTimeZone(TimeZone timeZone) {
 		if(timeZone != null) {
 			int offsetMillis = timeZone.getRawOffset();
@@ -102,11 +104,13 @@ public class TzType extends AbstractVCardType implements Comparable<TzType>, Clo
 		}
 	}
 
+	@Override
 	public boolean hasTimeZone()
 	{
 		return timeZone != null;
 	}
 
+	@Override
 	public void clearTimeZone() {
 		timeZone = null;
 		hourOffset = 0;
@@ -115,16 +119,19 @@ public class TzType extends AbstractVCardType implements Comparable<TzType>, Clo
 		longText = null;
 	}
 
+	@Override
 	public int getHourOffset()
 	{
 		return hourOffset;
 	}
 
+	@Override
 	public int getMinuteOffset()
 	{
 		return minuteOffset;
 	}
 
+	@Override
 	public void setOffset(int hourOffset, int minuteOffset) throws IllegalArgumentException {
 		if (minuteOffset < 0 || minuteOffset > 59){
 			throw new IllegalArgumentException("Minute offset must be a positive value between 0 and 59.");
@@ -151,6 +158,7 @@ public class TzType extends AbstractVCardType implements Comparable<TzType>, Clo
 		timeZone = new SimpleTimeZone(offsetMillis, "");
 	}
 
+	@Override
 	public String getShortText()
 	{
 		if(shortText != null) {
@@ -161,6 +169,7 @@ public class TzType extends AbstractVCardType implements Comparable<TzType>, Clo
 		}
 	}
 
+	@Override
 	public void setShortText(String shortText) {
 		if(shortText != null) {
 			this.shortText = new String(shortText);
@@ -170,6 +179,7 @@ public class TzType extends AbstractVCardType implements Comparable<TzType>, Clo
 		}
 	}
 
+	@Override
 	public String getLongText()
 	{
 		if(longText != null) {
@@ -180,6 +190,7 @@ public class TzType extends AbstractVCardType implements Comparable<TzType>, Clo
 		}
 	}
 
+	@Override
 	public void setLongText(String longText) {
 		if(longText != null) {
 			this.longText = new String(longText);
@@ -189,6 +200,7 @@ public class TzType extends AbstractVCardType implements Comparable<TzType>, Clo
 		}
 	}
 
+	@Override
 	public String getIso8601Offset()
 	{
 		if(timeZone != null) {
@@ -199,6 +211,7 @@ public class TzType extends AbstractVCardType implements Comparable<TzType>, Clo
 		}
 	}
 
+	@Override
 	public void parseTimeZoneOffset(String iso8601Offset) throws IllegalArgumentException {
 		Pattern p = Pattern.compile("^([-\\+])?(\\d{1,2})(:?(\\d{2}))?$");
 		Matcher m = p.matcher(iso8601Offset);
@@ -232,30 +245,36 @@ public class TzType extends AbstractVCardType implements Comparable<TzType>, Clo
 		setOffset(hourOffset, minuteOffset);
 	}
 
+	@Override
 	public TzParamType getParamType()
 	{
 		return tzParamType;
 	}
 
+	@Override
 	public void setParamType(TzParamType tzParamType) {
 		this.tzParamType = tzParamType;
 	}
 
+	@Override
 	public boolean hasParamType()
 	{
 		return tzParamType != null;
 	}
 	
+	@Override
 	public boolean isUtcOffset()
 	{
 		return TzParamType.UTC_OFFSET.equals(tzParamType);
 	}
 	
+	@Override
 	public boolean isText()
 	{
 		return TzParamType.TEXT.equals(tzParamType);
 	}
 	
+	@Override
 	public boolean hasParams()
 	{
 		return false;
@@ -292,6 +311,7 @@ public class TzType extends AbstractVCardType implements Comparable<TzType>, Clo
 		return cloned;
 	}
 	
+	@Override
 	public int compareTo(TzType obj)
 	{
 		if(obj != null) {

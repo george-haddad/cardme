@@ -36,6 +36,7 @@ public class ExtendedParamType implements VCardParamType, Comparable<ExtendedPar
 		setParentVCardTypeName(parentVCardTypeName);
 	}
 	
+	@Override
 	public String getTypeName()
 	{
 		if(typeName != null) {
@@ -46,6 +47,7 @@ public class ExtendedParamType implements VCardParamType, Comparable<ExtendedPar
 		}
 	}
 
+	@Override
 	public void setTypeName(String typeName) throws NullPointerException {
 		if(typeName == null) {
 			throw new NullPointerException("Parameter typeName cannot be set to null.");
@@ -54,6 +56,7 @@ public class ExtendedParamType implements VCardParamType, Comparable<ExtendedPar
 		this.typeName = new String(typeName);
 	}
 
+	@Override
 	public String getTypeValue()
 	{
 		if(typeValue != null) {
@@ -64,6 +67,7 @@ public class ExtendedParamType implements VCardParamType, Comparable<ExtendedPar
 		}
 	}
 
+	@Override
 	public void setTypeValue(String typeValue) {
 		if(typeValue != null) {
 			this.typeValue = new String(typeValue);
@@ -73,6 +77,7 @@ public class ExtendedParamType implements VCardParamType, Comparable<ExtendedPar
 		}
 	}
 
+	@Override
 	public boolean hasTypeValue()
 	{
 		return typeValue != null;
@@ -86,6 +91,7 @@ public class ExtendedParamType implements VCardParamType, Comparable<ExtendedPar
 		this.parentVCardTypeName = parentVCardTypeName;
 	}
 
+	@Override
 	public VCardTypeName getParentVCardTypeName()
 	{
 		return parentVCardTypeName;
@@ -103,6 +109,7 @@ public class ExtendedParamType implements VCardParamType, Comparable<ExtendedPar
 		return contents;
 	}
 	
+	@Override
 	public int compareTo(ExtendedParamType obj)
 	{
 		if(obj != null) {
