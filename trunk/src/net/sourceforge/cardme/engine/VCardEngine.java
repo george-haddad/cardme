@@ -2586,9 +2586,24 @@ public class VCardEngine {
 		return getContent(new StringReader(vcardString));
 	}
 	
+	private static final Pattern emptyLinePattern = Pattern.compile("$");
+	private static final Pattern startQpLinePattern = Pattern.compile(".*;([ \\t]*ENCODING[ \\t]*=)?[ \\t]*QUOTED-PRINTABLE.*:.*=", Pattern.CASE_INSENSITIVE);
+	private static final Pattern middleQpLinePattern = Pattern.compile("\\s*.+=?");
+	private static final Pattern vcardTypePattern = Pattern.compile("^[ \\t]*\\p{ASCII}+:.*$");
+	
 	/**
-	 * <p>Reads the contents of a Reader where each line is delimited with
-	 * the standard java EOL char '\n' This is still a folded vcard String.</p>
+	 * <p>Reads the content of a VCard from a reader interface. This method
+	 * performs the following automatic operations:
+	 * <ul>
+	 * 	<li>Removes blank lines</li>
+	 * 	<li>Replaces CRLF end of lines with just LF (\r\n -> \n)</li>
+	 * 	<li>Detects and unfolds Quoted-Printable lines</li>
+	 * 	<li>Makes a big effort to handle badly folded Quoted-Printable lines</li>
+	 * </ul>
+	 * 
+	 * Please note that the unfolding of binary data and other lines that are not
+	 * encoded as quoted-printable can be done using <code>{@link VCardUtils}.unfoldVCard(String, CompatibilityMode)</code>
+	 * </p>
 	 *
 	 * @param reader
 	 * @return {@link String}
@@ -2597,22 +2612,72 @@ public class VCardEngine {
 	private String getContent(Reader reader) throws IOException
 	{
 		BufferedReader br = null;
-		try	{
+		String vcardStr = null;
+		
+		try {
 			br = new BufferedReader(reader);
-			String line;
 			StringBuilder sb = new StringBuilder();
+			String line = null;
+			boolean prevFolded = false;
+			boolean isQuotedPrintable = false;
+			boolean isQuotedPrintableEnd = false;
+			
 			while((line = br.readLine()) != null) {
-				// skips blank lines
-				if(!line.matches("$")) {
-					sb.append(line);
-					sb.append("\n");
+				if(!emptyLinePattern.matcher(line).matches()) {
+					//non-empty line
+					if(isQuotedPrintable && prevFolded && !isQuotedPrintableEnd) {
+						//I am expecting more quoted printable lines
+						
+						//This is true if the current line is the start
+						//of a VCard type, regardless of what was before it.
+						if(vcardTypePattern.matcher(line).matches()) {
+							isQuotedPrintableEnd = true;
+							isQuotedPrintable = false;
+							prevFolded = false;
+							sb.append('\n');
+						}
+					}
+					
+					if(startQpLinePattern.matcher(line).matches()) {
+						//A quoted-printable line that has a soft-line break fold 
+						isQuotedPrintableEnd = false;
+						isQuotedPrintable = true;
+						prevFolded = true;
+						line = line.trim();
+						String s = line.substring(0, line.lastIndexOf('='));
+						sb.append(s);
+					}
+					else if(middleQpLinePattern.matcher(line).matches() && isQuotedPrintable && prevFolded) {
+						if(line.endsWith("=")) {
+							//Line is folded and there is more
+							line = line.trim();
+							String s = line.substring(0, line.lastIndexOf('='));
+							sb.append(s);
+						}
+						else {
+							//This is the last line
+							sb.append(line.trim());
+							sb.append('\n');
+							isQuotedPrintable = false;
+							prevFolded = false;
+							isQuotedPrintableEnd = true;
+						}
+					}
+					else {
+						sb.append(line);
+						sb.append('\n');
+					}
 				}
 			}
-			return sb.toString();
-		} finally {
-			if (br != null) {
+			
+			vcardStr = sb.toString();
+		}
+		finally {
+			if(br != null) {
 				br.close();
 			}
 		}
+		
+		return vcardStr;
 	}
 }

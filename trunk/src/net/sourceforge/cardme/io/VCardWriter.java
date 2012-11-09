@@ -168,6 +168,13 @@ public class VCardWriter {
 	private String eol = VCardUtils.CRLF;
 	
 	/**
+	 * <p>This forces cardme to make one extra pass on
+	 * a quoted-printable string converting all space
+	 * characters to =20.</p>
+	 */
+	private boolean forceEncodeQuotedPrintableSpaces = false;
+	
+	/**
 	 * <p>Creates a new VCardWriter with default parameters.</p>
 	 * 
 	 * @throws VCardException
@@ -354,6 +361,16 @@ public class VCardWriter {
 		else {
 			this.eol = new String(eol);
 		}
+	}
+	
+	/**
+	 * <p>Forces cardme to make one extra pass on a quoted-printable
+	 * string encoding all spaces to =20.</p>
+	 *
+	 * @param force
+	 */
+	public void setForceEncodeQuotedPrintableSpaces(boolean force) {
+		this.forceEncodeQuotedPrintableSpaces = force;
 	}
 	
 	/**
@@ -1195,7 +1212,15 @@ public class VCardWriter {
 				}
 
 				String tmpNameLine = tmpSb.toString();
-				String foldedNameLine = VCardUtils.foldLine(tmpNameLine, eol, foldingScheme);
+				String foldedNameLine = null;
+				
+				if(nType.isQuotedPrintable()) {
+					foldedNameLine = VCardUtils.foldQuotedPrintableLine(tmpNameLine, foldingScheme);
+				}
+				else {
+					foldedNameLine = VCardUtils.foldLine(tmpNameLine, eol, foldingScheme);
+				}
+				
 				sb.append(foldedNameLine);
 				sb.append(eol);
 			}
@@ -1254,7 +1279,15 @@ public class VCardWriter {
 				tmpSb.append(escapeOrEncode(formattedName, isQuotedPrintable, fnType.getCharset()));
 				
 				String tmpFormattedNameLine = tmpSb.toString();
-				String foldedFormattedNameLine = VCardUtils.foldLine(tmpFormattedNameLine, eol, foldingScheme);
+				String foldedFormattedNameLine = null;
+				
+				if(fnType.isQuotedPrintable()) {
+					foldedFormattedNameLine = VCardUtils.foldQuotedPrintableLine(tmpFormattedNameLine, foldingScheme);
+				}
+				else {
+					foldedFormattedNameLine = VCardUtils.foldLine(tmpFormattedNameLine, eol, foldingScheme);
+				}
+				
 				sb.append(foldedFormattedNameLine);
 				sb.append(eol);
 			}
@@ -1313,7 +1346,15 @@ public class VCardWriter {
 				tmpSb.append(escapeOrEncode(displayableName, isQuotedPrintable, nameType.getCharset()));
 				
 				String tmpDisplayableNameLine = tmpSb.toString();
-				String foldedDisplayableNameLine = VCardUtils.foldLine(tmpDisplayableNameLine, eol, foldingScheme);
+				String foldedDisplayableNameLine = null;
+				
+				if(nameType.isQuotedPrintable()) {
+					foldedDisplayableNameLine = VCardUtils.foldQuotedPrintableLine(tmpDisplayableNameLine, foldingScheme);
+				}
+				else {
+					foldedDisplayableNameLine = VCardUtils.foldLine(tmpDisplayableNameLine, eol, foldingScheme);
+				}
+				
 				sb.append(foldedDisplayableNameLine);
 				sb.append(eol);
 			}
@@ -1372,7 +1413,15 @@ public class VCardWriter {
 				tmpSb.append(escapeOrEncode(profile, isQuotedPrintable, profileType.getCharset()));
 				
 				String tmpProfileLine = tmpSb.toString();
-				String foldedProfileLine = VCardUtils.foldLine(tmpProfileLine, eol, foldingScheme);
+				String foldedProfileLine = null;
+				
+				if(profileType.isQuotedPrintable()) {
+					foldedProfileLine = VCardUtils.foldQuotedPrintableLine(tmpProfileLine, foldingScheme);
+				}
+				else {
+					foldedProfileLine = VCardUtils.foldLine(tmpProfileLine, eol, foldingScheme);
+				}
+				
 				sb.append(foldedProfileLine);
 				sb.append(eol);
 			}
@@ -1431,7 +1480,15 @@ public class VCardWriter {
 				tmpSb.append(escapeOrEncode(source, isQuotedPrintable, sourceType.getCharset()));
 				
 				String tmpSourceLine = tmpSb.toString();
-				String foldedSourceLine = VCardUtils.foldLine(tmpSourceLine, eol, foldingScheme);
+				String foldedSourceLine = null;
+				
+				if(sourceType.isQuotedPrintable()) {
+					foldedSourceLine = VCardUtils.foldQuotedPrintableLine(tmpSourceLine, foldingScheme);
+				}
+				else {
+					foldedSourceLine = VCardUtils.foldLine(tmpSourceLine, eol, foldingScheme);
+				}
+				
 				sb.append(foldedSourceLine);
 				sb.append(eol);
 			}
@@ -1491,7 +1548,15 @@ public class VCardWriter {
 					tmpSb.append(escapeOrEncode(title, isQuotedPrintable, titleType.getCharset()));
 					
 					String tmpTitleLine = tmpSb.toString();
-					String foldedTitleLine = VCardUtils.foldLine(tmpTitleLine, eol, foldingScheme);
+					String foldedTitleLine = null;
+					
+					if(titleType.isQuotedPrintable()) {
+						foldedTitleLine = VCardUtils.foldQuotedPrintableLine(tmpTitleLine, foldingScheme);
+					}
+					else {
+						foldedTitleLine = VCardUtils.foldLine(tmpTitleLine, eol, foldingScheme);
+					}
+					
 					sb.append(foldedTitleLine);
 					sb.append(eol);
 				}
@@ -1552,7 +1617,15 @@ public class VCardWriter {
 					tmpSb.append(escapeOrEncode(role, isQuotedPrintable, roleType.getCharset()));
 					
 					String tmpRoleLine = tmpSb.toString();
-					String foldedRoleLine = VCardUtils.foldLine(tmpRoleLine, eol, foldingScheme);
+					String foldedRoleLine = null;
+					
+					if(roleType.isQuotedPrintable()) {
+						foldedRoleLine = VCardUtils.foldQuotedPrintableLine(tmpRoleLine, foldingScheme);
+					}
+					else {
+						foldedRoleLine = VCardUtils.foldLine(tmpRoleLine, eol, foldingScheme);
+					}
+					
 					sb.append(foldedRoleLine);
 					sb.append(eol);
 				}
@@ -1670,7 +1743,15 @@ public class VCardWriter {
 					}
 					
 					String tmpOrgLine = tmpSb.toString();
-					String foldedOrgLine = VCardUtils.foldLine(tmpOrgLine, eol, foldingScheme);
+					String foldedOrgLine = null;
+					
+					if(orgType.isQuotedPrintable()) {
+						foldedOrgLine = VCardUtils.foldQuotedPrintableLine(tmpOrgLine, foldingScheme);
+					}
+					else {
+						foldedOrgLine = VCardUtils.foldLine(tmpOrgLine, eol, foldingScheme);
+					}
+					
 					sb.append(foldedOrgLine);
 					sb.append(eol);
 				}
@@ -1731,7 +1812,15 @@ public class VCardWriter {
 					tmpSb.append(escapeOrEncode(mailer, isQuotedPrintable, mailerType.getCharset()));
 					
 					String tmpMailerLine = tmpSb.toString();
-					String foldedMailerLine = VCardUtils.foldLine(tmpMailerLine, eol, foldingScheme);
+					String foldedMailerLine = null;
+					
+					if(mailerType.isQuotedPrintable()) {
+						foldedMailerLine = VCardUtils.foldQuotedPrintableLine(tmpMailerLine, foldingScheme);
+					}
+					else {
+						foldedMailerLine = VCardUtils.foldLine(tmpMailerLine, eol, foldingScheme);
+					}
+					
 					sb.append(foldedMailerLine);
 					sb.append(eol);
 				}
@@ -1940,7 +2029,15 @@ public class VCardWriter {
 					}
 					
 					String tmpUrlLine = tmpSb.toString();
-					String foldedUrlLine = VCardUtils.foldLine(tmpUrlLine, eol, foldingScheme);
+					String foldedUrlLine = null;
+					
+					if(urlType.isQuotedPrintable()) {
+						foldedUrlLine = VCardUtils.foldQuotedPrintableLine(tmpUrlLine, foldingScheme);
+					}
+					else {
+						foldedUrlLine = VCardUtils.foldLine(tmpUrlLine, eol, foldingScheme);
+					}
+					
 					sb.append(foldedUrlLine);
 					sb.append(eol);
 				}
@@ -1991,6 +2088,7 @@ public class VCardWriter {
 					
 					String tmpRevisionLine = tmpSb.toString();
 					String foldedRevisionLine = VCardUtils.foldLine(tmpRevisionLine, eol, foldingScheme);
+					
 					sb.append(foldedRevisionLine);
 					sb.append(eol);
 				}
@@ -2051,7 +2149,15 @@ public class VCardWriter {
 					tmpSb.append(escapeOrEncode(uid, isQuotedPrintable, uidType.getCharset()));
 					
 					String tmpUidLine = tmpSb.toString();
-					String foldedUidLine = VCardUtils.foldLine(tmpUidLine, eol, foldingScheme);
+					String foldedUidLine = null;
+					
+					if(uidType.isQuotedPrintable()) {
+						foldedUidLine = VCardUtils.foldQuotedPrintableLine(tmpUidLine, foldingScheme);
+					}
+					else {
+						foldedUidLine = VCardUtils.foldLine(tmpUidLine, eol, foldingScheme);
+					}
+					
 					sb.append(foldedUidLine);
 					sb.append(eol);
 				}
@@ -2235,7 +2341,15 @@ public class VCardWriter {
 				}
 
 				String tmpAddressLine = tmpSb.toString();
-				String foldedAddressLine = VCardUtils.foldLine(tmpAddressLine, eol, foldingScheme);
+				String foldedAddressLine = null;
+				
+				if(adrType.isQuotedPrintable()) {
+					foldedAddressLine = VCardUtils.foldQuotedPrintableLine(tmpAddressLine, foldingScheme);
+				}
+				else {
+					foldedAddressLine = VCardUtils.foldLine(tmpAddressLine, eol, foldingScheme);
+				}
+				
 				sb.append(foldedAddressLine);
 				sb.append(eol);
 			}
@@ -2323,12 +2437,12 @@ public class VCardWriter {
 					
 					tmpSb.append(":");
 					tmpSb.append(escapeOrEncode(labelType.getLabel(), isQuotedPrintable, labelType.getCharset()));
-					String tmpLabelLine = tmpSb.toString();
 					
+					String tmpLabelLine = tmpSb.toString();
 					String foldedLabelLine = null;
-					if(isQuotedPrintable) {
-						//RFC-822 line folding.
-						foldedLabelLine = VCardUtils.foldLine(tmpLabelLine, "=0D=0A=\r\n", foldingScheme);
+					
+					if(labelType.isQuotedPrintable()) {
+						foldedLabelLine = VCardUtils.foldQuotedPrintableLine(tmpLabelLine, foldingScheme);
 					}
 					else {
 						foldedLabelLine = VCardUtils.foldLine(tmpLabelLine, foldingScheme);
@@ -2425,7 +2539,15 @@ public class VCardWriter {
 					tmpSb.append(escapeOrEncode(telType.getTelephone(), isQuotedPrintable, telType.getCharset()));
 					
 					String tmpTelephoneLine = tmpSb.toString();
-					String foldedTelephoneLine = VCardUtils.foldLine(tmpTelephoneLine, eol, foldingScheme);
+					String foldedTelephoneLine = null;
+					
+					if(telType.isQuotedPrintable()) {
+						foldedTelephoneLine = VCardUtils.foldQuotedPrintableLine(tmpTelephoneLine, foldingScheme);
+					}
+					else {
+						foldedTelephoneLine = VCardUtils.foldLine(tmpTelephoneLine, eol, foldingScheme);
+					}
+					
 					sb.append(foldedTelephoneLine);
 					sb.append(eol);
 				}
@@ -2548,7 +2670,15 @@ public class VCardWriter {
 					}
 					
 					String tmpEmailLine = tmpSb.toString();
-					String foldedEmailLine = VCardUtils.foldLine(tmpEmailLine, eol, binaryFoldingScheme);
+					String foldedEmailLine = null;
+					
+					if(emailType.isQuotedPrintable()) {
+						foldedEmailLine = VCardUtils.foldQuotedPrintableLine(tmpEmailLine, foldingScheme);
+					}
+					else {
+						foldedEmailLine = VCardUtils.foldLine(tmpEmailLine, eol, binaryFoldingScheme);
+					}
+					
 					sb.append(foldedEmailLine);
 					sb.append(eol);
 				}
@@ -2608,7 +2738,15 @@ public class VCardWriter {
 					tmpSb.append(escapeOrEncode(noteType.getNote(), isQuotedPrintable, noteType.getCharset()));
 					
 					String tmpNoteLine = tmpSb.toString();
-					String foldedNoteLine = VCardUtils.foldLine(tmpNoteLine, eol, foldingScheme);
+					String foldedNoteLine = null;
+					
+					if(noteType.isQuotedPrintable()) {
+						foldedNoteLine = VCardUtils.foldQuotedPrintableLine(tmpNoteLine, foldingScheme);
+					}
+					else {
+						foldedNoteLine = VCardUtils.foldLine(tmpNoteLine, eol, foldingScheme);
+					}
+					
 					sb.append(foldedNoteLine);
 					sb.append(eol);
 				}
@@ -2674,7 +2812,15 @@ public class VCardWriter {
 					
 					tmpSb.deleteCharAt(tmpSb.length()-1);
 					String tmpNicknameLine = tmpSb.toString();
-					String foldedNicknameLine = VCardUtils.foldLine(tmpNicknameLine, eol, foldingScheme);
+					String foldedNicknameLine = null;
+					
+					if(nicknameType.isQuotedPrintable()) {
+						foldedNicknameLine = VCardUtils.foldQuotedPrintableLine(tmpNicknameLine, foldingScheme);
+					}
+					else {
+						foldedNicknameLine = VCardUtils.foldLine(tmpNicknameLine, eol, foldingScheme);
+					}
+					
 					sb.append(foldedNicknameLine);
 					sb.append(eol);
 				}
@@ -2755,7 +2901,15 @@ public class VCardWriter {
 					
 					tmpSb.deleteCharAt(tmpSb.length()-1);
 					String tmpCategoryLine = tmpSb.toString();
-					String foldedCategoryLine = VCardUtils.foldLine(tmpCategoryLine, eol, foldingScheme);
+					String foldedCategoryLine = null;
+					
+					if(categoriesType.isQuotedPrintable()) {
+						foldedCategoryLine = VCardUtils.foldQuotedPrintableLine(tmpCategoryLine, foldingScheme);
+					}
+					else {
+						foldedCategoryLine = VCardUtils.foldLine(tmpCategoryLine, eol, foldingScheme);
+					}
+					
 					sb.append(foldedCategoryLine);
 					sb.append(eol);
 				}
@@ -2815,7 +2969,15 @@ public class VCardWriter {
 					tmpSb.append(escapeOrEncode(classType.getSecurityClass(), isQuotedPrintable, classType.getCharset()));
 					
 					String tmpClassLine = tmpSb.toString();
-					String foldedClassLine = VCardUtils.foldLine(tmpClassLine, eol, foldingScheme);
+					String foldedClassLine = null;
+					
+					if(classType.isQuotedPrintable()) {
+						foldedClassLine = VCardUtils.foldQuotedPrintableLine(tmpClassLine, foldingScheme);
+					}
+					else {
+						foldedClassLine = VCardUtils.foldLine(tmpClassLine, eol, foldingScheme);
+					}
+					
 					sb.append(foldedClassLine);
 					sb.append(eol);
 				}
@@ -2875,7 +3037,15 @@ public class VCardWriter {
 					tmpSb.append(escapeOrEncode(prodIdType.getProdId(), isQuotedPrintable, prodIdType.getCharset()));
 					
 					String tmpProductIdLine = tmpSb.toString();
-					String foldedProductIdLine = VCardUtils.foldLine(tmpProductIdLine, eol, foldingScheme);
+					String foldedProductIdLine = null;
+					
+					if(prodIdType.isQuotedPrintable()) {
+						foldedProductIdLine = VCardUtils.foldQuotedPrintableLine(tmpProductIdLine, foldingScheme);
+					}
+					else {
+						foldedProductIdLine = VCardUtils.foldLine(tmpProductIdLine, eol, foldingScheme);
+					}
+					
 					sb.append(foldedProductIdLine);
 					sb.append(eol);
 				}
@@ -2935,7 +3105,15 @@ public class VCardWriter {
 					tmpSb.append(escapeOrEncode(sortStringType.getSortString(), isQuotedPrintable, sortStringType.getCharset()));
 					
 					String tmpSortStringLine = tmpSb.toString();
-					String foldedSortStringLine = VCardUtils.foldLine(tmpSortStringLine, eol, foldingScheme);
+					String foldedSortStringLine = null;
+					
+					if(sortStringType.isQuotedPrintable()) {
+						foldedSortStringLine = VCardUtils.foldQuotedPrintableLine(tmpSortStringLine, foldingScheme);
+					}
+					else {
+						foldedSortStringLine = VCardUtils.foldLine(tmpSortStringLine, eol, foldingScheme);
+					}
+					
 					sb.append(foldedSortStringLine);
 					sb.append(eol);
 				}
@@ -3768,6 +3946,7 @@ public class VCardWriter {
 					String tmpUrlLine = tmpSb.toString();
 					String foldedUrlLine = VCardUtils.foldLine(tmpUrlLine, eol, foldingScheme);
 					sb.append(foldedUrlLine);
+					
 					sb.append(eol);
 				}
 				else {
@@ -3825,7 +4004,15 @@ public class VCardWriter {
 				tmpSb.append(escapeOrEncode(extendedType.getExtendedValue(), isQuotedPrintable, extendedType.getCharset()));
 
 				String tmpExtendedLine = tmpSb.toString();
-				String foldedExtendedLine = VCardUtils.foldLine(tmpExtendedLine, eol, foldingScheme);
+				String foldedExtendedLine = null;
+				
+				if(extendedType.isQuotedPrintable()) {
+					foldedExtendedLine = VCardUtils.foldQuotedPrintableLine(tmpExtendedLine, foldingScheme);
+				}
+				else {
+					foldedExtendedLine = VCardUtils.foldLine(tmpExtendedLine, eol, foldingScheme);
+				}
+				
 				sb.append(foldedExtendedLine);
 				sb.append(eol);
 			}
@@ -3910,6 +4097,14 @@ public class VCardWriter {
 	private String escapeOrEncode(String str, boolean isQuotedPrintable, Charset charset) throws EncoderException, UnsupportedEncodingException
 	{
 		if(isQuotedPrintable) {
+			String str1 = null;
+			if(VCardUtils.needsEscaping(str)) {
+				str1 = VCardUtils.escapeString(str);
+			}
+			else {
+				str1 = str;
+			}
+			
 			if(charset == null) {
 				charset = Charset.defaultCharset();
 			}
@@ -3918,10 +4113,21 @@ public class VCardWriter {
 				qpCodec = new QuotedPrintableCodec();
 			}
 			
-			return qpCodec.encode(str, charset.name());
+			String str2 = qpCodec.encode(str1, charset.name());
+			
+			if(forceEncodeQuotedPrintableSpaces) {
+				str2 = str2.replaceAll(" ", "=20");
+			}
+			
+			return str2;
 		}
 		else {
-			return VCardUtils.escapeString(str);
+			if(VCardUtils.needsEscaping(str)) {
+				return VCardUtils.escapeString(str);
+			}
+			else {
+				return str;
+			}
 		}
 	}
 	

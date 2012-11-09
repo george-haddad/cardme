@@ -14,10 +14,14 @@ We want to be the best VCard library on the net, so if there is a bug or a new f
 
 Card Me Version 0.4.0-b2
 
+Upgraded commons-codec-1.5 to 1.7
+Card Me now requires Java 1.6.x or greater to work.
+
 BUG[47]
 GEO type using commas instead of decimals when run on system whose default locale is NL.
 
-
+BUG[52]
+Semi-colons and other special characters are now properly escaped in QUOTED-PRINTABLE fields.
 
 
 Card Me Version 0.4.0-b1
