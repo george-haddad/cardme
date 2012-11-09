@@ -1,6 +1,8 @@
 package net.sourceforge.cardme.io;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.TimeZone;
 import net.sourceforge.cardme.vcard.VCardImpl;
@@ -16,6 +18,7 @@ import net.sourceforge.cardme.vcard.types.KeyType;
 import net.sourceforge.cardme.vcard.types.MailerType;
 import net.sourceforge.cardme.vcard.types.NType;
 import net.sourceforge.cardme.vcard.types.NameType;
+import net.sourceforge.cardme.vcard.types.NoteType;
 import net.sourceforge.cardme.vcard.types.OrgType;
 import net.sourceforge.cardme.vcard.types.ProfileType;
 import net.sourceforge.cardme.vcard.types.RevType;
@@ -30,6 +33,7 @@ import net.sourceforge.cardme.vcard.types.media.KeyTextType;
 import net.sourceforge.cardme.vcard.types.params.AdrParamType;
 import net.sourceforge.cardme.vcard.types.params.BDayParamType;
 import net.sourceforge.cardme.vcard.types.params.TzParamType;
+import org.apache.commons.codec.net.QuotedPrintableCodec;
 import org.junit.Test;
 
 /*
@@ -69,25 +73,6 @@ import org.junit.Test;
  */
 public class VCardWriterTest {
 
-//	@BeforeClass
-//	public static void setUpBeforeClass() throws Exception {
-//		
-//	}
-//	
-//	@AfterClass
-//	public static void tearDownAfterClass() throws Exception {
-//		
-//	}
-//	
-//	@Before
-//	public void setUp() throws Exception {
-//		
-//	}
-//	
-//	@After
-//	public void tearDown() throws Exception {
-//	}
-	
 	@Test
 	public void testBuildBeginType() throws VCardBuildException {
 		VCardImpl vcard = getSimpleVCard();
@@ -478,6 +463,150 @@ public class VCardWriterTest {
 		vcard.setN(new NType("Doe", "John"));
 		vcard.setFN(new FNType("John \"Johny\" Doe"));
 		return vcard;
+	}
+	
+	@Test
+	public void testQuotedPrintableEncoding_1() throws UnsupportedEncodingException {
+		String text = "This is a string with no special characters.";
+		QuotedPrintableCodec QPC = new QuotedPrintableCodec();
+		String encodedText = QPC.encode(text, "UTF8");
+		assertEquals(text, encodedText);
+	}
+	
+	@Test
+	public void testQuotedPrintableEncoding_2() throws UnsupportedEncodingException {
+		String text = "This is a string with special characters 新中西里杨阿姨.";
+		String expected = "This is a string with special characters =E6=96=B0=E4=B8=AD=E8=A5=BF=E9=87=8C=E6=9D=A8=E9=98=BF=E5=A7=A8.";
+		
+		QuotedPrintableCodec QPC = new QuotedPrintableCodec();
+		String encodedText = QPC.encode(text, "UTF8");
+		assertEquals(expected, encodedText);
+	}
+	
+	@Test
+	public void testForceEncodeQuotedPrintableSpaces_1() throws VCardBuildException {
+		VCardImpl vcard = new VCardImpl();
+		vcard.setVersion(new VersionType(VCardVersion.V3_0));
+		vcard.setN(new NType("Doe", "John"));
+		vcard.setFN(new FNType("John Doe"));
+		
+		NoteType note = new NoteType("This is a note with normal text.");
+		note.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+		vcard.addNote(note);
+		
+		VCardWriter vcardWriter = new VCardWriter(); 
+		vcardWriter.setOutputVersion(VCardVersion.V3_0);
+		vcardWriter.setCompatibilityMode(CompatibilityMode.RFC2426);
+		vcardWriter.setFoldingScheme(FoldingScheme.MIME_DIR);
+		vcardWriter.setForceEncodeQuotedPrintableSpaces(true);
+		vcardWriter.setVCard(vcard);
+		String resultVCard = vcardWriter.buildVCardString();
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("BEGIN:VCARD\r\n");
+		sb.append("VERSION:3.0\r\n");
+		sb.append("N:Doe;John;;;\r\n");
+		sb.append("FN:John Doe\r\n");
+		sb.append("NOTE;ENCODING=QUOTED-PRINTABLE:This=20is=20a=20note=20with=20normal=20text.\r\n");
+		sb.append("END:VCARD\r\n");
+		String expectedVCard = sb.toString();
+		
+		assertEquals(expectedVCard, resultVCard);
+	}
+	
+	@Test
+	public void testForceEncodeQuotedPrintableSpaces_2() throws VCardBuildException {
+		VCardImpl vcard = new VCardImpl();
+		vcard.setVersion(new VersionType(VCardVersion.V3_0));
+		vcard.setN(new NType("Doe", "John"));
+		vcard.setFN(new FNType("John Doe"));
+		
+		NoteType note = new NoteType("This is a note with normal text.");
+		note.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+		vcard.addNote(note);
+		
+		VCardWriter vcardWriter = new VCardWriter(); 
+		vcardWriter.setOutputVersion(VCardVersion.V3_0);
+		vcardWriter.setCompatibilityMode(CompatibilityMode.RFC2426);
+		vcardWriter.setFoldingScheme(FoldingScheme.MIME_DIR);
+		vcardWriter.setForceEncodeQuotedPrintableSpaces(false);
+		vcardWriter.setVCard(vcard);
+		String resultVCard = vcardWriter.buildVCardString();
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("BEGIN:VCARD\r\n");
+		sb.append("VERSION:3.0\r\n");
+		sb.append("N:Doe;John;;;\r\n");
+		sb.append("FN:John Doe\r\n");
+		sb.append("NOTE;ENCODING=QUOTED-PRINTABLE:This is a note with normal text.\r\n");
+		sb.append("END:VCARD\r\n");
+		String expectedVCard = sb.toString();
+		
+		assertEquals(expectedVCard, resultVCard);
+	}
+	
+	@Test
+	public void testForceEncodeQuotedPrintableSpaces_3() throws VCardBuildException {
+		VCardImpl vcard = new VCardImpl();
+		vcard.setVersion(new VersionType(VCardVersion.V3_0));
+		vcard.setN(new NType("Doe", "John"));
+		vcard.setFN(new FNType("John Doe"));
+		
+		NoteType note = new NoteType("新中西里杨阿姨 some spaces ");
+		note.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+		vcard.addNote(note);
+		
+		VCardWriter vcardWriter = new VCardWriter(); 
+		vcardWriter.setOutputVersion(VCardVersion.V3_0);
+		vcardWriter.setCompatibilityMode(CompatibilityMode.RFC2426);
+		vcardWriter.setFoldingScheme(FoldingScheme.MIME_DIR);
+		vcardWriter.setForceEncodeQuotedPrintableSpaces(false);
+		vcardWriter.setVCard(vcard);
+		String resultVCard = vcardWriter.buildVCardString();
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("BEGIN:VCARD\r\n");
+		sb.append("VERSION:3.0\r\n");
+		sb.append("N:Doe;John;;;\r\n");
+		sb.append("FN:John Doe\r\n");
+		sb.append("NOTE;ENCODING=QUOTED-PRINTABLE:=E6=96=B0=E4=B8=AD=E8=A5=BF=E9=87=8C=E6=9D==\r\n");
+		sb.append(" A8=E9=98=BF=E5=A7=A8 some spaces \r\n");
+		sb.append("END:VCARD\r\n");
+		String expectedVCard = sb.toString();
+		
+		assertEquals(expectedVCard, resultVCard);
+	}
+	
+	@Test
+	public void testForceEncodeQuotedPrintableSpaces_4() throws VCardBuildException {
+		VCardImpl vcard = new VCardImpl();
+		vcard.setVersion(new VersionType(VCardVersion.V3_0));
+		vcard.setN(new NType("Doe", "John"));
+		vcard.setFN(new FNType("John Doe"));
+		
+		NoteType note = new NoteType("新中西里杨阿姨 some spaces ");
+		note.setEncodingType(EncodingType.QUOTED_PRINTABLE);
+		vcard.addNote(note);
+		
+		VCardWriter vcardWriter = new VCardWriter(); 
+		vcardWriter.setOutputVersion(VCardVersion.V3_0);
+		vcardWriter.setCompatibilityMode(CompatibilityMode.RFC2426);
+		vcardWriter.setFoldingScheme(FoldingScheme.MIME_DIR);
+		vcardWriter.setForceEncodeQuotedPrintableSpaces(true);
+		vcardWriter.setVCard(vcard);
+		String resultVCard = vcardWriter.buildVCardString();
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("BEGIN:VCARD\r\n");
+		sb.append("VERSION:3.0\r\n");
+		sb.append("N:Doe;John;;;\r\n");
+		sb.append("FN:John Doe\r\n");
+		sb.append("NOTE;ENCODING=QUOTED-PRINTABLE:=E6=96=B0=E4=B8=AD=E8=A5=BF=E9=87=8C=E6=9D==\r\n");
+		sb.append(" A8=E9=98=BF=E5=A7=A8=20some=20spaces=20\r\n");
+		sb.append("END:VCARD\r\n");
+		String expectedVCard = sb.toString();
+		
+		assertEquals(expectedVCard, resultVCard);
 	}
 	
 	//TODO a lot more to code

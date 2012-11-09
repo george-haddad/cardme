@@ -6,6 +6,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.StringReader;
 import java.text.NumberFormat;
 
@@ -268,13 +269,13 @@ public class VCardUtilsTest {
 	}
 	
 	@Test
-	public void testUnfoldVCardMsOutlookRFC822Violation_1() {
+	public void testUnfoldVCardMsOutlookRFC822Violation_1() throws IOException {
 		StringBuilder sb = new StringBuilder();
 		sb.append("BEGIN:VCARD\n");
 		sb.append("VERSION:3.0\n");
 		sb.append("N:Jost;John;;;\n");
 		sb.append("FN:John Doe\n");
-		sb.append("ADR;HOME:;;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=\n");
+		sb.append("ADR;ENCODING=QUOTED-PRINTABLE;HOME:;;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=\n");
 		sb.append("=41=41=41=41=41=41=41;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=\n");
 		sb.append("=41=41=41=41=41;;\n");
 		sb.append("END:VCARD\n");
@@ -285,23 +286,22 @@ public class VCardUtilsTest {
 		sb.append("VERSION:3.0\n");
 		sb.append("N:Jost;John;;;\n");
 		sb.append("FN:John Doe\n");
-		sb.append("ADR;HOME:;;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41;;\n");
+		sb.append("ADR;ENCODING=QUOTED-PRINTABLE;HOME:;;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41;;\n");
 		sb.append("END:VCARD\n");
 		String expectedUnfoledVCard = sb.toString();
 		
-		String unfolded = VCardUtils.unfoldVCard(foldedVCard);
-		
+		String unfolded = VCardUtils.unfoldQuotedPrintableLines(foldedVCard);
 		assertEquals(expectedUnfoledVCard, unfolded);
 	}
 	
 	@Test
-	public void testUnfoldVCardMsOutlookRFC822Violation_2() {
+	public void testUnfoldVCardMsOutlookRFC822Violation_2() throws IOException {
 		StringBuilder sb = new StringBuilder();
 		sb.append("BEGIN:VCARD\n");
 		sb.append("VERSION:3.0\n");
 		sb.append("N:Jost;John;;;\n");
 		sb.append("FN:John Doe\n");
-		sb.append("ADR;HOME:;;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=\n");
+		sb.append("ADR;ENCODING=QUOTED-PRINTABLE;HOME:;;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=\n");
 		sb.append("=41=41=41=41=41=41=41;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=\n");
 		sb.append("=41=41=41=41=41;;\n");
 		sb.append("LABEL:BLA BLA BLA\n");
@@ -313,24 +313,23 @@ public class VCardUtilsTest {
 		sb.append("VERSION:3.0\n");
 		sb.append("N:Jost;John;;;\n");
 		sb.append("FN:John Doe\n");
-		sb.append("ADR;HOME:;;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41;;\n");
+		sb.append("ADR;ENCODING=QUOTED-PRINTABLE;HOME:;;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41;;\n");
 		sb.append("LABEL:BLA BLA BLA\n");
 		sb.append("END:VCARD\n");
 		String expectedUnfoldedVCard = sb.toString();
 		
-		String unfolded = VCardUtils.unfoldVCard(foldedVCard);
-		
+		String unfolded = VCardUtils.unfoldQuotedPrintableLines(foldedVCard);
 		assertEquals(expectedUnfoldedVCard, unfolded);
 	}
 	
 	@Test
-	public void testUnfoldVCardMsOutlookRFC822Violation_3() {
+	public void testUnfoldVCardMsOutlookRFC822Violation_3() throws IOException {
 		StringBuilder sb = new StringBuilder();
 		sb.append("BEGIN:VCARD\n");
 		sb.append("VERSION:3.0\n");
 		sb.append("N:Jost;John;;;\n");
 		sb.append("FN:John Doe\n");
-		sb.append("ADR;HOME:;;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=\n");
+		sb.append("ADR;ENCODING=QUOTED-PRINTABLE;HOME:;;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=\n");
 		sb.append("=41=41=41=41=41=41=41;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=\n");
 		sb.append("=41=41=41=41=41;;\n");
 		sb.append("LABEL:BLA BLA BLA\n");
@@ -347,16 +346,17 @@ public class VCardUtilsTest {
 		sb.append("VERSION:3.0\n");
 		sb.append("N:Jost;John;;;\n");
 		sb.append("FN:John Doe\n");
-		sb.append("ADR;HOME:;;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41;;\n");
+		sb.append("ADR;ENCODING=QUOTED-PRINTABLE;HOME:;;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41;=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41=41;;\n");
 		sb.append("LABEL:BLA BLA BLA\n");
 		sb.append("PHOTO;ENCODING=b;TYPE=JPEG:/9j/4AAQSkZJRgABAQAAAQABAAD/4QBARXhpZgAATU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAyKADAAQAAAABAAAAyAAAAAD/2wBDAAXw5rH/ACGE/H/0EUUV8zifiPocB/DPeP2Xv+RvsPw/9HpX3v4C/wCQbH/1zH8loor18u2PPzH4joovv1NRRX0FHY8mQ6L/AFq/UVeoor7Hh7+HP1Oer0CiiivoTE//2Q==\n");
 		sb.append("UID:0e7602cc-443e-4b82-b4b1-90f62f99a199\n");
 		sb.append("END:VCARD\n");
 		String expectedUnfoldedVCard = sb.toString();
 		
-		String unfolded = VCardUtils.unfoldVCard(foldedVCard);
+		String unfolded = VCardUtils.unfoldQuotedPrintableLines(foldedVCard);
+		String unfolded2 = VCardUtils.unfoldVCard(unfolded);
 		
-		assertEquals(expectedUnfoldedVCard, unfolded);
+		assertEquals(expectedUnfoldedVCard, unfolded2);
 	}
 	
 	/**
@@ -376,24 +376,24 @@ public class VCardUtilsTest {
 		sb.append("N:Jost;John;;;\n");
 		sb.append("FN:John Doe\n");
 		
-		//one line
+		//One line
 		sb.append("LABEL;HOME;ENCODING=QUOTED-PRINTABLE:Silicon Alley 5\n");
 		
-		//two lines
-		//without "ENCODING" subtype name
+		//Two lines
+		//Without "ENCODING" subtype name
 		sb.append("LABEL;HOME;QUOTED-PRINTABLE:Silicon Alley 5,=0D=0A=\n");
 		sb.append("New York, New York  12345\n");
 		
-		//three lines
+		//Three lines
 		//"quoted-printable" in lower-case
 		sb.append("LABEL;HOME;ENCODING=quoted-printable:Silicon Alley 5,=0D=0A=\n");
 		sb.append("New York, New York  12345=0D=0A=\n");
 		sb.append("USA\n");
 		
-		//it should recognize when the string "QUOTED-PRINTABLE" is not to the left of the colon
+		//It should recognize when the string "QUOTED-PRINTABLE" is not to the left of the colon
 		sb.append("LABEL;HOME:Some text QUOTED-PRINTABLE more text=\n");
 		
-		//four lines
+		//Four lines
 		sb.append("LABEL;HOME;ENCODING=QUOTED-PRINTABLE:Silicon Alley 5,=0D=0A=\n");
 		sb.append("New York, New York  12345=0D=0A=\n");
 		sb.append("USA=0D=0A=\n");
@@ -428,18 +428,20 @@ public class VCardUtilsTest {
 		sb.append("END:VCARD\n");
 		String expectedUnfoldedVCard = sb.toString();
 		
-		String unfolded = VCardUtils.unfoldVCard(foldedVCard);
+		String unfolded = VCardUtils.unfoldQuotedPrintableLines(foldedVCard);
+		String unfolded2 = VCardUtils.unfoldVCard(unfolded);
 		
-		assertEquals(expectedUnfoldedVCard, unfolded);
+		assertEquals(expectedUnfoldedVCard, unfolded2);
 		
-		//make sure the quoted-printable lines can be properly decoded
-		BufferedReader r = new BufferedReader(new StringReader(unfolded));
+		//Make sure the quoted-printable lines can be properly decoded
+		BufferedReader r = new BufferedReader(new StringReader(unfolded2));
 		String line;
 		QuotedPrintableCodec codec = new QuotedPrintableCodec();
 		while ((line = r.readLine()) != null){
 			String split[] = line.split(":", 2);
 			if (split[0].toUpperCase().contains("QUOTED-PRINTABLE")){
-				codec.decode(split[1]); //it will throw an exception and fail the test if it can't be decoded
+				codec.decode(split[1]);
+				//It will throw an exception and fail the test if it cannot be decoded
 			}
 		}
 	}
@@ -515,7 +517,6 @@ public class VCardUtilsTest {
 		
 		//Note 6 gets rounded up to 7
 		assertEquals("123.123457", geoPos);
-		
 	}
 	
 	/**
