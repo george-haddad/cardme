@@ -58,7 +58,7 @@ public abstract class AbstractVCardType implements VCardType, VCardTypeFormatter
 	
 	private EncodingType encodingType = null;
 	private String group = null;
-	private Charset charset = null;
+	private Charset charset = Charset.forName("UTF-8");
 	private LanguageType languageType = null;
 	
 	private List<ExtendedParamType> extendedParameters = null;
@@ -140,17 +140,17 @@ public abstract class AbstractVCardType implements VCardType, VCardTypeFormatter
 	@Override
 	public final void setCharset(String strCharset) {
 		if(strCharset == null) {
-			charset = Charset.defaultCharset();
+			charset = Charset.forName("UTF-8");
 		}
 		else if(strCharset.isEmpty()) {
-			charset = Charset.defaultCharset();
+			charset = Charset.forName("UTF-8");
 		}
 		else {
 			if(Charset.isSupported(strCharset)) {
 				charset = Charset.forName(strCharset);
 			}
 			else {
-				charset = Charset.defaultCharset();
+				charset = Charset.forName("UTF-8");
 			}
 		}
 	}
@@ -158,7 +158,7 @@ public abstract class AbstractVCardType implements VCardType, VCardTypeFormatter
 	@Override
 	public final void setCharset(Charset charset) {
 		if(charset == null) {
-			this.charset = Charset.defaultCharset();
+			this.charset = Charset.forName("UTF-8");
 		}
 		else {
 			this.charset = charset;
@@ -168,7 +168,12 @@ public abstract class AbstractVCardType implements VCardType, VCardTypeFormatter
 	@Override
 	public final boolean hasCharset()
 	{
-		return charset != null;
+		if (charset == null || "UTF-8".equalsIgnoreCase(charset.name())) {
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
 
 	@Override

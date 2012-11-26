@@ -12,6 +12,17 @@ We want to be the best VCard library on the net, so if there is a bug or a new f
 
 -------------------
 
+Card Me Version 0.4.0-b3
+
+Default charset for vcards should be set to UTF-8 according to RFC-6350 (https://tools.ietf.org/html/rfc6350#section-3.1)
+
+George El-Haddad
+Project Leader
+
+Michael Rimov
+Maven Integration Contributor
+
+
 Card Me Version 0.4.0-b2
 
 Upgraded commons-codec-1.5 to 1.7
