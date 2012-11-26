@@ -2,8 +2,9 @@ package net.sourceforge.cardme.engine;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
@@ -2570,7 +2571,7 @@ public class VCardEngine {
 	 */
 	private String getContentFromFile(File vcardFile) throws IOException
 	{
-		return getContent(new FileReader(vcardFile));
+		return getContent(new InputStreamReader(new FileInputStream(vcardFile), Charset.forName("UTF-8")));
 	}
 	
 	/**
