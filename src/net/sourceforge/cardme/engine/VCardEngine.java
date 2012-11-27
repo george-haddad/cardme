@@ -266,7 +266,7 @@ public class VCardEngine {
 	public VCard parse(File vcardFile) throws IOException, VCardParseException
 	{
 		String vcardStr = getContentFromFile(vcardFile);
-		String unfoldedVcardStr = VCardUtils.unfoldVCard(vcardStr);
+		String unfoldedVcardStr = VCardUtils.unfoldVCard(vcardStr, compatMode);
 		return parseVCard(unfoldedVcardStr);
 	}
 	

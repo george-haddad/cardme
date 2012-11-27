@@ -25,6 +25,8 @@ import net.sourceforge.cardme.vcard.arch.ParameterTypeStyle;
 import net.sourceforge.cardme.vcard.arch.VCardTypeName;
 import net.sourceforge.cardme.vcard.arch.VCardVersion;
 import net.sourceforge.cardme.vcard.errors.VCardErrorHandler;
+import net.sourceforge.cardme.vcard.exceptions.VCardBuildException;
+import net.sourceforge.cardme.vcard.exceptions.VCardParseException;
 import net.sourceforge.cardme.vcard.types.AdrType;
 import net.sourceforge.cardme.vcard.types.BDayType;
 import net.sourceforge.cardme.vcard.types.CategoriesType;
@@ -395,6 +397,60 @@ public class TestVCard {
 		VCard _vcard = vcardEngine.parse(vcardString);
 		
 		assertEquals("DÖe", _vcard.getN().getFamilyName());
+	}
+	
+	/**
+	 * 
+	 * @author jolo72
+	 */
+	@Test
+	public void testUnfoldingSpaceBug() throws VCardBuildException, IOException, VCardParseException {
+		
+		/* This string will work just fine as the fold is in the middle of a word */
+		final String correctNote = "Lines seem to be unfolded correctly if spaces aren't exactly on a folding boundary.";
+		
+		VCard vcard = new VCardImpl();
+		vcard.setVersion(new VersionType(VCardVersion.V3_0));
+		vcard.setName(new NameType("Some Name"));
+		vcard.addNote(new NoteType(correctNote));
+
+		VCardWriter writer = new VCardWriter();
+		writer.setVCard(vcard);
+		String vcardString = writer.buildVCardString();
+		
+		VCardEngine vcardEngine = new VCardEngine(CompatibilityMode.RFC2426);
+		VCard parsedVcard = vcardEngine.parse(vcardString);
+		
+		assertNotNull(parsedVcard);
+		assertTrue(parsedVcard.hasNotes());
+		assertTrue(parsedVcard.getNotes().size() == 1);
+
+		String parsedNote = parsedVcard.getNotes().get(0).getNote();
+		assertEquals(correctNote, parsedNote);
+		
+		//------------------------------------------------------
+		
+		/* This string has the fold right at a space and the space is lost when retrieving it later */
+		final String incorrectNote = "Lines seem to be unfolded incorrectly if spaces are just exactly on a folding boundary.";
+		
+		vcard = new VCardImpl();
+		vcard.setVersion(new VersionType(VCardVersion.V3_0));
+		vcard.setName(new NameType("Some Name"));
+		vcard.addNote(new NoteType(incorrectNote));
+
+		writer = new VCardWriter();
+		writer.setVCard(vcard);
+		vcardString = writer.buildVCardString();
+		
+		vcardEngine = new VCardEngine(CompatibilityMode.RFC2426);
+		parsedVcard = vcardEngine.parse(vcardString);
+		
+		assertNotNull(parsedVcard);
+		assertTrue(parsedVcard.hasNotes());
+		assertTrue(parsedVcard.getNotes().size() == 1);
+
+		parsedNote = parsedVcard.getNotes().get(0).getNote();
+		assertEquals(incorrectNote, parsedNote);
 	}
 	
 	private static VCardImpl getFullVCardNoErrors() throws IOException, URISyntaxException
