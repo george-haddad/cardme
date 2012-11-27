@@ -343,7 +343,7 @@ public class VCardWriterTest {
 	
 	@Test
 	public void testBuildRevType() throws VCardBuildException {
-		Calendar rev = Calendar.getInstance();
+		Calendar rev = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 		rev.clear();
 		rev.set(Calendar.YEAR, 2011);
 		rev.set(Calendar.MONTH, 11);
@@ -363,7 +363,7 @@ public class VCardWriterTest {
 		
 		String vcardStr = vcardWriter.buildVCardString();
 		
-		assertTrue(vcardStr.contains("REV:2011-12-22T12:30:05Z\r\n"));
+		assertTrue(vcardStr.contains("REV:2011-12-22T14:30:05Z\r\n"));
 	}
 	
 	@Test
