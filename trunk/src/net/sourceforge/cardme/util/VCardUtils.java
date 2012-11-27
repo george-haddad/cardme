@@ -567,7 +567,8 @@ public final class VCardUtils {
 					first = false;
 				}
 
-				builder.append(thisLine.substring(prev, crnt).trim());
+				builder.append(thisLine.substring(prev, crnt));
+				//builder.append(thisLine.substring(prev, crnt).trim());
 				if(eolDelimeter != null) {
 					builder.append(eolDelimeter);
 				}

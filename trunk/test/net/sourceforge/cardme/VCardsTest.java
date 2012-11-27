@@ -266,8 +266,14 @@ public class VCardsTest {
 			assertEquals("New York", f.getRegion());
 			assertEquals("12345", f.getPostalCode());
 			
-			//FIXME the space between "United" and "States" is lost because it was included with the folding character and ignored (see .vcf file)
-			assertEquals("UnitedStates of America", f.getCountryName());
+			/*
+			 * This would fail under normal circumstances because Evolution 
+			 * assumes that only the first white-space character is discarded
+			 * as part of the folding and that the rest are preserved. If every
+			 * application followed the RFC standard then that would be so, but
+			 * it is not. 
+			 */
+			assertEquals("United States of America", f.getCountryName());
 			
 			List<AdrParamType> types = f.getParams();
 			assertEquals(1, types.size());
