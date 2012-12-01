@@ -50,19 +50,93 @@ import net.sourceforge.cardme.vcard.types.params.EmailParamType;
  */
 public interface EmailFeature {
 
+	/**
+	 * <p>Retrieve the email address.</p>
+	 * 
+	 * @return the email address or null if not set
+	 */
 	public String getEmail();
 	
+	/**
+	 * <p>Sets the email address.</p>
+	 * 
+	 * @param email - the email address to set
+	 */
 	public void setEmail(String email);
 	
+	/**
+	 * <p>Indicates if the email address has been set.</p>
+	 * 
+	 * @return true if the email address was set and false otherwise
+	 */
 	public boolean hasEmail();
 	
+	/**
+	 * <p>Retrieves the list of email parameter types.</p>
+	 * 
+	 * @return a list of email parameter types or empty list if none added
+	 */
 	public List<EmailParamType> getParams();
+	
+	/**
+	 * <p>Retrieves the total number of email parameter types added.</p>
+	 * 
+	 * @return the total number of email parameter types added
+	 */
 	public int getParamSize();
+	
+	/**
+	 * <p>Adds an email parameter type.</p>
+	 * 
+	 * @param emailParamType - the email parameter type to add
+	 * @return a reference to itself
+	 * @throws NullPointerException if adding a null email parameter type
+	 */
 	public EmailFeature addParam(EmailParamType emailParamType) throws NullPointerException;
+	
+	/**
+	 * <p>Adds a list of email parameter types.</p>
+	 * 
+	 * @param emailParamTypes - a list of email parameter types
+	 * @return a reference to itself
+	 * @throws NullPointerException if adding a null list of email parameter types
+	 */
 	public EmailFeature addAllParams(List<EmailParamType> emailParamTypes) throws NullPointerException;
+	
+	/**
+	 * <p>Removes the specified email parameter type.</p>
+	 * 
+	 * @param emailParamType - the email parameter type to remove
+	 * @return a reference to itself
+	 * @throws NullPointerException if removing a null email parameter type
+	 */
 	public EmailFeature removeParam(EmailParamType emailParamType) throws NullPointerException;
+	
+	/**
+	 * <p>Indicates if the specified email parameter type exists.</p>
+	 * 
+	 * @param emailParamType - the email parameter type to check
+	 * @return true if the specified email parameter type exists and false otherwise
+	 */
 	public boolean containsParam(EmailParamType emailParamType);
+	
+	/**
+	 * <p>Indicates if at least one of the email parameter types in the list exists.</p>
+	 * 
+	 * @param emailParamTypes - the list of email parameter types to check
+	 * @return true if at least one of the email parameter types in the list exists and false otherwise
+	 */
 	public boolean containsAllParams(List<EmailParamType> emailParamTypes);
+	
+	/**
+	 * <p>Indicates if at least one email parameter types exist.</p>
+	 * 
+	 * @return true if at least one email parameter type exists and false otherwise
+	 */
 	public boolean hasParams();
+	
+	/**
+	 * <p>Remove all email parameter types.</p>
+	 */
 	public void clearParams();
 }

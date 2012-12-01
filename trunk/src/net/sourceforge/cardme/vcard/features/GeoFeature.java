@@ -1,5 +1,6 @@
 package net.sourceforge.cardme.vcard.features;
 
+
 /*
  * Copyright 2012 George El-Haddad. All rights reserved.
  * 
@@ -46,20 +47,66 @@ package net.sourceforge.cardme.vcard.features;
  * </p>
  */
 public interface GeoFeature {
-
+	
+	/**
+	 * <p>Retrieves the longitude value or 0.0 if not set.</p>
+	 * 
+	 * @return the longitude value or 0.0 if not set
+	 */
 	public double getLongitude();
 	
+	/**
+	 * <p>Retrieves the latitude value or 0.0 if not set.</p>
+	 * 
+	 * @return the latitude value or 0.0 if not set
+	 */
 	public double getLatitude();
 	
+	/**
+	 * <p>Sets the longitude as a double.</p>
+	 * 
+	 * @param longitude - the longitude to set
+	 */
 	public void setLongitude(double longitude);
 	
+	/**
+	 * <p>Sets the longitude as a {@link String} value.</p>
+	 * 
+	 * @param longitude - the longitude to set
+	 * @throws IllegalArgumentException if it is not in a valid format according to regex pattern \\-?\\d{1,3}\\.\\d{1,6}
+	 */
 	public void setLongitude(String longitude) throws IllegalArgumentException ;
 	
+	/**
+	 * <p>Sets the longitude value from degrees, minutes and seconds.</p>
+	 * 
+	 * @param degrees - the degrees
+	 * @param minutes - the minutes
+	 * @param seconds - the seconds
+	 */
 	public void setLongitude(double degrees, double minutes, double seconds);
 	
+	/**
+	 * <p>Sets the latitude value as a double.</p>
+	 * 
+	 * @param latitude - the latitude to set
+	 */
 	public void setLatitude(double latitude);
 	
+	/**
+	 * <p>Sets the latitude value as a {@link String}.</p>
+	 * 
+	 * @param latitude - the latitude to set
+	 * @throws IllegalArgumentException if it is not in a valid format according to regex pattern \\-?\\d{1,3}\\.\\d{1,6}
+	 */
 	public void setLatitude(String latitude) throws IllegalArgumentException ;
 	
+	/**
+	 * <p>Sets the latitude value from degrees, minutes and seconds.</p>
+	 * 
+	 * @param degrees - the degrees
+	 * @param minutes - the minutes
+	 * @param seconds - the seconds
+	 */
 	public void setLatitude(double degrees, double minutes, double seconds);
 }

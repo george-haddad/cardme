@@ -65,17 +65,91 @@ import net.sourceforge.cardme.vcard.types.params.ImppParamType;
  */
 public interface ImppFeature {
 
+	/**
+	 * <p>Retrieves the {@link URI} of the IMPP address.</p>
+	 * 
+	 * @return the {@link URI} of the IMPP address or null if not set</p>
+	 */
 	public URI getUri();
+	
+	/**
+	 * <p>Sets the {@link URI} of the IMPP address.</p>
+	 * 
+	 * @param uri - the {@link URI} of the IMPP address
+	 */
 	public void setUri(URI uri);
+	
+	/**
+	 * <p>Indicates if the {@link URI} has been set.</p>
+	 * 
+	 * @return true if the {@link URI} has been set and false otherwise
+	 */
 	public boolean hasUri();
+	
+	/**
+	 * <p>Removes the {@link URI} address.</p>
+	 */
 	public void clearUri();
 	
+	/**
+	 * <p>Retrieves a list of IMPP parameter types.</p>
+	 * 
+	 * @return a list of IMPP parameter types or empty list if none added
+	 */
 	public List<ImppParamType> getParams();
+	
+	/**
+	 * <p>Adds the specified IMPP parameter type.</p>
+	 * 
+	 * @param imppParamType - the IMPP parameter type to add
+	 * @return a reference to itself
+	 * @throws NullPointerException if adding a null impp parameter type
+	 */
 	public ImppFeature addParam(ImppParamType imppParamType) throws NullPointerException;
+	
+	/**
+	 * <p>Add a list of IMPP parameter types.</p>
+	 * 
+	 * @param imppParamTypes - the list of IMPP parameter types to add
+	 * @return a reference to itself
+	 * @throws NullPointerException if adding null list of IMPP parameter types
+	 */
 	public ImppFeature addAllParams(List<ImppParamType> imppParamTypes) throws NullPointerException;
+	
+	/**
+	 * <p>Removes the specified IMPP parameter type.</p>
+	 * 
+	 * @param imppParamType - the IMPP parameter type to remove
+	 * @return a reference to itself
+	 * @throws NullPointerException if removing a null IMPP parameter type
+	 */
 	public ImppFeature removeParam(ImppParamType imppParamType) throws NullPointerException;
+	
+	/**
+	 * <p>Indicates if the specified IMPP parameter type exists.</p>
+	 * 
+	 * @param imppParamType - the IMPP parameter type to check
+	 * @return true if the specified IMPP parameter type exists and false otherwise
+	 */
 	public boolean containsParam(ImppParamType imppParamType);
+	
+	/**
+	 * <p>Indicates if all of the IMPP parameter types in the list exists.</p>
+	 * 
+	 * @param imppParamTypes - the list of IMPP parameter types to check
+	 * @return true if all the IMPP parameter types in the list exist
+	 */
 	public boolean containsAllParams(List<ImppParamType> imppParamTypes);
+	
+	/**
+	 * <p>Indicates if IMPP parameter types have been added.</p>
+	 * 
+	 * @return true if IMPP parameter types exist and false otherwise
+	 */
 	public boolean hasParams();
+	
+	/**
+	 * <p>Removes all IMPP parameter types.</p>
+	 */
 	public void clearParams();
 }

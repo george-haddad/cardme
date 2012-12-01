@@ -50,15 +50,48 @@ import net.sourceforge.cardme.vcard.VCard;
  */
 public interface AgentFeature {
 	
+	/**
+	 * <p>Retrieve the agent as a VCard object that is
+	 * embedded in the parent VCard.</p>
+	 * 
+	 * @return the VCard representing the agent
+	 */
 	public VCard getAgent();
 	
+	/**
+	 * <p>Embed the agent VCard.</p>
+	 *  
+	 * @param agent - the agent VCard to embed 
+	 */
 	public void setAgent(VCard agent);
 	
+	/**
+	 * <p>Retrieve the URI indicating the remote location
+	 * of the agent's VCard.</p>
+	 * 
+	 * @return the {@link URI} of the agent's VCard or null if not set
+	 */
 	public URI getAgentURI();
 	
+	/**
+	 * <p>Indicates if the agent VCard has been set via
+	 * {@link URI} or VCard.</p>
+	 * 
+	 * @return true if the agent VCard has been set and false otherwise
+	 */
 	public boolean hasAgent();
 	
+	/**
+	 * <p>Indicates if the agent's VCard is a {@link URI} value or not.</p>
+	 * 
+	 * @return true if the agent's VCard is a {@link URI} value and false otherwise
+	 */
 	public boolean isURI();
 	
+	/**
+	 * <p>Sets the agent's VCard as a {@link URI} object.</p>
+	 * 
+	 * @param agentUri - the {@link URI} object to set
+	 */
 	public void setAgentURI(URI agentUri);
 }
