@@ -34,10 +34,8 @@ package net.sourceforge.cardme.vcard.arch;
  * <br/>
  * Feb 10, 2010
  * 
- * <p>This specifies if we will use a type value list
- * or a type parameter list when writing out the types
- * of a specified feature. Note that both mean the same
- * thing, it is just how it is written.</p>
+ * <p>Indicator to specify the type of formatting
+ * for parameter types in vcards.</p>
  */
 public enum ParameterTypeStyle {
 

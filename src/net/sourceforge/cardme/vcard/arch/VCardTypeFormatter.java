@@ -33,11 +33,23 @@ package net.sourceforge.cardme.vcard.arch;
  * @author George El-Haddad
  * <br/>
  * Aug 7, 2012
- *
+ * 
+ * <p>Interface to provide a VCard type functions
+ * to specify how the output will be formatted.</p>
  */
 public interface VCardTypeFormatter {
 
+	/**
+	 * <p>Retrieve the style definition for the parameter type .</p>
+	 * 
+	 * @return the parameter type style definition
+	 */
 	public ParameterTypeStyle getParameterTypeStyle();
 	
+	/**
+	 * <p>Set the style definition for the parameter type.</p>
+	 * 
+	 * @param paramTypeStyle - the parameter type style definition
+	 */
 	public void setParameterTypeStyle(ParameterTypeStyle paramTypeStyle);
 }

@@ -33,7 +33,11 @@ package net.sourceforge.cardme.vcard.arch;
  * @author George El-Haddad
  * <br/>
  * Mar 10, 2010
- *
+ * 
+ * <p>VCard versions that are available to date.
+ * Note that even though version 4 is listed, there
+ * is no actual support for it. Currently most applications
+ * still use version 2.1 and 3.0.</p>
  */
 public enum VCardVersion {
 

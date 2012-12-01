@@ -33,7 +33,8 @@ package net.sourceforge.cardme.vcard.arch;
  * @author George El-Haddad
  * <br/>
  * Feb 5, 2010
- *
+ * 
+ * <p>The VCard type names as defined in the RFC2426.</p>
  */
 public enum VCardTypeName {
 	BEGIN("BEGIN"),

@@ -38,15 +38,15 @@ package net.sourceforge.cardme.vcard.errors;
 public enum ErrorSeverity {
 	
 	/**
-	 * <p>Fatal error causes the vcard to stop functioning
+	 * <p>Fatal error causes the VCard to stop functioning
 	 * in a predictable and correct way. Will cause other
 	 * errors else where. Needs immediate attention.</p>
 	 */
 	FATAL(100),
 	
 	/**
-	 * <p>Warning error causes the vcard to have undesirable
-	 * side-effects but still functions as a vcard. It may
+	 * <p>Warning error causes the VCard to have undesirable
+	 * side-effects but still functions as a VCard. It may
 	 * or may not work on all applications. Needs error
 	 * handling and trouble shooting attention.</p>
 	 */

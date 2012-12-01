@@ -33,19 +33,53 @@ package net.sourceforge.cardme.vcard.arch;
  * @author George El-Haddad
  * <br/>
  * Aug 7, 2012
- *
+ * 
+ * <p>Interface used for implementing parameter type functionality
+ * in a vcard type.</p>
  */
 public interface VCardParamType {
 
+	/**
+	 * <p>Retrieve the type name.</p>
+	 * 
+	 * @return the type name
+	 */
 	public String getTypeName();
 	
+	/**
+	 * <p>Set the type name.</p>
+	 * 
+	 * @param typeName - the type name as {@link String}
+	 */
 	public void setTypeName(String typeName);
 	
+	/**
+	 * <p>Retrieve the value of the type.</p>
+	 * 
+	 * @return the type value
+	 */
 	public String getTypeValue();
 	
+	/**
+	 * <p>Set the value of the type.</p>
+	 * 
+	 * @param typeValue - the type value as {@link String}
+	 */
 	public void setTypeValue(String typeValue);
 	
+	/**
+	 * <p>Indicates if the type name has a value of not.</p>
+	 * 
+	 * @return true if the type has a value and false otherwise
+	 */
 	public boolean hasTypeValue();
 	
+	/**
+	 * <p>Retrieve the parent type name of this parameter type.
+	 * Example, calling this method from the EmailType will return
+	 * the VCardTypeName enum of {@link VCardTypeName}.EMAIL</p>
+	 * 
+	 * @return the parent VCard type the parameter type belongs to
+	 */
 	public VCardTypeName getParentVCardTypeName();
 }
