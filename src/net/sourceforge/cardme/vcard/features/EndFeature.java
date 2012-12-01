@@ -46,5 +46,5 @@ package net.sourceforge.cardme.vcard.features;
  * </p>
  */
 public interface EndFeature {
-	
+	//Nothing to do here :)
 }

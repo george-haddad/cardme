@@ -19,7 +19,17 @@ package net.sourceforge.cardme.vcard.features;
  */
 public interface FNFeature {
 	
+	/**
+	 * <p>Retrieves the formatted name.</p>
+	 * 
+	 * @return the formatted name or null if not set
+	 */
 	public String getFormattedName();
 	
+	/**
+	 * <p>Sets the formatted name. Setting to null will clear it.</p>
+	 * 
+	 * @param formattedName - the formatted name to set
+	 */
 	public void setFormattedName(String formattedName);
 }

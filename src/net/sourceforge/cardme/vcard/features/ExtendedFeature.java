@@ -46,16 +46,46 @@ package net.sourceforge.cardme.vcard.features;
  * </p>
  */
 public interface ExtendedFeature {
-
+	
+	/**
+	 * <p>Retrieves the extended name of the type.</p>
+	 * 
+	 * @return the extended name of the type or null if not set
+	 */
 	public String getExtendedName();
 	
+	/**
+	 * <p>Sets the extended name. The name must start with
+	 * &quot;X-&quot;</p>
+	 * 
+	 * @param name - the name to set
+	 * @throws IllegalArgumentException if name does not start with &quot;X-&quot;
+	 */
 	public void setExtendedName(String name) throws IllegalArgumentException;
 	
+	/**
+	 * <p>Retrieves the extended value.</p>
+	 * 
+	 * @return the extended value or null if not set
+	 */
 	public String getExtendedValue();
 	
+	/**
+	 * <p>Sets the extended value.</p>
+	 * 
+	 * @param value - the value to set 
+	 */
 	public void setExtendedValue(String value);
 	
+	/**
+	 * <p>Indicates that there is a value for this extended type.</p>
+	 * 
+	 * @return true if a value exists and false otherwise
+	 */
 	public boolean hasExtendedValue();
 	
+	/**
+	 * <p>Removes the extended value.</p>
+	 */
 	public void clearExtension();
 }

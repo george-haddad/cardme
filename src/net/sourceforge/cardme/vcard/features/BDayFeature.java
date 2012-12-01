@@ -52,38 +52,70 @@ import net.sourceforge.cardme.vcard.types.params.BDayParamType;
  */
 public interface BDayFeature {
 	
+	/**
+	 * <p>Retrieves the birth date as a {@link Calendar} object.</p>
+	 * 
+	 * @return the birth date as a {@link Calendar} object or null if not set
+	 */
 	public Calendar getBirthday();
 	
+	/**
+	 * <p>Set the birth date from a {@link Calendar} object.</p>
+	 * 
+	 * @param bdayCal - the birth date to set
+	 */
 	public void setBirthday(Calendar bdayCal);
 	
+	/**
+	 * <p>Set the birth date from a {@link Date} object.</p>
+	 * 
+	 * @param bdayDate - the birth date to set
+	 */
 	public void setBirthday(Date bdayDate);
 	
+	/**
+	 * <p>Set the birth date parameter type.</p>
+	 * 
+	 * @param bdayParamType - the birth date parameter type
+	 */
 	public void setParam(BDayParamType bdayParamType);
 	
+	/**
+	 * <p>Retrieves the birth date parameter type.</p>
+	 * 
+	 * @return the birth date parameter type or null if not set
+	 */
 	public BDayParamType getParam();
 	
+	/**
+	 * <p>Removes the birth date parameter type.</p>
+	 */
 	public void clearParam();
 	
+	/**
+	 * <p>Indicates if the birth date parameter type has been set.</p>
+	 * 
+	 * @return true if the birth date parameter type was set and false otherwise
+	 */
 	public boolean hasParam();
 	
 	/**
 	 * <p>Set the ISO-8601 format for the output of the birthday.
-	 * The default is &quot;UTC Time Extended&quot;.</p>
+	 * The default is {@link ISOFormat#ISO8601_UTC_TIME_EXTENDED}.</p>
 	 * 
 	 * @see ISOFormat
 	 */
 	public void setISO8601Format(ISOFormat dateTimeFormat);
 	
 	/**
-	 * <p>Returns the proper ISO-8601 date time format
-	 * according to the birthday parameter type. Should
-	 * it be miss-matching; the default shall be returned
-	 * which is <code>ISOFormat.DATE_EXTENDED</code>
-	 * for date and <code>ISOFormat.UTC_TIME_EXTENDED</code>
-	 * for date-time. Should nothing be set then the default is
-	 * to use <code>ISOFormat.UTC_TIME_EXTENDED</code>.
-	 *
-	 * @return ISOFormat
+	 * <p>Retrieves the ISO-8601 date time format according
+	 * to the birth date parameter type. If the parameter type
+	 * is not set then the default {@link ISOFormat#ISO8601_DATE_EXTENDED}
+	 * will be returned for date values and {@link ISOFormat#ISO8601_UTC_TIME_EXTENDED}
+	 * will be returned for date-time values. If nothing is set
+	 * then the default returned will be {@link ISOFormat#ISO8601_UTC_TIME_EXTENDED}
+	 * 
+	 * @return the ISO 8601 formatting type
 	 */
 	public ISOFormat getISO8601Format();
 }

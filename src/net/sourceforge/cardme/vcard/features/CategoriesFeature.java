@@ -47,20 +47,66 @@ import java.util.List;
  * </ul>
  */
 public interface CategoriesFeature {
-
+	
+	/**
+	 * <p>Retrieves a list of categories.</p>
+	 * 
+	 * @return a list of categories or empty list if none have been added
+	 */
 	public List<String> getCategories();
 	
+	/**
+	 * <p>Adds a category.</p>
+	 * 
+	 * @param category - the category to add
+	 * @return a reference to itself
+	 * @throws NullPointerException if adding a null category
+	 */
 	public CategoriesFeature addCategory(String category) throws NullPointerException;
 	
+	/**
+	 * <p>Adds all categories from a specified list.</p>
+	 * 
+	 * @param categories - the list of categories to add
+	 * @return a reference to itself
+	 * @throws NullPointerException if adding a null list
+	 */
 	public CategoriesFeature addAllCategories(List<String> categories) throws NullPointerException;
 	
+	/**
+	 * <p>Removes the specified category.</p>
+	 * 
+	 * @param category - the category to remove
+	 * @return a reference to itself
+	 * @throws NullPointerException if removing a null category
+	 */
 	public CategoriesFeature removeCategory(String category) throws NullPointerException;
 	
+	/**
+	 * <p>Indicates if the specified category exists.</p>
+	 * 
+	 * @param category - the category to check
+	 * @return true if the specified category exists and false otherwise
+	 */
 	public boolean containsCategory(String category);
 	
+	/**
+	 * <p>Indicates if the list of categories exists.</p>
+	 * 
+	 * @param categories - the list of categories to check
+	 * @return true if all categories in the list exist and false otherwise
+	 */
 	public boolean containsAllCategories(List<String> categories);
 	
+	/**
+	 * <p>Indicates if there are at least one or more categories.</p>
+	 * 
+	 * @return true if one of more categories have been added
+	 */
 	public boolean hasCategories();
 	
+	/**
+	 * <p>Removes all categories.</p>
+	 */
 	public void clearCategories();
 }

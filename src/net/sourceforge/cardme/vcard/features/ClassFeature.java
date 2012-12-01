@@ -47,11 +47,29 @@ package net.sourceforge.cardme.vcard.features;
  */
 public interface ClassFeature {
 
+	/**
+	 * <p>Retrieve the security classification.</p>
+	 * 
+	 * @return the security classification or null if not set
+	 */
 	public String getSecurityClass();
 	
+	/**
+	 * <p>Sets the security classification.</p>
+	 * 
+	 * @param securityClass - the security classification to set
+	 */
 	public void setSecurityClass(String securityClass);
 	
+	/**
+	 * <p>Indicates if the security classification has been set.</p>
+	 * 
+	 * @return true if the security classification was set and false otherwise
+	 */
 	public boolean hasSecurityClass();
 	
+	/**
+	 * <p>Remove the security classification.</p>
+	 */
 	public void clearSecurityClass();
 }
