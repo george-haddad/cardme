@@ -38,7 +38,9 @@ import net.sourceforge.cardme.util.Util;
  * @author George El-Haddad
  * <br/>
  * Aug 11, 2012
- *
+ * 
+ * <p>This is used to store error messages and related severity
+ * as the VCard parses and writes data.</p>
  */
 public class VCardError implements Comparable<VCardError>, Cloneable, Serializable {
 	
@@ -62,6 +64,13 @@ public class VCardError implements Comparable<VCardError>, Cloneable, Serializab
 		setSeverity(severity);
 	}
 	
+	/**
+	 * <p>Retrieve the error message or null if
+	 * the defined error message or {@link Throwable}
+	 * object are both null.</p>
+	 *  
+	 * @return the error message or null if there are none
+	 */
 	public String getErrorMessage()
 	{
 		if(errorMessage != null) {
@@ -75,24 +84,50 @@ public class VCardError implements Comparable<VCardError>, Cloneable, Serializab
 		}
 	}
 	
+	/**
+	 * <p>Retrieves the severity value of this error.</p>
+	 * 
+	 * @return the severity value, default is {@link ErrorSeverity}.NONE
+	 */
 	public ErrorSeverity getSeverity()
 	{
 		return severity;
 	}
 	
+	/**
+	 * <p>Retrieves the {@link Throwable} object representing
+	 * this error, null if none was set.</p>
+	 * 
+	 * @return the {@link Throwable} object representing this error, null if none was set
+	 */
 	public Throwable getError()
 	{
 		return error;
 	}
 	
+	/**
+	 * <p>Sets an error message.</p>
+	 * 
+	 * @param errorMessage - the error message to set
+	 */
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
 	}
 	
+	/**
+	 * <p>Sets a {@link Throwable} object representing this error.</p>
+	 * 
+	 * @param error - the {@link Throwable} object representing this error
+	 */
 	public void setError(Throwable error) {
 		this.error = error;
 	}
 	
+	/**
+	 * <p>Sets the severity level of this error</p>
+	 * 
+	 * @param severity - the severity level
+	 */
 	public void setSeverity(ErrorSeverity severity) {
 		this.severity = severity;
 	}
@@ -125,6 +160,12 @@ public class VCardError implements Comparable<VCardError>, Cloneable, Serializab
 		}
 	}
 	
+	/**
+	 * <p>Returns the representation of this class as
+	 * an array of {@link String}.</p>
+	 *  
+	 * @return {@link String}[]
+	 */
 	private String[] getContents()
 	{
 		String[] contents = new String[4];

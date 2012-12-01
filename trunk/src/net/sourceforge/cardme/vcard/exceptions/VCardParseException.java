@@ -33,7 +33,9 @@ package net.sourceforge.cardme.vcard.exceptions;
  * @author George El-Haddad
  * <br/>
  * Aug 7, 2012
- *
+ * 
+ * <p>Exception to be used when errors occur during the
+ * parsing of VCards.</p>
  */
 public class VCardParseException extends Exception {
 

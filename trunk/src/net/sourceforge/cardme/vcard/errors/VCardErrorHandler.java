@@ -35,23 +35,75 @@ import java.util.List;
  * @author Wolfgang Fahl
  * <br/>
  * Feb 5, 2010
- *
+ * 
+ * <p>Interface to define functions for the handling of errors
+ * during the VCard parsing and building stages.</p>
  */
 public interface VCardErrorHandler {
 	
+	/**
+	 * <p>Retrieve a list of errors that occurred, empty list
+	 * is returned if there are none.</p>
+	 * 
+	 * @return list of errors or empty list if there are none
+	 */
 	public List<VCardError> getErrors();
 	
+	/**
+	 * <p>Add an error.</p>
+	 * 
+	 * @param error - the error to add
+	 * @throws NullPointerException if a null error object is added
+	 */
 	public void addError(VCardError error) throws NullPointerException;
 	
+	/**
+	 * <p>Add an error by specifying the errorMessage, severity and
+	 * {@link Throwable} object.</p>
+	 * 
+	 * @param errorMessage - the textual error message
+	 * @param severity - the severity level
+	 * @param error - the {@link Throwable} object representing the error
+	 * @throws NullPointerException if adding a null errorMessage
+	 */
 	public void addError(String errorMessage, ErrorSeverity severity, Throwable error) throws NullPointerException;
 	
+	/**
+	 * <p>Retrieve the severity level of errors on the VCard,
+	 * by default this is {@link ErrorSeverity}.NONE</p>
+	 * 
+	 * @return the severity level of errors on the VCard
+	 */
 	public ErrorSeverity getErrorSeverity();
 	
+	/**
+	 * <p>Sets whether exceptions should be thrown and propagated
+	 * upwards or caught and logged internally. Internally caught
+	 * errors can be accessed using this interface. The default
+	 * is to catch and log internally.</p>
+	 * 
+	 * @param throwExceptions - true to throw and propagate thrown exceptions
+	 */
 	public void setThrowExceptions(boolean throwExceptions);
 	
+	/**
+	 * <p>Indicates if exceptions will be thrown and propagated upwards
+	 * or caught and logged internally.</p>
+	 * 
+	 * @return true if exceptions will be thrown and propagated
+	 */
 	public boolean isThrowExceptions();
 	
+	/**
+	 * <p>Indicates if there is at least one error that
+	 * was caught and logged internally.</p>
+	 * 
+	 * @return true if at least one or more errors got caught and logged internally
+	 */
 	public boolean hasErrors();
 	
+	/**
+	 * <p>Removes all caught and logged errors.</p>
+	 */
 	public void clearErrors();
 }

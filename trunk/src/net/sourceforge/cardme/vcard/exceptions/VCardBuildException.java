@@ -1,5 +1,7 @@
 package net.sourceforge.cardme.vcard.exceptions;
 
+import net.sourceforge.cardme.io.VCardWriter;
+
 /*
  * Copyright 2011 George El-Haddad. All rights reserved.
  * 
@@ -33,7 +35,11 @@ package net.sourceforge.cardme.vcard.exceptions;
  * @author George El-Haddad
  * <br/>
  * Feb 8, 2010
- *
+ * 
+ * <p>Exception used when errors occur during the construction
+ * of VCard elements in the {@link VCardWriter} or anywhere else
+ * where VCardType objects are translated from Java to String to
+ * be written out.</p>
  */
 public class VCardBuildException extends Exception {
 

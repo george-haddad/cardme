@@ -35,12 +35,12 @@ package net.sourceforge.cardme.vcard.exceptions;
  * <br/>
  * Aug 9, 2006
  * 
+ * <p>Exception used for general VCard errors that occur during
+ * the operation of using the VCard functions that specifically
+ * do not relate to parsing or building.</p>
  */
 public class VCardException extends RuntimeException {
 
-	/**
-	 * <p>UID for serialization.</p> 
-	 */
 	private static final long serialVersionUID = -9211462689626599334L;
 
 	/**

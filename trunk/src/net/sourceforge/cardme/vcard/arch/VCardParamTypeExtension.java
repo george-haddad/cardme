@@ -36,25 +36,79 @@ import net.sourceforge.cardme.vcard.types.params.ExtendedParamType;
  * @author George El-Haddad
  * <br/>
  * Aug 7, 2012
- *
+ * 
+ * <p>Interface to define the functionalities of manipulating
+ * extended parameter types in a VCard.</p>
  */
 public interface VCardParamTypeExtension {
 
-	    public List<ExtendedParamType> getExtendedParams();
-
-	    public int getExtendedParamSize();
-
-	    public VCardParamTypeExtension addExtendedParam(ExtendedParamType xtendedParam) throws NullPointerException;
-	    
-	    public VCardParamTypeExtension addAllExtendedParams(List<ExtendedParamType> xtendedParams) throws NullPointerException;
-
-	    public VCardParamTypeExtension removeExtendedParam(ExtendedParamType xtendedParam) throws NullPointerException;
-
-	    public boolean containsExtendedParam(ExtendedParamType xtendedParam);
-
-	    public boolean containsAllExtendedParams(List<ExtendedParamType> xtendedParams);
-
-	    public boolean hasExtendedParams();
-	    
-	    public void clearExtendedParams();
+	/**
+	 * <p>Retrieve the list of extended parameter types.</p>
+	 * 
+	 * @return list of extended parameter types
+	 */
+	public List<ExtendedParamType> getExtendedParams();
+	
+	/**
+	 * <p>Retrieves the number of extended parameter types.</p>
+	 * 
+	 * @return the total number of extended parameter types.
+	 */
+	public int getExtendedParamSize();
+	
+	/**
+	 * <p>Adds an extended parameter type.</p>
+	 * 
+	 * @param xtendedParam - the extended parameter type to add
+	 * @return a reference to itself
+	 * @throws NullPointerException if trying to add a null extended parameter type
+	 */
+	public VCardParamTypeExtension addExtendedParam(ExtendedParamType xtendedParam) throws NullPointerException;
+	
+	/**
+	 * <p>Adds a list of extended parameter types to the current
+	 * list of parameters.</p>
+	 * 
+	 * @param xtendedParams - the list of extended parameter types to add 
+	 * @return a reference to itself
+	 * @throws NullPointerException if trying to add a null list of extended parameter types
+	 */
+	public VCardParamTypeExtension addAllExtendedParams(List<ExtendedParamType> xtendedParams) throws NullPointerException;
+	
+	/**
+	 * <p>Removes the specified extended parameter type.</p>
+	 * 
+	 * @param xtendedParam - the extended parameter type to remove
+	 * @return a reference to itself
+	 * @throws NullPointerException if trying to remove a null extended parameter type
+	 */
+	public VCardParamTypeExtension removeExtendedParam(ExtendedParamType xtendedParam) throws NullPointerException;
+	
+	/**
+	 * <p>Checks if the specified extended parameter type exists.</p>
+	 * 
+	 * @param xtendedParam - the extended parameter type to check
+	 * @return true if the specified extended parameter type exists and false otherwise
+	 */
+	public boolean containsExtendedParam(ExtendedParamType xtendedParam);
+	
+	/**
+	 * <p>Checks if all the extended parameter types in the specified list exists.</p>
+	 * 
+	 * @param xtendedParams - the list of extended parameter types
+	 * @return true if all extended parameter types in the list exist
+	 */
+	public boolean containsAllExtendedParams(List<ExtendedParamType> xtendedParams);
+	
+	/**
+	 * <p>Indicates if there are at least 1 or more extended parameter types.</p>
+	 * 
+	 * @return true if there exists at least 1 or more extended parameter types
+	 */
+	public boolean hasExtendedParams();
+	
+	/**
+	 * <p>Removes all extended parameter types.</p>
+	 */
+	public void clearExtendedParams();
 }
