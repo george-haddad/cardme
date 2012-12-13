@@ -47,11 +47,29 @@ package net.sourceforge.cardme.vcard.features;
  */
 public interface NoteFeature {
 	
+	/**
+	 * <p>Retrieves the note or null if not set.</p>
+	 * 
+	 * @return the note or null if not set
+	 */
 	public String getNote();
 	
+	/**
+	 * <p>Sets the note.</p>
+	 * 
+	 * @param note - the note to set
+	 */
 	public void setNote(String note);
 	
+	/**
+	 * <p>Indicates if a note was set or not.</p>
+	 * 
+	 * @return true if a note was set or false otherwise
+	 */
 	public boolean hasNote();
 	
+	/**
+	 * <p>Removes the note.</p>
+	 */
 	public void clearNote();
 }

@@ -46,9 +46,30 @@ package net.sourceforge.cardme.vcard.features;
  * </p>
  */
 public interface NameFeature {
-
+	
+	/**
+	 * <p>Retrieves the displayable name.</p>
+	 * 
+	 * @return the displayable name
+	 */
 	public String getName();
+	
+	/**
+	 * <p>Sets the displayable name.</p>
+	 * 
+	 * @param name - the displayable name to set
+	 */
 	public void setName(String name);
+	
+	/**
+	 * <p>Indicates whether a displayable name was set or not.</p>
+	 * 
+	 * @return true if a displayable name was set or false otherwise
+	 */
 	public boolean hasName();
+	
+	/**
+	 * <p>Removes the displayable name.</p>
+	 */
 	public void clearName();
 }
