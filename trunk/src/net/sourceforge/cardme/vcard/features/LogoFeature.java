@@ -53,27 +53,93 @@ import net.sourceforge.cardme.vcard.types.media.ImageMediaType;
  */
 public interface LogoFeature {
 	
+	/**
+	 * <p>Retrieves the logo as an array of bytes.</p>
+	 * 
+	 * @return the logo as an array of bytes or null if none was set
+	 */
 	public byte[] getLogo();
 	
+	/**
+	 * <p>Sets the logo as an array of bytes.</p>
+	 * 
+	 * @param logo - the logo to be set
+	 */
 	public void setLogo(byte[] logo);
 	
+	/**
+	 * <p>Indicates whether a logo has been set; either
+	 * as an array of bytes or as a {@link URI}.</p>
+	 * 
+	 * @return true if a logo was set or false otherwise
+	 */
 	public boolean hasLogo();
 	
+	/**
+	 * <p>This will remove the logo (array of bytes and the URI).</p>
+	 */
 	public void clearLogo();
 	
+	/**
+	 * <p>Retrieves the logo as a {@link URI} if one was set.</p>
+	 * 
+	 * @return the {@link URI} of the logo if one was set
+	 */
 	public URI getLogoURI();
 	
+	/**
+	 * <p>Sets the {@link URI} of the logo.</p>
+	 * 
+	 * @param logoUri - the {@link URI} of the logo
+	 */
 	public void setLogoURI(URI logoUri);
 	
+	/**
+	 * <p>Indicates if the logo is represented by a {@link URI}.
+	 * Note that if you set the logo as bytes and as a URI then
+	 * this will return true. It is recommended to set the logo
+	 * as one or the other unless you know what you are doing.</p>
+	 *
+	 * @return true if the {@link URI} of the logo has been set
+	 */
 	public boolean isURI();
 	
+	/**
+	 * <p>Sets the {@link URL} of the logo. This eventually
+	 * just calls {@link URL#toURI()} internally.</p>
+	 * 
+	 * @param logoUrl - the {@link URL} of the logo
+	 * @throws URISyntaxException if there is a syntax error in the {@link URL}
+	 */
 	public void setLogoURL(URL logoUrl) throws URISyntaxException;
 	
+	/**
+	 * <p>Retrieves the {@link URL} of the logo. This eventually
+	 * just calls {@link URI#toURL()} internally.</p>
+	 * 
+	 * @return the {@link URL} of the logo
+	 * @throws MalformedURLException if the URL is malformed
+	 */
 	public URL getLogoURL() throws MalformedURLException;
 	
+	/**
+	 * <p>Retrieves the IANA registered media type of this logo.</p>
+	 *  
+	 * @return the IANA registered media type
+	 */
 	public ImageMediaType getImageMediaType();
 	
+	/**
+	 * <p>Sets the IANA registered media type for this logo.</p>
+	 * 
+	 * @param imageMediaType - the IANA registered media type
+	 */
 	public void setImageMediaType(ImageMediaType imageMediaType);
 	
+	/**
+	 * <p>Indicates whether an IANA registered media type has been set.</p>
+	 * 
+	 * @return true if an IANA registered media type was set or false otherwise
+	 */
 	public boolean hasImageMediaType();
 }

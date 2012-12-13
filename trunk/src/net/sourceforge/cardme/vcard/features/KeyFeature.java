@@ -49,19 +49,60 @@ import net.sourceforge.cardme.vcard.types.media.KeyTextType;
  */
 public interface KeyFeature {
 	
+	/**
+	 * <p>Retrieves the key as an array of bytes or
+	 * null if no key has been set.</p>
+	 * 
+	 * @return the key as an array of bytes or null if none has been set
+	 */
 	public byte[] getKey();
 	
+	/**
+	 * <p>Sets the key as an array of bytes.</p>
+	 * 
+	 * @param keyBytes - the key as an array of bytes
+	 */
 	public void setKey(byte[] keyBytes);
 	
+	/**
+	 * <p>Sets the key represented as a {@link String}.</p>
+	 * 
+	 * @param keyText - the key as a String
+	 */
 	public void setKey(String keyText);
 	
+	/**
+	 * <p>Indicates whether the key as been set or not.</p>
+	 * 
+	 * @return true if the key has been set and false otherwise
+	 */
 	public boolean hasKey();
 	
+	/**
+	 * <p>Removes the key.</p>
+	 * 
+	 */
 	public void clearKey();
 	
+	/**
+	 * <p>Returns the key type as defined in {@link KeyTextType}.</p>
+	 * 
+	 * @return the {@link KeyTextType} object representing the type of key stored
+	 */
 	public KeyTextType getKeyTextType();
 	
+	/**
+	 * <p>Sets the {@link KeyTextType} for this key.</p>
+	 * 
+	 * @param keyTextType - the {@link KeyTextType} object representing the type of key stored
+	 */
 	public void setKeyTextType(KeyTextType keyTextType);
 	
+	/**
+	 * <p>Indicates whether a {@link KeyTextType} has been set
+	 * for this key.</p>
+	 * 
+	 * @return true if a {@link KeyTextType} has been set and false otherwise
+	 */
 	public boolean hasKeyTextType();
 }

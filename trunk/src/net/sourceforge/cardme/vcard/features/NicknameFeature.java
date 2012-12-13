@@ -48,20 +48,66 @@ import java.util.List;
  * </p>
  */
 public interface NicknameFeature {
-
+	
+	/**
+	 * <p>Retrieves the list of nicknames added.</p>
+	 * 
+	 * @return the list of nicknames added
+	 */
 	public List<String> getNicknames();
 	
+	/**
+	 * <p>Adds a nickname.</p>
+	 * 
+	 * @param nickname - the nickname to add
+	 * @return a reference to itself
+	 * @throws NullPointerException if adding a null nickname
+	 */
 	public NicknameFeature addNickname(String nickname) throws NullPointerException;
 	
+	/**
+	 * <p>Adds a list of nicknames.</p>
+	 * 
+	 * @param nicknames - the list of nicknames to add
+	 * @return a reference to itself
+	 * @throws NullPointerException if adding a null list of nicknames
+	 */
 	public NicknameFeature addAllNicknames(List<String> nicknames) throws NullPointerException;
 	
+	/**
+	 * <p>Removes the specified nickname.</p>
+	 * 
+	 * @param nickname - the nickname to remove
+	 * @return a reference to itself
+	 * @throws NullPointerException if removing a null nickname
+	 */
 	public NicknameFeature removeNickname(String nickname) throws NullPointerException;
 	
+	/**
+	 * <p>Indicates if the specified nickname exists.</p>
+	 * 
+	 * @param nickname - the nickname to check
+	 * @return true if the specified nickname exists or false otherwise
+	 */
 	public boolean containsNickname(String nickname);
 	
+	/**
+	 * <p>Indicates whether all nicknames in the list exist.</p>
+	 * 
+	 * @param nicknames - the list of nicknames to check
+	 * @return true if all nicknames in the list exist
+	 */
 	public boolean containsAllNicknames(List<String> nicknames);
 	
+	/**
+	 * <p>Indicates if nicknames have been added.</p>
+	 * 
+	 * @return true if nicknames have been added
+	 */
 	public boolean hasNicknames();
 	
+	/**
+	 * <p>Remvoes all nicknames.</p>
+	 */
 	public void clearNicknames();
 }

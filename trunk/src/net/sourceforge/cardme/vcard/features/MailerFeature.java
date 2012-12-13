@@ -46,12 +46,30 @@ package net.sourceforge.cardme.vcard.features;
  * </p>
  */
 public interface MailerFeature {
-
+	
+	/**
+	 * <p>Retrieves the mailer used.</p>
+	 * 
+	 * @return the mailer used
+	 */
 	public String getMailer();
-
+	
+	/**
+	 * <p>Sets the mailer used.</p>
+	 * 
+	 * @param mailer - the mailer used
+	 */
 	public void setMailer(String mailer);
-
+	
+	/**
+	 * <p>Indicates whether a mailer has been set.</p>
+	 * 
+	 * @return true if a mailer was set or false otherwise
+	 */
 	public boolean hasMailer();
-
+	
+	/**
+	 * <p>Removes the mailer string.</p>
+	 */
 	public void clearMailer();
 }

@@ -50,16 +50,90 @@ import net.sourceforge.cardme.vcard.exceptions.VCardException;
  */
 public interface OrgFeature {
 
+	/**
+	 * <p>Retrieves the organization name or null if not set.</p>
+	 * 
+	 * @return the organization name or null if not set
+	 */
 	public String getOrgName();
+	
+	/**
+	 * <p>Sets the organization name.</p>
+	 * 
+	 * @param orgName - the organization name to set
+	 * @return a reference to itself
+	 */
 	public OrgFeature setOrgName(String orgName);
+	
+	/**
+	 * <p>Indicates if an organization name has been set.</p>
+	 * 
+	 * @return true if an organization name has been set or false otherwise
+	 */
 	public boolean hasOrgName();
+	
+	/**
+	 * <p>Removes the organization name.
+	 * Note that this does not clear organizational units.</p>
+	 */
 	public void clearOrg();
 	
+	/**
+	 * <p>Adds an organizational unit.</p>
+	 * 
+	 * @param orgUnit - the organizational unit to add
+	 * @return a reference to itself
+	 * @throws NullPointerException if adding a null organizational unit
+	 * @throws VCardException if adding an organizational unit when the organization name has not been set
+	 */
 	public OrgFeature addOrgUnit(String orgUnit) throws NullPointerException, VCardException;
+	
+	/**
+	 * <p>Adds a list of organizational units.</p>
+	 *   
+	 * @param orgUnits - the list of organizational units to add
+	 * @return a reference to itself
+	 * @throws NullPointerException if adding a null list of organizational units
+	 * @throws VCardException if adding an organizational unit when the organization name has not been set
+	 */
 	public OrgFeature addAllOrgUnits(List<String> orgUnits) throws NullPointerException, VCardException;
+	
+	/**
+	 * <p>Removes the specified organizational unit.</p>
+	 * 
+	 * @param orgUnit - the organizational unit to remove
+	 * @return a reference to itself
+	 * @throws NullPointerException if removing a null organizational unit
+	 */
 	public OrgFeature removeOrgUnit(String orgUnit) throws NullPointerException;
+	
+	/**
+	 * <p>Indicates if the specified organizational unit exists.</p>
+	 * 
+	 * @param orgUnit - the organizational unit to check
+	 * @return true if the specified organizational unit exists or false otherwise
+	 */
 	public boolean containsOrgUnit(String orgUnit);
+	
+	/**
+	 * <p>Indicates whether all organizational units in the list exist.</p>
+	 * 
+	 * @param orgUnits - the list of organizational units to check
+	 * @return true if all organizational units in the list exist or false otherwise
+	 */
 	public boolean containsAllOrgUnits(List<String> orgUnits);
+	
+	/**
+	 * <p>Retrieves the list of organizational units.</p>
+	 * 
+	 * @return the list of organizational units
+	 */
 	public List<String> getOrgUnits();
+	
+	/**
+	 * <p>Indicates if organizational units have been added.</p>
+	 * 
+	 * @return true if organizational units have been added or false otherwise
+	 */
 	public boolean hasOrgUnits();
 }
