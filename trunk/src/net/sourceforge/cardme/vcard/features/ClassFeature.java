@@ -64,7 +64,7 @@ public interface ClassFeature {
 	/**
 	 * <p>Indicates if the security classification has been set.</p>
 	 * 
-	 * @return true if the security classification was set and false otherwise
+	 * @return true if the security classification was set or false otherwise
 	 */
 	public boolean hasSecurityClass();
 	

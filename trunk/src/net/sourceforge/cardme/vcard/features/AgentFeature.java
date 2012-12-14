@@ -77,14 +77,14 @@ public interface AgentFeature {
 	 * <p>Indicates if the agent VCard has been set via
 	 * {@link URI} or VCard.</p>
 	 * 
-	 * @return true if the agent VCard has been set and false otherwise
+	 * @return true if the agent VCard has been set or false otherwise
 	 */
 	public boolean hasAgent();
 	
 	/**
 	 * <p>Indicates if the agent's VCard is a {@link URI} value or not.</p>
 	 * 
-	 * @return true if the agent's VCard is a {@link URI} value and false otherwise
+	 * @return true if the agent's VCard is a {@link URI} value or false otherwise
 	 */
 	public boolean isURI();
 	

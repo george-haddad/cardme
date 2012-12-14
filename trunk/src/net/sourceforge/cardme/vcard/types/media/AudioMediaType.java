@@ -190,16 +190,31 @@ public class AudioMediaType {
 		extension = _extension;
 	}
 	
+	/**
+	 * <p>Retrieves the IANA audio media type name.</p>
+	 * 
+	 * @return the IANA audio media type name
+	 */
 	public String getTypeName()
 	{
 		return typeName;
 	}
 	
+	/**
+	 * <p>Retrieves the IANA audio media registered name.</p>
+	 * 
+	 * @return the IANA audio media registered name
+	 */
 	public String getIanaRegisteredName()
 	{
 		return ianaRegisteredName;
 	}
 	
+	/**
+	 * <p>Retrieves the IANA audio media extension.</p>
+	 * 
+	 * @return the IANA audio media extension
+	 */
 	public String getExtension()
 	{
 		return extension;

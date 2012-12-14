@@ -64,11 +64,21 @@ public enum EmailParamType {
 		desc = d;
 	}
 	
+	/**
+	 * <p>Retrieves the parameter type name.</p>
+	 * 
+	 * @return the parameter type name
+	 */
 	public String getType()
 	{
 		return type;
 	}
 	
+	/**
+	 * <p>Retrieves the parameter type description.</p>
+	 * 
+	 * @return the parameter type description
+	 */
 	public String getDescription()
 	{
 		return desc;

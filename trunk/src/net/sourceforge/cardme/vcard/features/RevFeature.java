@@ -49,14 +49,37 @@ import java.util.Date;
  * </p>
  */
 public interface RevFeature {
-
+	
+	/**
+	 * <p>Retrieves the revision date as a {@link Calendar} object.</p>
+	 * 
+	 * @return the revision date or null if not set
+	 */
 	public Calendar getRevision();
-
+	
+	/**
+	 * <p>Set the revision date as a {@link Calendar} object.</p>
+	 * 
+	 * @param calendar - the revision date to set
+	 */
 	public void setRevision(Calendar calendar);
-
+	
+	/**
+	 * <p>Set the revision date as a {@link Date} object.</p>
+	 * 
+	 * @param date - the revision date to set
+	 */
 	public void setRevision(Date date);
-
+	
+	/**
+	 * <p>Removes the revision date.</p>
+	 */
 	public void clearRevision();
-
+	
+	/**
+	 * <p>Indicates if the revision date has been set.</p>
+	 * 
+	 * @return true if the revision date has been set or false otherwise
+	 */
 	public boolean hasRevision();
 }

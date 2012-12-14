@@ -17,12 +17,30 @@ package net.sourceforge.cardme.vcard.features;
  * </p>
  */
 public interface SourceFeature {
-
+	
+	/**
+	 * <p>Retrieves the source.</p>
+	 * 
+	 * @return the source or null if not set
+	 */
 	public String getSource();
 	
+	/**
+	 * <p>Sets the source.</p>
+	 * 
+	 * @param source - the source to set
+	 */
 	public void setSource(String source);
 	
+	/**
+	 * <p>Indicates if the source has been set.</p>
+	 * 
+	 * @return true if the source was set or false otherwise
+	 */
 	public boolean hasSource();
 	
+	/**
+	 * <p>Removes the source.</p>
+	 */
 	public void clearSource();
 }

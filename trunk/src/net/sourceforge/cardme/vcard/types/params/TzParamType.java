@@ -45,6 +45,11 @@ public enum TzParamType {
 		type = t;
 	}
 	
+	/**
+	 * <p>Retrieves the parameter type name.</p>
+	 * 
+	 * @return the parameter type name
+	 */
 	public String getType()
 	{
 		return type;

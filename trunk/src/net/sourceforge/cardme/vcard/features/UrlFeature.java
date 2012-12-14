@@ -50,28 +50,120 @@ import net.sourceforge.cardme.vcard.types.params.UrlParamType;
  * </p>
  */
 public interface UrlFeature {
-
+	
+	/**
+	 * <p>Retrieves the URL.</p>
+	 * 
+	 * @return the URL or null if none was set
+	 */
 	public URL getUrl();
 	
+	/**
+	 * <p>Retrieves the raw URL value as a {@link String}.</p>
+	 * 
+	 * @return the raw URL value as a {@link String}
+	 */
 	public String getRawUrl();
 	
+	/**
+	 * <p>Sets the URL.</p>
+	 * 
+	 * @param url - the URL to set
+	 */
 	public void setUrl(URL url);
 	
+	/**
+	 * <p>Sets the URL by using the raw URL value.</p>
+	 * 
+	 * @param rawUrl - the raw URL value
+	 */
 	public void setRawUrl(String rawUrl);
 	
+	/**
+	 * <p>Removes the URL.</p>
+	 */
 	public void clearUrl();
 	
+	/**
+	 * <p>Indicates if the URL has been set.</p>
+	 * 
+	 * @return true if the URL has been set or false otherwise
+	 */
 	public boolean hasUrl();
 	
+	/**
+	 * <p>Indicates if the raw URL has been set.</p>
+	 * 
+	 * @return true if the raw URL has been set or false otherwise
+	 */
 	public boolean hasRawUrl();
 	
+	/**
+	 * <p>Retrieves a list of URL parameter types.</p>
+	 * 
+	 * @return a list of URL parameter types
+	 */
 	public List<UrlParamType> getParams();
+	
+	/**
+	 * <p>Retrieves the total number of URL parameter types added.</p>
+	 * 
+	 * @return the total number of URL parameter types added
+	 */
 	public int getParamSize();
+	
+	/**
+	 * <p>Adds a URL parameter type.</p>
+	 * 
+	 * @param urlParamType - the URL parameter type to add
+	 * @return a reference to itself
+	 * @throws NullPointerException if adding a null URL parameter type
+	 */
 	public UrlFeature addParam(UrlParamType urlParamType) throws NullPointerException;
+	
+	/**
+	 * <p>Adds all URL parameter types in the list.</p>
+	 * 
+	 * @param urlParamTypes - the list of URL parameter types to add
+	 * @return a reference to itself
+	 * @throws NullPointerException if adding a null list of parameter types
+	 */
 	public UrlFeature addAllParams(List<UrlParamType> urlParamTypes) throws NullPointerException;
+	
+	/**
+	 * <p>Removes the specified URL parameter type.</p>
+	 * 
+	 * @param urlParamType - the URL parameter type to remove
+	 * @return a reference to itself
+	 * @throws NullPointerException if removing a null URL parameter type
+	 */
 	public UrlFeature removeParam(UrlParamType urlParamType) throws NullPointerException;
+	
+	/**
+	 * <p>Indicates if the specified URL parameter type exists.</p>
+	 * 
+	 * @param urlParamType - the URL parameter type to check
+	 * @return true if the specified URL parameter type exists
+	 */
 	public boolean containsParam(UrlParamType urlParamType);
+	
+	/**
+	 * <p>Indicates if all URL parameter types in the list have been added.</p>
+	 * 
+	 * @param urlParamTypes - the list of URL parameter types to check
+	 * @return true if all URL parameter types in the list have been added
+	 */
 	public boolean containsAllParams(List<UrlParamType> urlParamTypes);
+	
+	/**
+	 * <p>Indicates if URL parameter types have been added.</p>
+	 * 
+	 * @return true if URL parameter types have been added or false otherwise
+	 */
 	public boolean hasParams();
+	
+	/**
+	 * <p>Removes all URL parameter types.</p>
+	 */
 	public void clearParams();
 }

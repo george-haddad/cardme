@@ -47,11 +47,29 @@ package net.sourceforge.cardme.vcard.features;
  */
 public interface UidFeature {
 
+	/**
+	 * <p>Retrieves the UID.</p>
+	 * 
+	 * @return the UID or null if not set
+	 */
 	public String getUid();
 	
+	/**
+	 * <p>Sets the UID.</p>
+	 * 
+	 * @param uid - the UID to set
+	 */
 	public void setUid(String uid);
 	
+	/**
+	 * <p>Removes the UID.</p>
+	 */
 	public void clearUid();
 	
+	/**
+	 * <p>Indicates if the UID has been set.</p>
+	 * 
+	 * @return true if the UID has been set or false otherwise
+	 */
 	public boolean hasUid();
 }

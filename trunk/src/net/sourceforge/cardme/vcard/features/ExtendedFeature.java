@@ -80,7 +80,7 @@ public interface ExtendedFeature {
 	/**
 	 * <p>Indicates that there is a value for this extended type.</p>
 	 * 
-	 * @return true if a value exists and false otherwise
+	 * @return true if a value exists or false otherwise
 	 */
 	public boolean hasExtendedValue();
 	

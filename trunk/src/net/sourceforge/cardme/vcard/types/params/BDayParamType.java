@@ -55,6 +55,11 @@ public enum BDayParamType {
 		typeName = _typeName;
 	}
 	
+	/**
+	 * <p>Retrieves the parameter type name.</p>
+	 * 
+	 * @return the parameter type name
+	 */
 	public String getTypeName()
 	{
 		return typeName;

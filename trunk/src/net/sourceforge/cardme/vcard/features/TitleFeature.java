@@ -47,11 +47,29 @@ package net.sourceforge.cardme.vcard.features;
  */
 public interface TitleFeature {
 	
+	/**
+	 * <p>Retrieves the title.</p>
+	 * 
+	 * @return the title or null if none was set
+	 */
 	public String getTitle();
 	
+	/**
+	 * <p>Sets the title.</p>
+	 * 
+	 * @param title - the title to set
+	 */
 	public void setTitle(String title);
 	
+	/**
+	 * <p>Removes the title.</p>
+	 */
 	public void clearTitle();
 	
+	/**
+	 * <p>Indicates if the title has been set.</p>
+	 * 
+	 * @return true if the title has been set or false otherwise
+	 */
 	public boolean hasTitle();
 }

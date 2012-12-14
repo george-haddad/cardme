@@ -86,7 +86,7 @@ public interface CategoriesFeature {
 	 * <p>Indicates if the specified category exists.</p>
 	 * 
 	 * @param category - the category to check
-	 * @return true if the specified category exists and false otherwise
+	 * @return true if the specified category exists or false otherwise
 	 */
 	public boolean containsCategory(String category);
 	
@@ -94,7 +94,7 @@ public interface CategoriesFeature {
 	 * <p>Indicates if the list of categories exists.</p>
 	 * 
 	 * @param categories - the list of categories to check
-	 * @return true if all categories in the list exist and false otherwise
+	 * @return true if all categories in the list exist or false otherwise
 	 */
 	public boolean containsAllCategories(List<String> categories);
 	

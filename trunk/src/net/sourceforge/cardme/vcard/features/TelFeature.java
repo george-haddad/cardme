@@ -39,18 +39,94 @@ import net.sourceforge.cardme.vcard.types.params.TelParamType;
  *
  */
 public interface TelFeature {
-
+	
+	/**
+	 * <p>Retrieves the telephone number.</p>
+	 * 
+	 * @return the telephone number or null if not set
+	 */
 	public String getTelephone();
+	
+	/**
+	 * <p>Sets the telephone number.</p>
+	 * 
+	 * @param telephone - the telephone number to set
+	 */
 	public void setTelephone(String telephone);
+	
+	/**
+	 * <p>Indicates if the telephone number has been set.</p>
+	 * 
+	 * @return true if the telephone number has been set
+	 */
 	public boolean hasTelephone();
 	
+	/**
+	 * <p>Retrieves a list of telephone parameter types.</p>
+	 * 
+	 * @return the list of telephone parameter types
+	 */
 	public List<TelParamType> getParams();
+	
+	/**
+	 * <p>Retrieves the total number of telephone parameter types.</p>
+	 * 
+	 * @return the total number of telephone parameter types
+	 */
 	public int getParamSize();
+	
+	/**
+	 * <p>Adds a telephone parameter type.</p>
+	 *  
+	 * @param telParamType - the telephone parameter type to add
+	 * @return a reference to itself
+	 * @throws NullPointerException if adding a null telephone parameter type
+	 */
 	public TelFeature addParam(TelParamType telParamType) throws NullPointerException;
+	
+	/**
+	 * <p>Adds all telephone parameter types from the list.</p>
+	 * 
+	 * @param telParamTypes - the list of telephone parameter types to add
+	 * @return a reference to itself
+	 * @throws NullPointerException if adding a null list of telephone parameter types
+	 */
 	public TelFeature addAllParams(List<TelParamType> telParamTypes) throws NullPointerException;
+	
+	/**
+	 * <p>Remove the specified telephone parameter type.</p>
+	 * 
+	 * @param telParamType - the telephone parameter type to remove
+	 * @return a reference to itself
+	 * @throws NullPointerException if removing a null telephone parameter type
+	 */
 	public TelFeature removeParam(TelParamType telParamType) throws NullPointerException;
+	
+	/**
+	 * <p>Indicates if the specified telephone parameter type exists.</p>
+	 * 
+	 * @param telParamType - the telephone parameter type to check
+	 * @return true if the telephone parameter type exists or false otherwise
+	 */
 	public boolean containsParam(TelParamType telParamType);
+	
+	/**
+	 * <p>Indicates whether all telephone parameter types in the list exists.</p>
+	 * 
+	 * @param telParamTypes - the list of telephone parameter types to check
+	 * @return true if all telephone parameter types in the list exists or false otherwise
+	 */
 	public boolean containsAllParams(List<TelParamType> telParamTypes);
+	
+	/**
+	 * <p>Indicates if telephone parameter types have been added.</p>
+	 * 
+	 * @return true if telephone parameter types have been added
+	 */
 	public boolean hasParams();
+	
+	/**
+	 * <p>Removes all telephone parameter types.</p>
+	 */
 	public void clearParams();
 }

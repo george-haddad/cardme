@@ -62,6 +62,11 @@ public enum ErrorSeverity {
 		level = _level;
 	}
 	
+	/**
+	 * <p>Retrieves the error severity level.</p>
+	 * 
+	 * @return the error severity level which is one of {@link ErrorSeverity#FATAL}, {@link ErrorSeverity#WARNING} or {@link ErrorSeverity#NONE}
+	 */
 	public int getLevel()
 	{
 		return level;

@@ -67,16 +67,31 @@ public class KeyTextType {
 		extension = _extension;
 	}
 	
+	/**
+	 * <p>Retrieves the IANA key type name.</p>
+	 * 
+	 * @return the IANA key type name
+	 */
 	public String getTypeName()
 	{
 		return typeName;
 	}
 	
+	/**
+	 * <p>Retrieves the IANA key registered name.</p>
+	 * 
+	 * @return the IANA key registered name
+	 */
 	public String getIanaRegisteredName()
 	{
 		return ianaRegisteredName;
 	}
 	
+	/**
+	 * <p>Retrieves the IANA key extension.</p>
+	 * 
+	 * @return the IANA key extension
+	 */
 	public String getExtension()
 	{
 		return extension;

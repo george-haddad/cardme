@@ -72,7 +72,7 @@ public interface AdrFeature {
 	/**
 	 * <p>Indicates if the post office box has been set or not.</p>
 	 * 
-	 * @return true if the post office box has been set and false otherwise
+	 * @return true if the post office box has been set or false otherwise
 	 */
 	public boolean hasPostOfficebox();
 	
@@ -98,7 +98,7 @@ public interface AdrFeature {
 	/**
 	 * <p>Indicates if an extended address was set.</p>
 	 * 
-	 * @return true if an extended address was set and false otherwise
+	 * @return true if an extended address was set or false otherwise
 	 */
 	public boolean hasExtendedAddress();
 	
@@ -124,7 +124,7 @@ public interface AdrFeature {
 	/**
 	 * <p>Indicates if the street address was set.</p>
 	 * 
-	 * @return true if the street address was set and false otherwise
+	 * @return true if the street address was set or false otherwise
 	 */
 	public boolean hasStreetAddress();
 	
@@ -150,7 +150,7 @@ public interface AdrFeature {
 	/**
 	 * <p>Indicates if the locality has been set.</p>
 	 * 
-	 * @return true if the locality has been set and false otherwise
+	 * @return true if the locality has been set or false otherwise
 	 */
 	public boolean hasLocality();
 	
@@ -176,7 +176,7 @@ public interface AdrFeature {
 	/**
 	 * <p>Indicates if the region has been set.</p>
 	 * 
-	 * @return true if the region was set and false otherwise
+	 * @return true if the region was set or false otherwise
 	 */
 	public boolean hasRegion();
 	
@@ -202,7 +202,7 @@ public interface AdrFeature {
 	/**
 	 * <p>Indicates if the postal code has been set.</p>
 	 * 
-	 * @return true if the postal code has been set and false otherwise
+	 * @return true if the postal code has been set or false otherwise
 	 */
 	public boolean hasPostalCode();
 	
@@ -228,7 +228,7 @@ public interface AdrFeature {
 	/**
 	 * <p>Indicates if the country name has been set.</p>
 	 * 
-	 * @return true if the country name has been set and false otherwise
+	 * @return true if the country name has been set or false otherwise
 	 */
 	public boolean hasCountryName();
 	
@@ -292,7 +292,7 @@ public interface AdrFeature {
 	/**
 	 * <p>Indicates if this feature has address parameter types.</p>
 	 * 
-	 * @return true if address parameter types exist and false otherwise
+	 * @return true if address parameter types exist or false otherwise
 	 */
 	public boolean hasParams();
 	
