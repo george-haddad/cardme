@@ -248,164 +248,871 @@ public interface VCard {
 	public FNType getFN();
 	
 	/**
-	 * <p>Sets the FN type, this type should always exist.</p>
+	 * <p>Sets the FN type. This type must be set in the
+	 * VCard and cannot be omitted, it can however be left with
+	 * all empty values</p>
 	 *
 	 * @param formattedName - the formatted name
-	 * @throws NullPointerException
-	 * 	Thrown if the formatted name is null
+	 * @throws NullPointerException if setting a null formatted name
 	 */
 	public void setFN(FNType formattedName) throws NullPointerException;
 	
 	/**
 	 * <p>Returns true if the FN type is set.</p>
 	 *
-	 * @return true if the FN type is set
+	 * @return true if the FN type is set or false otherwise
 	 */
 	public boolean hasFN();
 	
+	/**
+	 * <p>Returns the N type.</p>
+	 * 
+	 * @return the {@link NType}
+	 */
 	public NType getN();
-	public void setN(NType name) throws NullPointerException;
+	
+	/**
+	 * <p>Sets the N type. The N type must be set in the
+	 * VCard and cannot be omitted, it can however be left with
+	 * all empty values.</p>
+	 * 
+	 * @param name - the N type to set.
+	 * @throws NullPointerException if setting a null N type
+	 */
+	public void setN(NType name);
+	
+	/**
+	 * <p>Returns true if the N type has been set.</p>
+	 * 
+	 * @return true if the N type has been set or false otherwise
+	 */
 	public boolean hasN();
 	
+	/**
+	 * <p>Set the Nickname type.</p>
+	 * 
+	 * @param nicknames - the nickname to set
+	 */
 	public void setNickname(NicknameType nicknames);
+	
+	/**
+	 * <p>Returns the Nickname type.</p>
+	 * 
+	 * @return the Nickname type
+	 */
 	public NicknameType getNicknames();
+	
+	/**
+	 * <p>Returns true if the Nickname type has been set.</p>
+	 * 
+	 * @return true if the Nickname type has been set or false otherwise
+	 */
 	public boolean hasNicknames();
+	
+	/**
+	 * <p>Removes the Nickname type.</p>
+	 */
 	public void clearNickname();
 	
+	/**
+	 * <p>Returns a list of Photo types that were added.</p> 
+	 * 
+	 * @return list of Photo types
+	 */
 	public List<PhotoType> getPhotos();
+	
+	/**
+	 * <p>Adds a Photo type.</p>
+	 * 
+	 * @param photo - the Photo type to add
+	 * @throws NullPointerException if adding a null Photo type
+	 */
 	public void addPhoto(PhotoType photo) throws NullPointerException;
+	
+	/**
+	 * <p>Adds a list of Photo types.</p>
+	 * 
+	 * @param photos - the list of Photo types to add
+	 * @throws NullPointerException if adding a null list of Photo types
+	 */
 	public void addAllPhotos(Collection<PhotoType> photos) throws NullPointerException;
+	
+	/**
+	 * <p>Removes the specified Photo type.</p>
+	 * 
+	 * @param photo - the Photo type to remove
+	 * @return true if the specified Photo type existed and was removed
+	 * @throws NullPointerException if removing a null Photo type
+	 */
 	public boolean removePhoto(PhotoType photo) throws NullPointerException;
+	
+	/**
+	 * <p>Returns true if the specified Photo type exists.</p>
+	 * 
+	 * @param photo - the Photo type to check
+	 * @return true if the specified Photo type exists or false otherwise
+	 */
 	public boolean containsPhoto(PhotoType photo);
+	
+	/**
+	 * <p>Returns true this VCard contains Photo types.</p>
+	 * 
+	 * @return true if this VCard contains Photo types
+	 */
 	public boolean hasPhotos();
+	
+	/**
+	 * <p>Removes all Photo types.</p>
+	 */
 	public void clearPhotos();
 	
+	/**
+	 * <p>Returns the BDay type.</p>
+	 * 
+	 * @return the BDay type
+	 */
 	public BDayType getBDay();
+	
+	/**
+	 * <p>Sets the BDay type.</p>
+	 * 
+	 * @param bday - the BDay type to set
+	 */
 	public void setBDay(BDayType bday);
+	
+	/**
+	 * <p>Returns true if this VCard has a BDay type set.</p>
+	 * 
+	 * @return true if the BDay type was set or false otherwise
+	 */
 	public boolean hasBDay();
+	
+	/**
+	 * <p>Removes the BDay type.</p>
+	 */
 	public void clearBDay();
 	
+	/**
+	 * <p>Returns a list of added ADR types.</p>
+	 * 
+	 * @return a list of ADR types
+	 */
 	public List<AdrType> getAdrs();
+	
+	/**
+	 * <p>Adds an ADR type.</p>
+	 * 
+	 * @param adr - the ADR type to add
+	 * @throws NullPointerException if adding a null ADR type
+	 */
 	public void addAdr(AdrType adr) throws NullPointerException;
+	
+	/**
+	 * <p>Adds a list of ADR types.</p>
+	 * 
+	 * @param adrs - the list of ADR types to add
+	 * @throws NullPointerException if adding a null list of ADR types
+	 */
 	public void addAllAdrs(Collection<AdrType> adrs) throws NullPointerException;
+	
+	/**
+	 * <p>Removes the specified ADR type.</p>
+	 * 
+	 * @param adr - the ADR type to remove
+	 * @return true if the ADR type existed and was removed
+	 * @throws NullPointerException if removing a null ADR type
+	 */
 	public boolean removeAdr(AdrType adr) throws NullPointerException;
+	
+	/**
+	 * <p>Returns true if the specified ADR type exists.</p>
+	 * 
+	 * @param address - the ADR type to check
+	 * @return true if the specified ADR type exists
+	 */
 	public boolean containsAdr(AdrType address);
+	
+	/**
+	 * <p>Returns true if this VCard contains ADR types.</p>
+	 * 
+	 * @return true if this VCard contains ADR types
+	 */
 	public boolean hasAdrs();
+	
+	/**
+	 * <p>Removes all ADR types.</p>
+	 */
 	public void clearAdrs();
 	
+	/**
+	 * <p>Returns a list of all LABEL types.</p>
+	 * 
+	 * @return a list of all LABEL types
+	 */
 	public List<LabelType> getLables();
+	
+	/**
+	 * <p>Returns true if the specified LABEL type exists.</p>
+	 * 
+	 * @param label - the specified LABEL type to check
+	 * @return true if the specified LABEL type exists or false otherwise
+	 */
 	public boolean containsLabel(LabelType label);
+	
+	/**
+	 * <p>Removes all LABEL types.</p>
+	 */
 	public void clearLabels();
 	
+	/**
+	 * <p>Returns a list of TEL types.</p>
+	 * 
+	 * @return a list of TEL types
+	 */
 	public List<TelType> getTels();
+	
+	/**
+	 * <p>Adds a TEL type.</p>
+	 * 
+	 * @param tel - the TEL type to add
+	 * @throws NullPointerException if adding a null TEL type
+	 */
 	public void addTel(TelType tel) throws NullPointerException;
+	
+	/**
+	 * <p>Adds a list of TEL types.</p>
+	 * 
+	 * @param tels - the list of TEL types to add
+	 * @throws NullPointerException if adding a null list of TEL types
+	 */
 	public void addAllTels(Collection<TelType> tels) throws NullPointerException;
+	
+	/**
+	 * <p>Removes the specified TEL type.</p>
+	 * 
+	 * @param tel - the TEL type to remove
+	 * @return true if the specified TEL type exists and was removed
+	 * @throws NullPointerException if removing a null TEL type
+	 */
 	public boolean removeTel(TelType tel) throws NullPointerException;
+	
+	/**
+	 * <p>Returns true if the specified TEL type exists.</p>
+	 * 
+	 * @param tel - the TEL type to check
+	 * @return true if the specified TEL type exits or false otherwise
+	 */
 	public boolean containsTel(TelType tel);
+	
+	/**
+	 * <p>Remove all TEL types.</p>
+	 */
 	public void clearTel();
+	
+	/**
+	 * <p>Returns true if this VCard has TEL types.</p>
+	 * 
+	 * @return true if this VCard has TEL type or false otherwise
+	 */
 	public boolean hasTels();
 	
+	/**
+	 * <p>Returns a list of EMAIL types.</p>
+	 * 
+	 * @return list of EMAIL types
+	 */
 	public List<EmailType> getEmails();
+	
+	/**
+	 * <p>Adds an EMAIL type.</p>
+	 * 
+	 * @param email - the EMAIL type to add
+	 * @throws NullPointerException if adding a null EMAIL type
+	 */
 	public void addEmail(EmailType email) throws NullPointerException;
+	
+	/**
+	 * <p>Adds a list of EMAIL types.</p>
+	 * 
+	 * @param emailAddresses - the list of EMAIL types to add
+	 * @throws NullPointerException if adding a null list of EMAIL types
+	 */
 	public void addAllEmails(Collection<EmailType> emailAddresses) throws NullPointerException;
+	
+	/**
+	 * <p>Removes a specified EMAIL type.</p>
+	 * 
+	 * @param email - the EMAIL type to remove
+	 * @return true if the specified EMAIL type exists and was removed
+	 * @throws NullPointerException if removing a null EMAIL type
+	 */
 	public boolean removeEmail(EmailType email) throws NullPointerException;
+	
+	/**
+	 * <p>Returns true if the specified EMAIL type exists.</p>
+	 * 
+	 * @param email - the EMAIL type to check
+	 * @return true if the EMAIL type exists or false otherwise
+	 */
 	public boolean containsEmail(EmailType email);
+	
+	/**
+	 * <p>Returns true if this VCard contains EMAIL types.</p>
+	 * 
+	 * @return true if this VCard contains EMAIL types
+	 */
 	public boolean hasEmails();
+	
+	/**
+	 * <p>Removes all EMAIL types.</p>
+	 */
 	public void clearEmails();
 	
+	
+	/**
+	 * <p>Returns the MAILER type.</p>
+	 * 
+	 * @return the MAILER type
+	 */
 	public MailerType getMailer();
+	
+	/**
+	 * <p>Sets the MAILER type.</p>
+	 * 
+	 * @param mailer - the MAILER type to set
+	 */
 	public void setMailer(MailerType mailer);
+	
+	/**
+	 * <p>Returns true if this VCard has the MAILER type.</p>
+	 * 
+	 * @return true if this VCard has the MAILER type
+	 */
 	public boolean hasMailer();
+	
+	/**
+	 * <p>Removes the MAILER type.</p>
+	 */
 	public void clearMailer();
 	
+	/**
+	 * <p>Returns the TZ type.</p>
+	 * 
+	 * @return the TZ type
+	 */
 	public TzType getTz();
+	
+	/**
+	 * <p>Sets the TZ type.</p>
+	 * 
+	 * @param timeZone - the TZ type to set
+	 */
 	public void setTz(TzType timeZone);
+	
+	/**
+	 * <p>Returns true if this VCard contains the TZ type.</p>
+	 * 
+	 * @return true if this VCard contains the TZ type
+	 */
 	public boolean hasTz();
+	
+	/**
+	 * <p>Removes the TZ type.</p>
+	 */
 	public void clearTz();
 	
+	/**
+	 * <p>Returns the GEO type.</p>
+	 * 
+	 * @return the GEO type
+	 */
 	public GeoType getGeo();
+	
+	/**
+	 * <p>Sets the GEO type.</p>
+	 * 
+	 * @param geo - the GEO type to set
+	 */
 	public void setGeo(GeoType geo);
+	
+	/**
+	 * <p>Returns true if this VCard contains the GEO type.</p>
+	 * 
+	 * @return true if this VCard contains the GEO type
+	 */
 	public boolean hasGeo();
+	
+	/**
+	 * <p>Removes the GEO type.</p>
+	 */
 	public void clearGeo();
 	
+	/**
+	 * <p>Returns the TITLE type.</p>
+	 * 
+	 * @return the TITLE type
+	 */
 	public TitleType getTitle();
+	
+	/**
+	 * <p>Set the TITLE type.</p>
+	 * 
+	 * @param title - the TITLE type to set
+	 */
 	public void setTitle(TitleType title);
+	
+	/**
+	 * <p>Returns true if this VCard contains the TITLE type.</p>
+	 * 
+	 * @return true if this VCard contains the TITLE type
+	 */
 	public boolean hasTitle();
+	
+	/**
+	 * <p>Removes the TITLE type.</p>
+	 */
 	public void clearTitle();
 	
+	/**
+	 * <p>Returns the ROLE type.</p>
+	 * 
+	 * @return the ROLE type
+	 */
 	public RoleType getRole();
+	
+	/**
+	 * <p>Sets the ROLE type.</p>
+	 * 
+	 * @param role - the ROLE type to set
+	 */
 	public void setRole(RoleType role);
+	
+	/**
+	 * <p>Returns true if this VCard contains the ROLE type.</p>
+	 * 
+	 * @return true if this VCard contains the ROLE type
+	 */
 	public boolean hasRole();
+	
+	/**
+	 * <p>Removes the ROLE type.</p>
+	 */
 	public void clearRole();
 	
+	/**
+	 * <p>Returns a list of LOGO types.</p>
+	 * 
+	 * @return a list of LOGO types
+	 */
 	public List<LogoType> getLogos();
+	
+	/**
+	 * <p>Adds a LOGO type.</p>
+	 * 
+	 * @param logo - the LOGO type to add
+	 * @throws NullPointerException if adding a null LOGO type
+	 */
 	public void addLogo(LogoType logo) throws NullPointerException;
+	
+	/**
+	 * <p>Adds a list of LOGO type.</p>
+	 * 
+	 * @param logos - the list of LOGO types to add
+	 * @throws NullPointerException if adding a null list of LOGO types
+	 */
 	public void addAllLogos(Collection<LogoType> logos) throws NullPointerException;
+	
+	/**
+	 * <p>Removes the specified LOGO type.</p>
+	 * 
+	 * @param logo - the LOGO type to remove
+	 * @return true if the specified LOGO type exists and was removed
+	 * @throws NullPointerException if removing a null LOGO type
+	 */
 	public boolean removeLogo(LogoType logo) throws NullPointerException;
+	
+	/**
+	 * <p>Returns true if the specified LOGO type exists.</p>
+	 * 
+	 * @param logo - the LOGO type to check
+	 * @return true if the specified LOGO type exists or false otherwise
+	 */
 	public boolean containsLogo(LogoType logo);
+	
+	/**
+	 * <p>Returns true if this VCard contains LOGO types.</p>
+	 * 
+	 * @return true if this VCard contains LOGO types
+	 */
 	public boolean hasLogos();
+	
+	/**
+	 * <p>Removes all LOGO types.</p>
+	 */
 	public void clearLogos();
 	
+	/**
+	 * <p>Returns a list of AGENT types.</p>
+	 * 
+	 * @return a list of AGENT types
+	 */
 	public List<AgentType> getAgents();
+	
+	/**
+	 * <p>Adds an AGENT type.</p>
+	 * 
+	 * @param agent - the AGENT type to add
+	 * @throws NullPointerException if adding a null AGENT type
+	 */
 	public void addAgent(AgentType agent) throws NullPointerException;
+	
+	/**
+	 * <p>Adds a list of AGENT types.</p>
+	 * 
+	 * @param agents - the list of AGENT types to add
+	 * @throws NullPointerException if adding a null list of AGENT types
+	 */
 	public void addAllAgents(Collection<AgentType> agents) throws NullPointerException;
+	
+	/**
+	 * <p>Removes the specified AGENT type.</p>
+	 * 
+	 * @param agent - the AGENT type to remove
+	 * @return true if the specified AGENT type exists and was removed
+	 * @throws NullPointerException if removing a null AGENT type
+	 */
 	public boolean removeAgent(AgentType agent) throws NullPointerException;
+	
+	/**
+	 * <p>Returns true if the specified AGENT type exists.</p>
+	 * 
+	 * @param agent - the AGENT type to check
+	 * @return true if the specified AGENT type exists or false otherwise
+	 */
 	public boolean containsAgent(AgentType agent);
+	
+	/**
+	 * <p>Returns true if this VCard contains AGENT types.</p>
+	 * 
+	 * @return true if this VCard contains AGENT types
+	 */
 	public boolean hasAgents();
+	
+	/**
+	 * <p>Removes all AGENT types.</p>
+	 */
 	public void clearAgents();
 	
+	/**
+	 * <p>Returns the ORG type.</p>
+	 * 
+	 * @return the ORG type
+	 */
 	public OrgType getOrg();
+	
+	/**
+	 * <p>Sets the ORG type.</p>
+	 * 
+	 * @param organization - the ORG type to set
+	 */
 	public void setOrg(OrgType organization);
+	
+	/**
+	 * <p>Returns true if this VCard contains an ORG type.</p>
+	 * 
+	 * @return true if this VCard contains an ORG type
+	 */
 	public boolean hasOrg();
+	
+	/**
+	 * <p>Removes the ORG type.</p>
+	 */
 	public void clearOrg();
 	
+	/**
+	 * <p>Returns the CATEGORIES type.</p>
+	 * 
+	 * @return the CATEGORIES type
+	 */
 	public CategoriesType getCategories();
+	
+	/**
+	 * <p>Sets the CATEGORIES type.</p>
+	 * 
+	 * @param categories - the CATEGORIES type to set
+	 */
 	public void setCategories(CategoriesType categories);
+	
+	/**
+	 * <p>Returns true if this VCard contains a CATEGORIES type.</p>
+	 * 
+	 * @return true if this VCard contains a CATEGORIES type
+	 */
 	public boolean hasCategories();
+	
+	/**
+	 * <p>Removes the CATEGORIES type.</p>
+	 */
 	public void clearCategories();
 	
+	/**
+	 * <p>Returns a list of NOTE types.</p>
+	 * 
+	 * @return a list of NOTE types
+	 */
 	public List<NoteType> getNotes();
+	
+	/**
+	 * <p>Adds a NOTE type.</p>
+	 * 
+	 * @param note - the NOTE type to add
+	 * @throws NullPointerException if adding a null NOTE type
+	 */
 	public void addNote(NoteType note) throws NullPointerException;
+	
+	/**
+	 * <p>Adds a list of NOTE types.</p>
+	 * 
+	 * @param notes - the list of NOTE types to add
+	 * @throws NullPointerException if adding a null list of NOTE types
+	 */
 	public void addAllNotes(Collection<NoteType> notes) throws NullPointerException;
+	
+	/**
+	 * <p>Removes the specified NOTE type.</p>
+	 * 
+	 * @param note - the NOTE type to remove
+	 * @return true if the specified NOTE type exists and was removed
+	 * @throws NullPointerException if removing a null NOTE type
+	 */
 	public boolean removeNote(NoteType note) throws NullPointerException;
+	
+	/**
+	 * <p>Returns true if the specified NOTE type exists.</p>
+	 * 
+	 * @param note - the NOTE type to check
+	 * @return true if the specified NOTE type exists
+	 */
 	public boolean containsNote(NoteType note);
+	
+	/**
+	 * <p>Returns true if this VCard contains NOTE types.</p>
+	 * 
+	 * @return true if this VCard contains NOTE types
+	 */
 	public boolean hasNotes();
+	
+	/**
+	 * <p>Removes all NOTE types.</p>
+	 */
 	public void clearNotes();
 	
+	/**
+	 * <p>Returns the PRODID type.</p>
+	 * 
+	 * @return the PRODID type
+	 */
 	public ProdIdType getProdId();
+	
+	/**
+	 * <p>Sets the PRODID type.</p>
+	 * 
+	 * @param productId - the PRODID type to set
+	 */
 	public void setProdId(ProdIdType productId);
+	
+	/**
+	 * <p>Returns true if this VCard contains a PRODID type.</p>
+	 * 
+	 * @return true if this VCard contains a PRODID type
+	 */
 	public boolean hasProdId();
+	
+	/**
+	 * <p>Removes the PRODID type.</p>
+	 */
 	public void clearProdId();
 	
+	/**
+	 * <p>Returns the REV type.</p>
+	 * 
+	 * @return the REV type
+	 */
 	public RevType getRev();
+	
+	/**
+	 * <p>Sets the REV type.</p>
+	 * 
+	 * @param revision - the REV type to set
+	 */
 	public void setRev(RevType revision);
+	
+	/**
+	 * <p>Returns true if this VCard contains a REV type.</p>
+	 * 
+	 * @return true if this VCard contains a REV type
+	 */
 	public boolean hasRev();
+	
+	/**
+	 * <p>Removes the REV type.</p>
+	 */
 	public void clearRev();
 	
+	/**
+	 * <p>Returns the SORTSTRING type.</p>
+	 * 
+	 * @return the SORTSTRING type
+	 */
 	public SortStringType getSortString();
+	
+	/**
+	 * <p>Sets the SORTSTRING type.</p>
+	 * 
+	 * @param sortString - the SORTSTRING type to set
+	 */
 	public void setSortString(SortStringType sortString);
+	
+	/**
+	 * <p>Returns true if this VCard contains a SORTSRING type.</p>
+	 * 
+	 * @return true if this VCard contains a SORTSTRING type
+	 */
 	public boolean hasSortString();
+	
+	/**
+	 * <p>Removes the SORTSTRING type.</p>
+	 */
 	public void clearSortString();
 	
+	/**
+	 * <p>Returns a list of SOUND types.</p>
+	 * 
+	 * @return a list of SOUND types.</p>
+	 */
 	public List<SoundType> getSounds();
+	
+	/**
+	 * <p>Adds a SOUND type.</p>
+	 * 
+	 * @param sound - the SOUND type to add
+	 * @throws NullPointerException if adding a null SOUND type
+	 */
 	public void addSound(SoundType sound) throws NullPointerException;
+	
+	/**
+	 * <p>Adds a list of SOUND types.</p>
+	 * 
+	 * @param sounds - the list of SOUND types to add
+	 * @throws NullPointerException if adding a null list of SOUND types
+	 */
 	public void addAllSounds(Collection<SoundType> sounds) throws NullPointerException;
+	
+	/**
+	 * <p>Removes the specified SOUND type.</p>
+	 * 
+	 * @param sound - the SOUND type to remove
+	 * @return true if the specified SOUND type exists and was removed
+	 * @throws NullPointerException if removing a null SOUND type
+	 */
 	public boolean removeSound(SoundType sound) throws NullPointerException;
+	
+	/**
+	 * <p>Returns true if the specified SOUND type exists.</p>
+	 * 
+	 * @param sound - the SOUND type to check
+	 * @return true if the specified SOUND type exists or false otherwise
+	 */
 	public boolean containsSound(SoundType sound);
+	
+	/**
+	 * <p>Return true if this VCard contains SOUND types.</p>
+	 * 
+	 * @return true if this VCard contains SOUND types
+	 */
 	public boolean hasSounds();
+	
+	/**
+	 * <p>Removes all SOUND types.</p>
+	 */
 	public void clearSounds();
 	
+	/**
+	 * <p>Returns the UID type.</p>
+	 * 
+	 * @return the UID type
+	 */
 	public UidType getUid();
+	
+	/**
+	 * <p>Sets the UID type.</p>
+	 * 
+	 * @param uid - the UID type to set
+	 */
 	public void setUid(UidType uid);
+	
+	/**
+	 * <p>Returns true if this VCard contains the UID type.</p>
+	 * 
+	 * @return true if this VCard contains the UID type
+	 */
 	public boolean hasUid();
+	
+	/**
+	 * <p>Removes the UID type.</p>
+	 */
 	public void clearUid();
 	
+	/**
+	 * <p>Returns a list of URL types.</p>
+	 * 
+	 * @return a list of URL types
+	 */
 	public List<UrlType> getUrls();
+	
+	/**
+	 * <p>Adds a URL type.</p>
+	 * 
+	 * @param url - the URL type to add
+	 * @throws NullPointerException if adding a null URL type
+	 */
 	public void addUrl(UrlType url) throws NullPointerException;
+	
+	/**
+	 * <p>Adds a list of URL types.</p>
+	 * 
+	 * @param urls - the list of URL types to add
+	 * @throws NullPointerException if adding a null list of URL types
+	 */
 	public void addAllUrls(Collection<UrlType> urls) throws NullPointerException;
+	
+	/**
+	 * <p>Removes the specified URL type.</p>
+	 * 
+	 * @param url - the URL type to remove
+	 * @return true if the specified URL type exists and was removed
+	 * @throws NullPointerException if removing a null URL type
+	 */
 	public boolean removeUrl(UrlType url) throws NullPointerException;
+	
+	/**
+	 * <p>Returns true if the specified URL type exists.</p>
+	 * 
+	 * @param url -the URL type to check
+	 * @return true if the specified URL type exists or false otherwise
+	 */
 	public boolean containsUrl(UrlType url);
+	
+	/**
+	 * <p>Returns true if this VCard contains URL types.</p>
+	 * 
+	 * @return true if this VCard contains URL types
+	 */
 	public boolean hasUrls();
+	
+	/**
+	 * <p>Removes all URL types.</p>
+	 */
 	public void clearUrls();
 	
 	public List<ImppType> getIMPPs();
