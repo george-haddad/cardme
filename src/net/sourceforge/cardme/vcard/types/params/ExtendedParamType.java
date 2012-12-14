@@ -16,7 +16,11 @@ import net.sourceforge.cardme.vcard.arch.VCardTypeName;
  * @author George El-Haddad
  * <br/>
  * Aug 7, 2012
- *
+ * 
+ * <p>This is a special parameter type which is why it is not declared as an Enum like the other.
+ * One thing that sets it apart from the others is that the type name and type value can be set
+ * to a custom value. The typeValue can be left blank and the parent VCard is set to indicate which
+ * VCard feature this extended parameter type belongs to.</p>
  */
 public class ExtendedParamType implements VCardParamType, Comparable<ExtendedParamType>, Cloneable, Serializable {
 	

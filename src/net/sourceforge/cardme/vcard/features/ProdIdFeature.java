@@ -47,11 +47,29 @@ package net.sourceforge.cardme.vcard.features;
  */
 public interface ProdIdFeature {
 	
+	/**
+	 * <p>Retrieves the product id.</p>
+	 * 
+	 * @return the product id or null if not set
+	 */
 	public String getProdId();
 	
+	/**
+	 * <p>Sets the product id.</p>
+	 * 
+	 * @param prodId - the product id to set
+	 */
 	public void setProdId(String prodId);
 	
+	/**
+	 * <p>Removes the product id.</p>
+	 */
 	public void clearProdId();
 	
+	/**
+	 * <p>Indicates if the product id has been set.</p>
+	 * 
+	 * @return true if the product id has been set or false otherwise
+	 */
 	public boolean hasProdId();
 }

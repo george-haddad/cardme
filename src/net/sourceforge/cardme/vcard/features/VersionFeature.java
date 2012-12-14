@@ -21,7 +21,17 @@ import net.sourceforge.cardme.vcard.arch.VCardVersion;
  */
 public interface VersionFeature {
 	
+	/**
+	 * <p>Retrieves the VCard version number.</p>
+	 * 
+	 * @return the VCard version number or {@link VCardVersion#V3_0} if not set
+	 */
 	public VCardVersion getVersion();
 	
+	/**
+	 * <p>Set the VCard version number.</p>
+	 * 
+	 * @param version - the VCard version number to set
+	 */
 	public void setVersion(VCardVersion version);
 }

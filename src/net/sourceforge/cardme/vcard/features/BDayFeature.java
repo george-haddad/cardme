@@ -95,7 +95,7 @@ public interface BDayFeature {
 	/**
 	 * <p>Indicates if the birth date parameter type has been set.</p>
 	 * 
-	 * @return true if the birth date parameter type was set and false otherwise
+	 * @return true if the birth date parameter type was set or false otherwise
 	 */
 	public boolean hasParam();
 	

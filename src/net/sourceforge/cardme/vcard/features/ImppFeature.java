@@ -82,7 +82,7 @@ public interface ImppFeature {
 	/**
 	 * <p>Indicates if the {@link URI} has been set.</p>
 	 * 
-	 * @return true if the {@link URI} has been set and false otherwise
+	 * @return true if the {@link URI} has been set or false otherwise
 	 */
 	public boolean hasUri();
 	
@@ -129,7 +129,7 @@ public interface ImppFeature {
 	 * <p>Indicates if the specified IMPP parameter type exists.</p>
 	 * 
 	 * @param imppParamType - the IMPP parameter type to check
-	 * @return true if the specified IMPP parameter type exists and false otherwise
+	 * @return true if the specified IMPP parameter type exists or false otherwise
 	 */
 	public boolean containsParam(ImppParamType imppParamType);
 	
@@ -144,7 +144,7 @@ public interface ImppFeature {
 	/**
 	 * <p>Indicates if IMPP parameter types have been added.</p>
 	 * 
-	 * @return true if IMPP parameter types exist and false otherwise
+	 * @return true if IMPP parameter types exist or false otherwise
 	 */
 	public boolean hasParams();
 	

@@ -46,12 +46,30 @@ package net.sourceforge.cardme.vcard.features;
  * </p>
  */
 public interface ProfileFeature {
-
+	
+	/**
+	 * <p>Retrieves the profile.</p>
+	 * 
+	 * @return the profile or null if not set
+	 */
 	public String getProfile();
 	
+	/**
+	 * <p>Sets the profile.</p>
+	 * 
+	 * @param profile - the profile to set
+	 */
 	public void setProfile(String profile);
 	
+	/**
+	 * <p>Indicates if the profile has been set.</p>
+	 * 
+	 * @return true if the profile has been set or false otherwise
+	 */
 	public boolean hasProfile();
 	
+	/**
+	 * <p>Removes the profile.</p>
+	 */
 	public void clearProfile();
 }

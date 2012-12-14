@@ -47,11 +47,29 @@ package net.sourceforge.cardme.vcard.features;
  */
 public interface SortStringFeature {
 
+	/**
+	 * <p>Retrieves the sort string.</p>
+	 * 
+	 * @return the sort string or null if not set
+	 */
 	public String getSortString();
 	
+	/**
+	 * <p>Sets the sort string.</p>
+	 * 
+	 * @param sortString - the sort string to set
+	 */
 	public void setSortString(String sortString);
 	
+	/**
+	 * <p>Removes the sort string.</p>
+	 */
 	public void clearSortString();
 	
+	/**
+	 * <p>Indicates if the sort string has been set.</p>
+	 * 
+	 * @return true if the sort string has been set or false otherwise
+	 */
 	public boolean hasSortString();
 }

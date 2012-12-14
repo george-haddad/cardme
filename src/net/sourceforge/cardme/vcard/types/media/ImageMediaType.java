@@ -97,16 +97,31 @@ public class ImageMediaType {
 		extension = _extension;
 	}
 	
+	/**
+	 * <p>Retrieves the IANA image media type name.</p>
+	 * 
+	 * @return the IANA image media type name
+	 */
 	public String getTypeName()
 	{
 		return typeName;
 	}
 	
+	/**
+	 * <p>Retrieves the IANA image media registered name.</p>
+	 * 
+	 * @return the IANA image media registered name
+	 */
 	public String getIanaRegisteredName()
 	{
 		return ianaRegisteredName;
 	}
 	
+	/**
+	 * <p>Retrieves the IANA image media extension.</p>
+	 * 
+	 * @return the IANA image media extension
+	 */
 	public String getExtension()
 	{
 		return extension;

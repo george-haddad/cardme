@@ -53,27 +53,93 @@ import net.sourceforge.cardme.vcard.types.media.ImageMediaType;
  */
 public interface PhotoFeature {
 	
+	/**
+	 * <p>Retrieves the photo as an array of bytes.</p>
+	 * 
+	 * @return the photo as an array of bytes or null if none was set
+	 */
 	public byte[] getPhoto();
 	
+	/**
+	 * <p>Sets the photo as an array of bytes.</p>
+	 * 
+	 * @param photo - the photo to be set
+	 */
 	public void setPhoto(byte[] photo);
 	
+	/**
+	 * <p>Indicates whether a photo has been set; either
+	 * as an array of bytes or as a {@link URI}.</p>
+	 * 
+	 * @return true if a photo was set or false otherwise
+	 */
 	public boolean hasPhoto();
 	
+	/**
+	 * <p>This will remove the photo (array of bytes and the URI).</p>
+	 */
 	public void clearPhoto();
 	
+	/**
+	 * <p>Retrieves the photo as a {@link URI} if one was set.</p>
+	 * 
+	 * @return the {@link URI} of the photo if one was set
+	 */
 	public URI getPhotoURI();
 	
+	/**
+	 * <p>Sets the {@link URI} of the photo.</p>
+	 * 
+	 * @param photoUri - the {@link URI} of the photo
+	 */
 	public void setPhotoURI(URI photoUri);
 	
+	/**
+	 * <p>Indicates if the photo is represented by a {@link URI}.
+	 * Note that if you set the photo as bytes and as a URI then
+	 * this will return true. It is recommended to set the photo
+	 * as one or the other unless you know what you are doing.</p>
+	 *
+	 * @return true if the {@link URI} of the photo has been set
+	 */
 	public boolean isURI();
 	
+	/**
+	 * <p>Sets the {@link URL} of the photo. This eventually
+	 * just calls {@link URL#toURI()} internally.</p>
+	 * 
+	 * @param photoUrl - the {@link URL} of the photo
+	 * @throws URISyntaxException if there is a syntax error in the {@link URL}
+	 */
 	public void setPhotoURL(URL photoUrl) throws URISyntaxException;
 	
+	/**
+	 * <p>Retrieves the {@link URL} of the photo. This eventually
+	 * just calls {@link URI#toURL()} internally.</p>
+	 * 
+	 * @return the {@link URL} of the photo
+	 * @throws MalformedURLException if the URL is malformed
+	 */
 	public URL getPhotoURL() throws MalformedURLException;
 	
+	/**
+	 * <p>Retrieves the IANA registered media type of this photo.</p>
+	 *  
+	 * @return the IANA registered media type
+	 */
 	public ImageMediaType getImageMediaType();
 	
+	/**
+	 * <p>Sets the IANA registered media type for this photo.</p>
+	 * 
+	 * @param imageMediaType - the IANA registered media type
+	 */
 	public void setImageMediaType(ImageMediaType imageMediaType);
 	
+	/**
+	 * <p>Indicates whether an IANA registered media type has been set.</p>
+	 * 
+	 * @return true if an IANA registered media type was set or false otherwise
+	 */
 	public boolean hasImageMediaType();
 }

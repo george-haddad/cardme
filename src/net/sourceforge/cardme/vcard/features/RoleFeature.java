@@ -46,12 +46,30 @@ package net.sourceforge.cardme.vcard.features;
  * </p>
  */
 public interface RoleFeature {
-
+	
+	/**
+	 * <p>Retrieves the role.</p>
+	 * 
+	 * @return the role or null if not set
+	 */
 	public String getRole();
 	
+	/**
+	 * <p>Sets the role.</p>
+	 * 
+	 * @param role - the role to set
+	 */
 	public void setRole(String role);
 	
+	/**
+	 * <p>Removes the role.</p>
+	 */
 	public void clearRole();
 	
+	/**
+	 * <p>Indicates if the role has been set.</p>
+	 * 
+	 * @return true if the role has been set or false otherwise
+	 */
 	public boolean hasRole();
 }

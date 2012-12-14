@@ -67,7 +67,7 @@ public interface EmailFeature {
 	/**
 	 * <p>Indicates if the email address has been set.</p>
 	 * 
-	 * @return true if the email address was set and false otherwise
+	 * @return true if the email address was set or false otherwise
 	 */
 	public boolean hasEmail();
 	
@@ -116,7 +116,7 @@ public interface EmailFeature {
 	 * <p>Indicates if the specified email parameter type exists.</p>
 	 * 
 	 * @param emailParamType - the email parameter type to check
-	 * @return true if the specified email parameter type exists and false otherwise
+	 * @return true if the specified email parameter type exists or false otherwise
 	 */
 	public boolean containsParam(EmailParamType emailParamType);
 	
@@ -124,14 +124,14 @@ public interface EmailFeature {
 	 * <p>Indicates if at least one of the email parameter types in the list exists.</p>
 	 * 
 	 * @param emailParamTypes - the list of email parameter types to check
-	 * @return true if at least one of the email parameter types in the list exists and false otherwise
+	 * @return true if at least one of the email parameter types in the list exists or false otherwise
 	 */
 	public boolean containsAllParams(List<EmailParamType> emailParamTypes);
 	
 	/**
 	 * <p>Indicates if at least one email parameter types exist.</p>
 	 * 
-	 * @return true if at least one email parameter type exists and false otherwise
+	 * @return true if at least one email parameter type exists or false otherwise
 	 */
 	public boolean hasParams();
 	

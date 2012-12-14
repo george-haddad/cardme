@@ -74,7 +74,7 @@ public interface KeyFeature {
 	/**
 	 * <p>Indicates whether the key as been set or not.</p>
 	 * 
-	 * @return true if the key has been set and false otherwise
+	 * @return true if the key has been set or false otherwise
 	 */
 	public boolean hasKey();
 	
@@ -102,7 +102,7 @@ public interface KeyFeature {
 	 * <p>Indicates whether a {@link KeyTextType} has been set
 	 * for this key.</p>
 	 * 
-	 * @return true if a {@link KeyTextType} has been set and false otherwise
+	 * @return true if a {@link KeyTextType} has been set or false otherwise
 	 */
 	public boolean hasKeyTextType();
 }
