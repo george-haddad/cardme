@@ -1115,37 +1115,204 @@ public interface VCard {
 	 */
 	public void clearUrls();
 	
+	/**
+	 * <p>Retrieves a list of IMPP type.</p>
+	 * 
+	 * @return a list of IMPP types or null if not set.</p>
+	 */
 	public List<ImppType> getIMPPs();
+	
+	/**
+	 * <p>Adds an IMPP type.</p>
+	 * 
+	 * @param impp - the IMPP type
+	 * @throws NullPointerException if adding a null IMPP type
+	 */
 	public void addImpp(ImppType impp) throws NullPointerException;
+	
+	/**
+	 * <p>Adds a list of IMPP types.</p>
+	 * 
+	 * @param impps - the list of IMPP types to add.
+	 */
 	public void addAllImpp(Collection<ImppType> impps);
+	
+	/**
+	 * <p>Removes the specified IMPP type.</p>
+	 * 
+	 * @param impp - the IMPP type to remove
+	 * @return true if the IMPP type exists and was removed
+	 * @throws NullPointerException if removing a null IMPP type
+	 */
 	public boolean removeImpp(ImppType impp) throws NullPointerException;
-	public boolean containsImpp(ImppType impp) throws NullPointerException;
+	
+	/**
+	 * <p>Indicates if the specified IMPP type exists.</p>
+	 * 
+	 * @param impp - the IMPP type to check
+	 * @return true if the specified IMPP type exists
+	 */
+	public boolean containsImpp(ImppType impp);
+	
+	/**
+	 * <p>Indicates if this VCard has IMPP types.</p>
+	 * 
+	 * @return true if this VCard has IMPP types or false otherwise
+	 */
 	public boolean hasImpps();
+	
+	/**
+	 * <p>Removes all IMPP types.</p>
+	 */
 	public void clearImpp();
 	
+	/**
+	 * <p>Retrieves the Version type of this VCard.</p>
+	 * 
+	 * @return the Version type of this VCard
+	 */
 	public VersionType getVersion();
+	
+	/**
+	 * <p>Sets the Version type.</p>
+	 * 
+	 * @param version - the Version type to set
+	 * @throws NullPointerException if setting a null Version type
+	 */
 	public void setVersion(VersionType version) throws NullPointerException;
 	
+	/**
+	 * <p>Retrieves the Class type.</p>
+	 * 
+	 * @return the Class type or null if not set
+	 */
 	public ClassType getSecurityClass();
+	
+	/**
+	 * <p>Sets the Class type.</p>
+	 * 
+	 * @param securityClass - the Class type to set
+	 */
 	public void setSecurityClass(ClassType securityClass);
+	
+	/**
+	 * <p>Indicates if this VCard has a Class type set.</p>
+	 * 
+	 * @return true if this VCard has a Class type set or false otherwise
+	 */
 	public boolean hasSecurityClass();
+	
+	/**
+	 * <p>Removes the Class type.</p>
+	 */
 	public void clearSecurityClass();
 	
+	/**
+	 * <p>Retrieves a list of Key types.</p>
+	 * 
+	 * @return a list of Key types or null if none set.
+	 */
 	public List<KeyType> getKeys();
+	
+	/**
+	 * <p>Adds a Key type.</p>
+	 * 
+	 * @param key - the Key type to add
+	 * @throws NullPointerException if adding a null Key type
+	 */
 	public void addKey(KeyType key) throws NullPointerException;
+	
+	/**
+	 * <p>Adds a list of Key types.</p>
+	 * 
+	 * @param keys - the list of Key type to add
+	 * @throws NullPointerException if adding a null list of Key types
+	 */
 	public void addAllKeys(Collection<KeyType> keys) throws NullPointerException;
+	
+	/**
+	 * <p>Removes the specified Key type.</p>
+	 * 
+	 * @param key - the Key type to remove
+	 * @return true if the specified Key type exists and was removed
+	 * @throws NullPointerException if removing a null Key type
+	 */
 	public boolean removeKey(KeyType key) throws NullPointerException;
+	
+	/**
+	 * <p>Indicates if this VCard contains the specified Key type.</p>
+	 * 
+	 * @param key - the Key type to check
+	 * @return true if this VCard contains the specified Key type or false otherwise
+	 */
 	public boolean containsKey(KeyType key);
+	
+	/**
+	 * <p>Indicates if this VCard has Key types.</p>
+	 * 
+	 * @return true if this VCard has Key types
+	 */
 	public boolean hasKeys();
+	
+	/**
+	 * <p>Removes all Key types.</p>
+	 */
 	public void clearKeys();
 	
+	/**
+	 * <p>Retrieves a list of Extended types.</p>
+	 * 
+	 * @return a list of Extended types or null if none set
+	 */
 	public List<ExtendedType> getExtendedTypes();
+	
+	/**
+	 * <p>Adds an Extended type.</p>
+	 * 
+	 * @param extension - the Extended type to add
+	 * @throws NullPointerException if adding a null Extended type
+	 */
 	public void addExtendedType(ExtendedType extension) throws NullPointerException;
+	
+	/**
+	 * <p>Adds a list of Extended types.</p>
+	 * 
+	 * @param extensions - the list of Extended types to add
+	 * @throws NullPointerException if adding a null list of Extended types
+	 */
 	public void addAllExtendedTypes(Collection<ExtendedType> extensions) throws NullPointerException;
+	
+	/**
+	 * <p>Removes the specified Extended type.</p>
+	 * 
+	 * @param extension - the Extended type to remove
+	 * @return true if the specified Extended type exists and was removed
+	 * @throws NullPointerException if removing a null Extended type
+	 */
 	public boolean removeExtendedType(ExtendedType extension) throws NullPointerException;
+	
+	/**
+	 * <p>Returns true if the specified Extended type exists.</p>
+	 * 
+	 * @param extension - the Extended type to check
+	 * @return true if the specified extended type exists
+	 */
 	public boolean containsExtendedType(ExtendedType extension);
+	
+	/**
+	 * <p>Indicates if this VCard has Extended types.</p>
+	 * 
+	 * @return true if this VCard has Extended types or false otherwise
+	 */
 	public boolean hasExtendedTypes();
+	
+	/**
+	 * <p>Removes all Extended types.</p>
+	 */
 	public void clearExtendedTypes();
 	
+	/**
+	 * <p>Removes ALL types including mandatory types BEGIN, VERSION and END</p>
+	 */
 	public void clear();
 }

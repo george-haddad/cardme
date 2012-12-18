@@ -75,8 +75,8 @@ public final class ISOUtils {
 	 * formatted according to the timezone in the Calendar object.
 	 * </p>
 	 * 
-	 * @param time the date/datetime
-	 * @param format the date format to use
+	 * @param - time the date/datetime
+	 * @param - format the date format to use
 	 * @return the formatted date
 	 */
 	public static String formatISO8601Date(Calendar time, ISOFormat format) {
@@ -155,8 +155,8 @@ public final class ISOUtils {
 	 * be either basic or extended format.
 	 * </p>
 	 * 
-	 * @param timeZone the timezone to format
-	 * @param extended true to use "extended" format, false not to. Extended
+	 * @param - timeZone the timezone to format
+	 * @param - extended true to use "extended" format, false not to. Extended
 	 *  format will put a colon between the hour and minute.
 	 * @return the formatted timezone (e.g. "+0530" or "+05:30")
 	 */
@@ -191,7 +191,7 @@ public final class ISOUtils {
 	 * Parses a date that's in ISO8601 format.
 	 * </p>
 	 * 
-	 * @param dateStr the date string (e.g. "2012-07-01T10:31:22+02:00")
+	 * @param - dateStr the date string (e.g. "2012-07-01T10:31:22+02:00")
 	 * @return the parsed date (converted to the local timezone)
 	 * @throws ParseException if there's a problem parsing the date
 	 * @throws IllegalArgumentException if the date string is not recognized as

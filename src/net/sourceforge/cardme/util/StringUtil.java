@@ -51,9 +51,9 @@ public final class StringUtil {
 	 * <p>Counts how many times an instance of a specified character occurs in the
 	 * target string.</p>
 	 * 
-	 * @param target
-	 * @param instance
-	 * @return int
+	 * @param - the target string to check
+	 * @param - the character to count the number of instances of
+	 * @return the total number of instances of <code>instance</code> in <code>target</code>
 	 */
 	public static int countInstanceOf(String target, char instance)
 	{
@@ -64,9 +64,9 @@ public final class StringUtil {
 	 * <p>Counts how many times an instance of a specified substring occurs in the
 	 * target string.</p>
 	 * 
-	 * @param target
-	 * @param instance
-	 * @return int
+	 * @param - the target string to check
+	 * @param - the character to count the number of instances of
+	 * @return the total number of instances of <code>instance</code> in <code>target</code>
 	 */
 	public static int countInstanceOf(String target, String instance)
 	{
@@ -95,9 +95,8 @@ public final class StringUtil {
 	 * <p>Given an array of bytes, it will return the representation as a string of hex data.
 	 * This is primarily useful when needing to display encrypted data as a readable string.</p>
 	 * 
-	 * @param bytes
-	 * 	- the bytes to convert to hex
-	 * @return {@link String}
+	 * @param bytes - the bytes to convert to hex
+	 * @return a hex representation of the given byte array <code>bytes</code>
 	 */
 	public static String toHexString(byte[] bytes)
 	{
@@ -113,9 +112,8 @@ public final class StringUtil {
 	/**
 	 * <p>Returns a formatted string in the java style exception format.</p>
 	 * 
-	 * @param ex
-	 * 	- the exception to format
-	 * @return {@link String}
+	 * @param ex - the exception to format
+	 * @return the specified exception <code>ex</code> as a formatted text {@link String}
 	 */
 	public static String formatException(Throwable ex)
 	{
@@ -135,14 +133,10 @@ public final class StringUtil {
 	/**
 	 * <p>Given a String it will pad it to the specified length.</p>
 	 *  
-	 * @param string
-	 * 	- the string to pad
-	 * @param length
-	 * 	- the amount of characters to pad
-	 * @param charToPad
-	 * 	- the pad character to use
-	 * @return {@link String}
-	 * 	- the padded string
+	 * @param string - the string to pad
+	 * @param length - the amount of characters to pad
+	 * @param charToPad - the pad character to use
+	 * @return the padded string
 	 */
 	public static String padStringWith(String string, int length, char charToPad)
 	{
@@ -165,8 +159,8 @@ public final class StringUtil {
 	 * <p>Returns an empty string if the specified string is null.
 	 * and returns the same string if it's not.</p>
 	 * 
-	 * @param str
-	 * @return {@link String}
+	 * @param str - the string to return
+	 * @return the specified {@link String} or empty {@link String} if null
 	 */
 	public static final String getString(String str)
 	{
@@ -177,9 +171,9 @@ public final class StringUtil {
 	 * <p>Returns a specified string <code>nullString</code> if the given string is null.
 	 * and returns the same string if it's not.</p>
 	 * 
-	 * @param str
-	 * @param nullString
-	 * @return {@link String}
+	 * @param str - the string to return
+	 * @param nullString - the specified {@link String} to return if <code>str</code> is null
+	 * @return the specified {@link String} or <code>nullString</code> if null
 	 */
 	public static final String getString(String str, String nullString)
 	{
