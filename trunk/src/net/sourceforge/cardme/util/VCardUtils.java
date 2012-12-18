@@ -105,6 +105,10 @@ public final class VCardUtils {
 		"\\:"
 	};
 	
+	/*
+	 * Geographical positioning number formatter. Set to US locale to avoid
+	 * systems set to different locales from corrupting the format.
+	 */
 	private static NumberFormat GEO_NUM_FORMATTER = NumberFormat.getNumberInstance(Locale.US);
 	
 	static {
@@ -115,9 +119,6 @@ public final class VCardUtils {
 		GEO_NUM_FORMATTER.setGroupingUsed(false);
 	}
 	
-	/**
-	 * <p>Private constructor.</p>
-	 */
 	private VCardUtils() {
 		
 	}
@@ -127,8 +128,8 @@ public final class VCardUtils {
 	 * one of the following characters defined in the constant char[]
 	 * of {@link #NEED_ESCAPING}.</p>
 	 *
-	 * @param text
-	 * @return boolean
+	 * @param text - the {@link String} to check
+	 * @return true if the given {@link String} requires escaping or false otherwise
 	 */
 	public static boolean needsEscaping(String text)
 	{
@@ -148,8 +149,8 @@ public final class VCardUtils {
 	 * one of the following characters defined in the constant String[]
 	 * of {@link #NEED_UNESCAPING}.</p>
 	 *
-	 * @param text
-	 * @return boolean
+	 * @param text - the {@link String} to check
+	 * @return true if the given {@link String} requires un-escaping or false otherwise
 	 */
 	public static boolean needsUnEscaping(String text)
 	{
@@ -165,10 +166,21 @@ public final class VCardUtils {
 	}
 	
 	/**
-	 * <p>Effectively un-escapes a string, performs the reverse of {@link #escapeString(String)}.</p>
+	 * <p>Effectively un-escapes a string, performs the reverse of {@link #escapeString(String)}.
+	 * The characters the get unescaped are as follows:
+	 * <ul>
+	 * 	<li>\\n -> \n</li>
+	 * 	<li>\\r -> r</li>
+	 * 	<li>\\N ->\N</li>
+	 * 	<li>\\; -> \</li>
+	 * 	<li>\, -> ,</li>
+	 * 	<li>\; -> ;</li>
+	 * 	<li>\: -> :</li>
+	 * </ul>
+	 * </p>
 	 *
-	 * @param text
-	 * @return {@link String}
+	 * @param text - the {@link String} to un-escape
+	 * @return the un-escaped {@link String}
 	 */
 	public static String unescapeString(String text)
 	{
@@ -190,14 +202,16 @@ public final class VCardUtils {
 	 * <p>Escapes special characters in a string to be suitable for SQL.
 	 * Characters that are escaped are the following:
 	 * <ul>
-	 * 	<li><b>EOL</b> -> \n or \N</li> 
-	 * 	<li><b>\</b> -> \\</li>
-	 * 	<li><b>,</b> -> \,</li>
-	 * 	<li><b>;</b> -> \;</li>
+	 * 	<li>\n -> \\n</li>
+	 * 	<li>\N -> \\N</li> 
+	 * 	<li>\ -> \\</li>
+	 * 	<li>, -> \,</li>
+	 * 	<li>; -> \;</li>
+	 * 	<li>: -> \:</li>
 	 * </p>
 	 * 
-	 * @param text
-	 * @return {@link String}
+	 * @param text - the {@link String} to escape
+	 * @return a copy of the {@link String} fully escaped
 	 */
 	public static String escapeString(String text)
 	{
@@ -266,8 +280,8 @@ public final class VCardUtils {
 	 * <p>Returns true if the given String <code>line</code> is greater than the maximum allowed
 	 * characters needed for folding (75 chars per line excluding CRLF.)</p>
 	 * 
-	 * @param line
-	 * @return boolean
+	 * @param line - the {@link String} to check
+	 * @return true if the given {@link String} needs folding according to the MIME_DIR folding scheme
 	 */
 	public static boolean needsFolding(String line)
 	{
@@ -279,9 +293,9 @@ public final class VCardUtils {
 	 * characters needed for folding as specified by <code>foldingScheme</code> excluding
 	 * the CRLF at the end.</p>
 	 *
-	 * @param line
-	 * @param foldingScheme
-	 * @return boolean
+	 * @param line - the {@link String} to check
+	 * @param foldingScheme - the folding scheme to use for checking
+	 * @return true if the given {@link String} needs folding according to the specified folding scheme
 	 */
 	public static boolean needsFolding(String line, FoldingScheme foldingScheme)
 	{
@@ -293,9 +307,9 @@ public final class VCardUtils {
 	 * characters needed for folding as specified by <code>foldingScheme</code> excluding
 	 * the CRLF at the end.</p>
 	 *
-	 * @param line
-	 * @param maxChars
-	 * @return boolean
+	 * @param line - the {@link String} to check
+	 * @param maxChars - the maximum number of characters allowed before folding
+	 * @return true if the length of the given {@link String} <code>line</code> is greater than <code>maxChars</code> 
 	 */
 	public static boolean needsFolding(String line, int maxChars)
 	{
@@ -314,8 +328,8 @@ public final class VCardUtils {
 	 * <p>This unfolding technique is according to the MIME-DIR specifications
 	 * as described in section 5.8.1 "Line delimiting and folding."</p>
 	 * 
-	 * @param vcardString
-	 * @return {@link String}
+	 * @param vcardString - the VCard string to unfold
+	 * @return a fully unfolded VCard string using RFC2426 compatibility mode
 	 */
 	public static String unfoldVCard(String vcardString)
 	{
@@ -331,9 +345,9 @@ public final class VCardUtils {
 	 * <p>This unfolding technique is according to the MIME-DIR specifications
 	 * as described in section 5.8.1 "Line delimiting and folding."</p>
 	 * 
-	 * @param vcardString
-	 * @param compatMode
-	 * @return {@link String}
+	 * @param vcardString - the VCard string to unfold
+	 * @param compatMode - the specified compatibility mode to use for the unfolding
+	 * @return a fully unfolded VCard string using <code>compatMode</code> compatibility mode
 	 */
 	public static String unfoldVCard(String vcardString, CompatibilityMode compatMode)
 	{
@@ -356,8 +370,8 @@ public final class VCardUtils {
 	 * <p>Given a quoted-printable string and a folding scheme it will return
 	 * a folded line according to MIME-DIR specifications.</p>
 	 *
-	 * @param line
-	 * @param foldingScheme
+	 * @param line - the quoted printable {@link String} to fold 
+	 * @param foldingScheme - the folding scheme to use when folding
 	 * @return a folded quoted-printable line
 	 */
 	public static String foldQuotedPrintableLine(String line, FoldingScheme foldingScheme)
@@ -428,8 +442,8 @@ public final class VCardUtils {
 	 * doesn't need folding through here won't affect the outcome, but creates
 	 * extra over head.</p>
 	 * 
-	 * @param thisLine
-	 * @return {@link String}
+	 * @param thisLine - the line to fold
+	 * @return a fully folded line using MIME_DIR folding scheme by default
 	 */
 	public static String foldLine(String thisLine)
 	{
@@ -451,9 +465,9 @@ public final class VCardUtils {
 	 * doesn't need folding through here won't affect the outcome, but creates
 	 * extra over head.</p>
 	 * 
-	 * @param thisLine
-	 * @param foldingScheme
-	 * @return {@link String}
+	 * @param thisLine - the line to fold
+	 * @param foldingScheme - the specified folding scheme to use
+	 * @return a fully folded line using <code>foldingScheme</code>
 	 */
 	public static String foldLine(String thisLine, FoldingScheme foldingScheme)
 	{
@@ -475,9 +489,9 @@ public final class VCardUtils {
 	 * doesn't need folding through here won't affect the outcome, but creates
 	 * extra over head.</p>
 	 * 
-	 * @param thisLine
-	 * @param binaryFoldingScheme
-	 * @return {@link String}
+	 * @param thisLine - the line to fold that contains binary data
+	 * @param binaryFoldingScheme - the binary folding scheme to use when folding
+	 * @return a fully folded line using <code>binaryFoldingScheme</code>
 	 */
 	public static String foldLine(String thisLine, BinaryFoldingScheme binaryFoldingScheme)
 	{
@@ -506,10 +520,10 @@ public final class VCardUtils {
 	 * it is CRLF. Here you can specify what you want. Useful when folding
 	 * Quoted-Printable labels. Though a trailing delimiter may appear.</p>
 	 * 
-	 * @param thisLine
-	 * @param eolDelimeter
-	 * @param foldingScheme
-	 * @return {@link String}
+	 * @param thisLine - the line to fold
+	 * @param eolDelimeter - the EOL delimiter to use when folding
+	 * @param foldingScheme - the folding scheme to use
+	 * @return a fully folded line using <code>eolDelimiter</code> as end of line delimiters and uses <code>foldingScheme</code>
 	 */
 	public static String foldLine(String thisLine, String eolDelimeter, FoldingScheme foldingScheme)
 	{
@@ -522,11 +536,11 @@ public final class VCardUtils {
 	 * it is CRLF. Here you can specify what you want. Useful when folding
 	 * Quoted-Printable labels. Though a trailing delimiter may appear.</p>
 	 *
-	 * @param thisLine
-	 * @param eolDelimeter
-	 * @param maxChars
-	 * @param indent
-	 * @return {@link String}
+	 * @param thisLine - the line to fold
+	 * @param eolDelimeter - the EOL delimiter to use when folding
+	 * @param maxChars - the maximum number of characters before folding
+	 * @param indent - the indent {@link String} to use when folding
+	 * @return a fully folded line
 	 */
 	public static String foldLine(String thisLine, String eolDelimeter, int maxChars, String indent)
 	{
@@ -587,7 +601,7 @@ public final class VCardUtils {
 	 * <p>Returns the number formatter for the geographical position feature.
 	 * This will format the floating value to the 6th decimal place.</p>
 	 *
-	 * @return {@link NumberFormat}
+	 * @return the {@link NumberFormat} object used for formatting geographical position coordinates
 	 */
 	public static NumberFormat getGeographicPositionFormatter()
 	{
@@ -600,9 +614,9 @@ public final class VCardUtils {
 	 * delimited by the said delimiter. Note that this method takes into
 	 * account characters escaped by a backslash.</p>
 	 *
-	 * @param str
-	 * @param delim
-	 * @return {@link String}[]
+	 * @param str - the {@link String} to parse
+	 * @param delim - the delimiter to delimit the parsing
+	 * @return an array of {@link String} parsed by the specified delimiter <code>delim</code>
 	 */
 	public static String[] parseStringWithEscappedDelimiter(String str, char delim)
 	{
@@ -651,11 +665,23 @@ public final class VCardUtils {
 		return strList.toArray(new String[strList.size()]);
 	}
 	
+	/*
+	 * Regex used for unfolding quoted printable strings below 
+	 */
+	
 	private static final Pattern emptyLinePattern = Pattern.compile("$");
 	private static final Pattern startQpLinePattern = Pattern.compile(".*;([ \\t]*ENCODING[ \\t]*=)?[ \\t]*QUOTED-PRINTABLE.*:.*=", Pattern.CASE_INSENSITIVE);
 	private static final Pattern middleQpLinePattern = Pattern.compile("\\s*.+=?");
 	private static final Pattern vcardTypePattern = Pattern.compile("^[ \\t]*\\p{ASCII}+:.*$");
 	
+	/**
+	 * <p>Unfolds Quoted-Printable lines taking into account that
+	 * most strings will be folded incorrectly.</p>
+	 * 
+	 * @param qpString - the quoted-printable string to unfold
+	 * @return a fully unfolded quoted-printable string
+	 * @throws IOException if any I/O errors occur while reading the {@link String} as a stream
+	 */
 	public static String unfoldQuotedPrintableLines(String qpString) throws IOException
 	{
 		BufferedReader br = null;

@@ -53,8 +53,8 @@ public final class Util {
 	 * <p>Given an array of a particular type, it will return it
 	 * as a List of the same type.</p>
 	 * 
-	 * @param array
-	 * @return {@link List}
+	 * @param array - the array to convert into a generic list
+	 * @return a generic {@link List} of type <code>E</code>
 	 */
 	public static <E> List<E> asList(E[] array)
 	{
@@ -69,8 +69,8 @@ public final class Util {
 	/**
 	 * <p>Given an indeterminate array of strings; a hashcode is generated and returned.</p>
 	 * 
-	 * @param args
-	 * @return int
+	 * @param args - the array of {@link String}s to produce a hashcode from
+	 * @return the calculated haschode of <code>args</code>
 	 */
 	public static int generateHashCode(String ... args)
 	{
@@ -108,9 +108,9 @@ public final class Util {
 	 * <p>Given a File object it will read and return the entire file
 	 * as an array of bytes.</p>
 	 *
-	 * @param file
-	 * @return byte[]
-	 * @throws IOException
+	 * @param file - the file to retrieve as bytes
+	 * @return an array of bytes read in from file <code>file</code>
+	 * @throws IOException if any I/O errors occur
 	 */
 	public static byte[] getFileAsBytes(File file) throws IOException
 	{
