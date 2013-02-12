@@ -1160,7 +1160,8 @@ public class VCardWriter {
 				}
 				
 				if(nType.hasExtendedParams()) {
-					buildExtendParameters(nType, tmpSb);
+					boolean initWithParamTypes = nType.hasParams() || nType.hasExtendedParams();
+					buildExtendParameters(nType, initWithParamTypes, tmpSb);
 				}
 				
 				tmpSb.append(":");
@@ -1272,7 +1273,8 @@ public class VCardWriter {
 				}
 				
 				if(fnType.hasExtendedParams()) {
-					buildExtendParameters(fnType, tmpSb);
+					boolean initWithParamTypes = fnType.hasParams() || fnType.hasExtendedParams();
+					buildExtendParameters(fnType, initWithParamTypes, tmpSb);
 				}
 				
 				tmpSb.append(":");
@@ -1339,7 +1341,8 @@ public class VCardWriter {
 				}
 				
 				if(nameType.hasExtendedParams()) {
-					buildExtendParameters(nameType, tmpSb);
+					boolean initWithParamTypes = nameType.hasParams() || nameType.hasExtendedParams();
+					buildExtendParameters(nameType, initWithParamTypes, tmpSb);
 				}
 				
 				tmpSb.append(":");
@@ -1406,7 +1409,8 @@ public class VCardWriter {
 				}
 				
 				if(profileType.hasExtendedParams()) {
-					buildExtendParameters(profileType, tmpSb);
+					boolean initWithParamTypes = profileType.hasParams() || profileType.hasExtendedParams();
+					buildExtendParameters(profileType, initWithParamTypes, tmpSb);
 				}
 				
 				tmpSb.append(":");
@@ -1473,7 +1477,8 @@ public class VCardWriter {
 				}
 				
 				if(sourceType.hasExtendedParams()) {
-					buildExtendParameters(sourceType, tmpSb);
+					boolean initWithParamTypes = sourceType.hasParams() || sourceType.hasExtendedParams();
+					buildExtendParameters(sourceType, initWithParamTypes, tmpSb);
 				}
 				
 				tmpSb.append(":");
@@ -1541,7 +1546,8 @@ public class VCardWriter {
 					}
 					
 					if(titleType.hasExtendedParams()) {
-						buildExtendParameters(titleType, tmpSb);
+						boolean initWithParamTypes = titleType.hasParams() || titleType.hasExtendedParams();
+						buildExtendParameters(titleType, initWithParamTypes, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -1610,7 +1616,8 @@ public class VCardWriter {
 					}
 					
 					if(roleType.hasExtendedParams()) {
-						buildExtendParameters(roleType, tmpSb);
+						boolean initWithParamTypes = roleType.hasParams() || roleType.hasExtendedParams();
+						buildExtendParameters(roleType, initWithParamTypes, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -1667,7 +1674,8 @@ public class VCardWriter {
 				}
 				
 				if(geoType.hasExtendedParams()) {
-					buildExtendParameters(geoType, tmpSb);
+					boolean initWithParamTypes = geoType.hasParams() || geoType.hasExtendedParams();
+					buildExtendParameters(geoType, initWithParamTypes, tmpSb);
 				}
 				
 				tmpSb.append(":");
@@ -1725,7 +1733,8 @@ public class VCardWriter {
 					}
 					
 					if(orgType.hasExtendedParams()) {
-						buildExtendParameters(orgType, tmpSb);
+						boolean initWithParamTypes = orgType.hasParams() || orgType.hasExtendedParams();
+						buildExtendParameters(orgType, initWithParamTypes, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -1805,7 +1814,8 @@ public class VCardWriter {
 					}
 					
 					if(mailerType.hasExtendedParams()) {
-						buildExtendParameters(mailerType, tmpSb);
+						boolean initWithParamTypes = mailerType.hasParams() || mailerType.hasExtendedParams();
+						buildExtendParameters(mailerType, initWithParamTypes, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -2006,7 +2016,8 @@ public class VCardWriter {
 					}
 					
 					if(urlType.hasExtendedParams()) {
-						buildExtendParameters(urlType, tmpSb);
+						boolean initWithParamTypes = urlType.hasParams() || urlType.hasExtendedParams();
+						buildExtendParameters(urlType, initWithParamTypes, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -2080,7 +2091,8 @@ public class VCardWriter {
 					}
 					
 					if(revType.hasExtendedParams()) {
-						buildExtendParameters(revType, tmpSb);
+						boolean initWithParamTypes = revType.hasParams() || revType.hasExtendedParams();
+						buildExtendParameters(revType, initWithParamTypes, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -2142,7 +2154,8 @@ public class VCardWriter {
 					}
 					
 					if(uidType.hasExtendedParams()) {
-						buildExtendParameters(uidType, tmpSb);
+						boolean initWithParamTypes = uidType.hasParams() || uidType.hasExtendedParams();
+						buildExtendParameters(uidType, initWithParamTypes, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -2205,7 +2218,8 @@ public class VCardWriter {
 				}
 				
 				if(bdayType.hasExtendedParams()) {
-					buildExtendParameters(bdayType, tmpSb);
+					boolean initWithParamTypes = bdayType.hasParams() || bdayType.hasExtendedParams();
+					buildExtendParameters(bdayType, initWithParamTypes, tmpSb);
 				}
 				
 				ISOFormat isoFormat = bdayType.getISO8601Format();
@@ -2295,7 +2309,8 @@ public class VCardWriter {
 				}
 				
 				if(adrType.hasExtendedParams()) {
-					buildExtendParameters(adrType, tmpSb);
+					boolean initWithParamTypes = adrType.hasParams() || adrType.hasExtendedParams();
+					buildExtendParameters(adrType, initWithParamTypes, tmpSb);
 				}
 				
 				tmpSb.append(":");
@@ -2432,7 +2447,8 @@ public class VCardWriter {
 					}
 					
 					if(labelType.hasExtendedParams()) {
-						buildExtendParameters(labelType, tmpSb);
+						boolean initWithParamTypes = labelType.hasParams() || labelType.hasExtendedParams();
+						buildExtendParameters(labelType, initWithParamTypes, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -2532,7 +2548,8 @@ public class VCardWriter {
 					}
 					
 					if(telType.hasExtendedParams()) {
-						buildExtendParameters(telType, tmpSb);
+						boolean initWithParamTypes = telType.hasParams() || telType.hasExtendedParams();
+						buildExtendParameters(telType, initWithParamTypes, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -2630,7 +2647,8 @@ public class VCardWriter {
 					}
 					
 					if(emailType.hasExtendedParams()) {
-						buildExtendParameters(emailType, tmpSb);
+						boolean initWithParamTypes = emailType.hasParams() || emailType.hasExtendedParams();
+						buildExtendParameters(emailType, initWithParamTypes, tmpSb);
 					}
 					
 					EncodingType encType = emailType.getEncodingType();
@@ -2731,7 +2749,8 @@ public class VCardWriter {
 					}
 					
 					if(noteType.hasExtendedParams()) {
-						buildExtendParameters(noteType, tmpSb);
+						boolean initWithParamTypes = noteType.hasParams() || noteType.hasExtendedParams();
+						buildExtendParameters(noteType, initWithParamTypes, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -2799,7 +2818,8 @@ public class VCardWriter {
 					}
 					
 					if(nicknameType.hasExtendedParams()) {
-						buildExtendParameters(nicknameType, tmpSb);
+						boolean initWithParamTypes = nicknameType.hasParams() || nicknameType.hasExtendedParams();
+						buildExtendParameters(nicknameType, initWithParamTypes, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -2873,7 +2893,8 @@ public class VCardWriter {
 					}
 					
 					if(categoriesType.hasExtendedParams()) {
-						buildExtendParameters(categoriesType, tmpSb);
+						boolean initWithParamTypes = categoriesType.hasParams() || categoriesType.hasExtendedParams();
+						buildExtendParameters(categoriesType, initWithParamTypes, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -2962,7 +2983,8 @@ public class VCardWriter {
 					}
 					
 					if(classType.hasExtendedParams()) {
-						buildExtendParameters(classType, tmpSb);
+						boolean initWithParamTypes = classType.hasParams() || classType.hasExtendedParams();
+						buildExtendParameters(classType, initWithParamTypes, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -3030,7 +3052,8 @@ public class VCardWriter {
 					}
 					
 					if(prodIdType.hasExtendedParams()) {
-						buildExtendParameters(prodIdType, tmpSb);
+						boolean initWithParamTypes = prodIdType.hasParams() || prodIdType.hasExtendedParams();
+						buildExtendParameters(prodIdType, initWithParamTypes, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -3098,7 +3121,8 @@ public class VCardWriter {
 					}
 					
 					if(sortStringType.hasExtendedParams()) {
-						buildExtendParameters(sortStringType, tmpSb);
+						boolean initWithParamTypes = sortStringType.hasParams() || sortStringType.hasExtendedParams();
+						buildExtendParameters(sortStringType, initWithParamTypes, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -3197,7 +3221,8 @@ public class VCardWriter {
 					}
 					
 					if(keyType.hasExtendedParams()) {
-						buildExtendParameters(keyType, tmpSb);
+						boolean initWithParamTypes = keyType.hasParams() || keyType.hasExtendedParams();
+						buildExtendParameters(keyType, initWithParamTypes, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -3373,7 +3398,8 @@ public class VCardWriter {
 						}
 						
 						if(photoType.hasExtendedParams()) {
-							buildExtendParameters(photoType, tmpSb);
+							boolean initWithParamTypes = photoType.hasParams() || photoType.hasExtendedParams();
+							buildExtendParameters(photoType, initWithParamTypes, tmpSb);
 						}
 						
 						tmpSb.append(":");
@@ -3542,7 +3568,8 @@ public class VCardWriter {
 						}
 						
 						if(logoType.hasExtendedParams()) {
-							buildExtendParameters(logoType, tmpSb);
+							boolean initWithParamTypes = logoType.hasParams() || logoType.hasExtendedParams();
+							buildExtendParameters(logoType, initWithParamTypes, tmpSb);
 						}
 
 						tmpSb.append(":");
@@ -3709,7 +3736,8 @@ public class VCardWriter {
 						}
 						
 						if(soundType.hasExtendedParams()) {
-							buildExtendParameters(soundType, tmpSb);
+							boolean initWithParamTypes = soundType.hasParams() || soundType.hasExtendedParams();
+							buildExtendParameters(soundType, initWithParamTypes, tmpSb);
 						}
 						
 						tmpSb.append(":");
@@ -3937,7 +3965,8 @@ public class VCardWriter {
 					}
 					
 					if(imppType.hasExtendedParams()) {
-						buildExtendParameters(imppType, tmpSb);
+						boolean initWithParamTypes = imppType.hasParams() || imppType.hasExtendedParams();
+						buildExtendParameters(imppType, initWithParamTypes, tmpSb);
 					}
 					
 					tmpSb.append(":");
@@ -3997,7 +4026,8 @@ public class VCardWriter {
 				}
 
 				if(extendedType.hasExtendedParams()) {
-					buildExtendParameters(extendedType, tmpSb);
+					boolean initWithParamTypes = extendedType.hasExtendedParams();
+					buildExtendParameters(extendedType, initWithParamTypes, tmpSb);
 				}
 
 				tmpSb.append(":");
@@ -4030,9 +4060,10 @@ public class VCardWriter {
 	 * specified feature that is guaranteed to have extended parameters.</p>
 	 *
 	 * @param vcardType
+	 * @param initWithParamTypes
 	 * @param sb
 	 */
-	private void buildExtendParameters(AbstractVCardType vcardType, StringBuilder sb)
+	private void buildExtendParameters(AbstractVCardType vcardType, boolean initWithParamTypes, StringBuilder sb)
 	{
 		switch(vcardType.getParameterTypeStyle())
 		{
@@ -4055,7 +4086,11 @@ public class VCardWriter {
 
 			case PARAMETER_VALUE_LIST:
 			{
-				if(vcardType.hasParams()) {
+				//This will always be true, because you need to  have extended param types to 
+				//enter this method. But this only works to add a comma if we have already added
+				//param types or extended type params.
+				
+				if(vcardType.hasParams() && initWithParamTypes) {
 					//Continue from the list
 					sb.append(",");
 				}
