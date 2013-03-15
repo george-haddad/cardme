@@ -11,6 +11,17 @@ Do not forget to go to the project or Ohloh home page and recommend cardme to ot
 We want to be the best VCard library on the net, so if there is a bug or a new feature you want then let us know about it.
 
 -------------------
+Card Me Version 0.4.0
+
+BUG[54]
+Omitting semi-colon when building the extended parameter list only when there is no previously appended parameter and/or extended (type) parameters to the list.
+
+George El-Haddad
+Project Leader
+
+Michael Rimov
+Maven Integration Contributor
+
 
 Card Me Version 0.4.0-b3
 
