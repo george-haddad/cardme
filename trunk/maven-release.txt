@@ -18,4 +18,4 @@ If it doesn't look right, click "Drop"  to delete the item.
 
 If it looks correct, click "Close"
 
-Click the checkbox next to the repository and then click "relase"
+Click the checkbox next to the repository and then click "release"
