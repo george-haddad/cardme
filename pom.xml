@@ -51,9 +51,9 @@
 		<url>https://sourceforge.net/tracker/?group_id=99914&amp;atid=625723</url>
 	</issueManagement>
 	<scm>
-		<connection>scm:svn:https://svn.code.sf.net/p/cardme/code/tags/cardme-0.4.0</connection>
-		<developerConnection>scm:svn:https://svn.code.sf.net/p/cardme/code/tags/cardme-0.4.0</developerConnection>
-		<url>http://vn.code.sf.net/p/cardme/code/tags/cardme-0.4.0</url>
+		<connection>scm:svn:https://svn.code.sf.net/p/cardme/code/trunk/</connection>
+		<developerConnection>scm:svn:https://svn.code.sf.net/p/cardme/code/trunk/</developerConnection>
+		<url>https://svn.code.sf.net/p/cardme/code/trunk/</url>
 	</scm>
 	<dependencies>
 		<dependency>
