@@ -9,7 +9,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.sourceforge.cardme</groupId>
 	<artifactId>cardme</artifactId>
-	<version>0.4.2-SNAPSHOT</version>
+	<version>0.4.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Cardme VCard Library</name>
 	<url>https://sourceforge.net/projects/cardme/</url>
