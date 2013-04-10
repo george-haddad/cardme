@@ -9,7 +9,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.sourceforge.cardme</groupId>
 	<artifactId>cardme</artifactId>
-	<version>0.4.1-SNAPSHOT</version>
+	<version>0.4.1</version>
 	<packaging>jar</packaging>
 	<name>Cardme VCard Library</name>
 	<url>https://sourceforge.net/projects/cardme/</url>
@@ -51,9 +51,9 @@
 		<url>https://sourceforge.net/tracker/?group_id=99914&amp;atid=625723</url>
 	</issueManagement>
 	<scm>
-		<connection>scm:svn:https://svn.code.sf.net/p/cardme/code/trunk</connection>
-		<developerConnection>scm:svn:https://svn.code.sf.net/p/cardme/code/trunk</developerConnection>
-		<url>https://svn.code.sf.net/p/cardme/code/trunk</url>
+		<connection>scm:svn:https://svn.code.sf.net/p/cardme/code/tags/cardme-0.4.1</connection>
+		<developerConnection>scm:svn:https://svn.code.sf.net/p/cardme/code/tags/cardme-0.4.1</developerConnection>
+		<url>https://svn.code.sf.net/p/cardme/code/tags/cardme-0.4.1</url>
 	</scm>
 	<dependencies>
 		<dependency>
