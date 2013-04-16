@@ -51,9 +51,9 @@
 		<url>https://sourceforge.net/tracker/?group_id=99914&amp;atid=625723</url>
 	</issueManagement>
 	<scm>
-		<connection>scm:svn:https://svn.code.sf.net/p/cardme/code/trunk</connection>
+		<connection>scm:svn:http://svn.code.sf.net/p/cardme/code/trunk</connection>
 		<developerConnection>scm:svn:https://svn.code.sf.net/p/cardme/code/trunk</developerConnection>
-		<url>https://svn.code.sf.net/p/cardme/code/trunk</url>
+		<url>http://svn.code.sf.net/p/cardme/code/trunk</url>
 	</scm>
 
 	<distributionManagement>
@@ -61,9 +61,9 @@
 			<id>sonatype-nexus-staging</id>
 			<name>Nexus Staging Repository</name>
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
+		</repository>		
 	</distributionManagement>
-	
+	 
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
