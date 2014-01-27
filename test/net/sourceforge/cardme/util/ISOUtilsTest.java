@@ -1,10 +1,8 @@
 package net.sourceforge.cardme.util;
 
 import static org.junit.Assert.assertEquals;
-
 import java.util.Calendar;
 import java.util.TimeZone;
-
 import org.junit.Test;
 
 /*
@@ -125,7 +123,8 @@ public class ISOUtilsTest {
 
 	@Test
 	public void parseISO8601Date() throws Exception {
-		Calendar expected, actual;
+		Calendar expected = null;
+		Calendar actual = null;
 
 		//test date
 		expected = Calendar.getInstance();
@@ -157,6 +156,12 @@ public class ISOUtilsTest {
 		assertEquals(expected, actual);
 
 		actual = ISOUtils.parseISO8601Date("2012-07-01T11:01:30+03:00");
+		actual.setTimeZone(TimeZone.getTimeZone("GMT"));
+		assertEquals(expected, actual);
+		
+		//Test with decimals before Z (Android 4.3 export format)
+		//                                  1978-01-21T08:00:00.000Z
+		actual = ISOUtils.parseISO8601Date("2012-07-01T08:01:30.000Z");
 		actual.setTimeZone(TimeZone.getTimeZone("GMT"));
 		assertEquals(expected, actual);
 	}

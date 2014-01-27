@@ -48,6 +48,7 @@ public final class ISOUtils {
 
 	private static final Pattern ISO8601_UTC_TIME_BASIC_REGEX = Pattern.compile("\\d{8}T\\d{6}Z");
 	private static final Pattern ISO8601_UTC_TIME_EXTENDED_REGEX = Pattern.compile("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z");
+	private static final Pattern ISO8601_UTC_TIME_EXTENDED_DROID_REGEX = Pattern.compile("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{1,3}Z");
 	
 	private static final Pattern ISO8601_TIME_BASIC_REGEX = Pattern.compile("\\d{8}T\\d{6}[-\\+]\\d{4}");
 	private static final Pattern ISO8601_TIME_EXTENDED_REGEX = Pattern.compile("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[-\\+]\\d{2}:\\d{2}");
@@ -231,6 +232,13 @@ public final class ISOUtils {
 
 			//SimpleDateFormat doesn't recognize "Z"
 			dateStr = dateStr.replace("Z", "+0000");
+			format = "yyyy-MM-dd'T'HH:mm:ssZ";
+		}
+		else if (ISO8601_UTC_TIME_EXTENDED_DROID_REGEX.matcher(dateStr).matches()) {
+			//Android export format may include 1 to 3 zeros before Z
+			
+			//SimpleDateFormat doesn't recognize "Z"
+			dateStr = dateStr.replaceAll("\\.\\d{1,3}Z", "+0000");
 			format = "yyyy-MM-dd'T'HH:mm:ssZ";
 		}
 		else {
