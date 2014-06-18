@@ -1308,7 +1308,7 @@ public class VCardEngine {
 					value = decodeQuotedPrintableValue(emailType, value);
 				}
 				
-				emailType.setEmail(value);
+				emailType.setEmail(VCardUtils.unescapeString(value));
 			}
 			
 			if(group != null) {
@@ -1554,7 +1554,7 @@ public class VCardEngine {
 			String[] orgUnits = VCardUtils.parseStringWithEscappedDelimiter(value, ';');
 			if(orgUnits.length > 0) {
 				//First in list is the organization name
-				orgType.setOrgName(orgUnits[0]);
+				orgType.setOrgName(VCardUtils.unescapeString(orgUnits[0]));
 				
 				//The rest are organizational units
 				for(int i = 1; i < orgUnits.length; i++) {
