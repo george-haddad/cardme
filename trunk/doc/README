@@ -11,6 +11,17 @@ Do not forget to go to the project or Ohloh home page and recommend cardme to ot
 We want to be the best VCard library on the net, so if there is a bug or a new feature you want then let us know about it.
 
 -------------------
+Card Me Version 0.4.1
+
+PATCHES[19]
+Added special case for android 4.3 export format of ISO8601 date/time format to accept .000 at the end of the date/time string before UTC indicator Z character.
+Test case added for this bug.
+
+BUG[55]
+BUG[56]
+Added missing unescape routine to ORG and EMAIL types.
+
+
 Card Me Version 0.4.0
 
 BUG[54]
