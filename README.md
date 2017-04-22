@@ -3,4 +3,4 @@ An implementation of RFC 2426 - VCard. This groupware library will provide java 
 
 Recently migrated from sourceforge site https://sourceforge.net/projects/cardme
 
-Expect updates to the code and documentation.
+Wiki has been updated: https://github.com/george-haddad/cardme/wiki
